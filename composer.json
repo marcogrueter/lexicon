@@ -1,0 +1,28 @@
+{
+    "name": "aiws/lexicon",
+    "type":"library",
+    "description": "A lightweight PHP template engine.",
+    "homepage": "https://github.com/AIWebSystems/Lexicon",
+    "keywords": ["template","parser"],
+    "authors": [
+        {
+            "name": "Osvaldo Brignoni",
+            "email": "obrignoni@aiwebsystems.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.1.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Aiws\\Lexicon": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
