@@ -38,7 +38,7 @@ class Lexicon
 
     final public function compile($content = null, $data = null)
     {
-        if (!$content or !$data) {
+        if (!$content) {
             return null;
         }
 
