@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon;
+<?php namespace Aiws\Lexicon\Adapter\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 use Aiws\Lexicon\Adapter\Laravel\Compiler;
