@@ -30,6 +30,7 @@ class Lexicon
         'Aiws\Lexicon\Node\SectionYield',
         'Aiws\Lexicon\Node\SectionShow',
         'Aiws\Lexicon\Node\SectionStop',
+        'Aiws\Lexicon\Node\Insert',
         'Aiws\Lexicon\Node\Block',
         'Aiws\Lexicon\Node\Conditional',
         'Aiws\Lexicon\Node\ConditionalElse',
