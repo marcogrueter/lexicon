@@ -4,7 +4,7 @@ class Variable extends Single
 {
     public function getRegex()
     {
-        return '/\{\{\s*(' . $this->getVariableRegex() . ')(\s.*?)\}\}/m';
+        return "/\{\{\s*(?!{static::PARENT_MATCHER})({$this->getVariableRegex()})(\s.*?)\}\}/m";
     }
 
     public function compileNode()

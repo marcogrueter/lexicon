@@ -18,6 +18,8 @@ class Lexicon
 
     public $callback;
 
+    const PARENT_MATCHER = 'parent';
+
     protected $noParseExtractions = array();
 
     public $callbackHandlerClass;
@@ -25,8 +27,9 @@ class Lexicon
     public $nodeTypes = array(
         'Aiws\Lexicon\Node\SectionExtends',
         'Aiws\Lexicon\Node\Section',
+        'Aiws\Lexicon\Node\SectionYield',
         'Aiws\Lexicon\Node\SectionShow',
-        'Aiws\Lexicon\Node\SectionEnd',
+        'Aiws\Lexicon\Node\SectionStop',
         'Aiws\Lexicon\Node\Block',
         'Aiws\Lexicon\Node\Conditional',
         'Aiws\Lexicon\Node\ConditionalElse',
