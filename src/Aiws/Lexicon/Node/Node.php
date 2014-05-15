@@ -258,10 +258,8 @@ abstract class Node extends Lexicon
         return preg_replace('/\s\s+/', ' ', $text);
     }
 
-    protected function php($php = '', $short = false)
+    protected function php($php = '')
     {
-        $open = $short ? '<?= ' : '<?php ';
-
-        return $open . $php . ' ?>';
+        return '<?php ' . $php . ' ?>';
     }
 }

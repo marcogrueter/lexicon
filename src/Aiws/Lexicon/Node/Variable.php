@@ -13,7 +13,7 @@ class Variable extends Single
 
         if ($this->callbackHandlerPhp and $dataParser->isString($this->callbackData)) {
 
-            return $this->php($this->callbackHandlerPhp, true);
+            return $this->php('echo '.$this->callbackHandlerPhp);
 
         } else {
             $variablePHP = null;
@@ -36,7 +36,7 @@ class Variable extends Single
             }
 
             if ($dataParser->isString($propertyData['value'])) {
-                return $this->php($variablePHP, true);
+                return $this->php('echo '.$variablePHP);
             }
         }
 
