@@ -1,6 +1,6 @@
-<?php namespace Aiws\Lexicon\Context;
+<?php namespace Aiws\Lexicon\Node;
 
-class ContextConditional extends Single
+class Conditional extends Single
 {
     public $startConditionals = array(
         'if',
@@ -79,7 +79,7 @@ class ContextConditional extends Single
         }
     }
 
-    public function compileParentContext($parsedParentContent)
+    public function compileParentNode($parsedParentContent)
     {
         $this->expression = $this->replaceOperators($this->expression);
 
@@ -249,12 +249,12 @@ class ContextConditional extends Single
         return $variableName;
     }
 
-    public function compileContext()
+    public function compileNode()
     {
         $hasConditionalEnd = false;
 
-        foreach ($this->parent->children as $context) {
-            if ($context instanceof ContextConditionalEnd) {
+        foreach ($this->parent->children as $node) {
+            if ($node instanceof ConditionalEnd) {
                 $hasConditionalEnd = true;
                 break;
             }

@@ -1,10 +1,10 @@
-<?php namespace Aiws\Lexicon\Context;
+<?php namespace Aiws\Lexicon\Node;
 
 class SectionExtends extends Single
 {
     public $name = 'extends';
 
-    public function compileContext()
+    public function compileNode()
     {
         $rootNode = $this->getRootNode();
 

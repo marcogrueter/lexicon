@@ -1,6 +1,6 @@
-<?php namespace Aiws\Lexicon\Context;
+<?php namespace Aiws\Lexicon\Node;
 
-abstract class Single extends ContextType
+abstract class Single extends Node
 {
     public function getRegex()
     {

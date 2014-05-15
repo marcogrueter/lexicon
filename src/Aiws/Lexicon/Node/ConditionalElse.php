@@ -1,6 +1,6 @@
-<?php namespace Aiws\Lexicon\Context;
+<?php namespace Aiws\Lexicon\Node;
 
-class ContextConditionalElse extends Single
+class ConditionalElse extends Single
 {
     public $callbackEnabled = false;
 
@@ -15,19 +15,19 @@ class ContextConditionalElse extends Single
         $this->extractionContent = $match[0];
     }
 
-    public function compileContext()
+    public function compileNode()
     {
         $hasConditionalStart = $hasConditionalEnd = false;
 
-        foreach ($this->parent->children as $context) {
-            if ($context instanceof ContextConditional) {
+        foreach ($this->parent->children as $node) {
+            if ($node instanceof Conditional) {
                 $hasConditionalStart = true;
                 break;
             }
         }
 
-        foreach ($this->parent->children as $context) {
-            if ($context instanceof ContextConditionalEnd) {
+        foreach ($this->parent->children as $node) {
+            if ($node instanceof ConditionalEnd) {
                 $hasConditionalEnd = true;
                 break;
             }

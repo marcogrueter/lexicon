@@ -2,7 +2,7 @@
 
 use Aiws\Lexicon\Base\Cache;
 use Aiws\Lexicon\Base\Data;
-use Aiws\Lexicon\Context\ContextBlock;
+use Aiws\Lexicon\Node\Block;
 
 class Lexicon
 {
@@ -22,22 +22,22 @@ class Lexicon
 
     public $callbackHandlerClass;
 
-    public $contexts = array(
-        'Aiws\Lexicon\Context\SectionExtends',
-        'Aiws\Lexicon\Context\Section',
-        'Aiws\Lexicon\Context\SectionShow',
-        'Aiws\Lexicon\Context\SectionEnd',
-        'Aiws\Lexicon\Context\ContextBlock',
-        'Aiws\Lexicon\Context\ContextConditional',
-        'Aiws\Lexicon\Context\ContextConditionalElse',
-        'Aiws\Lexicon\Context\ContextConditionalEnd',
-        'Aiws\Lexicon\Context\ContextVariable',
+    public $nodeTypes = array(
+        'Aiws\Lexicon\Node\SectionExtends',
+        'Aiws\Lexicon\Node\Section',
+        'Aiws\Lexicon\Node\SectionShow',
+        'Aiws\Lexicon\Node\SectionEnd',
+        'Aiws\Lexicon\Node\Block',
+        'Aiws\Lexicon\Node\Conditional',
+        'Aiws\Lexicon\Node\ConditionalElse',
+        'Aiws\Lexicon\Node\ConditionalEnd',
+        'Aiws\Lexicon\Node\Variable',
     );
 
     public function __construct($cachePath = null, \Closure $callback = null)
     {
         $this->cachePath = $cachePath;
-        $this->callback = $callback;
+        $this->callback  = $callback;
     }
 
     final public function compile($content = null, $data = null)
@@ -46,7 +46,7 @@ class Lexicon
             return null;
         }
 
-        $contextType = new ContextBlock;
+        $nodeType = new Block;
 
         $content = $this->parseComments($content);
         $content = $this->extractNoParse($content);
@@ -56,25 +56,24 @@ class Lexicon
             'content' => $content,
         );
 
-        $context = $contextType->make($setup);
+        $node = $nodeType->make($setup);
 
-        $context->callback = $this->callback;
+        $node->callback = $this->callback;
 
-        $context->data = $data;
+        $node->data = $data;
 
-        $parsedContext = $context->createChildContexts();
+        $parsedNode = $node->createChildNodes();
 
-        $php = $parsedContext->compileContext();
+        $php = $parsedNode->compileNode();
 
         $php = $this->injectNoParse($php);
 
         // If there are any footer lines that need to get added to a template we will
         // add them here at the end of the template. This gets used mainly for the
         // template inheritance via the extends keyword that should be appended.
-        if (count($parsedContext->footer) > 0)
-        {
+        if (count($parsedNode->footer) > 0) {
             $php = ltrim($php, PHP_EOL)
-                .PHP_EOL.implode(PHP_EOL, array_reverse($parsedContext->footer));
+                . PHP_EOL . implode(PHP_EOL, array_reverse($parsedNode->footer));
         }
 
         if ($this->compress) {
@@ -122,15 +121,15 @@ class Lexicon
     {
         preg_match_all('/\{\{\s*noparse\s*\}\}(.*?)\{\{\s*\/noparse\s*\}\}/ms', $text, $matches, PREG_SET_ORDER);
 
-        foreach($matches as $match) {
+        foreach ($matches as $match) {
 
             $extraction = array(
-              'block' => $match[0],
-              'hash' => '__NO_PARSE__'.md5($match[0]),
-              'content' => $match[1],
+                'block'   => $match[0],
+                'hash'    => '__NO_PARSE__' . md5($match[0]),
+                'content' => $match[1],
             );
 
-            $text = str_replace($extraction['block'], $extraction['hash'], $text);
+            $text                       = str_replace($extraction['block'], $extraction['hash'], $text);
             $this->noParseExtractions[] = $extraction;
         }
 
@@ -139,7 +138,7 @@ class Lexicon
 
     public function injectNoParse($text)
     {
-        foreach($this->noParseExtractions as $key => $extraction) {
+        foreach ($this->noParseExtractions as $key => $extraction) {
             $text = str_replace($extraction['hash'], $extraction['content'], $text);
             unset($this->noParseExtractions[$key]);
         }

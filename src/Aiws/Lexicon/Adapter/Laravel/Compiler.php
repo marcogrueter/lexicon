@@ -57,8 +57,8 @@ class Compiler extends BladeCompiler
     {
 		$this->extend(function($content) use ($parserCachePath) {
 
-            $lexicon = new Lexicon($parserCachePath, function($name, $parameters, $content, $context) {
-                $callbackHandler = new $context->callbackHandlerClass;
+            $lexicon = new Lexicon($parserCachePath, function($name, $parameters, $content, $node) {
+                $callbackHandler = new $node->callbackHandlerClass;
                 return $callbackHandler->call($name, $parameters, $content);
             });
 

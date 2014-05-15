@@ -1,6 +1,6 @@
-<?php namespace Aiws\Lexicon\Context;
+<?php namespace Aiws\Lexicon\Node;
 
-class ContextBlock extends ContextType
+class Block extends Node
 {
     public function getRegex()
     {
@@ -26,7 +26,7 @@ class ContextBlock extends ContextType
         return $this;
     }
 
-    public function compileParentContext($parentParsedContent)
+    public function compileParentNode($parentParsedContent)
     {
         $dataParser = $this->data();
 
@@ -65,24 +65,24 @@ class ContextBlock extends ContextType
         return $parentParsedContent;
     }
 
-    public function compileContext()
+    public function compileNode()
     {
-        foreach ($this->children as $context) {
+        foreach ($this->children as $node) {
 
             // If the block is set as trash, it will be removed from the parsedContent
-            if ($context->trash) {
+            if ($node->trash) {
 
                 // Remove excessive white space so the content its easier to match
                 $this->parsedContent = $this->compress($this->parsedContent);
 
                 $this->parsedContent = str_replace(
-                    '{{ ' . $context->name . ' }}' . $context->getExtractionHash() . '{{ /' . $context->name . ' }}',
+                    '{{ ' . $node->name . ' }}' . $node->getExtractionHash() . '{{ /' . $node->name . ' }}',
                     '',
                     $this->parsedContent
                 );
             }
 
-            $this->inject($context);
+            $this->inject($node);
         }
 
         return $this->parsedContent;

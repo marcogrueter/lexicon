@@ -1,13 +1,13 @@
-<?php namespace Aiws\Lexicon\Context;
+<?php namespace Aiws\Lexicon\Node;
 
-class ContextVariable extends Single
+class Variable extends Single
 {
     public function getRegex()
     {
         return '/\{\{\s*(' . $this->getVariableRegex() . ')(\s.*?)\}\}/m';
     }
 
-    public function compileContext()
+    public function compileNode()
     {
         $dataParser = $this->data();
 

@@ -1,6 +1,6 @@
 <?php namespace Aiws\Lexicon\Base;
 
-use Aiws\Lexicon\Context\ContextType;
+use Aiws\Lexicon\Node\Node;
 
 class Data
 {
@@ -12,55 +12,55 @@ class Data
         $this->scopeGlue = $scopeGlue;
     }
 
-    public function getContextData(ContextType $parentContext, $data, $key = null)
+    public function getNodeData(Node $parentNode, $data, $key = null)
     {
-        $contextData = null;
+        $nodeData = null;
 
         // Set the root of the data if this is the root
-        if ($parentContext->isRoot()) {
+        if ($parentNode->isRoot()) {
 
-            $contextData = $data;
+            $nodeData = $data;
 
         } elseif ($this->isArray($data)
-            and isset($data[$parentContext->name])
-            and $this->isArray($data[$parentContext->name])
-            and isset($data[$parentContext->name][$key])
+            and isset($data[$parentNode->name])
+            and $this->isArray($data[$parentNode->name])
+            and isset($data[$parentNode->name][$key])
         ) {
 
-            $contextData = $data[$parentContext->name][$key];
+            $nodeData = $data[$parentNode->name][$key];
 
         } elseif (!is_numeric($key)
             and $this->isArray($data)
-            and isset($data[$parentContext->name])
-            and is_object($data[$parentContext->name])
-            and isset($data[$parentContext->name]->$key)
+            and isset($data[$parentNode->name])
+            and is_object($data[$parentNode->name])
+            and isset($data[$parentNode->name]->$key)
         ) {
 
-            $contextData = $data[$parentContext->name]->$key;
+            $nodeData = $data[$parentNode->name]->$key;
 
         } elseif (is_object($data)
-            and isset($data->{$parentContext->name})
-            and ($this->isArray($data->{$parentContext->name})
-                and isset($data->{$parentContext->name}[$key]))
+            and isset($data->{$parentNode->name})
+            and ($this->isArray($data->{$parentNode->name})
+                and isset($data->{$parentNode->name}[$key]))
         ) {
 
-            $contextData = $data->{$parentContext->name}[$key];
+            $nodeData = $data->{$parentNode->name}[$key];
 
         } elseif ($this->isArray($data)
-            and isset($data[$parentContext->name])
+            and isset($data[$parentNode->name])
         ) {
 
-            $contextData = $data[$parentContext->name];
+            $nodeData = $data[$parentNode->name];
 
         } elseif (is_object($data)
-            and isset($data->{$parentContext->name})
+            and isset($data->{$parentNode->name})
         ) {
 
-            $contextData = $data->{$parentContext->name};
+            $nodeData = $data->{$parentNode->name};
 
         }
 
-        return $contextData;
+        return $nodeData;
     }
 
 

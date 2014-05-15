@@ -1,11 +1,11 @@
-<?php namespace Aiws\Lexicon\Context;
+<?php namespace Aiws\Lexicon\Node;
 
 class SectionShow extends Single
 {
 
     public $name = 'show';
 
-    public function compileContext()
+    public function compileNode()
     {
         return "<?php echo \$__env->yieldSection(); ?>";
     }

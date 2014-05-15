@@ -1,8 +1,8 @@
-<?php namespace Aiws\Lexicon\Context;
+<?php namespace Aiws\Lexicon\Node;
 
 use Aiws\Lexicon\Lexicon;
 
-abstract class ContextType extends Lexicon
+abstract class Node extends Lexicon
 {
     public $callback;
 
@@ -32,7 +32,7 @@ abstract class ContextType extends Lexicon
 
     public $incrementDepth = true;
 
-    public $name = '__LEXICON_ROOT__';
+    public $name = 'root';
 
     public $parameters;
 
@@ -49,24 +49,24 @@ abstract class ContextType extends Lexicon
 
     abstract public function getMatches($text);
 
-    abstract public function compileContext();
+    abstract public function compileNode();
 
     public function make($match, $parent = null, $depth = 0, $count = 0)
     {
-        /** @var $context ContextType */
-        $context = new static;
+        /** @var $node Node */
+        $node = new static;
 
-        $context->getSetup($match);
-        $context->callback      = $this->callback;
-        $context->count         = $count;
-        $context->depth         = ($this->incrementDepth and $depth <= $this->maxDepth) ? $depth + 1 : $depth;
-        $context->hash          = md5($context->content . $context->name . $depth . $count);
-        $context->parsedContent = $context->content;
-        $context->parent        = $parent;
+        $node->getSetup($match);
+        $node->callback      = $this->callback;
+        $node->count         = $count;
+        $node->depth         = ($this->incrementDepth and $depth <= $this->maxDepth) ? $depth + 1 : $depth;
+        $node->hash          = md5($node->content . $node->name . $depth . $count);
+        $node->parsedContent = $node->content;
+        $node->parent        = $parent;
 
-        $context->parseParameters();
+        $node->parseParameters();
 
-        return $context;
+        return $node;
     }
 
     protected function getVariableRegex()
@@ -135,19 +135,19 @@ abstract class ContextType extends Lexicon
         return $this->callbackParameters;
     }
 
-    public function createChildContexts()
+    public function createChildNodes()
     {
         // @todo - find IF
         // @todo - find ELSEIF
         // @todo - find ELSE
         // @todo - find UNLESS
 
-        foreach ($this->contexts as $contextTypeClass) {
-            $contextType = new $contextTypeClass;
+        foreach ($this->nodeTypes as $nodeTypeClass) {
+            $nodeType = new $nodeTypeClass;
 
-            if ($contextType instanceof ContextType) {
-                foreach ($contextType->getMatches($this->parsedContent) as $count => $match) {
-                    $this->createChildContext($contextType, $match, $count);
+            if ($nodeType instanceof Node) {
+                foreach ($nodeType->getMatches($this->parsedContent) as $count => $match) {
+                    $this->createChildNode($nodeType, $match, $count);
                 }
             } else {
                 // @todo - throw exception
@@ -157,65 +157,65 @@ abstract class ContextType extends Lexicon
         return $this;
     }
 
-    protected function createChildContext(ContextType $contextType, $match, $count = 0)
+    protected function createChildNode(Node $nodeType, $match, $count = 0)
     {
-        $context = $contextType->make(
+        $node = $nodeType->make(
             $match,
             $parent = $this,
             $this->depth,
             $count
         );
 
-        $context->data = $this->data()->getContextData($this, $this->data, $count);
+        $node->data = $this->data()->getNodeData($this, $this->data, $count);
 
-        if ($this->callbackHandlerClass and $context->callbackEnabled and $this->callback) {
+        if ($this->callbackHandlerClass and $node->callbackEnabled and $this->callback) {
             // @todo - react to the returned data type within the compile() method
-            $context->callbackData = call_user_func_array(
+            $node->callbackData = call_user_func_array(
                 $this->callback,
-                array($context->name, $context->callbackParameters, $context->content, $context)
+                array($node->name, $node->callbackParameters, $node->content, $node)
             );
 
-            $callbackHandler = new $context->callbackHandlerClass;
+            $callbackHandler = new $node->callbackHandlerClass;
 
-            $context->callbackHandlerPhp = $callbackHandler->compile(
-                $context->name,
-                $context->callbackParameters,
-                $context->content
+            $node->callbackHandlerPhp = $callbackHandler->compile(
+                $node->name,
+                $node->callbackParameters,
+                $node->content
             );
         }
 
-        $context->createChildContexts();
+        $node->createChildNodes();
 
-        $this->extract($context);
+        $this->extract($node);
 
-        return $context;
+        return $node;
     }
 
-    protected function extract(ContextType $context)
+    protected function extract(Node $node)
     {
-        if (method_exists($context, 'compileParentContext')) {
-            $this->parsedContent = $context->compileParentContext($this->parsedContent);
+        if (method_exists($node, 'compileParentNode')) {
+            $this->parsedContent = $node->compileParentNode($this->parsedContent);
         }
 
-        if (!$context->trash) {
+        if (!$node->trash) {
 
             $this->parsedContent = str_replace(
-                $context->extractionContent,
-                $context->getExtractionHash(),
+                $node->extractionContent,
+                $node->getExtractionHash(),
                 $this->parsedContent
             );
 
-            $this->children[] = $context;
+            $this->children[] = $node;
         }
 
         return $this;
     }
 
-    protected function inject(ContextType $context)
+    protected function inject(Node $node)
     {
         $this->parsedContent = str_replace(
-            $context->getExtractionHash(),
-            $context->compileContext(),
+            $node->getExtractionHash(),
+            $node->compileNode(),
             $this->parsedContent
         );
 

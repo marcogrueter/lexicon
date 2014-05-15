@@ -1,11 +1,11 @@
-<?php namespace Aiws\Lexicon\Context;
+<?php namespace Aiws\Lexicon\Node;
 
 class SectionEnd extends Single
 {
 
     public $name = 'stop';
 
-    public function compileContext()
+    public function compileNode()
     {
         return "<?php \$__env->stopSection(); ?>";
     }
