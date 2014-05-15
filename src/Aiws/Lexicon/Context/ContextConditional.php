@@ -1,6 +1,6 @@
 <?php namespace Aiws\Lexicon\Context;
 
-class ContextConditional extends ContextType
+class ContextConditional extends Single
 {
     public $startConditionals = array(
         'if',

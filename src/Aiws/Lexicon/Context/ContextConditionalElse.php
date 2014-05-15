@@ -1,6 +1,6 @@
 <?php namespace Aiws\Lexicon\Context;
 
-class ContextConditionalElse extends ContextType
+class ContextConditionalElse extends Single
 {
     public $callbackEnabled = false;
 

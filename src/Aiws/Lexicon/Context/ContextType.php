@@ -26,6 +26,8 @@ abstract class ContextType extends Lexicon
 
     public $extractionContent;
 
+    public $footer  = array();
+
     public $hash;
 
     public $incrementDepth = true;
@@ -45,10 +47,13 @@ abstract class ContextType extends Lexicon
 
     abstract public function getRegex();
 
+    abstract public function getMatches($text);
+
     abstract public function compileContext();
 
     public function make($match, $parent = null, $depth = 0, $count = 0)
     {
+        /** @var $context ContextType */
         $context = new static;
 
         $context->getSetup($match);
@@ -69,6 +74,41 @@ abstract class ContextType extends Lexicon
         $glue = preg_quote($this->scopeGlue, '/');
 
         return $glue === '\\.' ? '[a-zA-Z0-9_' . $glue . ']+' : '[a-zA-Z0-9_\.' . $glue . ']+';
+    }
+
+    public function getClosingTagRegex($name)
+    {
+        return '/\{\{\s*(\/' . $name . ')\s*\}\}/m';
+    }
+
+    public function getOpenTagMatches($text, $regex = null)
+    {
+        $matches = array();
+
+        if (!$regex) {
+            $regex = $this->getRegex();
+        }
+
+        preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
+
+        return $matches;
+    }
+
+    public function getSingleTagMatches($text, $name)
+    {
+        $matches = array();
+
+        /**
+         * $data_matches[0] is the raw data tag
+         * $data_matches[1] is the data variable (dot notated)
+         */
+        foreach($this->getOpenTagMatches($text) as $match) {
+            if (!preg_match($this->getClosingTagRegex($name), $text, $closingTagMatch)) {
+                $matches[] = $match;
+            }
+        }
+
+        return $matches;
     }
 
     /**
@@ -94,26 +134,6 @@ abstract class ContextType extends Lexicon
 
         return $this->callbackParameters;
     }
-
-    /**
-     * Extracts the looped tags so that we can parse conditionals then re-inject.
-     *
-     * @param  string $text The text to extract from
-     * @return array
-     */
-    public function getMatches($text, $regex = null)
-    {
-        $matches = array();
-
-        if (!$regex) {
-            $regex = $this->getRegex();
-        }
-
-        preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
-
-        return $matches;
-    }
-
 
     public function createChildContexts()
     {
@@ -202,6 +222,17 @@ abstract class ContextType extends Lexicon
         return $this;
     }
 
+    public function getRootNode()
+    {
+        $node = $this;
+
+        while(!$node->isRoot()) {
+            $node = $this->parent;
+        }
+
+        return $node;
+    }
+
     public function isRoot()
     {
         return !$this->parent;
@@ -215,6 +246,11 @@ abstract class ContextType extends Lexicon
     public function getItem()
     {
         return $this->name . 'Item';
+    }
+
+    public function getAttribute($name)
+    {
+        return isset($this->callbackParameters[$name]) ? $this->callbackParameters[$name] : null;
     }
 
     public function compress($text)

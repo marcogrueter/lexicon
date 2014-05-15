@@ -1,39 +1,10 @@
 <?php namespace Aiws\Lexicon\Context;
 
-class ContextVariable extends ContextType
+class ContextVariable extends Single
 {
     public function getRegex()
     {
         return '/\{\{\s*(' . $this->getVariableRegex() . ')(\s.*?)\}\}/m';
-    }
-
-    protected function getClosingPairRegex($name)
-    {
-        return '/\{\{\s*(\/' . $name . ')\s*\}\}/m';
-    }
-
-    public function getSetup(array $match)
-    {
-        $this->name = $match[1];
-        $this->parameters = $match[2];
-        $this->extractionContent = $match[0];
-    }
-
-    public function getMatches($text, $regex = null)
-    {
-        $matches = array();
-
-        /**
-         * $data_matches[0] is the raw data tag
-         * $data_matches[1] is the data variable (dot notated)
-         */
-        foreach(parent::getMatches($text) as $match) {
-            if (!preg_match($this->getClosingPairRegex($match[1]), $text, $closingPairMatch)) {
-                $matches[] = $match;
-            }
-        }
-
-        return $matches;
     }
 
     public function compileContext()

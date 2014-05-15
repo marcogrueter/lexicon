@@ -7,16 +7,21 @@ class ContextBlock extends ContextType
         return '/\{\{\s*(' . $this->getVariableRegex() . ')(\s.*?)\}\}(.*?)\{\{\s*\/\1\s*\}\}/ms';
     }
 
+    public function getMatches($text)
+    {
+        return $this->getOpenTagMatches($text);
+    }
+
     public function getSetup(array $match)
     {
-/*        if ($this->name == 'example') {
-            //dd($match);
-        }*/
+        /*        if ($this->name == 'example') {
+                    //dd($match);
+                }*/
 
         $this->name              = isset($match['name']) ? $match['name'] : $match[1];
         $this->parameters        = isset($match['parameters']) ? $match['parameters'] : isset($match[2]) ? $match[2] : null;
-        $this->content           = isset($match['content']) ? $match['content'] : $match[3];
-        $this->extractionContent = $this->content;
+        $this->extractionContent = $this->content = isset($match['content']) ? $match['content'] : $match[3];
+
 
         return $this;
     }

@@ -23,11 +23,15 @@ class Lexicon
     public $callbackHandlerClass;
 
     public $contexts = array(
+        'Aiws\Lexicon\Context\SectionExtends',
+        'Aiws\Lexicon\Context\Section',
+        'Aiws\Lexicon\Context\SectionShow',
+        'Aiws\Lexicon\Context\SectionEnd',
         'Aiws\Lexicon\Context\ContextBlock',
         'Aiws\Lexicon\Context\ContextConditional',
         'Aiws\Lexicon\Context\ContextConditionalElse',
         'Aiws\Lexicon\Context\ContextConditionalEnd',
-        'Aiws\Lexicon\Context\ContextVariable'
+        'Aiws\Lexicon\Context\ContextVariable',
     );
 
     public function __construct($cachePath = null, \Closure $callback = null)
@@ -63,6 +67,15 @@ class Lexicon
         $php = $parsedContext->compileContext();
 
         $php = $this->injectNoParse($php);
+
+        // If there are any footer lines that need to get added to a template we will
+        // add them here at the end of the template. This gets used mainly for the
+        // template inheritance via the extends keyword that should be appended.
+        if (count($parsedContext->footer) > 0)
+        {
+            $php = ltrim($php, PHP_EOL)
+                .PHP_EOL.implode(PHP_EOL, array_reverse($parsedContext->footer));
+        }
 
         if ($this->compress) {
             $php = $this->compress($php);
