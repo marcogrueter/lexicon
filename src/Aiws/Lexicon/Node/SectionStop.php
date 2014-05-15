@@ -1,6 +1,6 @@
 <?php namespace Aiws\Lexicon\Node;
 
-class SectionEnd extends Single
+class SectionStop extends Single
 {
 
     public $name = 'stop';
