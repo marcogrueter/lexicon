@@ -119,17 +119,25 @@ abstract class Node extends Lexicon
      */
     protected function parseParameters()
     {
+        $this->parameters = $this->compress(trim($this->parameters));
+
         // Extract all literal string in the conditional to make it easier
-        if (preg_match_all(
-            '/(([a-zA-Z0-9_]*)\s*=\s*[\"|\']\s*([a-zA-Z0-9_]*)\s*[\"|\'])+/ms',
-            $this->parameters,
-            $matches,
-            PREG_SET_ORDER
-        )
-        ) {
-            foreach ($matches as $match) {
-                $this->callbackParameters[$match[2]] = $match[3];
+        if (strpos($this->parameters, '"') !== false) {
+            if (preg_match_all(
+                '/(([a-zA-Z0-9_]*)\s*=\s*[\"|\']\s*([a-zA-Z0-9_]*)\s*[\"|\'])+/ms',
+                $this->parameters,
+                $matches,
+                PREG_SET_ORDER
+            )
+            ) {
+                foreach ($matches as $match) {
+                    $this->callbackParameters[$match[2]] = $match[3];
+                }
             }
+        } else {
+
+            $this->callbackParameters = explode(' ', $this->parameters);
+
         }
 
         return $this->callbackParameters;
@@ -248,9 +256,15 @@ abstract class Node extends Lexicon
         return $this->name . 'Item';
     }
 
-    public function getAttribute($name)
+    public function getAttribute($name, $default = 0)
     {
-        return isset($this->callbackParameters[$name]) ? $this->callbackParameters[$name] : null;
+        if (isset($this->callbackParameters[$name])) {
+            return $this->callbackParameters[$name];
+        } elseif (isset($this->callbackParameters[$default])) {
+            return $this->callbackParameters[$default];
+        }
+
+        return null;
     }
 
     public function compress($text)

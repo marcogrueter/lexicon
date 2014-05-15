@@ -36,7 +36,7 @@ class Variable extends Single
             }
 
             if ($dataParser->isString($propertyData['value'])) {
-                return $this->php('echo '.$variablePHP);
+                return $this->php('echo '.$variablePHP.';');
             }
         }
 

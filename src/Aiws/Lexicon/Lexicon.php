@@ -56,7 +56,7 @@ class Lexicon
         $content = $this->extractNoParse($content);
 
         $setup = array(
-            'name'    => '__LEXICON_ROOT__',
+            'name'    => 'root',
             'content' => $content,
         );
 
