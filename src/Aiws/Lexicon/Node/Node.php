@@ -1,8 +1,10 @@
 <?php namespace Aiws\Lexicon\Node;
 
+use Aiws\Lexicon\Contract\EnvironmentInterface;
+use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Lexicon;
 
-abstract class Node extends Lexicon
+abstract class Node implements NodeInterface
 {
     public $callback;
 
@@ -42,24 +44,15 @@ abstract class Node extends Lexicon
 
     public $trash = false;
 
-
-    abstract public function getSetup(array $match);
-
-    abstract public function getRegex();
-
-    abstract public function getMatches($text);
-
-    abstract public function compileNode();
-
     public function make($match, $parent = null, $depth = 0, $count = 0)
     {
         /** @var $node Node */
         $node = new static;
-
+        $node->setEnvironment($this->lexicon);
         $node->getSetup($match);
         $node->callback      = $this->callback;
         $node->count         = $count;
-        $node->depth         = ($this->incrementDepth and $depth <= $this->maxDepth) ? $depth + 1 : $depth;
+        $node->depth         = ($this->incrementDepth and $depth <= $this->lexicon->getMaxDepth()) ? $depth + 1 : $depth;
         $node->hash          = md5($node->content . $node->name . $depth . $count);
         $node->parsedContent = $node->content;
         $node->parent        = $parent;
@@ -71,7 +64,7 @@ abstract class Node extends Lexicon
 
     protected function getVariableRegex()
     {
-        $glue = preg_quote($this->scopeGlue, '/');
+        $glue = preg_quote($this->lexicon->getScopeGlue(), '/');
 
         return $glue === '\\.' ? '[a-zA-Z0-9_' . $glue . ']+' : '[a-zA-Z0-9_\.' . $glue . ']+';
     }
@@ -150,10 +143,11 @@ abstract class Node extends Lexicon
         // @todo - find ELSE
         // @todo - find UNLESS
 
-        foreach ($this->nodeTypes as $nodeTypeClass) {
+        foreach ($this->lexicon->getNodeTypes() as $nodeTypeClass) {
             $nodeType = new $nodeTypeClass;
 
             if ($nodeType instanceof Node) {
+                $nodeType->setEnvironment($this->lexicon);
                 foreach ($nodeType->getMatches($this->parsedContent) as $count => $match) {
                     $this->createChildNode($nodeType, $match, $count);
                 }
@@ -174,16 +168,16 @@ abstract class Node extends Lexicon
             $count
         );
 
-        $node->data = $this->data()->getNodeData($this, $this->data, $count);
+        $node->data = $this->lexicon->data()->getNodeData($this, $this->data, $count);
 
-        if ($this->callbackHandlerClass and $node->callbackEnabled and $this->callback) {
+        if ($this->lexicon->callbackHandlerClass and $node->callbackEnabled and $this->callback) {
             // @todo - react to the returned data type within the compile() method
             $node->callbackData = call_user_func_array(
                 $this->callback,
                 array($node->name, $node->callbackParameters, $node->content, $node)
             );
 
-            $callbackHandler = new $node->callbackHandlerClass;
+            $callbackHandler = new $this->lexicon->callbackHandlerClass;
 
             $node->callbackHandlerPhp = $callbackHandler->compile(
                 $node->name,
@@ -223,7 +217,7 @@ abstract class Node extends Lexicon
     {
         $this->parsedContent = str_replace(
             $node->getExtractionHash(),
-            $node->compileNode(),
+            $node->compile(),
             $this->parsedContent
         );
 
@@ -265,6 +259,12 @@ abstract class Node extends Lexicon
         }
 
         return null;
+    }
+
+    public function setEnvironment(EnvironmentInterface $lexicon)
+    {
+        $this->lexicon = $lexicon;
+        return $this;
     }
 
     public function compress($text)

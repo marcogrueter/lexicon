@@ -7,9 +7,9 @@ class Variable extends Single
         return "/\{\{\s*(?!{static::PARENT_MATCHER})({$this->getVariableRegex()})(\s.*?)\}\}/m";
     }
 
-    public function compileNode()
+    public function compile()
     {
-        $dataParser = $this->data();
+        $dataParser = $this->lexicon->data();
 
         if ($this->callbackHandlerPhp and $dataParser->isString($this->callbackData)) {
 

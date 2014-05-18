@@ -4,7 +4,7 @@ class SectionExtends extends Single
 {
     public $name = 'extends';
 
-    public function compileNode()
+    public function compile()
     {
         $rootNode = $this->getRootNode();
 

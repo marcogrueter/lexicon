@@ -2,9 +2,10 @@
 
 use Aiws\Lexicon\Base\Cache;
 use Aiws\Lexicon\Base\Data;
+use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Node\Block;
 
-class Lexicon
+class Lexicon implements EnvironmentInterface
 {
     public $cachePath;
 
@@ -52,6 +53,8 @@ class Lexicon
 
         $nodeType = new Block;
 
+        $nodeType->setEnvironment($this);
+
         $content = $this->parseComments($content);
         $content = $this->extractNoParse($content);
 
@@ -68,7 +71,7 @@ class Lexicon
 
         $parsedNode = $node->createChildNodes();
 
-        $php = $parsedNode->compileNode();
+        $php = $parsedNode->compile();
 
         $php = $this->injectNoParse($php);
 
@@ -98,6 +101,21 @@ class Lexicon
         $cache->put($content, $namespace, $this->compile($content, $data));
 
         return $cache->get($content, $data, $namespace);
+    }
+
+    public function getScopeGlue()
+    {
+        return $this->scopeGlue;
+    }
+
+    public function getNodeTypes()
+    {
+        return $this->nodeTypes;
+    }
+
+    public function getMaxDepth()
+    {
+        return $this->maxDepth;
     }
 
     public function cache()

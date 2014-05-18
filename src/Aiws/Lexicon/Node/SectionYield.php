@@ -5,7 +5,7 @@ class SectionYield extends Single
 
     public $name = 'yield';
 
-    public function compileNode()
+    public function compile()
     {
         $name = $this->getAttribute('name');
 

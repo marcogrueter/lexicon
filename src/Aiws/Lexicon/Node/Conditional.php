@@ -209,7 +209,7 @@ class Conditional extends Single
 
     public function getVariablePhp($value)
     {
-        $dataParser   = $this->data();
+        $dataParser   = $this->lexicon->data();
         $value        = trim($value);
         $variableName = $value;
 
@@ -249,7 +249,7 @@ class Conditional extends Single
         return $variableName;
     }
 
-    public function compileNode()
+    public function compile()
     {
         $hasConditionalEnd = false;
 

@@ -5,7 +5,7 @@ class Insert extends Single
 
     public $name = 'include';
 
-    public function compileNode()
+    public function compile()
     {
         $name = $this->getAttribute('name');
 

@@ -15,7 +15,7 @@ class ConditionalElse extends Single
         $this->extractionContent = $match[0];
     }
 
-    public function compileNode()
+    public function compile()
     {
         $hasConditionalStart = $hasConditionalEnd = false;
 

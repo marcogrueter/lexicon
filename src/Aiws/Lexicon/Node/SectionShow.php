@@ -5,7 +5,7 @@ class SectionShow extends Single
 
     public $name = 'show';
 
-    public function compileNode()
+    public function compile()
     {
         return "<?php echo \$__env->yieldSection(); ?>";
     }

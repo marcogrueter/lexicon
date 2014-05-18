@@ -4,7 +4,7 @@ class Section extends Single
 {
     public $name = 'section';
 
-    public function compileNode()
+    public function compile()
     {
         $name = $this->getAttribute('name');
 

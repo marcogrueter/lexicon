@@ -5,7 +5,7 @@ class SectionStop extends Single
 
     public $name = 'stop';
 
-    public function compileNode()
+    public function compile()
     {
         return "<?php \$__env->stopSection(); ?>";
     }

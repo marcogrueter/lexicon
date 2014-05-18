@@ -28,7 +28,7 @@ class Block extends Node
 
     public function compileParentNode($parentParsedContent)
     {
-        $dataParser = $this->data();
+        $dataParser = $this->lexicon->data();
 
         if ($this->parent and $loopVariable = $dataParser->getVariable(
                 $this->parent->data,
@@ -65,7 +65,7 @@ class Block extends Node
         return $parentParsedContent;
     }
 
-    public function compileNode()
+    public function compile()
     {
         foreach ($this->children as $node) {
 
