@@ -1,9 +1,19 @@
 <?php namespace Aiws\Lexicon\Adapter\Laravel;
 
+use Aiws\Lexicon\Lexicon;
+use Aiws\Lexicon\Node\Block;
+use Aiws\Lexicon\Node\Conditional;
+use Aiws\Lexicon\Node\ConditionalElse;
+use Aiws\Lexicon\Node\ConditionalEnd;
+use Aiws\Lexicon\Node\Insert;
+use Aiws\Lexicon\Node\Section;
+use Aiws\Lexicon\Node\SectionExtends;
+use Aiws\Lexicon\Node\SectionShow;
+use Aiws\Lexicon\Node\SectionStop;
+use Aiws\Lexicon\Node\SectionYield;
+use Aiws\Lexicon\Node\Variable;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Aiws\Lexicon\Adapter\Laravel\Compiler;
-use Aiws\Lexicon\Adapter\Laravel\CompilerEngine;
-use Aiws\Lexicon\Adapter\Laravel\Environment;
 
 class LexiconServiceProvider extends ServiceProvider {
 
@@ -14,25 +24,62 @@ class LexiconServiceProvider extends ServiceProvider {
      */
     public function register()
     {
+       // dd('hello');
+
+        $this->package('aiws/lexicon', null, __DIR__.'/../../../..');
+
+        /** @var $app Application */
         $app = $this->app;
+
+        $app->singleton('lexicon', function() use ($app) {
+
+                $lexicon = new Lexicon(new PluginHandler());
+
+                $block = new Block();
+
+                $lexicon
+                    ->registerPlugin('Aiws\Lexicon\Example\TestPlugin')
+                    ->registerRootNodeType($block)
+                    ->registerNodeTypes(
+                        [
+                            new Section(),
+                            new SectionExtends(),
+                            new SectionShow(),
+                            new SectionStop(),
+                            new SectionYield(),
+                            new Insert(),
+                            $block,
+                            new Conditional(),
+                            new ConditionalElse(),
+                            new ConditionalEnd(),
+                            new Variable(),
+                        ]
+                    );
+
+                return $lexicon;
+            });
 
         $app->resolving(
             'view',
             function ($view) use ($app) {
+
+                $extension = $app['config']->get('lexicon::extension', 'html');
+
+                /** @var $view Environment */
+                $view->share('__lexicon', $app['lexicon']);
+
                 $view->addExtension(
-                    'lex',
+                    $extension,
                     'lexicon',
                     function () use ($app) {
                         $cachePath = $app['path.storage'] . '/views';
-
-                        $parserCachePath = $app['path.storage'] . '/lexicon';
 
                         // The Compiler engine requires an instance of the CompilerInterface, which in
                         // this case will be the Blade compiler, so we'll first create the compiler
                         // instance to pass into the engine so it can compile the views properly.
                         $compiler = new Compiler($app['files'], $cachePath);
 
-                        $compiler->boot($parserCachePath);
+                        $compiler->boot($app['lexicon']);
 
                         return new CompilerEngine($compiler, $app['files']);
                     }
@@ -77,14 +124,14 @@ class LexiconServiceProvider extends ServiceProvider {
         );
     }
 
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array();
-	}
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array('lexicon');
+    }
 
 }
