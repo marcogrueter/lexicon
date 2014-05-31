@@ -2,7 +2,7 @@
 
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
-use Aiws\Lexicon\Lexicon;
+use Aiws\Lexicon\Contract\PluginHandlerInterface;
 
 abstract class Node implements NodeInterface
 {
@@ -28,7 +28,7 @@ abstract class Node implements NodeInterface
 
     public $extractionContent;
 
-    public $footer  = array();
+    public $footer = array();
 
     public $hash;
 
@@ -44,7 +44,12 @@ abstract class Node implements NodeInterface
 
     public $trash = false;
 
-    public function make($match, $parent = null, $depth = 0, $count = 0)
+    /**
+     * @var EnvironmentInterface
+     */
+    public $lexicon;
+
+    public function make(array $match, $parent = null, $depth = 0, $count = 0)
     {
         /** @var $node Node */
         $node = new static;
@@ -52,7 +57,8 @@ abstract class Node implements NodeInterface
         $node->getSetup($match);
         $node->callback      = $this->callback;
         $node->count         = $count;
-        $node->depth         = ($this->incrementDepth and $depth <= $this->lexicon->getMaxDepth()) ? $depth + 1 : $depth;
+        $node->depth         = ($this->incrementDepth and $depth <= $this->lexicon->getMaxDepth(
+            )) ? $depth + 1 : $depth;
         $node->hash          = md5($node->content . $node->name . $depth . $count);
         $node->parsedContent = $node->content;
         $node->parent        = $parent;
@@ -95,7 +101,7 @@ abstract class Node implements NodeInterface
          * $data_matches[0] is the raw data tag
          * $data_matches[1] is the data variable (dot notated)
          */
-        foreach($this->getOpenTagMatches($text) as $match) {
+        foreach ($this->getOpenTagMatches($text) as $match) {
             if (!preg_match($this->getClosingTagRegex($name), $text, $closingTagMatch)) {
                 $matches[] = $match;
             }
@@ -116,6 +122,7 @@ abstract class Node implements NodeInterface
 
         // Extract all literal string in the conditional to make it easier
         if (strpos($this->parameters, '"') !== false) {
+
             if (preg_match_all(
                 '/(([a-zA-Z0-9_]*)\s*=\s*[\"|\']\s*([a-zA-Z0-9_]*)\s*[\"|\'])+/ms',
                 $this->parameters,
@@ -127,7 +134,7 @@ abstract class Node implements NodeInterface
                     $this->callbackParameters[$match[2]] = $match[3];
                 }
             }
-        } else {
+        } elseif (!empty($this->parameters)) {
 
             $this->callbackParameters = explode(' ', $this->parameters);
 
@@ -143,16 +150,12 @@ abstract class Node implements NodeInterface
         // @todo - find ELSE
         // @todo - find UNLESS
 
-        foreach ($this->lexicon->getNodeTypes() as $nodeTypeClass) {
-            $nodeType = new $nodeTypeClass;
-
+        foreach ($this->lexicon->getNodeTypes() as $nodeType) {
             if ($nodeType instanceof Node) {
                 $nodeType->setEnvironment($this->lexicon);
                 foreach ($nodeType->getMatches($this->parsedContent) as $count => $match) {
                     $this->createChildNode($nodeType, $match, $count);
                 }
-            } else {
-                // @todo - throw exception
             }
         }
 
@@ -170,21 +173,19 @@ abstract class Node implements NodeInterface
 
         $node->data = $this->lexicon->data()->getNodeData($this, $this->data, $count);
 
-        if ($this->lexicon->callbackHandlerClass and $node->callbackEnabled and $this->callback) {
-            // @todo - react to the returned data type within the compile() method
-            $node->callbackData = call_user_func_array(
-                $this->callback,
-                array($node->name, $node->callbackParameters, $node->content, $node)
-            );
+/*        $handler = $this->lexicon->getPluginHandler();
 
-            $callbackHandler = new $this->lexicon->callbackHandlerClass;
+        if ($handler instanceof PluginHandlerInterface and $node->callbackEnabled
+        ) {
 
-            $node->callbackHandlerPhp = $callbackHandler->compile(
+            $node->callbackData = $handler->call($node->name, $node->callbackParameters, $node->content);
+
+            $node->callbackHandlerPhp = $handler->compile(
                 $node->name,
                 $node->callbackParameters,
                 $node->content
             );
-        }
+        }*/
 
         $node->createChildNodes();
 
@@ -228,7 +229,7 @@ abstract class Node implements NodeInterface
     {
         $node = $this;
 
-        while(!$node->isRoot()) {
+        while (!$node->isRoot()) {
             $node = $this->parent;
         }
 
