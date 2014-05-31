@@ -3,7 +3,8 @@
 use Aiws\Lexicon\Base\Cache;
 use Aiws\Lexicon\Base\Data;
 use Aiws\Lexicon\Contract\EnvironmentInterface;
-use Aiws\Lexicon\Node\Block;
+use Aiws\Lexicon\Contract\NodeInterface;
+use Aiws\Lexicon\Contract\PluginHandlerInterface;
 
 class Lexicon implements EnvironmentInterface
 {
@@ -17,43 +18,31 @@ class Lexicon implements EnvironmentInterface
 
     public $maxDepth = 20;
 
-    public $callback;
-
     const PARENT_MATCHER = 'parent';
 
     protected $noParseExtractions = array();
 
-    public $callbackHandlerClass;
+    public $pluginHandler;
 
-    public $nodeTypes = array(
-        'Aiws\Lexicon\Node\SectionExtends',
-        'Aiws\Lexicon\Node\Section',
-        'Aiws\Lexicon\Node\SectionYield',
-        'Aiws\Lexicon\Node\SectionShow',
-        'Aiws\Lexicon\Node\SectionStop',
-        'Aiws\Lexicon\Node\Insert',
-        'Aiws\Lexicon\Node\Block',
-        'Aiws\Lexicon\Node\Conditional',
-        'Aiws\Lexicon\Node\ConditionalElse',
-        'Aiws\Lexicon\Node\ConditionalEnd',
-        'Aiws\Lexicon\Node\Variable',
-    );
+    /**
+     * @var NodeInterface
+     */
+    public $rootNodeType;
 
-    public function __construct($cachePath = null, \Closure $callback = null)
+    public $nodeTypes = array();
+
+    protected $plugins = array();
+
+    public function __construct(PluginHandlerInterface $pluginHandler = null)
     {
-        $this->cachePath = $cachePath;
-        $this->callback  = $callback;
+        $this->pluginHandler  = $pluginHandler;
     }
 
-    final public function compile($content = null, $data = null)
+    public function compile($content = null, $data = null)
     {
         if (!$content) {
             return null;
         }
-
-        $nodeType = new Block;
-
-        $nodeType->setEnvironment($this);
 
         $content = $this->parseComments($content);
         $content = $this->extractNoParse($content);
@@ -63,10 +52,11 @@ class Lexicon implements EnvironmentInterface
             'content' => $content,
         );
 
-        $node = $nodeType->make($setup);
+        return $this->compileRootNode($this->rootNodeType->make($setup), $data);
+    }
 
-        $node->callback = $this->callback;
-
+    public function compileRootNode(NodeInterface $node, $data)
+    {
         $node->data = $data;
 
         $parsedNode = $node->createChildNodes();
@@ -90,19 +80,6 @@ class Lexicon implements EnvironmentInterface
         return $php;
     }
 
-    public function parse($content = null, $data = null, $namespace = null)
-    {
-        $cache = $this->cache();
-
-        if (!$this->disableCache and $cachedTemplate = $cache->get($content, $data, $namespace)) {
-            return $cachedTemplate;
-        }
-
-        $cache->put($content, $namespace, $this->compile($content, $data));
-
-        return $cache->get($content, $data, $namespace);
-    }
-
     public function getScopeGlue()
     {
         return $this->scopeGlue;
@@ -116,6 +93,11 @@ class Lexicon implements EnvironmentInterface
     public function getMaxDepth()
     {
         return $this->maxDepth;
+    }
+
+    public function getPluginHandler()
+    {
+        return $this->pluginHandler->setEnvironment($this);
     }
 
     public function cache()
@@ -166,5 +148,60 @@ class Lexicon implements EnvironmentInterface
         }
 
         return $text;
+    }
+
+    public function registerRootNodeType(NodeInterface $nodeType)
+    {
+        $nodeType->setEnvironment($this);
+        $this->rootNodeType = $nodeType;
+        return $this;
+    }
+
+    public function registerNodeType(NodeInterface $nodeType)
+    {
+        $nodeType->setEnvironment($this);
+        $this->nodeTypes[] = $nodeType;
+        return $this;
+    }
+
+    public function registerNodeTypes(array $nodeTypes)
+    {
+        foreach($nodeTypes as $nodeType) {
+            $this->registerNodeType($nodeType);
+        }
+        return $this;
+    }
+
+    public function registerPlugin($class)
+    {
+        $segments = explode('\\', $class);
+
+        $shortclass = $segments[count($segments)-1];
+
+        $name = str_replace('plugin', '', strtolower($shortclass));
+
+        $bindString = "lexicon.plugin.{$name}";
+
+        \App::singleton($bindString, function() use ($class) {
+                return new $class;
+            });
+
+        $this->plugins[$name] = $bindString;
+
+        return $this;
+    }
+
+    public function getPlugin($name)
+    {
+        $segments = explode('.', $name);
+
+        $name = $segments[0];
+
+        return isset($this->plugins[$name]) ? \App::make("lexicon.plugin.{$name}") : null;
+    }
+
+    public function call($name, $attributes, $content)
+    {
+        return $this->pluginHandler->call($name, $attributes, $content);
     }
 }
