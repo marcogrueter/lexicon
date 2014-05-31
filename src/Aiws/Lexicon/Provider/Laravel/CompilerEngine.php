@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon\Adapter\Laravel;
+<?php namespace Aiws\Lexicon\Provider\Laravel;
 
 use Illuminate\View\Engines\CompilerEngine as BaseCompilerEngine;
 

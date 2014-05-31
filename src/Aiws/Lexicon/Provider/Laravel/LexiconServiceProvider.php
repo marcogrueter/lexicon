@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon\Adapter\Laravel;
+<?php namespace Aiws\Lexicon\Provider\Laravel;
 
 use Aiws\Lexicon\Lexicon;
 use Aiws\Lexicon\Node\Block;
