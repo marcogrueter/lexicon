@@ -1,14 +1,16 @@
 <?php namespace Aiws\Lexicon\Adapter\Laravel;
 
-use Closure;
+use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Illuminate\View\Compilers\BladeCompiler;
-use Aiws\Lexicon\Lexicon;
 
 class Compiler extends BladeCompiler
 {
+    /**
+     * @var
+     */
     protected $view;
 
-    protected $parserCachePath;
+    protected $lexicon;
 
     /**
      * All of the available compiler functions.
@@ -36,13 +38,6 @@ class Compiler extends BladeCompiler
         //'SectionOverwrite',
     );
 
-	/**
-	 * All of the plugins that have been registered.
-	 *
-	 * @var array
-	 */
-	static public $plugins = array();
-
     public function setView($view)
     {
         $this->view = $view;
@@ -53,93 +48,102 @@ class Compiler extends BladeCompiler
         return $this->view->getData();
     }
 
-    public function boot($parserCachePath)
+    public function setEnvironment(EnvironmentInterface $lexicon)
     {
-		$this->extend(function($content) use ($parserCachePath) {
-
-            $lexicon = new Lexicon($parserCachePath, function($name, $parameters, $content, $node) {
-                $callbackHandler = new $node->callbackHandlerClass;
-                return $callbackHandler->call($name, $parameters, $content);
-            });
-
-            return $lexicon->compile($content, $this->getData());
-
-		});
-
-	    return $this;
+        $this->lexicon = $lexicon;
     }
 
-	/**
-	 * Register a template plugin.
-	 *
-	 * @param  string   $name
-	 * @param  Closure  $plugin
-	 * @return void
-	 */
-	public static function plugin($name, Closure $plugin)
-	{
-		static::$plugins[$name] = $plugin;
-	}
+    public function boot($lexicon)
+    {
+        $this->lexicon = $lexicon;
 
-	/**
-	 * Parse the content for template tags.
-	 *
-	 * @return string
-	 */
-	public static function parse($content)
-	{
+        $this->extend(
+            function ($content) use ($lexicon) {
+                return $this->lexicon->compile($content, $this->getData());
+            }
+        );
 
-		//print_r(static::$viewDataParser->getData()); exit;
+        return $this;
+    }
 
-		if(count(static::$plugins) == 0)
-		{
-			// The regular expression will match all Blade tags if there are
-			// no plugins. To prevent this from happening, parsing will be
-			// forced to end here.
-			return $content;
-		}
+    /**
+     * Compile the view at the given path.
+     *
+     * @param  string $path
+     * @return void
+     */
+    public function compile($path = null)
+    {
+        if ($path) {
+            $this->setPath($path);
+        }
 
-		$names = array();
+        $contents = $this->lexicon->compile($this->files->get($this->getPath()), $this->getData());
 
-		foreach(static::$plugins as $name => $plugin)
-		{
-			$names[] = preg_quote($name, '/');
-		}
+        if (!is_null($this->cachePath)) {
+            $this->files->put($this->getCompiledPath($this->getPath()), $contents);
+        }
+    }
 
-		$regexp = '/\{\{('.implode('|', $names).')(.*?)\}\}/u';
+    /**
+     * Get the path currently being compiled.
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
 
-		return  preg_replace_callback($regexp, function($match)
-		{
-			list(, $name, $params) = $match;
+    /**
+     * Set the path currently being compiled.
+     *
+     * @param string $path
+     * @return void
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
 
-			if( ! empty($params))
-			{
-				// The tag's parameters need to be converted into a PHP array.
-				// Single quotes will need to be backslashed to prevent them
-				// from accidentally escaping out.
-				$params = addcslashes($params, '\'');
-				$params = preg_replace('/ (.*?)="(.*?)"/', '\'$1\'=>\'$2\',', $params);
-				$params = substr($params, 0, -1);
-			}
+    /**
+     * Compile the given Blade template contents.
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function parseString($content)
+    {
+        $contents = $this->lexicon->compile($content, $this->getData());
 
-			return '<?php echo '.get_called_class().'::call(\''.$name.'\', array('.$params.')); ?>';
-		}, $content);
-	}
+        if (!is_null($this->cachePath)) {
+            $this->files->put($this->getCompiledPath($content), $contents);
+        }
+    }
 
+    public function getLexicon()
+    {
+        return $this->lexicon;
+    }
 
+    /**
+     * Determine if the view at the given path is expired.
+     *
+     * @param  string $path
+     * @return bool
+     */
+    public function isNotParsed($content)
+    {
+        $compiled = $this->getCompiledPath($content);
 
-	/**
-	 * Call a template plugin.
-	 *
-	 * @param  string  $name
-	 * @param  array   $params
-	 * @return mixed
-	 */
-	public static function call($name, $params = array())
-	{
-		$plugin = static::$plugins[$name];
+        // If the compiled file doesn't exist we will indicate that the view is expired
+        // so that it can be re-compiled. Else, we will verify the last modification
+        // of the views is less than the modification times of the compiled views.
+        if (! $this->cachePath || !$this->files->exists($compiled)) {
+            return true;
+        }
 
-		return $plugin($params);
-	}
+        return false;
+    }
 
 }
