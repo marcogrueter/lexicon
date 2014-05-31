@@ -3,6 +3,7 @@
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\PluginHandlerInterface;
+use Aiws\Lexicon\Data\Context;
 
 class Lexicon implements EnvironmentInterface
 {

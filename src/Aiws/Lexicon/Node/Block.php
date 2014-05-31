@@ -1,5 +1,7 @@
 <?php namespace Aiws\Lexicon\Node;
 
+use Aiws\Lexicon\Data\Context;
+
 class Block extends Node
 {
     public function getRegex()
@@ -28,6 +30,7 @@ class Block extends Node
 
     public function compileParentNode($parentParsedContent)
     {
+
         if ($this->parent and $loopVariable = $this->traversal->getVariable(
                 $this->parent->data,
                 $this->name

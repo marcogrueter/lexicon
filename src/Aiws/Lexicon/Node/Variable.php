@@ -1,5 +1,7 @@
 <?php namespace Aiws\Lexicon\Node;
 
+use Aiws\Lexicon\Data\Context;
+
 class Variable extends Single
 {
     public function getRegex()
@@ -9,33 +11,24 @@ class Variable extends Single
 
     public function compile()
     {
-        if ($this->callbackHandlerPhp and $this->traversal->isString($this->callbackData)) {
+        // @todo = modify data with plugins
 
-            return $this->php('echo '.$this->callbackHandlerPhp);
-
+        if ($parentIsRoot = !$this->parent->isRoot()) {
+            $context = new Context(
+                $this->data,
+                $this->name,
+                '$' . $this->parent->getItem(),
+                $this->isRoot()
+            );
         } else {
-            $variablePHP = null;
-            $value = null;
+            $context = new Context(
+                $this->data,
+                $this->name
+            );
+        }
 
-            // @todo - Check the data type of the property and decide to echo or not
-            if (!empty($this->data)) {
-
-                $isRoot = $this->parent->isRoot();
-
-                $propertyData = $this->traversal->getPropertyData($this->data, $this->name);
-
-                if (!$isRoot and is_object($this->data)) {
-                    $variablePHP = "\${$this->parent->getItem()}->{$this->name}";
-                } elseif (!$isRoot and $this->traversal->isArray($this->data)) {
-                    $variablePHP = "\${$this->parent->getItem()}['{$this->name}']";
-                } else {
-                    $variablePHP = "\${$propertyData['variable']}{$propertyData['property']}";
-                }
-
-                if ($this->traversal->isString($propertyData['value'])) {
-                    return $this->php('echo '.$variablePHP.';');
-                }
-            }
+        if ($context->getDataReflection()->isString()) {
+            return $context->getSource()->tagsEcho()->toString();
         }
 
         return null;

@@ -2,7 +2,7 @@
 
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
-use Aiws\Lexicon\Contract\PluginHandlerInterface;
+use Aiws\Lexicon\Data\Context;
 use Aiws\Lexicon\Data\Traversal;
 
 abstract class Node implements NodeInterface
@@ -60,12 +60,14 @@ abstract class Node implements NodeInterface
         $node->getSetup($match);
         $node->callback      = $this->callback;
         $node->count         = $count;
-        $node->depth         = ($this->incrementDepth and $depth <= $this->lexicon->getMaxDepth(
-            )) ? $depth + 1 : $depth;
+        $node->depth         =
+            ($this->incrementDepth and $depth <= $this->lexicon->getMaxDepth())
+                ? $depth + 1
+                : $depth;
         $node->hash          = md5($node->content . $node->name . $depth . $count);
         $node->parsedContent = $node->content;
         $node->parent        = $parent;
-        $node->traversal = new Traversal($this->lexicon->getScopeGlue());
+        $node->traversal     = new Traversal($this->lexicon->getScopeGlue());
         $node->parseParameters();
 
         return $node;
@@ -174,21 +176,23 @@ abstract class Node implements NodeInterface
             $count
         );
 
+        $this->context = new Context($this->data, $node->name);
+
         $node->data = $this->traversal->getNodeData($this, $this->data, $count);
 
-/*        $handler = $this->lexicon->getPluginHandler();
+        /*        $handler = $this->lexicon->getPluginHandler();
 
-        if ($handler instanceof PluginHandlerInterface and $node->callbackEnabled
-        ) {
+                if ($handler instanceof PluginHandlerInterface and $node->callbackEnabled
+                ) {
 
-            $node->callbackData = $handler->call($node->name, $node->callbackParameters, $node->content);
+                    $node->callbackData = $handler->call($node->name, $node->callbackParameters, $node->content);
 
-            $node->callbackHandlerPhp = $handler->compile(
-                $node->name,
-                $node->callbackParameters,
-                $node->content
-            );
-        }*/
+                    $node->callbackHandlerPhp = $handler->compile(
+                        $node->name,
+                        $node->callbackParameters,
+                        $node->content
+                    );
+                }*/
 
         $node->createChildNodes();
 
@@ -244,14 +248,16 @@ abstract class Node implements NodeInterface
         return !$this->parent;
     }
 
-    public function getExtractionHash()
+    public function getExtractionHash($suffix = null)
     {
-        return '__' . get_called_class() . '__' . $this->name . '__' . $this->hash . '__';
+        return '__' . get_called_class() . '__' . $this->name . '__' . $this->hash . '__' . $suffix;
     }
 
     public function getItem()
     {
-        return $this->name . 'Item';
+        $name = str_replace($this->lexicon->getScopeGlue(), ' ', $this->name);
+
+        return str_replace(' ', '', $name) . 'Item';
     }
 
     public function getAttribute($name, $default = 0)
