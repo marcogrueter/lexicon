@@ -1,4 +1,6 @@
-<?php namespace Aiws\Lexicon\Node;
+<?php namespace Aiws\Lexicon\Provider\Laravel\Node;
+
+use Aiws\Lexicon\Node\Single;
 
 class SectionExtends extends Single
 {
