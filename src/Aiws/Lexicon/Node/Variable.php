@@ -9,9 +9,7 @@ class Variable extends Single
 
     public function compile()
     {
-        $dataParser = $this->lexicon->data();
-
-        if ($this->callbackHandlerPhp and $dataParser->isString($this->callbackData)) {
+        if ($this->callbackHandlerPhp and $this->traversal->isString($this->callbackData)) {
 
             return $this->php('echo '.$this->callbackHandlerPhp);
 
@@ -24,19 +22,19 @@ class Variable extends Single
 
                 $isRoot = $this->parent->isRoot();
 
-                $propertyData = $dataParser->getPropertyData($this->data, $this->name);
+                $propertyData = $this->traversal->getPropertyData($this->data, $this->name);
 
                 if (!$isRoot and is_object($this->data)) {
                     $variablePHP = "\${$this->parent->getItem()}->{$this->name}";
-                } elseif (!$isRoot and $dataParser->isArray($this->data)) {
+                } elseif (!$isRoot and $this->traversal->isArray($this->data)) {
                     $variablePHP = "\${$this->parent->getItem()}['{$this->name}']";
                 } else {
                     $variablePHP = "\${$propertyData['variable']}{$propertyData['property']}";
                 }
-            }
 
-            if ($dataParser->isString($propertyData['value'])) {
-                return $this->php('echo '.$variablePHP.';');
+                if ($this->traversal->isString($propertyData['value'])) {
+                    return $this->php('echo '.$variablePHP.';');
+                }
             }
         }
 

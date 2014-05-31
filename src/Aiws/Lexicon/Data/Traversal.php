@@ -1,8 +1,8 @@
-<?php namespace Aiws\Lexicon\Base;
+<?php namespace Aiws\Lexicon\Data;
 
 use Aiws\Lexicon\Node\Node;
 
-class Data
+class Traversal
 {
 
     public $scopeGlue;

@@ -209,7 +209,6 @@ class Conditional extends Single
 
     public function getVariablePhp($value)
     {
-        $dataParser   = $this->lexicon->data();
         $value        = trim($value);
         $variableName = $value;
 
@@ -219,17 +218,17 @@ class Conditional extends Single
 
         if (!is_numeric($value) and !in_array($value, $this->noParse)) {
 
-            $property = $dataParser->getPropertyData($this->data, $value);
+            $property = $this->traversal->getPropertyData($this->data, $value);
 
-            if ($this->parent and $loopVariable = $dataParser->getVariable(
+            if ($this->parent and $loopVariable = $this->traversal->getVariable(
                     $this->parent->data,
                     $this->parent->name
-                ) and $dataParser->hasIterator($loopVariable)
+                ) and $this->traversal->hasIterator($loopVariable)
             ) {
 
-                if ($dataParser->hasArrayKey($loopVariable[0], $value)) {
+                if ($this->traversal->hasArrayKey($loopVariable[0], $value)) {
                     $variableName = "\${$this->parent->getItem()}['{$value}']";
-                } elseif ($dataParser->hasObjectKey($loopVariable[0], $value)) {
+                } elseif ($this->traversal->hasObjectKey($loopVariable[0], $value)) {
                     $variableName = "\${$this->parent->getItem()}->{$value}";
                 } else {
                     $variableName = 'null';

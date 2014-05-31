@@ -1,6 +1,5 @@
 <?php namespace Aiws\Lexicon\Provider\Laravel;
 
-use Aiws\Lexicon\Base\Data;
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\PluginHandlerInterface;
 use Aiws\Lexicon\Contract\PluginInterface;

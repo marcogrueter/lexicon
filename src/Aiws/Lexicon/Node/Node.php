@@ -3,6 +3,7 @@
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\PluginHandlerInterface;
+use Aiws\Lexicon\Data\Traversal;
 
 abstract class Node implements NodeInterface
 {
@@ -44,6 +45,8 @@ abstract class Node implements NodeInterface
 
     public $trash = false;
 
+    public $traversal;
+
     /**
      * @var EnvironmentInterface
      */
@@ -62,7 +65,7 @@ abstract class Node implements NodeInterface
         $node->hash          = md5($node->content . $node->name . $depth . $count);
         $node->parsedContent = $node->content;
         $node->parent        = $parent;
-
+        $node->traversal = new Traversal($this->lexicon->getScopeGlue());
         $node->parseParameters();
 
         return $node;
@@ -171,7 +174,7 @@ abstract class Node implements NodeInterface
             $count
         );
 
-        $node->data = $this->lexicon->data()->getNodeData($this, $this->data, $count);
+        $node->data = $this->traversal->getNodeData($this, $this->data, $count);
 
 /*        $handler = $this->lexicon->getPluginHandler();
 

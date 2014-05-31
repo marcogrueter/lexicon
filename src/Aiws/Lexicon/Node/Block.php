@@ -28,15 +28,13 @@ class Block extends Node
 
     public function compileParentNode($parentParsedContent)
     {
-        $dataParser = $this->lexicon->data();
-
-        if ($this->parent and $loopVariable = $dataParser->getVariable(
+        if ($this->parent and $loopVariable = $this->traversal->getVariable(
                 $this->parent->data,
                 $this->name
-            ) and $dataParser->hasIterator($loopVariable)
+            ) and $this->traversal->hasIterator($loopVariable)
         ) {
 
-            $propertyData = $dataParser->getPropertyData($this->data, $this->name);
+            $propertyData = $this->traversal->getPropertyData($this->data, $this->name);
 
             if (!$this->parent->isRoot()) {
                 $propertyData['variable'] = $this->parent->getItem();

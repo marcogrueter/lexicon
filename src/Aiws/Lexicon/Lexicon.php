@@ -1,7 +1,5 @@
 <?php namespace Aiws\Lexicon;
 
-use Aiws\Lexicon\Base\Cache;
-use Aiws\Lexicon\Base\Data;
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\PluginHandlerInterface;
@@ -98,16 +96,6 @@ class Lexicon implements EnvironmentInterface
     public function getPluginHandler()
     {
         return $this->pluginHandler->setEnvironment($this);
-    }
-
-    public function cache()
-    {
-        return new Cache($this->cachePath);
-    }
-
-    public function data()
-    {
-        return new Data($this->scopeGlue);
     }
 
     /**
