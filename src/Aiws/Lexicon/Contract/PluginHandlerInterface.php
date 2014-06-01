@@ -8,5 +8,5 @@ interface PluginHandlerInterface
 
     public function get($name);
 
-    public function call($name, $attributes, $content);
+    public function call($name, $attributes = [], $content = '');
 }

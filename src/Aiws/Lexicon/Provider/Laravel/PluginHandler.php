@@ -53,7 +53,7 @@ class PluginHandler implements PluginHandlerInterface
         return isset($this->plugins[$name]) ? \App::make("lexicon.plugin.{$name}") : null;
     }
 
-    public function call($name, $attributes, $content)
+    public function call($name, $attributes = [], $content = '')
     {
         $segments = explode('.', $name);
 
@@ -66,7 +66,7 @@ class PluginHandler implements PluginHandlerInterface
             }
 
             /** @var $plugin PluginInterface */
-            if ($plugin = $this->lexicon->getPlugin($name)) {
+            if ($plugin = $this->get($name)) {
                 $plugin->setAttributes($attributes);
                 $plugin->setContent($content);
                 return $this->pluginData[$name] = $plugin->{$method}();

@@ -69,4 +69,28 @@ class Reflection
     {
         return is_string($this->data) or ($this->isObject() and method_exists($this->data, '__toString'));
     }
+
+    public function isInt()
+    {
+        return is_numeric($this->data);
+    }
+
+    public function isBool()
+    {
+        return is_bool($this->data);
+    }
+
+    public function isFloat()
+    {
+        return is_float($this->data);
+    }
+
+    public function isEchoable()
+    {
+        return
+            $this->isString() or
+            $this->isBool() or
+            $this->isInt() or
+            $this->isFloat();
+    }
 }
