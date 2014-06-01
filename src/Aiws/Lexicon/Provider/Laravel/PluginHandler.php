@@ -27,7 +27,7 @@ class PluginHandler implements PluginHandlerInterface
 
     public function register($name, $class)
     {
-        \App::singleton($class, function() use ($class) {
+        \App::singleton("lexicon.plugin.{$name}", function() use ($class) {
                 return new $class;
             });
 
