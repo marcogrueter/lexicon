@@ -25,21 +25,13 @@ class PluginHandler implements PluginHandlerInterface
         return $this;
     }
 
-    public function register($class)
+    public function register($name, $class)
     {
-        $segments = explode('\\', $class);
-
-        $shortclass = $segments[count($segments)-1];
-
-        $name = str_replace('plugin', '', strtolower($shortclass));
-
-        $bindString = "lexicon.plugin.{$name}";
-
-        \App::singleton($bindString, function() use ($class) {
+        \App::singleton($class, function() use ($class) {
                 return new $class;
             });
 
-        $this->plugins[$name] = $bindString;
+        $this->plugins[$name] = $class;
 
         return $this;
     }
