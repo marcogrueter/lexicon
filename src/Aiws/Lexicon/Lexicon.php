@@ -138,9 +138,9 @@ class Lexicon implements EnvironmentInterface
         return $this;
     }
 
-    public function registerPlugin($class)
+    public function registerPlugin($name, $class)
     {
-        $this->pluginHandler->register($class);
+        $this->pluginHandler->register($name, $class);
         return $this;
     }
 
