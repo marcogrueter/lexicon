@@ -112,4 +112,9 @@ class Context
     {
         return $this->isRoot;
     }
+
+    public function getName()
+    {
+        return $this->name;
+    }
 }
