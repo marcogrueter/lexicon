@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon\Example;
+<?php namespace Aiws\Lexicon\Plugin;
 
 use Aiws\Lexicon\Contract\PluginInterface;
 
@@ -7,10 +7,6 @@ class Plugin implements PluginInterface
     protected $attributes = array();
 
     protected $content;
-
-    protected $restrict = [];
-
-    protected $class;
 
     public $name;
 
@@ -41,25 +37,9 @@ class Plugin implements PluginInterface
         return $default;
     }
 
-    public function isRestricted($name)
+    public function __call($name, $arguments)
     {
-        if (!empty($this->restrict)) {
-            return in_array($name, $this->restrict);
-        }
-
-        return false;
-    }
-
-    public function __call($name, $arguments) {
-
-        if ($this->class and !$this->isRestricted($name)) {
-            $class = new $this->class;
-
-            if (method_exists($class, $name)) {
-                return $class->{$name}($arguments);
-            }
-        }
-
         return null;
     }
+    
 }

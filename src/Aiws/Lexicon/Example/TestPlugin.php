@@ -1,5 +1,7 @@
 <?php namespace Aiws\Lexicon\Example;
 
+use Aiws\Lexicon\Plugin\Plugin;
+
 class TestPlugin extends Plugin
 {
 
@@ -9,10 +11,6 @@ class TestPlugin extends Plugin
      * @var string
      */
     public $name = 'test';
-
-    protected $restrict = ['test'];
-
-    protected $class = 'Aiws\Lexicon\Example\Delegate';
 
     /**
      * Hello method
