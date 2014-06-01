@@ -209,6 +209,15 @@ abstract class Node implements NodeInterface
 
         if (!$node->trash) {
 
+
+            if (method_exists($node, 'getExtractionOpen')) {
+                $this->parsedContent = str_replace(
+                    $node->getExtractionOpen(),
+                    $node->getExtractionHash('open'),
+                    $this->parsedContent
+                );
+            }
+
             $this->parsedContent = str_replace(
                 $node->extractionContent,
                 $node->getExtractionHash(),
@@ -216,6 +225,18 @@ abstract class Node implements NodeInterface
             );
 
             $this->children[] = $node;
+
+            if (method_exists($node, 'getExtractionClose')) {
+                $this->parsedContent = str_replace(
+                    $node->getExtractionClose(),
+                    $node->getExtractionHash('close'),
+                    $this->parsedContent
+                );
+            }
+        }
+
+        if ($this->name == 'title') {
+            dd($this->parent->parsedContent);
         }
 
         return $this;
@@ -223,11 +244,27 @@ abstract class Node implements NodeInterface
 
     protected function inject(Node $node)
     {
+        if (method_exists($node, 'compileOpen')) {
+            $this->parsedContent = str_replace(
+                $node->getExtractionHash('open'),
+                $node->compileOpen(),
+                $this->parsedContent
+            );
+        }
+
         $this->parsedContent = str_replace(
             $node->getExtractionHash(),
             $node->compile(),
             $this->parsedContent
         );
+
+        if (method_exists($node, 'compileClose')) {
+            $this->parsedContent = str_replace(
+                $node->getExtractionHash('close'),
+                $node->compileClose(),
+                $this->parsedContent
+            );
+        }
 
         return $this;
     }
@@ -250,7 +287,11 @@ abstract class Node implements NodeInterface
 
     public function getExtractionHash($suffix = null)
     {
-        return '__' . get_called_class() . '__' . $this->name . '__' . $this->hash . '__' . $suffix;
+        if ($suffix) {
+            $suffix .= '__ ';
+        }
+
+        return ' __' . get_called_class() . '__' . $this->name . '__' . $this->hash . '__' . $suffix;
     }
 
     public function getItem()
