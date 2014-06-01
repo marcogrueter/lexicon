@@ -10,5 +10,5 @@ interface EnvironmentInterface
 
     public function getNodeTypes();
 
-    public function getPlugin($name);
+    public function getIgnoredMatchers();
 }
