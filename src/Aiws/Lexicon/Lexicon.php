@@ -3,7 +3,7 @@
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\PluginHandlerInterface;
-use Aiws\Lexicon\Data\Context;
+use Aiws\Lexicon\Util\Regex;
 
 class Lexicon implements EnvironmentInterface
 {
@@ -17,7 +17,7 @@ class Lexicon implements EnvironmentInterface
 
     public $maxDepth = 20;
 
-    const PARENT_MATCHER = 'parent';
+    public $ignoredMatchers = [];
 
     protected $noParseExtractions = array();
 
@@ -43,40 +43,47 @@ class Lexicon implements EnvironmentInterface
             return null;
         }
 
-        $content = $this->parseComments($content);
-        $content = $this->extractNoParse($content);
+        $regex = new Regex($this);
+
+        $content = $regex->parseComments($content);
+
+        $noParse = $regex->extractNoParse($content);
+
+        $content = $noParse['content'];
+
+        $this->noParseExtractions = $noParse['extractions'];
 
         $setup = array(
             'name'    => 'root',
             'content' => $content,
         );
 
-        return $this->compileRootNode($this->rootNodeType->make($setup), $data);
+        return $this->compileRootNode($this->rootNodeType->make($setup), $data, $regex);
     }
 
-    public function compileRootNode(NodeInterface $node, $data)
+    public function compileRootNode(NodeInterface $node, $data, $regex)
     {
         $node->data = $data;
 
         $parsedNode = $node->createChildNodes();
 
-        $php = $parsedNode->compile();
+        $source = $parsedNode->compile();
 
-        $php = $this->injectNoParse($php);
+        $source = $this->injectNoParse($source);
 
         // If there are any footer lines that need to get added to a template we will
         // add them here at the end of the template. This gets used mainly for the
         // template inheritance via the extends keyword that should be appended.
         if (count($parsedNode->footer) > 0) {
-            $php = ltrim($php, PHP_EOL)
+            $source = ltrim($source, PHP_EOL)
                 . PHP_EOL . implode(PHP_EOL, array_reverse($parsedNode->footer));
         }
 
         if ($this->compress) {
-            $php = $this->compress($php);
+            $source = $regex->compress($source);
         }
 
-        return $php;
+        return $source;
     }
 
     public function getScopeGlue()
@@ -97,36 +104,6 @@ class Lexicon implements EnvironmentInterface
     public function getPluginHandler()
     {
         return $this->pluginHandler->setEnvironment($this);
-    }
-
-    /**
-     * Removes all of the comments from the text.
-     *
-     * @param  string $text Text to remove comments from
-     * @return string
-     */
-    public function parseComments($text)
-    {
-        return preg_replace('/\{\{#.*?#\}\}/s', '', $text);
-    }
-
-    public function extractNoParse($text)
-    {
-        preg_match_all('/\{\{\s*noparse\s*\}\}(.*?)\{\{\s*\/noparse\s*\}\}/ms', $text, $matches, PREG_SET_ORDER);
-
-        foreach ($matches as $match) {
-
-            $extraction = array(
-                'block'   => $match[0],
-                'hash'    => '__NO_PARSE__' . md5($match[0]),
-                'content' => $match[1],
-            );
-
-            $text                       = str_replace($extraction['block'], $extraction['hash'], $text);
-            $this->noParseExtractions[] = $extraction;
-        }
-
-        return $text;
     }
 
     public function injectNoParse($text)
@@ -163,34 +140,22 @@ class Lexicon implements EnvironmentInterface
 
     public function registerPlugin($class)
     {
-        $segments = explode('\\', $class);
-
-        $shortclass = $segments[count($segments)-1];
-
-        $name = str_replace('plugin', '', strtolower($shortclass));
-
-        $bindString = "lexicon.plugin.{$name}";
-
-        \App::singleton($bindString, function() use ($class) {
-                return new $class;
-            });
-
-        $this->plugins[$name] = $bindString;
-
+        $this->pluginHandler->register($class);
         return $this;
-    }
-
-    public function getPlugin($name)
-    {
-        $segments = explode('.', $name);
-
-        $name = $segments[0];
-
-        return isset($this->plugins[$name]) ? \App::make("lexicon.plugin.{$name}") : null;
     }
 
     public function call($name, $attributes, $content)
     {
         return $this->pluginHandler->call($name, $attributes, $content);
+    }
+
+    public function setIgnoredMatchers(array $ignoredMatchers = [])
+    {
+        return $this->ignoredMatchers = $ignoredMatchers;
+    }
+
+    public function getIgnoredMatchers()
+    {
+        return implode('|', $this->ignoredMatchers);
     }
 }

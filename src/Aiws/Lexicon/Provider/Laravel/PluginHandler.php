@@ -12,12 +12,45 @@ class PluginHandler implements PluginHandlerInterface
      */
     protected $lexicon;
 
+    /**
+     * @var array
+     */
+    protected $plugins = [];
+
     protected $pluginData = array();
 
     public function setEnvironment(EnvironmentInterface $lexicon)
     {
         $this->lexicon = $lexicon;
         return $this;
+    }
+
+    public function register($class)
+    {
+        $segments = explode('\\', $class);
+
+        $shortclass = $segments[count($segments)-1];
+
+        $name = str_replace('plugin', '', strtolower($shortclass));
+
+        $bindString = "lexicon.plugin.{$name}";
+
+        \App::singleton($bindString, function() use ($class) {
+                return new $class;
+            });
+
+        $this->plugins[$name] = $bindString;
+
+        return $this;
+    }
+
+    public function get($name)
+    {
+        $segments = explode('.', $name);
+
+        $name = $segments[0];
+
+        return isset($this->plugins[$name]) ? \App::make("lexicon.plugin.{$name}") : null;
     }
 
     public function call($name, $attributes, $content)
