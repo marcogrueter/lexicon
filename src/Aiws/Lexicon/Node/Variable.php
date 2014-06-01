@@ -25,23 +25,29 @@ class Variable extends Single
                 return "<?php echo \$__lexicon->call('{$this->name}', {$parameters}); ?>";
             }
 
-        } elseif ($parentIsRoot = !$this->parent->isRoot()) {
-            $context = new Context(
-                $this->data,
-                $this->name,
-                '$' . $this->parent->getItem(),
-                $this->isRoot()
-            );
         } else {
-            $context = new Context(
-                $this->data,
-                $this->name
-            );
+
+            if ($parentIsRoot = !$this->parent->isRoot()) {
+                $context = new Context(
+                    $this->data,
+                    $this->name,
+                    '$' . $this->parent->getItem(),
+                    $this->isRoot()
+                );
+            } else {
+                $context = new Context(
+                    $this->data,
+                    $this->name
+                );
+            }
+
+            if ($context->getDataReflection()->isEchoable()) {
+                return $context->getSource()->tagsEcho()->toString();
+            }
+
         }
 
-        if ($context->getDataReflection()->isEchoable()) {
-            return $context->getSource()->tagsEcho()->toString();
-        }
+
 
         return null;
     }

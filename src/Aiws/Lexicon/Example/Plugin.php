@@ -8,6 +8,10 @@ class Plugin implements PluginInterface
 
     protected $content;
 
+    protected $restrict = [];
+
+    protected $class;
+
     public $name;
 
     public function getPluginName()
@@ -35,5 +39,27 @@ class Plugin implements PluginInterface
         }
 
         return $default;
+    }
+
+    public function isRestricted($name)
+    {
+        if (!empty($this->restrict)) {
+            return in_array($name, $this->restrict);
+        }
+
+        return false;
+    }
+
+    public function __call($name, $arguments) {
+
+        if ($this->class and !$this->isRestricted($name)) {
+            $class = new $this->class;
+
+            if (method_exists($class, $name)) {
+                return $class->{$name}($arguments);
+            }
+        }
+
+        return null;
     }
 }

@@ -10,6 +10,10 @@ class TestPlugin extends Plugin
      */
     public $name = 'test';
 
+    protected $restrict = ['test'];
+
+    protected $class = 'Aiws\Lexicon\Example\Delegate';
+
     /**
      * Hello method
      *

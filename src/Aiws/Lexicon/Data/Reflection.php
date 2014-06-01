@@ -85,12 +85,18 @@ class Reflection
         return is_float($this->data);
     }
 
+    public function isNull()
+    {
+        return is_null($this->data);
+    }
+
     public function isEchoable()
     {
         return
             $this->isString() or
             $this->isBool() or
             $this->isInt() or
-            $this->isFloat();
+            $this->isFloat() or
+            $this->isNull();
     }
 }
