@@ -35,6 +35,8 @@ class LexiconServiceProvider extends ServiceProvider {
 
                 $lexicon = new Lexicon(new PluginHandler());
 
+                $lexicon->setIgnoredMatchers(['parent']);
+
                 $block = new Block();
 
                 $lexicon
@@ -79,7 +81,7 @@ class LexiconServiceProvider extends ServiceProvider {
                         // instance to pass into the engine so it can compile the views properly.
                         $compiler = new Compiler($app['files'], $cachePath);
 
-                        $compiler->boot($app['lexicon']);
+                        $compiler->setEnvironment($app['lexicon']);
 
                         return new CompilerEngine($compiler, $app['files']);
                     }

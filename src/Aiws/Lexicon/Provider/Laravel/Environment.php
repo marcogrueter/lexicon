@@ -1,6 +1,6 @@
 <?php namespace Aiws\Lexicon\Provider\Laravel;
 
-use Aiws\Lexicon\Lexicon;
+use Aiws\Lexicon\Util\Regex;
 use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Environment as BaseEnvironment;
 
@@ -32,8 +32,6 @@ class Environment extends BaseEnvironment
 
         $compiler = $engine->getCompiler();
 
-
-
         $view = md5($content);
 
         $data = array_merge($mergeData, $this->parseData($data));
@@ -56,9 +54,17 @@ class Environment extends BaseEnvironment
      */
     protected function extendSection($section, $content)
     {
+        $engine = $this->engines->resolve('lexicon');
+
+        $lexicon = $engine->getCompiler()->getEnvironment();
+
+        $regex = new Regex($lexicon);
+
+        $content = $regex->compress($content);
+
         if (isset($this->sections[$section]))
         {
-            $content = str_replace(Lexicon::PARENT_MATCHER, $content, $this->sections[$section]);
+            $content = str_replace('{{ parent }}', $content, $this->sections[$section]);
 
             $this->sections[$section] = $content;
         }
