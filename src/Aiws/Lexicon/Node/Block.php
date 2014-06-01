@@ -35,7 +35,6 @@ class Block extends Node
             $this->closingContent = $parts[1];
         }
 
-
         return $this;
     }
 
@@ -58,15 +57,13 @@ class Block extends Node
 
             $parentParsedContent = str_replace(
                 '{{ ' . $this->name . ' }}',
-                $this->php(
-                    "foreach (\${$propertyData['variable']} as \${$this->getItem()}):"
-                ),
+                "<?php foreach (\${$propertyData['variable']} as \${$this->getItem()}): ?>",
                 $parentParsedContent
             );
 
             $parentParsedContent = str_replace(
                 '{{ /' . $this->name . ' }}',
-                $this->php('endforeach;'),
+                '<?php endforeach; ?>',
                 $parentParsedContent
             );
 

@@ -68,7 +68,7 @@ class Conditional extends Single
     {
         $this->name              = $this->parsedName = $match[1];
         $this->extractionContent = $match[0];
-        $this->expression        = $this->compress($match[2]);
+        $this->expression        = $this->regex->compress($match[2]);
 
         if ($this->parsedName == 'unless') {
             $this->parsedName = 'if (!(';
@@ -260,7 +260,7 @@ class Conditional extends Single
         }
 
         if ($hasConditionalEnd and !empty($this->data)) {
-            return $this->php("{$this->parsedName} {$this->compress($this->parsedExpression)})):");
+            return "<?php {$this->parsedName} {$this->regex->compress($this->parsedExpression)})): ?>";
         }
 
         return null;

@@ -34,7 +34,7 @@ class ConditionalElse extends Single
         }
 
         if ($hasConditionalStart and $hasConditionalEnd) {
-            return $this->php('else:');
+            return '<?php else: ?>';
         }
 
         return null;

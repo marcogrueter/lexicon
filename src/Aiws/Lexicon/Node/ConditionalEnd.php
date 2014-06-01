@@ -17,6 +17,8 @@ class ConditionalEnd extends Single
 
     public function compile()
     {
+
+
         $hasConditionalStart = false;
 
         foreach ($this->parent->children as $node) {
@@ -27,7 +29,7 @@ class ConditionalEnd extends Single
         }
 
         if ($hasConditionalStart) {
-            return $this->php('endif;');
+            return '<?php endif; ?>';
         }
 
         return null;

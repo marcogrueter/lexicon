@@ -4,6 +4,7 @@ use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Data\Context;
 use Aiws\Lexicon\Data\Traversal;
+use Aiws\Lexicon\Util\Regex;
 
 abstract class Node implements NodeInterface
 {
@@ -48,6 +49,12 @@ abstract class Node implements NodeInterface
     public $traversal;
 
     /**
+     * Regex
+     * @var Regex
+     */
+    public $regex;
+
+    /**
      * @var EnvironmentInterface
      */
     public $lexicon;
@@ -57,6 +64,7 @@ abstract class Node implements NodeInterface
         /** @var $node Node */
         $node = new static;
         $node->setEnvironment($this->lexicon);
+        $node->regex = new Regex($this->lexicon);
         $node->getSetup($match);
         $node->callback      = $this->callback;
         $node->count         = $count;
@@ -123,7 +131,7 @@ abstract class Node implements NodeInterface
      */
     protected function parseParameters()
     {
-        $this->parameters = $this->compress(trim($this->parameters));
+        $this->parameters = $this->regex->compress(trim($this->parameters));
 
         // Extract all literal string in the conditional to make it easier
         if (strpos($this->parameters, '"') !== false) {
@@ -318,13 +326,4 @@ abstract class Node implements NodeInterface
         return $this;
     }
 
-    public function compress($text)
-    {
-        return preg_replace('/\s\s+/', ' ', $text);
-    }
-
-    protected function php($php = '')
-    {
-        return '<?php ' . $php . ' ?>';
-    }
 }
