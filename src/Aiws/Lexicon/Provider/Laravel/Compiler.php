@@ -53,17 +53,9 @@ class Compiler extends BladeCompiler
         $this->lexicon = $lexicon;
     }
 
-    public function boot($lexicon)
+    public function getEnvironment()
     {
-        $this->lexicon = $lexicon;
-
-        $this->extend(
-            function ($content) use ($lexicon) {
-                return $this->lexicon->compile($content, $this->getData());
-            }
-        );
-
-        return $this;
+        return $this->lexicon;
     }
 
     /**
