@@ -219,19 +219,26 @@ class Conditional extends Single
         if (!is_numeric($value) and !in_array($value, $this->noParse)) {
 
             $property = $this->traversal->getPropertyData($this->data, $value);
-
+//dd($property);
             if ($this->parent and $loopVariable = $this->traversal->getVariable(
                     $this->parent->data,
                     $this->parent->name
                 ) and $this->traversal->hasIterator($loopVariable)
             ) {
 
-                if ($this->traversal->hasArrayKey($loopVariable[0], $value)) {
-                    $variableName = "\${$this->parent->getItem()}['{$value}']";
-                } elseif ($this->traversal->hasObjectKey($loopVariable[0], $value)) {
-                    $variableName = "\${$this->parent->getItem()}->{$value}";
-                } else {
-                    $variableName = 'null';
+                foreach($loopVariable as $var) {
+                    if ($this->traversal->hasArrayKey($var, $value)) {
+                        $variableName = "\${$this->parent->getItem()}['{$value}']";
+                        break;
+                    } elseif ($this->traversal->hasObjectKey($var, $value)) {
+                        $variableName = "\${$this->parent->getItem()}->{$value}";
+                        break;
+                    } else {
+                        $variableName = 'null';
+                        break;
+                    }
+
+                   // dd($variableName);
                 }
 
             } else {
