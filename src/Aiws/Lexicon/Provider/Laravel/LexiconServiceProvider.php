@@ -40,6 +40,7 @@ class LexiconServiceProvider extends ServiceProvider {
                 $block = new Block();
 
                 $lexicon
+                    ->registerPlugin('test', 'Aiws\\Lexicon\\Example\\TestPlugin')
                     ->registerRootNodeType($block)
                     ->registerNodeTypes(
                         [
