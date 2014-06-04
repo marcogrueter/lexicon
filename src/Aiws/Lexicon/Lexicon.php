@@ -149,7 +149,7 @@ class Lexicon implements EnvironmentInterface
         return $this->pluginHandler->get($name);
     }
 
-    public function call($name, $attributes, $content = '')
+    public function call($name, $attributes = [], $content = '')
     {
         return $this->pluginHandler->call($name, $attributes, $content);
     }

@@ -11,4 +11,6 @@ interface EnvironmentInterface
     public function getNodeTypes();
 
     public function getIgnoredMatchers();
+
+    public function call($name, $attributes = [], $content = '');
 }
