@@ -4,7 +4,7 @@ abstract class Single extends Node
 {
     public function getRegex()
     {
-        return "/\{\{\s*($this->name)(\s.*?)\}\}/m";
+        return "/\{\{\s*($this->name)(\s.*?)?\s*(\/)?\}\}/ms";
     }
 
     public function getSetup(array $match)

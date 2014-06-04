@@ -131,22 +131,23 @@ abstract class Node implements NodeInterface
      */
     protected function parseParameters()
     {
-        $this->parameters = $this->regex->compress(trim($this->parameters));
+        $this->parameters = $this->regex->compress($this->parameters);
 
         // Extract all literal string in the conditional to make it easier
         if (strpos($this->parameters, '"') !== false) {
 
             if (preg_match_all(
-                '/(([a-zA-Z0-9_]*)\s*=\s*[\"|\']\s*([a-zA-Z0-9_]*)\s*[\"|\'])+/ms',
+                '/(.*?)\s*=\s*(\'|"|&#?\w+;)(.*?)(?<!\\\\)\2/s',
                 $this->parameters,
                 $matches,
                 PREG_SET_ORDER
             )
             ) {
                 foreach ($matches as $match) {
-                    $this->callbackParameters[$match[2]] = $match[3];
+                    $this->callbackParameters[$match[1]] = $match[3];
                 }
             }
+
         } elseif (!empty($this->parameters)) {
 
             $this->callbackParameters = explode(' ', $this->parameters);
@@ -158,11 +159,6 @@ abstract class Node implements NodeInterface
 
     public function createChildNodes()
     {
-        // @todo - find IF
-        // @todo - find ELSEIF
-        // @todo - find ELSE
-        // @todo - find UNLESS
-
         foreach ($this->lexicon->getNodeTypes() as $nodeType) {
             if ($nodeType instanceof Node) {
                 $nodeType->setEnvironment($this->lexicon);
@@ -244,7 +240,7 @@ abstract class Node implements NodeInterface
         }
 
         if ($this->name == 'title') {
-            dd($this->parent->parsedContent);
+            //dd($this->parent->parsedContent);
         }
 
         return $this;

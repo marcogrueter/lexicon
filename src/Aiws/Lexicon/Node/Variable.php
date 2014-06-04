@@ -7,7 +7,7 @@ class Variable extends Single
 {
     public function getRegex()
     {
-        return "/\{\{\s*(?!{$this->lexicon->getIgnoredMatchers()})({$this->getVariableRegex()})(\s.*?)\}\}/m";
+        return "/\{\{\s*(?!{$this->lexicon->getIgnoredMatchers()})({$this->getVariableRegex()})(\s+.*?)?\s*(\/)?\}\}/ms";
     }
 
     public function compile()

@@ -13,7 +13,7 @@ class Regex
 
     public function compress($string)
     {
-        return preg_replace('/\s\s+/', ' ', $string);
+        return preg_replace('/\s\s+/', ' ', trim($string));
     }
 
     /**
