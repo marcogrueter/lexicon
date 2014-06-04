@@ -144,13 +144,17 @@ abstract class Node implements NodeInterface
             )
             ) {
                 foreach ($matches as $match) {
-                    $this->callbackParameters[$match[1]] = $match[3];
+                    $this->callbackParameters[trim($match[1])] = trim($match[3]);
                 }
             }
 
         } elseif (!empty($this->parameters)) {
 
             $this->callbackParameters = explode(' ', $this->parameters);
+
+            foreach($this->callbackParameters as &$attribute) {
+                $attribute = trim($attribute);
+            }
 
         }
 
