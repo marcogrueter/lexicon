@@ -163,4 +163,9 @@ class Lexicon implements EnvironmentInterface
     {
         return implode('|', $this->ignoredMatchers);
     }
+
+    public function getRootNodeType()
+    {
+        return $this->rootNodeType;
+    }
 }

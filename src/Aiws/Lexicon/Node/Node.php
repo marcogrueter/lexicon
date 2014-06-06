@@ -163,6 +163,15 @@ abstract class Node implements NodeInterface
 
     public function createChildNodes()
     {
+        $rootNodeType = $this->lexicon->getRootNodeType();
+
+        if ($rootNodeType instanceof Node) {
+            $rootNodeType->setEnvironment($this->lexicon);
+            foreach ($rootNodeType->getMatches($this->parsedContent) as $count => $match) {
+                $this->createChildNode($rootNodeType, $match, $count);
+            }
+        }
+
         foreach ($this->lexicon->getNodeTypes() as $nodeType) {
             if ($nodeType instanceof Node) {
                 $nodeType->setEnvironment($this->lexicon);

@@ -37,11 +37,9 @@ class LexiconServiceProvider extends ServiceProvider {
 
                 $lexicon->setIgnoredMatchers(['parent']);
 
-                $block = new Block();
-
                 $lexicon
                     ->registerPlugin('test', 'Aiws\\Lexicon\\Example\\TestPlugin')
-                    ->registerRootNodeType($block)
+                    ->registerRootNodeType(new Block())
                     ->registerNodeTypes(
                         [
                             new Section(),
@@ -50,7 +48,6 @@ class LexiconServiceProvider extends ServiceProvider {
                             new SectionStop(),
                             new SectionYield(),
                             new Insert(),
-                            $block,
                             new Conditional(),
                             new ConditionalElse(),
                             new ConditionalEnd(),
