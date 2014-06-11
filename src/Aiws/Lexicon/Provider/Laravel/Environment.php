@@ -8,9 +8,13 @@ class Environment extends BaseEnvironment
 {
     public function make($view, $data = [], $mergeData = [])
     {
-        $lexiconCompiler = $this->engines->resolve('lexicon')->getCompiler();
+        $path = $this->finder->find($view);
 
-        $view = parent::make($view, $data, $mergeData);
+        $data = array_merge($mergeData, $this->parseData($data));
+
+        $this->callCreator($view = new View($this, $this->getEngineFromPath($path)->parse(false), $view, $path, $data));
+
+        $lexiconCompiler = $this->engines->resolve('lexicon')->getCompiler();
 
         $lexiconCompiler->setView($view);
 
