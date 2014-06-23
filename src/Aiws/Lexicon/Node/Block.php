@@ -1,6 +1,5 @@
 <?php namespace Aiws\Lexicon\Node;
 
-use Aiws\Lexicon\Util\Context;
 use Aiws\Lexicon\Util\Type;
 
 class Block extends Node
@@ -23,13 +22,17 @@ class Block extends Node
 
     public function getSetup(array $match)
     {
-
+        $this->setName(isset($match['name']) ? $match['name'] : $match[1]);
         $this->fullContent       = isset($match[0]) ? $match[0] : '';
-        $this->name              = isset($match['name']) ? $match['name'] : $match[1];
-        $this->parameters        = isset($match['parameters']) ? $match['parameters'] : isset($match[2]) ? $match[2] : null;
-        $this->extractionContent = $this->content = isset($match['content']) ? $match['content'] : $match[3];
+        $this->parsedAttributes        = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
 
-        $parts = explode($this->content, $this->fullContent);
+        $content = isset($match['content']) ? $match['content'] : $match[3];
+
+        $this
+            ->setContent($content)
+            ->setExtractionContent($content);
+
+        $parts = explode($content, $this->fullContent);
 
         if (count($parts) == 2) {
             $this->openContent = $parts[0];
@@ -41,25 +44,25 @@ class Block extends Node
 
     public function compileParentNode($parentParsedContent)
     {
-        $attributes = var_export($this->attributes, true);
+        $attributes = var_export($this->getAttributes(), true);
 
         $expected = Type::ITERATEABLE;
 
-        if ($this->parent->isRoot()) {
-            $iterateableSource = "\$__lexicon->getVariable(\$__data, '{$this->name}', {$attributes}, null, [], '{$expected}')";
+        if ($this->getParent()->isRoot()) {
+            $iterateableSource = "\$__lexicon->getVariable(\$__data, '{$this->getName()}', {$attributes}, null, [], '{$expected}')";
         } else {
             $dataSource = '$' . $this->parent->getItem();
-            $iterateableSource =  "\$__lexicon->getVariable({$dataSource}, '{$this->name}', {$attributes}, null, [], '{$expected}')";
+            $iterateableSource =  "\$__lexicon->getVariable({$dataSource}, '{$this->getName()}', {$attributes}, null, [], '{$expected}')";
         }
 
         $parentParsedContent = str_replace(
-            '{{ ' . $this->name . ' }}',
+            '{{ ' . $this->getName() . ' }}',
             "<?php foreach ({$iterateableSource} as \${$this->getItem()}): ?>",
             $parentParsedContent
         );
 
         $parentParsedContent = str_replace(
-            '{{ /' . $this->name . ' }}',
+            '{{ /' . $this->getName() . ' }}',
             '<?php endforeach; ?>',
             $parentParsedContent
         );
@@ -80,18 +83,18 @@ class Block extends Node
     public function compile()
     {
         /** @var $node Node */
-        foreach ($this->children as $node) {
+        foreach ($this->getChildren() as $node) {
 
             // If the block is set as trash, it will be removed from the parsedContent
-            if ($node->trash) {
+            if ($node->isTrashable()) {
 
                 // Remove excessive white space so the content its easier to match
                 //$this->parsedContent = $this->compress($this->parsedContent);
 
-                $this->parsedContent = str_replace(
+                $this->setParsedContent(str_replace(
                     $node->getExtractionOpen() . $node->getExtractionId() . $node->getExtractionClose(),
                     '',
-                    $this->parsedContent);
+                    $this->getParsedContent()));
             } else {
 
                 $this->inject($node);
@@ -99,6 +102,6 @@ class Block extends Node
             }
         }
 
-        return $this->parsedContent;
+        return $this->getParsedContent();
     }
 }

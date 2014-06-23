@@ -66,9 +66,12 @@ class Conditional extends Single
 
     public function getSetup(array $match)
     {
-        $this->name              = $this->parsedName = $match[1];
-        $this->extractionContent = $match[0];
-        $this->expression        = $this->lexicon->getRegex()->compress($match[2]);
+        $this
+            ->setName($match[1])
+            ->setExtractionContent($match[0]);
+
+        $this->parsedName = $match[1];
+        $this->expression = $this->lexicon->getRegex()->compress($match[2]);
 
         if ($this->parsedName == 'unless') {
             $this->parsedName = 'if (!(';
@@ -83,7 +86,10 @@ class Conditional extends Single
     {
         $this->expression = $this->replaceOperators($this->expression);
 
-        $logicalOperatorMatches = $this->lexicon->getRegex()->getMatches($this->expression, $this->getLogicalOperatorsRegexMatcher());
+        $logicalOperatorMatches = $this->lexicon->getRegex()->getMatches(
+            $this->expression,
+            $this->getLogicalOperatorsRegexMatcher()
+        );
 
         // Get logical operator matches
         foreach ($logicalOperatorMatches as $match) {
@@ -218,37 +224,37 @@ class Conditional extends Single
 
         if (!is_numeric($value) and !in_array($value, $this->noParse)) {
 
-    /*        $property = $this->traversal->getPropertyData($this->data, $value);
+            /*        $property = $this->traversal->getPropertyData($this->data, $value);
 
-            if ($this->parent and $loopVariable = $this->traversal->getVariable(
-                    $this->parent->data,
-                    $this->parent->name
-                ) and $this->traversal->hasIterator($loopVariable)
-            ) {
+                    if ($this->parent and $loopVariable = $this->traversal->getVariable(
+                            $this->parent->data,
+                            $this->parent->name
+                        ) and $this->traversal->hasIterator($loopVariable)
+                    ) {
 
-                foreach($loopVariable as $var) {
-                    if ($this->traversal->hasArrayKey($var, $value)) {
-                        $variableName = "\${$this->parent->getItem()}['{$value}']";
-                        break;
-                    } elseif ($this->traversal->hasObjectKey($var, $value)) {
-                        $variableName = "\${$this->parent->getItem()}->{$value}";
-                        break;
+                        foreach($loopVariable as $var) {
+                            if ($this->traversal->hasArrayKey($var, $value)) {
+                                $variableName = "\${$this->parent->getItem()}['{$value}']";
+                                break;
+                            } elseif ($this->traversal->hasObjectKey($var, $value)) {
+                                $variableName = "\${$this->parent->getItem()}->{$value}";
+                                break;
+                            } else {
+                                $variableName = 'null';
+                                break;
+                            }
+
+                        }
+
                     } else {
-                        $variableName = 'null';
-                        break;
-                    }
 
-                }
+                        if (is_null($property['value'])) {
+                            $variableName = 'null';
+                        } else {
+                            $variableName = "\${$property['variable']}{$property['property']}";
+                        }
 
-            } else {
-
-                if (is_null($property['value'])) {
-                    $variableName = 'null';
-                } else {
-                    $variableName = "\${$property['variable']}{$property['property']}";
-                }
-
-            }*/
+                    }*/
         }
 
         return $variableName;
@@ -263,15 +269,15 @@ class Conditional extends Single
     {
         $hasConditionalEnd = false;
 
-        foreach ($this->parent->children as $node) {
+        foreach ($this->getParent()->getChildren() as $node) {
             if ($node instanceof ConditionalEnd) {
                 $hasConditionalEnd = true;
                 break;
             }
         }
 
-        if ($hasConditionalEnd and !empty($this->data)) {
-            return "<?php {$this->parsedName} {$this->lexicon->getRegex()->compress($this->parsedExpression)})): ?>";
+        if ($hasConditionalEnd) {
+            /* return "<?php {$this->parsedName} {$this->lexicon->getRegex()->compress($this->parsedExpression)})): ?>"; */
         }
 
         return null;

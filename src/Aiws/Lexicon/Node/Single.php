@@ -9,9 +9,10 @@ abstract class Single extends Node
 
     public function getSetup(array $match)
     {
-        $this->name = $match[1];
-        $this->parameters = $match[2];
-        $this->extractionContent = $match[0];
+        $this
+            ->setName($match[1])
+            ->setParsedAttributes($match[2])
+            ->setExtractionContent($match[0]);
     }
 
     public function getMatches($text)

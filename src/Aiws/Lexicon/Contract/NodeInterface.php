@@ -23,10 +23,12 @@ interface NodeInterface
     public function getId();
 
     /**
-     * @return Node
+     * @return NodeInterface
      */
     public function setDepth();
 
     public function getDepth();
+
+    public function setParsedContent($parsedContent);
 
 }

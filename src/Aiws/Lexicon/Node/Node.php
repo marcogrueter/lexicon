@@ -2,45 +2,93 @@
 
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
-use Aiws\Lexicon\Util\Regex;
 
 abstract class Node implements NodeInterface
 {
-    public $attributes = array();
+    /**
+     * @var array
+     */
+    protected $attributes = array();
 
-    public $children = array();
+    /**
+     * @var array
+     */
+    protected $children = array();
 
-    public $content = '';
+    /**
+     * @var string
+     */
+    protected $content = '';
 
-    public $count = 0;
+    /**
+     * @var int
+     */
+    protected $count = 0;
 
-    public $data;
+    /**
+     * @var int
+     */
+    protected $depth = 0;
 
-    public $depth = 0;
+    /**
+     * @var string
+     */
+    protected $extractionContent;
 
-    public $extractionContent;
+    /**
+     * @var array
+     */
+    protected $footer = array();
 
-    public $footer = array();
+    /**
+     * @var string
+     */
+    protected $id;
 
-    public $id;
+    /**
+     * @var bool
+     */
+    protected $incrementDepth = true;
 
-    public $incrementDepth = true;
+    /**
+     * @var string
+     */
+    protected $name = 'root';
 
-    public $name = 'root';
+    /**
+     * @var string
+     */
+    protected $parsedAttributes = '';
 
-    public $parameters;
+    /**
+     * @var NodeInterface|null
+     */
+    protected $parent = null;
 
-    public $parent;
+    /**
+     * @var string
+     */
+    protected $parsedContent;
 
-    public $parsedContent;
-
-    public $trash = false;
+    /**
+     * @var bool
+     */
+    protected $trash = false;
 
     /**
      * @var EnvironmentInterface
      */
-    public $lexicon;
+    protected $lexicon;
 
+    /**
+     * Make a new node instance
+     *
+     * @param array $match
+     * @param null  $parent
+     * @param int   $depth
+     * @param int   $count
+     * @return mixed
+     */
     public function make(array $match, $parent = null, $depth = 0, $count = 0)
     {
         $depth = ($this->incrementDepth and $depth <= $this->lexicon->getMaxDepth())
@@ -66,7 +114,7 @@ abstract class Node implements NodeInterface
     /**
      * Set content
      *
-     * @return string
+     * @return NodeInterface
      */
     public function setContent($content)
     {
@@ -85,6 +133,26 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Set extraction content
+     *
+     * @param $extractionContent
+     * @return NodeInterface
+     */
+    public function setExtractionContent($extractionContent)
+    {
+        $this->extractionContent = $extractionContent;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtractionContent()
+    {
+        return $this->extractionContent;
+    }
+
+    /**
      * Set parsed content
      *
      * @param $parsedContent
@@ -97,10 +165,30 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Get parsed content
+     *
+     * @return string
+     */
+    public function getParsedContent()
+    {
+        return $this->parsedContent;
+    }
+
+    /**
+     * Get child nodes
+     *
+     * @return array
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
      * Set depth
      *
      * @param $depth
-     * @return Node
+     * @return NodeInterface
      */
     public function setDepth($depth = 0)
     {
@@ -119,6 +207,8 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Set id
+     *
      * @return NodeInterface
      */
     public function setId()
@@ -127,49 +217,98 @@ abstract class Node implements NodeInterface
         return $this;
     }
 
+    /**
+     * Get id
+     *
+     * @return string
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Set count
+     *
+     * @param int $count
+     * @return Node
+     */
     public function setCount($count = 0)
     {
         $this->count = $count;
         return $this;
     }
 
+    /**
+     * Get count
+     *
+     * @return int
+     */
     public function getCount()
     {
         return $this->count;
     }
 
+    /**
+     * Set name
+     *
+     * @param $name
+     * @return Node
+     */
     public function setName($name)
     {
         $this->name = $name;
         return $this;
     }
 
+    /**
+     * Get name
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * Set parent node
+     *
+     * @param Node $parentNode
+     * @return Node
+     */
     public function setParent(Node $parentNode = null)
     {
         $this->parent = $parentNode;
         return $this;
     }
 
+    /**
+     * Get root
+     *
+     * @return Node
+     */
     public function getParent()
     {
         return $this->parent;
     }
 
+    /**
+     * Is root node
+     *
+     * @return bool
+     */
     public function isRoot()
     {
         return !$this->parent;
     }
 
+    /**
+     * Get extraction id
+     *
+     * @param null $suffix
+     * @return string
+     */
     public function getExtractionId($suffix = null)
     {
         if ($suffix) {
@@ -179,6 +318,11 @@ abstract class Node implements NodeInterface
         return ' __' . get_called_class() . '__' . $this->getName() . '__' . $this->getId() . '__' . $suffix;
     }
 
+    /**
+     * Get item variable name
+     *
+     * @return string
+     */
     public function getItem()
     {
         $name = str_replace($this->lexicon->getScopeGlue(), ' ', $this->name);
@@ -186,17 +330,56 @@ abstract class Node implements NodeInterface
         return str_replace(' ', '', $name) . 'Item';
     }
 
-    public function setAttributes()
+    /**
+     * Set parsed attributes
+     *
+     * @param $parsedAttributes
+     * @return $this
+     */
+    public function setParsedAttributes($parsedAttributes)
     {
-        $this->attributes = $this->lexicon->getRegex()->parseAttributes($this->parameters);
+        $this->parsedAttributes = $parsedAttributes;
         return $this;
     }
 
+    /**
+     * Get parsed attributes
+     *
+     * @return string
+     */
+    public function getParsedAttributes()
+    {
+        return $this->parsedAttributes;
+    }
+
+    /**
+     * Set attributes
+     *
+     * @return Node
+     */
+    public function setAttributes()
+    {
+        $this->attributes = $this->lexicon->getRegex()->parseAttributes($this->parsedAttributes);
+        return $this;
+    }
+
+    /**
+     * Get attributes
+     *
+     * @return array
+     */
     public function getAttributes()
     {
         return $this->attributes;
     }
 
+    /**
+     * Get attribute
+     *
+     * @param     $name
+     * @param int $default
+     * @return null
+     */
     public function getAttribute($name, $default = 0)
     {
         if (isset($this->attributes[$name])) {
@@ -208,22 +391,81 @@ abstract class Node implements NodeInterface
         return null;
     }
 
+    /**
+     * Get root node
+     *
+     * @return NodeInterface|Node|null
+     */
+    public function getRootNode()
+    {
+        $node = $this;
+
+        while (!$node->isRoot()) {
+            $node = $this->getParent();
+        }
+
+        return $node;
+    }
+
+    /**
+     * Set environment
+     *
+     * @param EnvironmentInterface $lexicon
+     * @return $this
+     */
     public function setEnvironment(EnvironmentInterface $lexicon)
     {
         $this->lexicon = $lexicon;
         return $this;
     }
 
+    /**
+     * Get environment
+     *
+     * @return EnvironmentInterface
+     */
     public function getEnvironment()
     {
         return $this->lexicon;
     }
 
+    /**
+     * Array of content to be compiled at the end of a view
+     *
+     * @return array
+     */
+    public function getFooter()
+    {
+        return $this->footer;
+    }
+
+    /**
+     * Is the node trashable?
+     *
+     * @return bool
+     */
+    public function isTrashable()
+    {
+        return $this->trash;
+    }
+
+    /**
+     * Get open tag matches
+     *
+     * @param $text
+     * @return array
+     */
     public function getOpenTagMatches($text)
     {
         return $this->lexicon->getRegex()->getMatches($text, $this->getRegexMatcher());
     }
 
+    /**
+     * Get single tag matches
+     *
+     * @param $text
+     * @return array
+     */
     public function getSingleTagMatches($text)
     {
         $matches = array();
@@ -246,6 +488,11 @@ abstract class Node implements NodeInterface
         return $matches;
     }
 
+    /**
+     * Create child nodes
+     *
+     * @return Node
+     */
     public function createChildNodes()
     {
         $rootNodeType = $this->lexicon->getRootNodeType();
@@ -269,7 +516,15 @@ abstract class Node implements NodeInterface
         return $this;
     }
 
-    protected function createChildNode(Node $nodeType, $match, $count = 0)
+    /**
+     * Create child node
+     *
+     * @param Node $nodeType
+     * @param      $match
+     * @param int  $count
+     * @return mixed
+     */
+    protected function createChildNode(NodeInterface $nodeType, $match, $count = 0)
     {
         $node = $nodeType->make(
             $match,
@@ -285,55 +540,66 @@ abstract class Node implements NodeInterface
         return $node;
     }
 
-    protected function extract(Node $node)
+    /**
+     * Extract node content
+     *
+     * @param Node $node
+     * @return Node
+     */
+    protected function extract(NodeInterface $node)
     {
         if (method_exists($node, 'compileParentNode')) {
-            $this->parsedContent = $node->compileParentNode($this->parsedContent);
+            $this->setParsedContent($node->compileParentNode($this->getParsedContent()));
         }
 
-        if (!$node->trash) {
-
+        if (!$node->isTrashable()) {
 
             if (method_exists($node, 'getExtractionOpen')) {
-                $this->parsedContent = str_replace(
+                $this->setParsedContent(str_replace(
                     $node->getExtractionOpen(),
                     $node->getExtractionId('open'),
-                    $this->parsedContent
-                );
+                    $this->getParsedContent()
+                ));
             }
 
-            $this->parsedContent = str_replace(
-                $node->extractionContent,
+            $this->setParsedContent(str_replace(
+                $node->getExtractionContent(),
                 $node->getExtractionId(),
-                $this->parsedContent
-            );
+                $this->getParsedContent()
+            ));
 
             $this->children[] = $node;
 
             if (method_exists($node, 'getExtractionClose')) {
-                $this->parsedContent = str_replace(
+                $this->setParsedContent(str_replace(
                     $node->getExtractionClose(),
                     $node->getExtractionId('close'),
-                    $this->parsedContent
-                );
+                    $this->getParsedContent()
+                ));
             }
         }
 
-        if ($this->name == 'title') {
+        if ($this->getName() == 'title') {
             //dd($this->parent->parsedContent);
         }
 
         return $this;
     }
 
-    protected function inject(Node $node)
+    /**
+     * Inject node content
+     *
+     * @param Node $node
+     * @return NodeInterface
+     */
+    protected function inject(NodeInterface $node)
     {
         if (method_exists($node, 'compileOpen')) {
-            $this->parsedContent = str_replace(
+            $this->setParsedContent(str_replace(
                 $node->getExtractionId('open'),
                 $node->compileOpen(),
-                $this->parsedContent
-            );
+                $this->getParsedContent()
+            ));
         }
 
         $this->parsedContent = str_replace(
@@ -343,25 +609,14 @@ abstract class Node implements NodeInterface
         );
 
         if (method_exists($node, 'compileClose')) {
-            $this->parsedContent = str_replace(
+            $this->setParsedContent(str_replace(
                 $node->getExtractionId('close'),
                 $node->compileClose(),
-                $this->parsedContent
-            );
+                $this->getParsedContent()
+            ));
         }
 
         return $this;
-    }
-
-    public function getRootNode()
-    {
-        $node = $this;
-
-        while (!$node->isRoot()) {
-            $node = $this->parent;
-        }
-
-        return $node;
     }
 
 }

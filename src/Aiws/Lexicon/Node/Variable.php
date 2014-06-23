@@ -10,9 +10,9 @@ class Variable extends Single
 
     public function compile()
     {
-        $attributes = var_export($this->attributes, true);
+        $attributes = var_export($this->getAttributes(), true);
 
-        $dataSource = '$' . $this->parent->getItem();
+        $dataSource = '$' . $this->getParent()->getItem();
 
         if ($this->parent->isRoot()) {
             $dataSource = '$__data';
