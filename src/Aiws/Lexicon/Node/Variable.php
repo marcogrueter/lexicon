@@ -1,55 +1,24 @@
 <?php namespace Aiws\Lexicon\Node;
 
-use Aiws\Lexicon\Data\Context;
-use Aiws\Lexicon\Data\Reflection;
-
 class Variable extends Single
 {
-    public function getRegex()
+    public function getRegexMatcher()
     {
-        return "/\{\{\s*(?!{$this->lexicon->getIgnoredMatchers()})({$this->getVariableRegex()})(\s+.*?)?\s*(\/)?\}\}/ms";
+        return "/\{\{\s*(?!{$this->lexicon->getIgnoredMatchers()})({$this
+            ->lexicon->getRegex()->getVariableRegexMatcher()})(\s+.*?)?\s*(\/)?\}\}/ms";
     }
 
     public function compile()
     {
-        // @todo = modify data with plugins
+        $attributes = var_export($this->attributes, true);
 
-        if ($plugin = $this->lexicon->getPlugin($this->name)) {
+        $dataSource = '$' . $this->parent->getItem();
 
-            $value = $this->lexicon->call($this->name, $this->callbackParameters);
-
-            $reflection = new Reflection($value);
-
-            if ($reflection->isEchoable()) {
-                $parameters = var_export($this->callbackParameters, true);
-                return "<?php echo \$__lexicon->call('{$this->name}', {$parameters}); ?>";
-            }
-
-        } else {
-
-            if ($parentIsRoot = !$this->parent->isRoot()) {
-                $context = new Context(
-                    $this->data,
-                    $this->name,
-                    '$' . $this->parent->getItem(),
-                    $this->isRoot()
-                );
-            } else {
-                $context = new Context(
-                    $this->data,
-                    $this->name
-                );
-            }
-
-            if ($context->getDataReflection()->isEchoable()) {
-                return $context->getSource()->tagsEcho()->toString();
-            }
-
+        if ($this->parent->isRoot()) {
+            $dataSource = '$__data';
         }
 
-
-
-        return null;
+        return "<?php echo \$__lexicon->getVariable({$dataSource}, '{$this->getName()}', {$attributes}); ?>";
     }
 
 }

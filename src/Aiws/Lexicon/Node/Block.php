@@ -1,6 +1,7 @@
 <?php namespace Aiws\Lexicon\Node;
 
-use Aiws\Lexicon\Data\Context;
+use Aiws\Lexicon\Util\Context;
+use Aiws\Lexicon\Util\Type;
 
 class Block extends Node
 {
@@ -10,9 +11,9 @@ class Block extends Node
 
     public $closingContent;
 
-    public function getRegex()
+    public function getRegexMatcher()
     {
-        return '/\{\{\s*(' . $this->getVariableRegex() . ')(\s.*?)\}\}(.*?)\{\{\s*\/\1\s*\}\}/ms';
+        return '/\{\{\s*(' . $this->lexicon->getRegex()->getVariableRegexMatcher() . ')(\s.*?)\}\}(.*?)\{\{\s*\/\1\s*\}\}/ms';
     }
 
     public function getMatches($text)
@@ -40,36 +41,28 @@ class Block extends Node
 
     public function compileParentNode($parentParsedContent)
     {
+        $attributes = var_export($this->attributes, true);
 
-        if ($this->parent and $loopVariable = $this->traversal->getVariable(
-                $this->parent->data,
-                $this->name
-            ) and $this->traversal->hasIterator($loopVariable)
-        ) {
+        $expected = Type::ITERATEABLE;
 
-            $propertyData = $this->traversal->getPropertyData($this->data, $this->name);
-
-            if (!$this->parent->isRoot()) {
-                $propertyData['variable'] = $this->parent->getItem();
-            }
-
-            $propertyData['variable'] .= $propertyData['property'];
-
-            $parentParsedContent = str_replace(
-                '{{ ' . $this->name . ' }}',
-                "<?php foreach (\${$propertyData['variable']} as \${$this->getItem()}): ?>",
-                $parentParsedContent
-            );
-
-            $parentParsedContent = str_replace(
-                '{{ /' . $this->name . ' }}',
-                '<?php endforeach; ?>',
-                $parentParsedContent
-            );
-
+        if ($this->parent->isRoot()) {
+            $iterateableSource = "\$__lexicon->getVariable(\$__data, '{$this->name}', {$attributes}, null, [], '{$expected}')";
         } else {
-            $this->trash = true;
+            $dataSource = '$' . $this->parent->getItem();
+            $iterateableSource =  "\$__lexicon->getVariable({$dataSource}, '{$this->name}', {$attributes}, null, [], '{$expected}')";
         }
+
+        $parentParsedContent = str_replace(
+            '{{ ' . $this->name . ' }}',
+            "<?php foreach ({$iterateableSource} as \${$this->getItem()}): ?>",
+            $parentParsedContent
+        );
+
+        $parentParsedContent = str_replace(
+            '{{ /' . $this->name . ' }}',
+            '<?php endforeach; ?>',
+            $parentParsedContent
+        );
 
         return $parentParsedContent;
     }
@@ -86,21 +79,6 @@ class Block extends Node
 
     public function compile()
     {
-        if ($this->isRoot()) {
-            $context = new Context(
-                $this->data,
-                $this->name,
-                '$' . $this->getItem(),
-                $this->isRoot()
-            );
-        } else {
-            $context = new Context(
-                $this->data,
-                $this->name
-            );
-        }
-
-
         /** @var $node Node */
         foreach ($this->children as $node) {
 
@@ -111,7 +89,7 @@ class Block extends Node
                 //$this->parsedContent = $this->compress($this->parsedContent);
 
                 $this->parsedContent = str_replace(
-                    $node->getExtractionOpen() . $node->getExtractionHash() . $node->getExtractionClose(),
+                    $node->getExtractionOpen() . $node->getExtractionId() . $node->getExtractionClose(),
                     '',
                     $this->parsedContent);
             } else {
@@ -120,10 +98,6 @@ class Block extends Node
 
             }
         }
-
-/*        if ($this->name == 'books') {
-            dd($this->parent->parsedContent);
-        }*/
 
         return $this->parsedContent;
     }

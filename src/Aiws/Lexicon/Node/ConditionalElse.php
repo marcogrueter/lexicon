@@ -4,10 +4,7 @@ class ConditionalElse extends Single
 {
     public $callbackEnabled = false;
 
-    public function getRegex()
-    {
-        return '/\{\{\s*else\s*\}\}/ms';
-    }
+    public $name ='else';
 
     public function getSetup(array $match)
     {

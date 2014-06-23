@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon\Data;
+<?php namespace Aiws\Lexicon\Util;
 
 class Source
 {
@@ -6,7 +6,11 @@ class Source
 
     public function __construct($source = '')
     {
-        $this->source = $source;
+        if ($source instanceof static) {
+            $this->source = $source->toString();
+        } elseif (is_string($source)) {
+            $this->source = $source;
+        }
     }
 
     /**

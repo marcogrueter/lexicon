@@ -1,5 +1,7 @@
 <?php namespace Aiws\Lexicon\Contract;
 
+use Aiws\Lexicon\Node\Node;
+
 interface NodeInterface
 {
     public function setEnvironment(EnvironmentInterface $lexicon);
@@ -8,11 +10,23 @@ interface NodeInterface
 
     public function getSetup(array $match);
 
-    public function getRegex();
+    public function getRegexMatcher();
 
     public function getMatches($text);
 
     public function createChildNodes();
 
     public function compile();
+
+    public function setId();
+
+    public function getId();
+
+    /**
+     * @return Node
+     */
+    public function setDepth();
+
+    public function getDepth();
+
 }

@@ -3,6 +3,7 @@
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\PluginHandlerInterface;
+use Aiws\Lexicon\Util\Context;
 use Aiws\Lexicon\Util\Regex;
 
 class Lexicon implements EnvironmentInterface
@@ -32,8 +33,9 @@ class Lexicon implements EnvironmentInterface
 
     protected $plugins = array();
 
-    public function __construct(PluginHandlerInterface $pluginHandler = null)
+    public function __construct(Regex $regex, PluginHandlerInterface $pluginHandler = null)
     {
+        $this->regex = $regex;
         $this->pluginHandler  = $pluginHandler;
     }
 
@@ -43,11 +45,9 @@ class Lexicon implements EnvironmentInterface
             return null;
         }
 
-        $regex = new Regex($this);
+        $content = $this->regex->parseComments($content);
 
-        $content = $regex->parseComments($content);
-
-        $noParse = $regex->extractNoParse($content);
+        $noParse = $this->regex->extractNoParse($content);
 
         $content = $noParse['content'];
 
@@ -58,10 +58,10 @@ class Lexicon implements EnvironmentInterface
             'content' => $content,
         );
 
-        return $this->compileRootNode($this->rootNodeType->make($setup), $data, $regex);
+        return $this->compileRootNode($this->rootNodeType->make($setup), $data);
     }
 
-    public function compileRootNode(NodeInterface $node, $data, $regex)
+    public function compileRootNode(NodeInterface $node, $data)
     {
         $node->data = $data;
 
@@ -80,7 +80,7 @@ class Lexicon implements EnvironmentInterface
         }
 
         if ($this->compress) {
-            $source = $regex->compress($source);
+            $source = $this->regex->compress($source);
         }
 
         return $source;
@@ -106,10 +106,15 @@ class Lexicon implements EnvironmentInterface
         return $this->pluginHandler->setEnvironment($this);
     }
 
+    public function getConditionHandler()
+    {
+        return null;
+    }
+
     public function injectNoParse($text)
     {
         foreach ($this->noParseExtractions as $key => $extraction) {
-            $text = str_replace($extraction['hash'], $extraction['content'], $text);
+            $text = str_replace($extraction['id'], $extraction['content'], $text);
             unset($this->noParseExtractions[$key]);
         }
 
@@ -149,6 +154,12 @@ class Lexicon implements EnvironmentInterface
         return $this->pluginHandler->get($name);
     }
 
+    public function getVariable($data, $key, $parameters = [], $content = '', $default = null)
+    {
+        $context = new Context($this, $data);
+        return $context->getVariable($key, $parameters, $content, $default);
+    }
+
     public function call($name, $attributes = [], $content = '')
     {
         return $this->pluginHandler->call($name, $attributes, $content);
@@ -167,5 +178,10 @@ class Lexicon implements EnvironmentInterface
     public function getRootNodeType()
     {
         return $this->rootNodeType;
+    }
+
+    public function getRegex()
+    {
+        return $this->regex;
     }
 }

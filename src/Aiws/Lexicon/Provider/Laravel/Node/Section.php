@@ -8,9 +8,7 @@ class Section extends Single
 
     public function compile()
     {
-        $name = $this->getAttribute('name');
-
-        return "<?php \$__env->startSection('{$name}'); ?>";
+        return "<?php \$__env->startSection('{$this->getAttribute('name')}'); ?>";
     }
 
 }

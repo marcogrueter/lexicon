@@ -9,9 +9,7 @@ class SectionYield extends Single
 
     public function compile()
     {
-        $name = $this->getAttribute('name');
-
-        return "<?php echo \$__env->yieldContent('{$name}'); ?>";
+        return "<?php echo \$__env->yieldContent('{$this->getAttribute('name')}'); ?>";
     }
 
 }

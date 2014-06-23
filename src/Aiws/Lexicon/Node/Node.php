@@ -2,21 +2,11 @@
 
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
-use Aiws\Lexicon\Data\Context;
-use Aiws\Lexicon\Data\Traversal;
 use Aiws\Lexicon\Util\Regex;
 
 abstract class Node implements NodeInterface
 {
-    public $callback;
-
-    public $callbackParameters = array();
-
-    public $callbackData;
-
-    public $callbackEnabled = true;
-
-    public $callbackHandlerPhp;
+    public $attributes = array();
 
     public $children = array();
 
@@ -32,7 +22,7 @@ abstract class Node implements NodeInterface
 
     public $footer = array();
 
-    public $hash;
+    public $id;
 
     public $incrementDepth = true;
 
@@ -46,14 +36,6 @@ abstract class Node implements NodeInterface
 
     public $trash = false;
 
-    public $traversal;
-
-    /**
-     * Regex
-     * @var Regex
-     */
-    public $regex;
-
     /**
      * @var EnvironmentInterface
      */
@@ -61,52 +43,188 @@ abstract class Node implements NodeInterface
 
     public function make(array $match, $parent = null, $depth = 0, $count = 0)
     {
+        $depth = ($this->incrementDepth and $depth <= $this->lexicon->getMaxDepth())
+            ? $depth + 1
+            : $depth;
+
         /** @var $node Node */
         $node = new static;
-        $node->setEnvironment($this->lexicon);
-        $node->regex = new Regex($this->lexicon);
-        $node->getSetup($match);
-        $node->callback      = $this->callback;
-        $node->count         = $count;
-        $node->depth         =
-            ($this->incrementDepth and $depth <= $this->lexicon->getMaxDepth())
-                ? $depth + 1
-                : $depth;
-        $node->hash          = md5($node->content . $node->name . $depth . $count);
-        $node->parsedContent = $node->content;
-        $node->parent        = $parent;
-        $node->traversal     = new Traversal($this->lexicon->getScopeGlue());
-        $node->parseParameters();
 
-        return $node;
+        $node
+            ->setEnvironment($this->lexicon)
+            ->getSetup($match);
+
+        return $node
+            ->setCount($count)
+            ->setDepth($depth)
+            ->setId()
+            ->setParsedContent($node->getContent())
+            ->setParent($parent)
+            ->setAttributes();
     }
 
-    protected function getVariableRegex()
+    /**
+     * Set content
+     *
+     * @return string
+     */
+    public function setContent($content)
     {
-        $glue = preg_quote($this->lexicon->getScopeGlue(), '/');
-
-        return $glue === '\\.' ? '[a-zA-Z0-9_' . $glue . ']+' : '[a-zA-Z0-9_\.' . $glue . ']+';
+        $this->content = $content;
+        return $this;
     }
 
-    public function getClosingTagRegex($name)
+    /**
+     * Get content
+     *
+     * @return string
+     */
+    public function getContent()
     {
-        return '/\{\{\s*(\/' . $name . ')\s*\}\}/m';
+        return $this->content;
     }
 
-    public function getOpenTagMatches($text, $regex = null)
+    /**
+     * Set parsed content
+     *
+     * @param $parsedContent
+     * @return $this
+     */
+    public function setParsedContent($parsedContent)
     {
-        $matches = array();
+        $this->parsedContent = $parsedContent;
+        return $this;
+    }
 
-        if (!$regex) {
-            $regex = $this->getRegex();
+    /**
+     * Set depth
+     *
+     * @param $depth
+     * @return Node
+     */
+    public function setDepth($depth = 0)
+    {
+        $this->depth = $depth;
+        return $this;
+    }
+
+    /**
+     * Get depth
+     *
+     * @return int
+     */
+    public function getDepth()
+    {
+        return $this->depth;
+    }
+
+    /**
+     * @return NodeInterface
+     */
+    public function setId()
+    {
+        $this->id = md5($this->getContent() . $this->getName() . $this->getDepth() . $this->getCount());
+        return $this;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setCount($count = 0)
+    {
+        $this->count = $count;
+        return $this;
+    }
+
+    public function getCount()
+    {
+        return $this->count;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setParent(Node $parentNode = null)
+    {
+        $this->parent = $parentNode;
+        return $this;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function isRoot()
+    {
+        return !$this->parent;
+    }
+
+    public function getExtractionId($suffix = null)
+    {
+        if ($suffix) {
+            $suffix .= '__ ';
         }
 
-        preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
-
-        return $matches;
+        return ' __' . get_called_class() . '__' . $this->getName() . '__' . $this->getId() . '__' . $suffix;
     }
 
-    public function getSingleTagMatches($text, $name)
+    public function getItem()
+    {
+        $name = str_replace($this->lexicon->getScopeGlue(), ' ', $this->name);
+
+        return str_replace(' ', '', $name) . 'Item';
+    }
+
+    public function setAttributes()
+    {
+        $this->attributes = $this->lexicon->getRegex()->parseAttributes($this->parameters);
+        return $this;
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    public function getAttribute($name, $default = 0)
+    {
+        if (isset($this->attributes[$name])) {
+            return $this->attributes[$name];
+        } elseif (isset($this->attributes[$default])) {
+            return $this->attributes[$default];
+        }
+
+        return null;
+    }
+
+    public function setEnvironment(EnvironmentInterface $lexicon)
+    {
+        $this->lexicon = $lexicon;
+        return $this;
+    }
+
+    public function getEnvironment()
+    {
+        return $this->lexicon;
+    }
+
+    public function getOpenTagMatches($text)
+    {
+        return $this->lexicon->getRegex()->getMatches($text, $this->getRegexMatcher());
+    }
+
+    public function getSingleTagMatches($text)
     {
         $matches = array();
 
@@ -115,50 +233,17 @@ abstract class Node implements NodeInterface
          * $data_matches[1] is the data variable (dot notated)
          */
         foreach ($this->getOpenTagMatches($text) as $match) {
-            if (!preg_match($this->getClosingTagRegex($name), $text, $closingTagMatch)) {
+            if (!preg_match(
+                $this->lexicon->getRegex()->getClosingTagRegexMatcher($this->getName()),
+                $text,
+                $closingTagMatch
+            )
+            ) {
                 $matches[] = $match;
             }
         }
 
         return $matches;
-    }
-
-    /**
-     * Parses a parameter string into an array
-     *
-     * @param   string  The string of parameters
-     * @return array
-     */
-    protected function parseParameters()
-    {
-        $this->parameters = $this->regex->compress($this->parameters);
-
-        // Extract all literal string in the conditional to make it easier
-        if (strpos($this->parameters, '"') !== false) {
-
-            if (preg_match_all(
-                '/(.*?)\s*=\s*(\'|"|&#?\w+;)(.*?)(?<!\\\\)\2/s',
-                $this->parameters,
-                $matches,
-                PREG_SET_ORDER
-            )
-            ) {
-                foreach ($matches as $match) {
-                    $this->callbackParameters[trim($match[1])] = trim($match[3]);
-                }
-            }
-
-        } elseif (!empty($this->parameters)) {
-
-            $this->callbackParameters = explode(' ', $this->parameters);
-
-            foreach($this->callbackParameters as &$attribute) {
-                $attribute = trim($attribute);
-            }
-
-        }
-
-        return $this->callbackParameters;
     }
 
     public function createChildNodes()
@@ -193,27 +278,9 @@ abstract class Node implements NodeInterface
             $count
         );
 
-        $this->context = new Context($this->data, $node->name);
+        $node->data = [];
 
-        $node->data = $this->traversal->getNodeData($this, $this->data, $count);
-
-        /*        $handler = $this->lexicon->getPluginHandler();
-
-                if ($handler instanceof PluginHandlerInterface and $node->callbackEnabled
-                ) {
-
-                    $node->callbackData = $handler->call($node->name, $node->callbackParameters, $node->content);
-
-                    $node->callbackHandlerPhp = $handler->compile(
-                        $node->name,
-                        $node->callbackParameters,
-                        $node->content
-                    );
-                }*/
-
-        $node->createChildNodes();
-
-        $this->extract($node);
+        $this->extract($node->createChildNodes());
 
         return $node;
     }
@@ -230,14 +297,14 @@ abstract class Node implements NodeInterface
             if (method_exists($node, 'getExtractionOpen')) {
                 $this->parsedContent = str_replace(
                     $node->getExtractionOpen(),
-                    $node->getExtractionHash('open'),
+                    $node->getExtractionId('open'),
                     $this->parsedContent
                 );
             }
 
             $this->parsedContent = str_replace(
                 $node->extractionContent,
-                $node->getExtractionHash(),
+                $node->getExtractionId(),
                 $this->parsedContent
             );
 
@@ -246,7 +313,7 @@ abstract class Node implements NodeInterface
             if (method_exists($node, 'getExtractionClose')) {
                 $this->parsedContent = str_replace(
                     $node->getExtractionClose(),
-                    $node->getExtractionHash('close'),
+                    $node->getExtractionId('close'),
                     $this->parsedContent
                 );
             }
@@ -263,21 +330,21 @@ abstract class Node implements NodeInterface
     {
         if (method_exists($node, 'compileOpen')) {
             $this->parsedContent = str_replace(
-                $node->getExtractionHash('open'),
+                $node->getExtractionId('open'),
                 $node->compileOpen(),
                 $this->parsedContent
             );
         }
 
         $this->parsedContent = str_replace(
-            $node->getExtractionHash(),
+            $node->getExtractionId(),
             $node->compile(),
             $this->parsedContent
         );
 
         if (method_exists($node, 'compileClose')) {
             $this->parsedContent = str_replace(
-                $node->getExtractionHash('close'),
+                $node->getExtractionId('close'),
                 $node->compileClose(),
                 $this->parsedContent
             );
@@ -295,44 +362,6 @@ abstract class Node implements NodeInterface
         }
 
         return $node;
-    }
-
-    public function isRoot()
-    {
-        return !$this->parent;
-    }
-
-    public function getExtractionHash($suffix = null)
-    {
-        if ($suffix) {
-            $suffix .= '__ ';
-        }
-
-        return ' __' . get_called_class() . '__' . $this->name . '__' . $this->hash . '__' . $suffix;
-    }
-
-    public function getItem()
-    {
-        $name = str_replace($this->lexicon->getScopeGlue(), ' ', $this->name);
-
-        return str_replace(' ', '', $name) . 'Item';
-    }
-
-    public function getAttribute($name, $default = 0)
-    {
-        if (isset($this->callbackParameters[$name])) {
-            return $this->callbackParameters[$name];
-        } elseif (isset($this->callbackParameters[$default])) {
-            return $this->callbackParameters[$default];
-        }
-
-        return null;
-    }
-
-    public function setEnvironment(EnvironmentInterface $lexicon)
-    {
-        $this->lexicon = $lexicon;
-        return $this;
     }
 
 }

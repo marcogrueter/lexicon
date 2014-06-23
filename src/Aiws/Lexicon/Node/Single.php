@@ -2,9 +2,9 @@
 
 abstract class Single extends Node
 {
-    public function getRegex()
+    public function getRegexMatcher()
     {
-        return "/\{\{\s*($this->name)(\s.*?)?\s*(\/)?\}\}/ms";
+        return "/\{\{\s*({$this->getName()})(\s.*?)?\s*(\/)?\}\}/ms";
     }
 
     public function getSetup(array $match)
@@ -14,8 +14,8 @@ abstract class Single extends Node
         $this->extractionContent = $match[0];
     }
 
-    public function getMatches($text, $regex = null)
+    public function getMatches($text)
     {
-        return $this->getSingleTagMatches($text, $regex);
+        return $this->getSingleTagMatches($text);
     }
 }

@@ -23,4 +23,20 @@ class TestPlugin extends Plugin
 
         return "Hello {$name}!";
     }
+
+    public function object()
+    {
+        $name = $this->attribute('name', 'yay');
+
+        $object = new \stdClass();
+
+        $object->property = "Plugin property {$name}!";
+
+        return $object;
+    }
+
+    public function loop()
+    {
+        return \Book::all();
+    }
 }

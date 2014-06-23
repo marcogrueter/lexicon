@@ -1,5 +1,6 @@
 <?php
 
 return array(
-    'extension' => 'html'
+    'extension' => 'html',
+    'scopeGlue' => '.',
 );

@@ -49,17 +49,17 @@ class Conditional extends Single
         'null'
     );
 
-    public function getRegex()
+    public function getRegexMatcher()
     {
         return '/\{\{\s*(' . implode('|', $this->startConditionals) . ')\s*((?:\()?(.*?)(?:\))?)\s*\}\}/ms';
     }
 
-    public function getLogicalOperatorsRegex()
+    public function getLogicalOperatorsRegexMatcher()
     {
         return '/\s*(' . implode('|', $this->logicalOperators) . ')\s/ms';
     }
 
-    public function getComparisonOperatorsRegex()
+    public function getComparisonOperatorsRegexMatcher()
     {
         return '/\s*(' . implode('|', $this->comparisonOperators) . ')\s/ms';
     }
@@ -68,7 +68,7 @@ class Conditional extends Single
     {
         $this->name              = $this->parsedName = $match[1];
         $this->extractionContent = $match[0];
-        $this->expression        = $this->regex->compress($match[2]);
+        $this->expression        = $this->lexicon->getRegex()->compress($match[2]);
 
         if ($this->parsedName == 'unless') {
             $this->parsedName = 'if (!(';
@@ -83,7 +83,7 @@ class Conditional extends Single
     {
         $this->expression = $this->replaceOperators($this->expression);
 
-        $logicalOperatorMatches = $this->getMatches($this->expression, $this->getLogicalOperatorsRegex());
+        $logicalOperatorMatches = $this->lexicon->getRegex()->getMatches($this->expression, $this->getLogicalOperatorsRegexMatcher());
 
         // Get logical operator matches
         foreach ($logicalOperatorMatches as $match) {
@@ -112,7 +112,7 @@ class Conditional extends Single
             $comparison = preg_replace('/! /', '', $comparison);
             $comparison = preg_replace('/\bexists\b/', '', $comparison);
 
-            $matches = $this->getMatches($comparison, $this->getComparisonOperatorsRegex());
+            $matches = $this->getMatches($comparison, $this->getComparisonOperatorsRegexMatcher());
 
             $comparisonOperator = null;
 
@@ -212,14 +212,14 @@ class Conditional extends Single
         $value        = trim($value);
         $variableName = $value;
 
-        if (preg_match('/\'' . $this->getVariableRegex() . '\'/s', $value)) {
+        if (preg_match('/\'' . $this->lexicon->getRegex()->getVariableRegexMatcher() . '\'/s', $value)) {
             return $value;
         }
 
         if (!is_numeric($value) and !in_array($value, $this->noParse)) {
 
-            $property = $this->traversal->getPropertyData($this->data, $value);
-//dd($property);
+    /*        $property = $this->traversal->getPropertyData($this->data, $value);
+
             if ($this->parent and $loopVariable = $this->traversal->getVariable(
                     $this->parent->data,
                     $this->parent->name
@@ -238,7 +238,6 @@ class Conditional extends Single
                         break;
                     }
 
-                   // dd($variableName);
                 }
 
             } else {
@@ -249,10 +248,15 @@ class Conditional extends Single
                     $variableName = "\${$property['variable']}{$property['property']}";
                 }
 
-            }
+            }*/
         }
 
         return $variableName;
+    }
+
+    public function resolve($key)
+    {
+
     }
 
     public function compile()
@@ -267,7 +271,7 @@ class Conditional extends Single
         }
 
         if ($hasConditionalEnd and !empty($this->data)) {
-            return "<?php {$this->parsedName} {$this->regex->compress($this->parsedExpression)})): ?>";
+            return "<?php {$this->parsedName} {$this->lexicon->getRegex()->compress($this->parsedExpression)})): ?>";
         }
 
         return null;

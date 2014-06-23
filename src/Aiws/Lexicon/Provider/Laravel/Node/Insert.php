@@ -9,9 +9,9 @@ class Insert extends Single
 
     public function compile()
     {
-        $name = $this->getAttribute('name');
-
-        return "<?php echo \$__env->make('{$name}', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>";
+        return "<?php echo \$__env->make('{$this->getAttribute(
+            'name'
+        )}', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>";
     }
 
 }

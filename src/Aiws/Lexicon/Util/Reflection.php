@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon\Data;
+<?php namespace Aiws\Lexicon\Util;
 
 class Reflection
 {

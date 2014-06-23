@@ -12,6 +12,7 @@ use Aiws\Lexicon\Provider\Laravel\Node\SectionExtends;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionShow;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionStop;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionYield;
+use Aiws\Lexicon\Util\Regex;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -33,7 +34,9 @@ class LexiconServiceProvider extends ServiceProvider {
 
         $app->singleton('lexicon', function() use ($app) {
 
-                $lexicon = new Lexicon(new PluginHandler());
+                $scopeGlue = $app['config']->get('lexicon::scopeGlue', '.');
+
+                $lexicon = new Lexicon(new Regex($scopeGlue), new PluginHandler());
 
                 $lexicon->setIgnoredMatchers(['parent']);
 
