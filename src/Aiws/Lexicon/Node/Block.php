@@ -12,7 +12,8 @@ class Block extends Node
 
     public function getRegexMatcher()
     {
-        return '/\{\{\s*(' . $this->lexicon->getRegex()->getVariableRegexMatcher() . ')(\s.*?)\}\}(.*?)\{\{\s*\/\1\s*\}\}/ms';
+        return '/\{\{\s*(' . $this->lexicon->getRegex()->getVariableRegexMatcher(
+        ) . ')(\s.*?)\}\}(.*?)\{\{\s*\/\1\s*\}\}/ms';
     }
 
     public function getMatches($text)
@@ -23,8 +24,8 @@ class Block extends Node
     public function getSetup(array $match)
     {
         $this->setName(isset($match['name']) ? $match['name'] : $match[1]);
-        $this->fullContent       = isset($match[0]) ? $match[0] : '';
-        $this->parsedAttributes        = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
+        $this->fullContent      = isset($match[0]) ? $match[0] : '';
+        $this->parsedAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
 
         $content = isset($match['content']) ? $match['content'] : $match[3];
 
@@ -35,7 +36,7 @@ class Block extends Node
         $parts = explode($content, $this->fullContent);
 
         if (count($parts) == 2) {
-            $this->openContent = $parts[0];
+            $this->openContent    = $parts[0];
             $this->closingContent = $parts[1];
         }
 
@@ -48,12 +49,14 @@ class Block extends Node
 
         $expected = Type::ITERATEABLE;
 
+        $dataSource = '$' . $this->parent->getItem();
+
         if ($this->getParent()->isRoot()) {
-            $iterateableSource = "\$__lexicon->getVariable(\$__data, '{$this->getName()}', {$attributes}, null, [], '{$expected}')";
-        } else {
-            $dataSource = '$' . $this->parent->getItem();
-            $iterateableSource =  "\$__lexicon->getVariable({$dataSource}, '{$this->getName()}', {$attributes}, null, [], '{$expected}')";
+            $dataSource = $this->getEnvironment()->getEnvironmentVariable();
         }
+
+        $iterateableSource = "\$__lexicon->get({$dataSource}, '{$this->getName(
+        )}', {$attributes}, '', [], '{$expected}')";
 
         $parentParsedContent = str_replace(
             '{{ ' . $this->getName() . ' }}',
@@ -91,10 +94,13 @@ class Block extends Node
                 // Remove excessive white space so the content its easier to match
                 //$this->parsedContent = $this->compress($this->parsedContent);
 
-                $this->setParsedContent(str_replace(
-                    $node->getExtractionOpen() . $node->getExtractionId() . $node->getExtractionClose(),
-                    '',
-                    $this->getParsedContent()));
+                $this->setParsedContent(
+                    str_replace(
+                        $node->getExtractionOpen() . $node->getExtractionId() . $node->getExtractionClose(),
+                        '',
+                        $this->getParsedContent()
+                    )
+                );
             } else {
 
                 $this->inject($node);

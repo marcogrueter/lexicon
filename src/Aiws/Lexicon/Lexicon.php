@@ -3,8 +3,10 @@
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\PluginHandlerInterface;
+use Aiws\Lexicon\Util\ConditionalHandler;
 use Aiws\Lexicon\Util\Context;
 use Aiws\Lexicon\Util\Regex;
+use Aiws\Lexicon\Util\Type;
 
 class Lexicon implements EnvironmentInterface
 {
@@ -22,7 +24,11 @@ class Lexicon implements EnvironmentInterface
 
     protected $noParseExtractions = array();
 
-    public $pluginHandler;
+    protected $pluginHandler;
+
+    protected $conditionalHandler;
+
+    protected $environmentVariable = "array_except(get_defined_vars(), array('__data', '__path'))";
 
     /**
      * @var NodeInterface
@@ -33,9 +39,10 @@ class Lexicon implements EnvironmentInterface
 
     protected $plugins = array();
 
-    public function __construct(Regex $regex, PluginHandlerInterface $pluginHandler = null)
+    public function __construct(Regex $regex, ConditionalHandler $conditionalHandler = null, PluginHandlerInterface $pluginHandler = null)
     {
         $this->regex = $regex;
+        $this->conditionalHandler  = $conditionalHandler;
         $this->pluginHandler  = $pluginHandler;
     }
 
@@ -58,13 +65,11 @@ class Lexicon implements EnvironmentInterface
             'content' => $content,
         );
 
-        return $this->compileRootNode($this->rootNodeType->make($setup), $data);
+        return $this->compileRootNode($this->rootNodeType->make($setup));
     }
 
-    public function compileRootNode(NodeInterface $node, $data)
+    public function compileRootNode(NodeInterface $node)
     {
-        $node->data = $data;
-
         $parsedNode = $node->createChildNodes();
 
         $source = $parsedNode->compile();
@@ -106,9 +111,34 @@ class Lexicon implements EnvironmentInterface
         return $this->pluginHandler->setEnvironment($this);
     }
 
-    public function getConditionHandler()
+    /**
+     * @return ConditionalHandler|mixed
+     */
+    public function getConditionalHandler()
     {
-        return null;
+        return $this->conditionalHandler;
+    }
+
+    /**
+     * Set environment variable
+     *
+     * @param $environmentVariable
+     * @return $this
+     */
+    public function setEnvironmentVariable($environmentVariable)
+    {
+        $this->environmentVariable = $environmentVariable;
+        return $this;
+    }
+
+    /**
+     * Get environment variable
+     *
+     * @return string
+     */
+    public function getEnvironmentVariable()
+    {
+        return $this->environmentVariable;
     }
 
     public function injectNoParse($text)
@@ -154,10 +184,15 @@ class Lexicon implements EnvironmentInterface
         return $this->pluginHandler->get($name);
     }
 
-    public function getVariable($data, $key, $parameters = [], $content = '', $default = null)
+    public function get($data, $key, $parameters = [], $content = '', $default = null, $expected = Type::ECHOABLE)
     {
         $context = new Context($this, $data);
-        return $context->getVariable($key, $parameters, $content, $default);
+        return $context->getVariable($key, $parameters, $content, $default, $expected);
+    }
+
+    public function compare($left, $right, $operator = null)
+    {
+        return $this->getConditionalHandler()->compare($left, $right, $operator);
     }
 
     public function call($name, $attributes = [], $content = '')

@@ -12,7 +12,7 @@ interface EnvironmentInterface
     /**
      * @return mixed
      */
-    public function getConditionHandler();
+    public function getConditionalHandler();
 
     /**
      * @return string
@@ -35,9 +35,20 @@ interface EnvironmentInterface
     public function getIgnoredMatchers();
 
     /**
+     * @return string
+     */
+    public function getEnvironmentVariable();
+
+    /**
      * @return Regex
      */
     public function getRegex();
+
+    /**
+     * @param        $name
+     * @return PluginInterface
+     */
+    public function getPlugin($name);
 
     /**
      * @param        $name
@@ -46,4 +57,13 @@ interface EnvironmentInterface
      * @return mixed
      */
     public function call($name, $attributes = [], $content = '');
+
+    /**
+     * @param        $data
+     * @param        $key
+     * @param array  $attributes
+     * @param string $content
+     * @return mixed
+     */
+    public function get($data, $key, $attributes = [], $content = '', $default = null, $expected = null);
 }

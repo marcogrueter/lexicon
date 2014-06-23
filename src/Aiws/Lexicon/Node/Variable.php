@@ -14,11 +14,11 @@ class Variable extends Single
 
         $dataSource = '$' . $this->getParent()->getItem();
 
-        if ($this->parent->isRoot()) {
-            $dataSource = '$__data';
+        if ($this->getParent()->isRoot()) {
+            $dataSource = $this->getEnvironment()->getEnvironmentVariable();
         }
 
-        return "<?php echo \$__lexicon->getVariable({$dataSource}, '{$this->getName()}', {$attributes}); ?>";
+        return "<?php echo \$__lexicon->get({$dataSource}, '{$this->getName()}', {$attributes}); ?>";
     }
 
 }

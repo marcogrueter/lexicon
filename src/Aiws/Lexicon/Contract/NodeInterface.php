@@ -1,10 +1,10 @@
 <?php namespace Aiws\Lexicon\Contract;
 
-use Aiws\Lexicon\Node\Node;
-
 interface NodeInterface
 {
     public function setEnvironment(EnvironmentInterface $lexicon);
+
+    public function getEnvironment();
 
     public function make(array $match, $parent = null, $depth = 0, $count = 0);
 
@@ -21,6 +21,11 @@ interface NodeInterface
     public function setId();
 
     public function getId();
+
+    /**
+     * @return NodeInterface
+     */
+    public function getParent();
 
     /**
      * @return NodeInterface

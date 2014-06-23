@@ -8,22 +8,21 @@ class ConditionalElse extends Single
 
     public function getSetup(array $match)
     {
-        $this->name = 'else';
-        $this->extractionContent = $match[0];
+        $this->setExtractionContent($match[0]);
     }
 
     public function compile()
     {
         $hasConditionalStart = $hasConditionalEnd = false;
 
-        foreach ($this->parent->children as $node) {
+        foreach ($this->getParent()->getChildren() as $node) {
             if ($node instanceof Conditional) {
                 $hasConditionalStart = true;
                 break;
             }
         }
 
-        foreach ($this->parent->children as $node) {
+        foreach ($this->getParent()->getChildren() as $node) {
             if ($node instanceof ConditionalEnd) {
                 $hasConditionalEnd = true;
                 break;

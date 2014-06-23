@@ -105,15 +105,15 @@ class Regex
 
     public function getMatch($text, $regex)
     {
-
+        $match = [];
+        preg_match($regex, $text, $match);
+        return $match;
     }
 
     public function getMatches($text, $regex)
     {
-        $matches = array();
-
+        $matches = [];
         preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
-
         return $matches;
     }
 

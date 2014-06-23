@@ -6,21 +6,16 @@ class ConditionalEnd extends Single
 
     public $name = 'endif';
 
-    public function getRegexMatcher()
-    {
-        return '/\{\{\s*endif\s*\}\}/ms';
-    }
-
     public function getSetup(array $match)
     {
-        $this->extractionContent = $match[0];
+        $this->setExtractionContent($match[0]);
     }
 
     public function compile()
     {
         $hasConditionalStart = false;
 
-        foreach ($this->parent->children as $node) {
+        foreach ($this->getParent()->getChildren() as $node) {
             if ($node instanceof Conditional) {
                 $hasConditionalStart = true;
                 break;
@@ -28,7 +23,7 @@ class ConditionalEnd extends Single
         }
 
         if ($hasConditionalStart) {
-            //return '<?php endif; ;
+            return '<?php endif; ?>';
         }
 
         return null;

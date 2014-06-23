@@ -272,6 +272,16 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Get name matcher
+     *
+     * @return string
+     */
+    public function getNameMatcher()
+    {
+        return $this->getName();
+    }
+
+    /**
      * Set parent node
      *
      * @param Node $parentNode
@@ -439,6 +449,12 @@ abstract class Node implements NodeInterface
         return $this->footer;
     }
 
+    public function setIsTrashable($isTrashable = false)
+    {
+        $this->trash = $isTrashable;
+        return $this;
+    }
+
     /**
      * Is the node trashable?
      *
@@ -532,8 +548,6 @@ abstract class Node implements NodeInterface
             $this->depth,
             $count
         );
-
-        $node->data = [];
 
         $this->extract($node->createChildNodes());
 
