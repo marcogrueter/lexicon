@@ -44,16 +44,16 @@ class Context
      * @param  mixed        $default Default value to use if not found
      * @return mixed
      */
-    public function getVariable($key, array $attributes = [], $content = '', $default = null, $expected = Type::ECHOABLE)
+    public function getVariable($key, array $attributes = [], $content = '', $default = null, $expected = Type::ANY)
     {
         $data       = $this->getData();
         $reflection = $this->newReflection($data);
 
         $parts = explode($this->scopeGlue, $key);
 
-        if ($this->lexicon->getPlugin($key)) {
+        $pluginKey = $key;
 
-            $pluginKey = $key;
+        if ($this->lexicon->getPlugin($pluginKey)) {
 
             if (count($parts) > 2) {
                 $plugin    = array_shift($parts);
@@ -63,12 +63,10 @@ class Context
 
             $data = $this->lexicon->call($pluginKey, $attributes, $content);
 
-            if (count($parts) == 2) {
-                return $data;
-            }
-
             $reflection = $this->newReflection($data);
         }
+
+        $count = 0;
 
         foreach ($parts as $part) {
 
@@ -76,12 +74,18 @@ class Context
                 $data = $data[$part];
             } elseif ($reflection->hasObjectKey($part)) {
                 $data = $data->{$part};
+            } elseif(count($parts) == $count) {
+                $data = $default;
             }
 
             $reflection = $this->newReflection($data);
+
+            $count++;
         }
 
-        if ($expected == Type::ECHOABLE and $reflection->isEchoable()) {
+        if ($expected == Type::ANY) {
+            return $data;
+        } elseif ($expected == Type::ECHOABLE and $reflection->isEchoable()) {
             return $data;
         } elseif ($expected == Type::ITERATEABLE and $reflection->isIteratable()) {
             return $data;
