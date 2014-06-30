@@ -62,9 +62,9 @@ class Conditional extends Single
             }
         }
 
-        //if ($hasConditionalEnd) {
+        if ($hasConditionalEnd) {
             return "<?php if ({$this->conditionalParser->getSource()}): ?>";
-        //}
+        }
 
         return null;
     }
