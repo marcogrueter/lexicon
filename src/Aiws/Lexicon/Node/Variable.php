@@ -1,5 +1,7 @@
 <?php namespace Aiws\Lexicon\Node;
 
+use Aiws\Lexicon\Util\Type;
+
 class Variable extends Single
 {
     public function getRegexMatcher()
@@ -18,7 +20,9 @@ class Variable extends Single
             $dataSource = $this->getEnvironment()->getEnvironmentVariable();
         }
 
-        return "<?php echo \$__lexicon->get({$dataSource}, '{$this->getName()}', {$attributes}); ?>";
+        $expected = Type::ECHOABLE;
+
+        return "<?php echo \$__lexicon->get({$dataSource}, '{$this->getName()}', {$attributes}, '', '', '{$expected}'); ?>";
     }
 
 }
