@@ -3,6 +3,8 @@
 class Type
 {
 
+    const ANY = 'any';
+
     const STRING = 'string';
 
     const OBJECT = 'object';
