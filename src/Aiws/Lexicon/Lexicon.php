@@ -184,7 +184,7 @@ class Lexicon implements EnvironmentInterface
         return $this->pluginHandler->get($name);
     }
 
-    public function get($data, $key, $parameters = [], $content = '', $default = null, $expected = Type::ECHOABLE)
+    public function get($data, $key, $parameters = [], $content = '', $default = null, $expected = Type::ANY)
     {
         $context = new Context($this, $data);
         return $context->getVariable($key, $parameters, $content, $default, $expected);
