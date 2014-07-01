@@ -12,6 +12,7 @@ use Aiws\Lexicon\Provider\Laravel\Node\SectionExtends;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionShow;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionStop;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionYield;
+use Aiws\Lexicon\Util\ConditionalComparisons;
 use Aiws\Lexicon\Util\ConditionalHandler;
 use Aiws\Lexicon\Util\Regex;
 use Illuminate\Foundation\Application;
@@ -37,7 +38,11 @@ class LexiconServiceProvider extends ServiceProvider {
 
                 $scopeGlue = $app['config']->get('lexicon::scopeGlue', '.');
 
-                $lexicon = new Lexicon(new Regex($scopeGlue), new ConditionalHandler(), new PluginHandler());
+                $conditionalHandler = new ConditionalHandler();
+
+                $conditionalHandler->registerSpecialComparisonClass(new ConditionalComparisons());
+
+                $lexicon = new Lexicon(new Regex($scopeGlue), $conditionalHandler, new PluginHandler());
 
                 $lexicon->setIgnoredMatchers(['parent']);
 
