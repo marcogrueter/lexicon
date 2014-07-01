@@ -49,7 +49,7 @@ class Block extends Node
 
         $expected = Type::ITERATEABLE;
 
-        $dataSource = '$' . $this->parent->getItem();
+        $dataSource = '$' . $this->parent->getItemName();
 
         if ($this->getParent()->isRoot()) {
             $dataSource = $this->getEnvironment()->getEnvironmentVariable();
@@ -60,7 +60,7 @@ class Block extends Node
 
         $parentParsedContent = str_replace(
             '{{ ' . $this->getName() . ' }}',
-            "<?php foreach ({$iterateableSource} as \${$this->getItem()}): ?>",
+            "<?php foreach ({$iterateableSource} as \${$this->getItemName()}): ?>",
             $parentParsedContent
         );
 

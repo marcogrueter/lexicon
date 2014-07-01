@@ -14,7 +14,7 @@ class Variable extends Single
     {
         $attributes = var_export($this->getAttributes(), true);
 
-        $dataSource = '$' . $this->getParent()->getItem();
+        $dataSource = '$' . $this->getParent()->getItemName();
 
         if ($this->getParent()->isRoot()) {
             $dataSource = $this->getEnvironment()->getEnvironmentVariable();

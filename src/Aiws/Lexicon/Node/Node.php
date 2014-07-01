@@ -81,6 +81,13 @@ abstract class Node implements NodeInterface
     protected $lexicon;
 
     /**
+     * Item name
+     *
+     * @var
+     */
+    protected $itemName;
+
+    /**
      * Make a new node instance
      *
      * @param array $match
@@ -105,7 +112,8 @@ abstract class Node implements NodeInterface
         return $node
             ->setCount($count)
             ->setDepth($depth)
-            ->setId()
+            ->setId($node->getContent() . $node->getName() . $node->getDepth() . $node->getCount())
+            ->setItemName(str_replace(' ', '', str_replace($this->lexicon->getScopeGlue(), ' ', $node->getName())) . 'Item')
             ->setParsedContent($node->getContent())
             ->setParent($parent)
             ->setAttributes();
@@ -211,9 +219,9 @@ abstract class Node implements NodeInterface
      *
      * @return NodeInterface
      */
-    public function setId()
+    public function setId($id)
     {
-        $this->id = md5($this->getContent() . $this->getName() . $this->getDepth() . $this->getCount());
+        $this->id = md5($id);
         return $this;
     }
 
@@ -329,15 +337,25 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Set item name
+     *
+     * @param $itemName
+     * @return $this
+     */
+    public function setItemName($itemName)
+    {
+        $this->itemName = $itemName;
+        return $this;
+    }
+
+    /**
      * Get item variable name
      *
      * @return string
      */
-    public function getItem()
+    public function getItemName()
     {
-        $name = str_replace($this->lexicon->getScopeGlue(), ' ', $this->name);
-
-        return str_replace(' ', '', $name) . 'Item';
+        return $this->itemName;
     }
 
     /**

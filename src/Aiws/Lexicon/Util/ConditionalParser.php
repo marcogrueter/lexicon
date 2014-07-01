@@ -190,7 +190,7 @@ class ConditionalParser
             return $matches[1];
         }
 
-        $dataSource = '$' . $this->node->getParent()->getItem();
+        $dataSource = '$' . $this->node->getParent()->getItemName();
 
         if ($this->node->getParent()->isRoot()) {
             $dataSource = $this->node->getEnvironment()->getEnvironmentVariable();

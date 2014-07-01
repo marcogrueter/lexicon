@@ -18,9 +18,11 @@ interface NodeInterface
 
     public function compile();
 
-    public function setId();
+    public function setId($id);
 
     public function getId();
+
+    public function setItemName($itemName);
 
     /**
      * @return NodeInterface
