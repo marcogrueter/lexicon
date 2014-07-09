@@ -51,6 +51,11 @@ interface EnvironmentInterface
     public function getPlugin($name);
 
     /**
+     * @return string
+     */
+    public function getRootContextName();
+
+    /**
      * @param        $name
      * @param array  $attributes
      * @param string $content
