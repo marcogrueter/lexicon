@@ -2,6 +2,7 @@
 
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
+use Aiws\Lexicon\Util\ContextFinder;
 
 abstract class Node implements NodeInterface
 {
@@ -83,9 +84,21 @@ abstract class Node implements NodeInterface
     /**
      * Item name
      *
-     * @var
+     * @var string
      */
     protected $itemName;
+
+    /**
+     * @var string
+     */
+    protected $contextItemName;
+
+    /**
+     * Context finder
+     *
+     * @var ContextFinder
+     */
+    protected $contextFinder;
 
     /**
      * Make a new node instance
@@ -109,14 +122,17 @@ abstract class Node implements NodeInterface
             ->setEnvironment($this->lexicon)
             ->getSetup($match);
 
-        return $node
+        $node
             ->setCount($count)
             ->setDepth($depth)
             ->setId($node->getContent() . $node->getName() . $node->getDepth() . $node->getCount())
             ->setItemName(str_replace(' ', '', str_replace($this->lexicon->getScopeGlue(), ' ', $node->getName())) . 'Item')
+            ->setContextName($node->getName())
             ->setParsedContent($node->getContent())
             ->setParent($parent)
             ->setAttributes();
+
+        return $node;
     }
 
     /**
@@ -356,6 +372,28 @@ abstract class Node implements NodeInterface
     public function getItemName()
     {
         return $this->itemName;
+    }
+
+    /**
+     * Get context item name
+     *
+     * @return string
+     */
+    public function getContextName()
+    {
+        return $this->contextItemName;
+    }
+
+    /**
+     * Set context item name
+     *
+     * @param $contextItemName
+     * @return $this
+     */
+    public function setContextName($contextItemName)
+    {
+        $this->contextItemName = $contextItemName;
+        return $this;
     }
 
     /**
@@ -611,10 +649,6 @@ abstract class Node implements NodeInterface
             }
         }
 
-        if ($this->getName() == 'title') {
-            //dd($this->parent->parsedContent);
-        }
-
         return $this;
     }
 
@@ -649,6 +683,14 @@ abstract class Node implements NodeInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return ContextFinder
+     */
+    public function getContextFinder()
+    {
+        return new ContextFinder($this);
     }
 
 }
