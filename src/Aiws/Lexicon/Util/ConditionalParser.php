@@ -65,10 +65,10 @@ class ConditionalParser
 
     public $parsedName;
 
-    public $noParse = array(
+    public $noParseKey = array(
+        'null',
         'true',
         'false',
-        'null'
     );
 
     /**
@@ -170,7 +170,7 @@ class ConditionalParser
             return 'null';
         }
 
-        if (in_array($key, ['null', 'true', 'false'])) {
+        if (in_array($key, $this->noParseKey)) {
             return $key;
         }
 
