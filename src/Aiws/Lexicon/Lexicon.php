@@ -39,6 +39,18 @@ class Lexicon implements EnvironmentInterface
 
     protected $plugins = array();
 
+    /**
+     * Root context name
+     *
+     * @var
+     */
+    protected $rootContextName = 'data';
+
+    /**
+     * @param Regex                  $regex
+     * @param ConditionalHandler     $conditionalHandler
+     * @param PluginHandlerInterface $pluginHandler
+     */
     public function __construct(Regex $regex, ConditionalHandler $conditionalHandler = null, PluginHandlerInterface $pluginHandler = null)
     {
         $this->regex = $regex;
@@ -218,5 +230,10 @@ class Lexicon implements EnvironmentInterface
     public function getRegex()
     {
         return $this->regex;
+    }
+
+    public function getRootContextName()
+    {
+        return $this->rootContextName;
     }
 }
