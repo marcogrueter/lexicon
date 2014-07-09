@@ -16,7 +16,10 @@ class Variable extends Single
 
         $dataSource = '$' . $this->getParent()->getItemName();
 
-        if ($this->getParent()->isRoot()) {
+        $finder = $this->getContextFinder();
+
+        if ($this->getParent()->isRoot() or $finder->isRootContextName()) {
+            $this->setName(str_replace('data.','', $this->getName()));
             $dataSource = $this->getEnvironment()->getEnvironmentVariable();
         }
 
