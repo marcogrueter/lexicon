@@ -1,6 +1,8 @@
 <?php namespace Aiws\Lexicon\Util;
 
+use Aiws\Lexicon\Node\Block;
 use Aiws\Lexicon\Node\Node;
+use Aiws\Lexicon\Node\Variable;
 
 class ContextFinder
 {
@@ -17,6 +19,8 @@ class ContextFinder
      */
     protected $lexicon;
 
+    protected $parent;
+
     /**
      * @param Node $node
      */
@@ -24,20 +28,30 @@ class ContextFinder
     {
         $this->node = $node;
         $this->lexicon = $this->node->getEnvironment();
+        $this->parent = $this->node->getParent();
     }
 
     public function getName()
     {
-        if ($this->isRootContextName()) {
+        if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
             return str_replace($this->getRootStart(),'', $this->node->getName());
+        } else {
+            return $this->node->getName();
         }
     }
 
     public function getItemName()
     {
-        if ($this->isRootContextName()) {
-            return $this->lexicon->getEnvironmentVariable();
+        if ($this->node instanceof Variable) {
+            if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
+                return $this->lexicon->getEnvironmentVariable();
+            } elseif ($this->parent and !$this->parent->isRoot()) {
+                return '$'.$this->parent->getItemName();
+            } else {
+                return $this->lexicon->getEnvironmentVariable();
+            }
         }
+
     }
 
     public function isRootContextName()

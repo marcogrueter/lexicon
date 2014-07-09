@@ -14,18 +14,11 @@ class Variable extends Single
     {
         $attributes = var_export($this->getAttributes(), true);
 
-        $dataSource = '$' . $this->getParent()->getItemName();
-
         $finder = $this->getContextFinder();
-
-        if ($this->getParent()->isRoot() or $finder->isRootContextName()) {
-            $this->setName(str_replace('data.','', $this->getName()));
-            $dataSource = $this->getEnvironment()->getEnvironmentVariable();
-        }
 
         $expected = Type::ECHOABLE;
 
-        return "<?php echo \$__lexicon->get({$dataSource}, '{$this->getName()}', {$attributes}, '', '', '{$expected}'); ?>";
+        return "<?php echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName()}', {$attributes}, '', '', '{$expected}'); ?>";
     }
 
 }
