@@ -47,23 +47,17 @@ class PluginHandler implements PluginHandlerInterface
 
     public function call($name, $attributes = [], $content = '')
     {
-        $tagname = $name;
-
         $segments = explode('.', $name);
 
         if (count($segments) > 1) {
             $name   = $segments[0];
             $method = $segments[1];
 
-            if (isset($this->pluginData[$tagname])) {
-                return $this->pluginData[$tagname];
-            }
-
             /** @var $plugin PluginInterface */
             if ($plugin = $this->get($name)) {
                 $plugin->setAttributes($attributes);
                 $plugin->setContent($content);
-                return $this->pluginData[$tagname] = $plugin->{$method}();
+                return $plugin->{$method}();
             }
         }
 
