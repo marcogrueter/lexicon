@@ -622,17 +622,17 @@ abstract class Node implements NodeInterface
             $this->setParsedContent($node->compileParentNode($this->getParsedContent()));
         }
 
-        if (method_exists($node, 'getExtractionOpen')) {
+        if (method_exists($node, 'getExtractionContentOpen')) {
             $this->setParsedContent(str_replace(
-                $node->getExtractionOpen(),
+                $node->getExtractionContentOpen(),
                 $node->getExtractionId('open'),
                 $this->getParsedContent()
             ));
         }
 
-        if (method_exists($node, 'getExtractionClose')) {
+        if (method_exists($node, 'getExtractionContentClose')) {
             $this->setParsedContent(str_replace(
-                    $node->getExtractionClose(),
+                    $node->getExtractionContentClose(),
                     $node->getExtractionId('close'),
                     $this->getParsedContent()
                 ));
