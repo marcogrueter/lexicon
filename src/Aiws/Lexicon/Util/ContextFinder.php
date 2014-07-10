@@ -33,16 +33,32 @@ class ContextFinder
 
     public function getName()
     {
-        if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
-            return str_replace($this->getRootStart(),'', $this->node->getName());
-        } else {
-            return $this->node->getName();
+        $string = $this->node->getName();
+        $prefix = $this->getRootStart();
+
+        if (substr($string, 0, strlen($prefix)) == $prefix) {
+            $string = substr($string, strlen($prefix));
         }
+
+        return $string;
     }
 
     public function getItemName()
     {
-        if ($this->node instanceof Variable) {
+        //if ($this->node instanceof Variable) {
+            if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
+                return $this->lexicon->getEnvironmentVariable();
+            } elseif ($this->parent and !$this->parent->isRoot()) {
+                return '$'.$this->parent->getItemName();
+            } else {
+                return $this->lexicon->getEnvironmentVariable();
+            }
+        //}
+    }
+
+    public function getLoopItemSource()
+    {
+        if ($this->node instanceof Block) {
             if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
                 return $this->lexicon->getEnvironmentVariable();
             } elseif ($this->parent and !$this->parent->isRoot()) {
@@ -51,7 +67,6 @@ class ContextFinder
                 return $this->lexicon->getEnvironmentVariable();
             }
         }
-
     }
 
     public function isRootContextName()
