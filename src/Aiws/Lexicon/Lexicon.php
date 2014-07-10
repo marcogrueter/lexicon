@@ -226,7 +226,8 @@ class Lexicon implements EnvironmentInterface
 
     public function setIgnoredMatchers(array $ignoredMatchers = [])
     {
-        return $this->ignoredMatchers = $ignoredMatchers;
+        $this->ignoredMatchers = $ignoredMatchers;
+        return $this;
     }
 
     public function getIgnoredMatchers()

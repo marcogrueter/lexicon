@@ -38,15 +38,17 @@ class LexiconServiceProvider extends ServiceProvider {
 
                 $scopeGlue = $app['config']->get('lexicon::scopeGlue', '.');
 
+                $allowPhp = $app['config']->get('lexicon::allowPhp', false);
+
                 $conditionalHandler = new ConditionalHandler();
 
                 $conditionalHandler->registerSpecialComparisonClass(new ConditionalComparisons());
 
                 $lexicon = new Lexicon(new Regex($scopeGlue), $conditionalHandler, new PluginHandler());
 
-                $lexicon->setIgnoredMatchers(['parent']);
-
                 $lexicon
+                    ->setAllowPhp($allowPhp)
+                    ->setIgnoredMatchers(['parent'])
                     ->registerPlugin('test', 'Aiws\\Lexicon\\Example\\TestPlugin')
                     ->registerRootNodeType(new Block())
                     ->registerNodeTypes(
