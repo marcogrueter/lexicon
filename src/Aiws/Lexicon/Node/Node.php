@@ -622,32 +622,29 @@ abstract class Node implements NodeInterface
             $this->setParsedContent($node->compileParentNode($this->getParsedContent()));
         }
 
-        if (!$node->isTrashable()) {
-
-            if (method_exists($node, 'getExtractionOpen')) {
-                $this->setParsedContent(str_replace(
-                    $node->getExtractionOpen(),
-                    $node->getExtractionId('open'),
-                    $this->getParsedContent()
-                ));
-            }
-
+        if (method_exists($node, 'getExtractionOpen')) {
             $this->setParsedContent(str_replace(
-                $node->getExtractionContent(),
-                $node->getExtractionId(),
+                $node->getExtractionOpen(),
+                $node->getExtractionId('open'),
                 $this->getParsedContent()
             ));
+        }
 
-            $this->children[] = $node;
-
-            if (method_exists($node, 'getExtractionClose')) {
-                $this->setParsedContent(str_replace(
+        if (method_exists($node, 'getExtractionClose')) {
+            $this->setParsedContent(str_replace(
                     $node->getExtractionClose(),
                     $node->getExtractionId('close'),
                     $this->getParsedContent()
                 ));
-            }
         }
+
+        $this->setParsedContent(str_replace(
+            $node->getExtractionContent(),
+            $node->getExtractionId(),
+            $this->getParsedContent()
+        ));
+
+        $this->children[] = $node;
 
         return $this;
     }
@@ -668,19 +665,19 @@ abstract class Node implements NodeInterface
             ));
         }
 
-        $this->parsedContent = str_replace(
-            $node->getExtractionId(),
-            $node->compile(),
-            $this->parsedContent
-        );
-
         if (method_exists($node, 'compileClose')) {
             $this->setParsedContent(str_replace(
-                $node->getExtractionId('close'),
-                $node->compileClose(),
-                $this->getParsedContent()
-            ));
+                    $node->getExtractionId('close'),
+                    $node->compileClose(),
+                    $this->getParsedContent()
+                ));
         }
+
+        $this->setParsedContent(str_replace(
+            $node->getExtractionId(),
+            $node->compile(),
+            $this->getParsedContent()
+        ));
 
         return $this;
     }
