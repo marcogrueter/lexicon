@@ -11,6 +11,11 @@ class CompilerEngine extends BaseCompilerEngine
      */
     protected $refresh = true;
 
+    /**
+     * Enable string parsing
+     *
+     * @var bool
+     */
     protected $parse = false;
 
     /**
@@ -25,6 +30,12 @@ class CompilerEngine extends BaseCompilerEngine
         return $this;
     }
 
+    /**
+     * Set the parse flag
+     *
+     * @param bool $parse
+     * @return $this
+     */
     public function parse($parse = true)
     {
         $this->parse = $parse;

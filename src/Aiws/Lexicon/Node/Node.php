@@ -101,6 +101,11 @@ abstract class Node implements NodeInterface
     protected $contextFinder;
 
     /**
+     * @var string|null
+     */
+    protected $loopItemName;
+
+    /**
      * Make a new node instance
      *
      * @param array $match
@@ -122,6 +127,16 @@ abstract class Node implements NodeInterface
             ->setEnvironment($this->lexicon)
             ->getSetup($match);
 
+        $parsedAttributes = $node->getParsedAttributes();
+
+        $asSegments = explode('as', $parsedAttributes);
+
+        if (count($asSegments) == 2) {
+            $node->setLoopItemName($asSegments[1]);
+        }
+
+        $attributes = $this->lexicon->getRegex()->parseAttributes($parsedAttributes);
+
         $node
             ->setCount($count)
             ->setDepth($depth)
@@ -130,7 +145,7 @@ abstract class Node implements NodeInterface
             ->setContextName($node->getName())
             ->setParsedContent($node->getContent())
             ->setParent($parent)
-            ->setAttributes();
+            ->setAttributes($attributes);
 
         return $node;
     }
@@ -423,9 +438,9 @@ abstract class Node implements NodeInterface
      *
      * @return Node
      */
-    public function setAttributes()
+    public function setAttributes($attributes = [])
     {
-        $this->attributes = $this->lexicon->getRegex()->parseAttributes($this->parsedAttributes);
+        $this->attributes = $attributes;
         return $this;
     }
 
@@ -505,6 +520,12 @@ abstract class Node implements NodeInterface
         return $this->footer;
     }
 
+    /**
+     * Set is trashable
+     *
+     * @param bool $isTrashable
+     * @return $this
+     */
     public function setIsTrashable($isTrashable = false)
     {
         $this->trash = $isTrashable;
@@ -684,6 +705,25 @@ abstract class Node implements NodeInterface
     public function getContextFinder()
     {
         return new ContextFinder($this);
+    }
+
+    /**
+     * @param $loopItemName
+     * @return Node
+     */
+    public function setLoopItemName($loopItemName)
+    {
+        $this->loopItemName = trim($loopItemName);
+        return $this;
+    }
+
+    /**
+     * Get loop item name
+     * @return null|string
+     */
+    public function getLoopItemName()
+    {
+        return $this->loopItemName;
     }
 
 }
