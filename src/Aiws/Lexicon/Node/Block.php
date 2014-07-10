@@ -4,11 +4,27 @@ use Aiws\Lexicon\Util\Type;
 
 class Block extends Node
 {
-    public $fullContent = '';
 
-    public $contentOpen = '';
+    /**
+     * Full content, including opening, inner and closing
+     *
+     * @var string
+     */
+    protected $fullContent = '';
 
-    public $contentClose = '';
+    /**
+     * Opening tag content
+     *
+     * @var string
+     */
+    protected $contentOpen = '';
+
+    /**
+     * Closing tag content
+     *
+     * @var string
+     */
+    protected $contentClose = '';
 
     /**
      * Get regex matcher
@@ -40,17 +56,19 @@ class Block extends Node
      */
     public function getSetup(array $match)
     {
-        $this->setName(isset($match['name']) ? $match['name'] : $match[1]);
-        $this->fullContent      = isset($match[0]) ? $match[0] : '';
-        $this->parsedAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
+        $fullContent = isset($match[0]) ? $match[0] : '';
 
         $content = isset($match['content']) ? $match['content'] : $match[3];
 
+        $this->parsedAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
+
         $this
+            ->setName(isset($match['name']) ? $match['name'] : $match[1])
+            ->setFullContent($fullContent)
             ->setContent($content)
             ->setExtractionContent($content);
 
-        $parts = explode($content, $this->fullContent);
+        $parts = explode($content, $this->getFullContent());
 
         if (count($parts) == 2) {
             $this->contentOpen    = $parts[0];
@@ -58,6 +76,28 @@ class Block extends Node
         }
 
         return $this;
+    }
+
+    /**
+     * Set full content
+     *
+     * @param $fullContent
+     * @return $this
+     */
+    public function setFullContent($fullContent)
+    {
+        $this->fullContent = $fullContent;
+        return $this;
+    }
+
+    /**
+     * Get full content
+     *
+     * @return string
+     */
+    public function getFullContent()
+    {
+        return $this->fullContent;
     }
 
     /**
