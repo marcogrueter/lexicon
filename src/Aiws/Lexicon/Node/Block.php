@@ -49,17 +49,21 @@ class Block extends Node
 
         $expected = Type::ITERATEABLE;
 
+        //dd($this->openContent);
+
+        $finder = $this->getContextFinder();
+
         $dataSource = '$' . $this->parent->getItemName();
 
         if ($this->getParent()->isRoot()) {
             $dataSource = $this->getEnvironment()->getEnvironmentVariable();
         }
 
-        $iterateableSource = "\$__lexicon->get({$dataSource}, '{$this->getName(
+        $iterateableSource = "\$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
         )}', {$attributes}, '', [], '{$expected}')";
 
         $parentParsedContent = str_replace(
-            '{{ ' . $this->getName() . ' }}',
+            $this->getExtractionOpen(),
             "<?php foreach ({$iterateableSource} as \${$this->getItemName()}): ?>",
             $parentParsedContent
         );
