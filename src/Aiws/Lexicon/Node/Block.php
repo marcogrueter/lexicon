@@ -6,21 +6,38 @@ class Block extends Node
 {
     public $fullContent = '';
 
-    public $openContent = '';
+    public $contentOpen = '';
 
-    public $closingContent;
+    public $contentClose = '';
 
+    /**
+     * Get regex matcher
+     *
+     * @return string
+     */
     public function getRegexMatcher()
     {
         return '/\{\{\s*(' . $this->lexicon->getRegex()->getVariableRegexMatcher(
         ) . ')(\s.*?)\}\}(.*?)\{\{\s*\/\1\s*\}\}/ms';
     }
 
+    /**
+     * Get matches
+     *
+     * @param $text
+     * @return array
+     */
     public function getMatches($text)
     {
         return $this->getOpenTagMatches($text);
     }
 
+    /**
+     * Get setup
+     *
+     * @param array $match
+     * @return $this
+     */
     public function getSetup(array $match)
     {
         $this->setName(isset($match['name']) ? $match['name'] : $match[1]);
@@ -36,82 +53,98 @@ class Block extends Node
         $parts = explode($content, $this->fullContent);
 
         if (count($parts) == 2) {
-            $this->openContent    = $parts[0];
-            $this->closingContent = $parts[1];
+            $this->contentOpen    = $parts[0];
+            $this->contentClose = $parts[1];
         }
 
         return $this;
     }
 
-    public function compileParentNode($parentParsedContent)
-    {
-        $attributes = var_export($this->getAttributes(), true);
-
-        $expected = Type::ITERATEABLE;
-
-        //dd($this->openContent);
-
-        $finder = $this->getContextFinder();
-
-        $dataSource = '$' . $this->parent->getItemName();
-
-        if ($this->getParent()->isRoot()) {
-            $dataSource = $this->getEnvironment()->getEnvironmentVariable();
-        }
-
-        $iterateableSource = "\$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
-        )}', {$attributes}, '', [], '{$expected}')";
-
-        $parentParsedContent = str_replace(
-            $this->getExtractionOpen(),
-            "<?php foreach ({$iterateableSource} as \${$this->getItemName()}): ?>",
-            $parentParsedContent
-        );
-
-        $parentParsedContent = str_replace(
-            '{{ /' . $this->getName() . ' }}',
-            '<?php endforeach; ?>',
-            $parentParsedContent
-        );
-
-        return $parentParsedContent;
-    }
-
+    /**
+     * Get the extraction content that opens the block
+     *
+     * @return string
+     */
     public function getExtractionOpen()
     {
-        return $this->openContent;
+        return $this->contentOpen;
     }
 
+    /**
+     * Get the extraction content that closes the block
+     *
+     * @return string
+     */
     public function getExtractionClose()
     {
-        return $this->closingContent;
+        return $this->contentClose;
     }
 
+    /**
+     * Compile source
+     *
+     * @return string
+     */
     public function compile()
     {
         /** @var $node Node */
         foreach ($this->getChildren() as $node) {
-
             // If the block is set as trash, it will be removed from the parsedContent
             if ($node->isTrashable()) {
-
-                // Remove excessive white space so the content its easier to match
-                //$this->parsedContent = $this->compress($this->parsedContent);
-
                 $this->setParsedContent(
                     str_replace(
-                        $node->getExtractionOpen() . $node->getExtractionId() . $node->getExtractionClose(),
+                        $node->getExtractionId('open') . $node->getExtractionId() . $node->getExtractionId('close'),
                         '',
                         $this->getParsedContent()
                     )
                 );
             } else {
-
                 $this->inject($node);
-
             }
         }
 
         return $this->getParsedContent();
+    }
+
+    /**
+     * Compile opening source
+     *
+     * @return string
+     */
+    public function compileOpen()
+    {
+        $iterateable = $this->getIterateableSource();
+
+        return "<?php foreach ({$iterateable} as \${$this->getItemName()}): ?>";
+    }
+
+    /**
+     * Compile iterateable source
+     *
+     * @return string
+     */
+    public function getIterateableSource()
+    {
+        $attributes = var_export($this->getAttributes(), true);
+
+        $expected = Type::ITERATEABLE;
+
+        $finder = $this->getContextFinder();
+
+        $itemName = $finder->getItemName();
+
+        $name = $finder->getName();
+
+        return "\$__lexicon->get({$itemName}, '{$name}', {$attributes}, '', [], '{$expected}')";
+    }
+
+    /**
+     * Compile closing source
+     *
+     * @return string
+     */
+    public function compileClose()
+    {
+        return '<?php endforeach; ?>';
     }
 }
