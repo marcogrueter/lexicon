@@ -60,19 +60,23 @@ class Block extends Node
 
         $content = isset($match['content']) ? $match['content'] : $match[3];
 
-        $this->parsedAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
+        $name = isset($match['name']) ? $match['name'] : $match[1];
+
+        $parsedAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
 
         $this
-            ->setName(isset($match['name']) ? $match['name'] : $match[1])
-            ->setFullContent($fullContent)
+            ->setName($name)
             ->setContent($content)
-            ->setExtractionContent($content);
+            ->setFullContent($fullContent)
+            ->setExtractionContent($content)
+            ->setParsedAttributes($parsedAttributes);
 
         $parts = explode($content, $this->getFullContent());
 
         if (count($parts) == 2) {
-            $this->contentOpen    = $parts[0];
-            $this->contentClose = $parts[1];
+            $this
+                ->setContentOpen($parts[0])
+                ->setContentClose($parts[1]);
         }
 
         return $this;
@@ -105,7 +109,7 @@ class Block extends Node
      *
      * @return string
      */
-    public function getExtractionOpen()
+    public function getExtractionContentOpen()
     {
         return $this->contentOpen;
     }
@@ -115,9 +119,33 @@ class Block extends Node
      *
      * @return string
      */
-    public function getExtractionClose()
+    public function getExtractionContentClose()
     {
         return $this->contentClose;
+    }
+
+    /**
+     * Set content open
+     *
+     * @param $contentOpen
+     * @return Block
+     */
+    public function setContentOpen($contentOpen)
+    {
+        $this->contentOpen = $contentOpen;
+        return $this;
+    }
+
+    /**
+     * Set content close
+     *
+     * @param $contentOpen
+     * @return Block
+     */
+    public function setContentClose($contentClose)
+    {
+        $this->contentClose = $contentClose;
+        return $this;
     }
 
     /**
