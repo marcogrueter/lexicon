@@ -2,6 +2,7 @@
 
 
 use Aiws\Lexicon\Contract\NodeInterface;
+use Aiws\Lexicon\Node\Variable;
 
 class ConditionalParser
 {
@@ -79,6 +80,13 @@ class ConditionalParser
     protected $comparisons = [];
 
     /**
+     * Variable node
+     *
+     * @var \Aiws\Lexicon\Node\Variable
+     */
+    protected $variableNode;
+
+    /**
      * @param               $expression
      * @param NodeInterface $node
      */
@@ -87,6 +95,9 @@ class ConditionalParser
         $this->node       = $node;
         $this->lexicon    = $node->getEnvironment();
         $this->expression = $this->lexicon->getRegex()->compress($expression);
+        $this->variableNode = new Variable();
+        $this->variableNode->setEnvironment($this->lexicon);
+
         $this->parse();
     }
 
@@ -190,13 +201,9 @@ class ConditionalParser
             return $matches[1];
         }
 
-        $dataSource = '$' . $this->node->getParent()->getItemName();
+        $finder = $this->variableNode->make(['name' => $key], $this->node->getParent())->getContextFinder();
 
-        if ($this->node->getParent()->isRoot()) {
-            $dataSource = $this->node->getEnvironment()->getEnvironmentVariable();
-        }
-
-        return "\$__lexicon->get({$dataSource}, '{$key}')";
+        return "\$__lexicon->get({$finder->getItemName()}, '{$finder->getName()}')";
     }
 
     public function getComparisonSource($left, $right, $operator = null)
