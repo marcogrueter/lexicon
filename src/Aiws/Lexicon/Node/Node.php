@@ -618,10 +618,6 @@ abstract class Node implements NodeInterface
      */
     protected function extract(NodeInterface $node)
     {
-        if (method_exists($node, 'compileParentNode')) {
-            $this->setParsedContent($node->compileParentNode($this->getParsedContent()));
-        }
-
         if (method_exists($node, 'getExtractionContentOpen')) {
             $this->setParsedContent(str_replace(
                 $node->getExtractionContentOpen(),
