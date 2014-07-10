@@ -46,6 +46,14 @@ class Lexicon implements EnvironmentInterface
      */
     protected $rootContextName = 'data';
 
+
+    /**
+     * Allow PHP
+     *
+     * @var bool
+     */
+    protected $allowPhp = false;
+
     /**
      * @param Regex                  $regex
      * @param ConditionalHandler     $conditionalHandler
@@ -62,6 +70,10 @@ class Lexicon implements EnvironmentInterface
     {
         if (!$content) {
             return null;
+        }
+
+        if (!$this->getAllowPhp()) {
+            $content = $this->escapePhp($content);
         }
 
         $content = $this->regex->parseComments($content);
@@ -235,5 +247,38 @@ class Lexicon implements EnvironmentInterface
     public function getRootContextName()
     {
         return $this->rootContextName;
+    }
+
+    /**
+     * Escape PHP
+     *
+     * @param $content
+     * @return mixed
+     */
+    public function escapePhp($content)
+    {
+        return str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $content);
+    }
+
+    /**
+     * Get allow PHP
+     *
+     * @return bool
+     */
+    public function getAllowPhp()
+    {
+        return $this->allowPhp;
+    }
+
+    /**
+     * Set allow PHP
+     *
+     * @param $allowPhp
+     * @return $this
+     */
+    public function setAllowPhp($allowPhp = false)
+    {
+        $this->allowPhp = $allowPhp;
+        return $this;
     }
 }
