@@ -19,6 +19,11 @@ class Conditional extends Single
 
     public $parsedName;
 
+    /**
+     * @var ConditionalParser
+     */
+    protected $parser;
+
     public function getNameMatcher()
     {
         return implode('|', $this->startConditionals);
@@ -41,14 +46,8 @@ class Conditional extends Single
         } else {
             $this->parsedName .= ' ((';
         }
-    }
 
-    public function compileParentNode($parsedParentContent)
-    {
-
-        $this->conditionalParser = new ConditionalParser($this->expression, $this);
-
-        return $parsedParentContent;
+        $this->parser = new ConditionalParser($this->expression, $this);
     }
 
     public function compile()
@@ -63,7 +62,7 @@ class Conditional extends Single
         }
 
         if ($hasConditionalEnd) {
-            return "<?php if ({$this->conditionalParser->getSource()}): ?>";
+            return "<?php if ({$this->parser->getSource()}): ?>";
         }
 
         return null;
