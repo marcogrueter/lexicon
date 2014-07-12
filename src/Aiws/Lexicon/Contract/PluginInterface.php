@@ -3,12 +3,31 @@
 interface PluginInterface
 {
 
+    /**
+     * @return string
+     */
     public function getPluginName();
 
+    /**
+     * @param $content
+     * @return string
+     */
     public function setContent($content);
 
+    /**
+     * @param array $attributes
+     * @return PluginInterface
+     */
     public function setAttributes(array $attributes);
 
-    public function attribute($name, $default = null, $defaultOffset = 0);
+    /**
+     * Get attribute
+     *
+     * @param      $name
+     * @param int  $offset
+     * @param null $default
+     * @return mixed
+     */
+    public function getAttribute($name, $offset = 0, $default = null);
 
 }
