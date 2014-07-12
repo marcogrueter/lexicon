@@ -87,16 +87,24 @@ class ConditionalParser
     protected $variableNode;
 
     /**
+     * Start conditional
+     *
+     * @var
+     */
+    protected $start;
+
+    /**
      * @param               $expression
      * @param NodeInterface $node
      */
     public function __construct($expression, NodeInterface $node)
     {
-        $this->node       = $node;
-        $this->lexicon    = $node->getEnvironment();
-        $this->expression = $this->lexicon->getRegex()->compress($expression);
+        $this->node         = $node;
+        $this->lexicon      = $node->getEnvironment();
+        $this->expression   = $this->lexicon->getRegex()->compress($expression);
         $this->variableNode = new Variable();
         $this->variableNode->setEnvironment($this->lexicon);
+        $this->start = $node->getName();
 
         $this->parse();
     }
@@ -201,6 +209,7 @@ class ConditionalParser
             return $matches[1];
         }
 
+
         $finder = $this->variableNode->make(['name' => $key], $this->node->getParent())->getContextFinder();
 
         return "\$__lexicon->get({$finder->getItemName()}, '{$finder->getName()}')";
@@ -242,7 +251,10 @@ class ConditionalParser
 
     public function getComparisonOperatorsRegexMatcher()
     {
-        return '/\s*(' . implode('|', array_merge($this->comparisonOperators, $this->getSpecialComparisonOperators())) . ')\s/ms';
+        return '/\s*(' . implode(
+            '|',
+            array_merge($this->comparisonOperators, $this->getSpecialComparisonOperators())
+        ) . ')\s/ms';
     }
 
     protected function replaceOperators($comparison)
@@ -254,12 +266,24 @@ class ConditionalParser
         return $comparison;
     }
 
-    public function getSource()
+    public function getStart()
+    {
+        switch ($this->start) {
+            case 'unless':
+                return 'if';
+            case 'elseunless':
+                return 'elseif';
+            default:
+                return $this->start;
+        }
+    }
+
+    public function getExpression()
     {
         foreach ($this->comparisons as $key => $comparisonSource) {
             $this->source .= $comparisonSource;
             if (isset($this->logicalOperatorsFound[$key])) {
-                $this->source .= $this->logicalOperatorsFound[$key];
+                $this->source .= ' ' . $this->logicalOperatorsFound[$key] . ' ';
             }
         }
 

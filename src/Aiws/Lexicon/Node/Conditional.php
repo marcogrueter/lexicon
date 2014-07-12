@@ -4,8 +4,11 @@ use Aiws\Lexicon\Util\ConditionalParser;
 
 class Conditional extends Single
 {
-    protected $conditionalParser;
-
+    /**
+     * Start conditionals
+     *
+     * @var array
+     */
     public $startConditionals = array(
         'if',
         'unless',
@@ -13,43 +16,67 @@ class Conditional extends Single
         'elseunless'
     );
 
+    /**
+     * Expression
+     *
+     * @var string
+     */
     protected $expression = '';
-
-    public $parsedExpression = '';
-
-    public $parsedName;
 
     /**
      * @var ConditionalParser
      */
     protected $parser;
 
+    /**
+     * @return string
+     */
     public function getNameMatcher()
     {
         return implode('|', $this->startConditionals);
     }
 
+    /**
+     * Get setup
+     *
+     * @param array $match
+     */
     public function getSetup(array $match)
     {
         $this
             ->setName($match[1])
-            ->setExtractionContent($match[0]);
-
-        $this->expression = $match[2];
-
-        $this->parsedName = $match[1];
-
-        if ($this->parsedName == 'unless') {
-            $this->parsedName = 'if (!(';
-        } elseif ($this->parsedName == 'elseunless') {
-            $this->parsedName = 'elseif (!(';
-        } else {
-            $this->parsedName .= ' ((';
-        }
-
-        $this->parser = new ConditionalParser($this->expression, $this);
+            ->setExtractionContent($match[0])
+            ->setExpression($match[2])
+            ->setParser(new ConditionalParser($this->expression, $this));
     }
 
+    /**
+     * Conditional parser
+     *
+     * @param $parser
+     * @return ConditionalParser
+     */
+    public function setParser($parser)
+    {
+        $this->parser = $parser;
+        return $this;
+    }
+
+    /**
+     * @param $expression
+     * @return Conditional
+     */
+    public function setExpression($expression)
+    {
+        $this->expression = $expression;
+        return $this;
+    }
+
+    /**
+     * Compile source
+     *
+     * @return null|string
+     */
     public function compile()
     {
         $hasConditionalEnd = false;
@@ -62,7 +89,7 @@ class Conditional extends Single
         }
 
         if ($hasConditionalEnd) {
-            return "<?php if ({$this->parser->getSource()}): ?>";
+            return "<?php {$this->parser->getStart()} ({$this->parser->getExpression()}): ?>";
         }
 
         return null;
