@@ -4,28 +4,70 @@ use Aiws\Lexicon\Contract\PluginInterface;
 
 class Plugin implements PluginInterface
 {
+    /**
+     * Attributes
+     *
+     * @var array
+     */
     protected $attributes = array();
 
+    /**
+     * Content
+     *
+     * @var string
+     */
     protected $content;
 
-    public $name;
+    /**
+     * Get name
+     *
+     * @var string
+     */
+    protected $name;
 
+    /**
+     * Get plugin name
+     *
+     * @return string
+     */
     public function getPluginName()
     {
         return $this->name;
     }
 
+    /**
+     * Set content
+     *
+     * @param string $content
+     * @return Plugin
+     */
     public function setContent($content = '')
     {
         $this->content = $content;
+        return $this;
     }
 
+    /**
+     * Set attributes
+     *
+     * @param array $attributes
+     * @return Plugin
+     */
     public function setAttributes(array $attributes)
     {
         $this->attributes = $attributes;
+        return $this;
     }
 
-    public function attribute($name, $default = null, $offset = 0)
+    /**
+     * Get attribute
+     *
+     * @param      $name
+     * @param int  $offset
+     * @param null $default
+     * @return mixed|null
+     */
+    public function getAttribute($name, $offset = 0, $default = null)
     {
         if (isset($this->attributes[$name])) {
             return $this->attributes[$name];
@@ -37,6 +79,13 @@ class Plugin implements PluginInterface
         return $default;
     }
 
+    /**
+     * Prevent errors if a method that is called does not exists
+     *
+     * @param $name
+     * @param $arguments
+     * @return null
+     */
     public function __call($name, $arguments)
     {
         return null;
