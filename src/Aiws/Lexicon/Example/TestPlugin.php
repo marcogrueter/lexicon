@@ -19,14 +19,14 @@ class TestPlugin extends Plugin
      */
     public function hello()
     {
-        $name = $this->attribute('name', 'World');
+        $name = $this->getAttribute('name', 'World');
 
         return "Hello {$name}!";
     }
 
     public function object()
     {
-        $name = $this->attribute('name', 'yay');
+        $name = $this->getAttribute('name', 'yay');
 
         $object = new \stdClass();
 
@@ -37,6 +37,30 @@ class TestPlugin extends Plugin
 
     public function loop()
     {
-        return \Book::all();
+        return [
+
+            [
+                'title' => 'Library 1',
+                'books' => [
+                    [
+                        'title' => 'Book 1.2'
+                    ],
+                    [
+                        'title' => 'Book 1.2'
+                    ],
+                ]
+            ],
+            [
+                'title' => 'Library 2',
+                'books' => [
+                    [
+                        'title' => 'Book 2.2'
+                    ],
+                    [
+                        'title' => 'Book 2.2'
+                    ],
+                ]
+            ],
+        ];
     }
 }
