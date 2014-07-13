@@ -4,7 +4,7 @@ use Aiws\Lexicon\Lexicon;
 use Aiws\Lexicon\Node\Block;
 use Aiws\Lexicon\Node\Conditional;
 use Aiws\Lexicon\Node\ConditionalElse;
-use Aiws\Lexicon\Node\ConditionalEnd;
+use Aiws\Lexicon\Node\ConditionalEndif;
 use Aiws\Lexicon\Node\Variable;
 use Aiws\Lexicon\Provider\Laravel\Node\Insert;
 use Aiws\Lexicon\Provider\Laravel\Node\Section;
@@ -12,12 +12,17 @@ use Aiws\Lexicon\Provider\Laravel\Node\SectionExtends;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionShow;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionStop;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionYield;
-use Aiws\Lexicon\Util\ConditionalComparisons;
-use Aiws\Lexicon\Util\ConditionalHandler;
+use Aiws\Lexicon\Util\Conditional\ConditionalComparisons;
+use Aiws\Lexicon\Util\Conditional\ConditionalHandler;
 use Aiws\Lexicon\Util\Regex;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class LexiconServiceProvider
+ *
+ * @package Aiws\Lexicon\Provider\Laravel
+ */
 class LexiconServiceProvider extends ServiceProvider {
 
     /**
@@ -61,7 +66,7 @@ class LexiconServiceProvider extends ServiceProvider {
                             new Insert(),
                             new Conditional(),
                             new ConditionalElse(),
-                            new ConditionalEnd(),
+                            new ConditionalEndif(),
                             new Variable(),
                         ]
                     );
