@@ -1,8 +1,9 @@
 <?php namespace Aiws\Lexicon\Node;
 
+use Aiws\Lexicon\Contract\NodeBlockInterface;
 use Aiws\Lexicon\Util\Type;
 
-class Block extends Node
+class Block extends Node implements NodeBlockInterface
 {
 
     /**
@@ -67,11 +68,10 @@ class Block extends Node
         $this
             ->setName($name)
             ->setContent($content)
-            ->setFullContent($fullContent)
             ->setExtractionContent($content)
             ->setParsedAttributes($parsedAttributes);
 
-        $parts = explode($content, $this->getFullContent());
+        $parts = explode($content, $fullContent);
 
         if (count($parts) == 2) {
             $this
@@ -80,28 +80,6 @@ class Block extends Node
         }
 
         return $this;
-    }
-
-    /**
-     * Set full content
-     *
-     * @param $fullContent
-     * @return $this
-     */
-    public function setFullContent($fullContent)
-    {
-        $this->fullContent = $fullContent;
-        return $this;
-    }
-
-    /**
-     * Get full content
-     *
-     * @return string
-     */
-    public function getFullContent()
-    {
-        return $this->fullContent;
     }
 
     /**
@@ -139,8 +117,8 @@ class Block extends Node
     /**
      * Set content close
      *
-     * @param $contentOpen
-     * @return Block
+     * @param $contentClose
+     * @return NodeBlockInterface
      */
     public function setContentClose($contentClose)
     {
@@ -157,18 +135,7 @@ class Block extends Node
     {
         /** @var $node Node */
         foreach ($this->getChildren() as $node) {
-            // If the block is set as trash, it will be removed from the parsedContent
-            if ($node->isTrashable()) {
-                $this->setParsedContent(
-                    str_replace(
-                        $node->getExtractionId('open') . $node->getExtractionId() . $node->getExtractionId('close'),
-                        '',
-                        $this->getParsedContent()
-                    )
-                );
-            } else {
-                $this->inject($node);
-            }
+            $this->inject($node);
         }
 
         return $this->getParsedContent();
@@ -181,9 +148,7 @@ class Block extends Node
      */
     public function compileOpen()
     {
-        $iterateable = $this->getIterateableSource();
-
-        return "<?php foreach ({$iterateable} as \${$this->getItemName()}): ?>";
+        return "<?php foreach ({$this->getIterateableSource()} as \${$this->getItemName()}): ?>";
     }
 
     /**
