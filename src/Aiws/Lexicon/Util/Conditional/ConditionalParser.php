@@ -1,5 +1,4 @@
-<?php namespace Aiws\Lexicon\Util;
-
+<?php namespace Aiws\Lexicon\Util\Conditional;
 
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Node\Variable;
@@ -13,8 +12,16 @@ class ConditionalParser
      */
     protected $node;
 
+    /**
+     * @var string
+     */
     protected $source = '';
 
+    /**
+     * Logical operator placeholder
+     *
+     * @var string
+     */
     protected $logicalOperatorPlaceholder = ' __LOGICAL__OPERATOR__ ';
 
     public $startConditionals = array(
@@ -97,28 +104,36 @@ class ConditionalParser
      * @param               $expression
      * @param NodeInterface $node
      */
-    public function __construct($expression, NodeInterface $node)
+    public function __construct(NodeInterface $node)
     {
         $this->node         = $node;
         $this->lexicon      = $node->getEnvironment();
-        $this->expression   = $this->lexicon->getRegex()->compress($expression);
+        $this->expression   = $this->lexicon->getRegex()->compress($node->getExpression());
         $this->variableNode = new Variable();
         $this->variableNode->setEnvironment($this->lexicon);
         $this->start = $node->getName();
 
+
         $this->parse();
     }
 
+    /**
+     * @return mixed
+     */
     public function getSpecialComparisonOperators()
     {
         return $this->lexicon->getConditionalHandler()->getSpecialComparisonOperators();
     }
 
+    /**
+     * @return ConditionalParser
+     */
     public function parse()
     {
         $this
             ->extractLogicalOperators($this->getLogicalOperatorsMatches())
             ->parseComparisons();
+        return $this;
     }
 
     public function extractLogicalOperators($logicalOperatorMatches)
