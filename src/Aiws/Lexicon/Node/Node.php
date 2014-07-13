@@ -133,7 +133,18 @@ abstract class Node implements NodeInterface
 
         $node
             ->setEnvironment($this->lexicon)
+            ->setParent($parent)
+            ->setCount($count)
+            ->setDepth($depth)
             ->getSetup($match);
+
+        $node
+            ->setId($node->getContent() . $node->getName() . $node->getDepth() . $node->getCount())
+            ->setItemName(
+                str_replace(' ', '', str_replace($this->lexicon->getScopeGlue(), ' ', $node->getName())) . 'Item'
+            )
+            ->setContextName($node->getName())
+            ->setParsedContent($node->getContent());
 
         $parsedAttributes = $node->getParsedAttributes();
 
@@ -145,17 +156,7 @@ abstract class Node implements NodeInterface
 
         $attributes = $this->lexicon->getRegex()->parseAttributes($parsedAttributes);
 
-        $node
-            ->setCount($count)
-            ->setDepth($depth)
-            ->setId($node->getContent() . $node->getName() . $node->getDepth() . $node->getCount())
-            ->setItemName(
-                str_replace(' ', '', str_replace($this->lexicon->getScopeGlue(), ' ', $node->getName())) . 'Item'
-            )
-            ->setContextName($node->getName())
-            ->setParsedContent($node->getContent())
-            ->setParent($parent)
-            ->setAttributes($attributes);
+        $node->setAttributes($attributes);
 
         return $node;
     }
