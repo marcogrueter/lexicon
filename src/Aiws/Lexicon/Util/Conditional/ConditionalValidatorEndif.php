@@ -13,10 +13,10 @@ class ConditionalValidatorEndif extends NodeValidator
     public function isValid()
     {
         return
-            $this->isEqualCount('if', 'endif') and
+            $this->isEqualCount('if', 'endif')/* and
             $this->isAfterExisting('if') and
             $this->isAfter('elseif') and
-            $this->isAfter('else');
+            $this->isAfter('else')*/;
     }
 
 }
