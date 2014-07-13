@@ -1,6 +1,8 @@
 <?php namespace Aiws\Lexicon\Util;
 
-use Aiws\Lexicon\Node\Block;
+use Aiws\Lexicon\Contract\EnvironmentInterface;
+use Aiws\Lexicon\Contract\NodeBlockInterface;
+use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Node\Node;
 
 class ContextFinder
@@ -14,16 +16,19 @@ class ContextFinder
     /**
      * Lexicon environment
      *
-     * @var \Aiws\Lexicon\Contract\EnvironmentInterface
+     * @var EnvironmentInterface
      */
     protected $lexicon;
 
+    /**
+     * @var NodeInterface
+     */
     protected $parent;
 
     /**
      * @param Node $node
      */
-    public function __construct(Node $node)
+    public function __construct(NodeInterface $node)
     {
         $this->node    = $node;
         $this->lexicon = $this->node->getEnvironment();
@@ -95,7 +100,7 @@ class ContextFinder
 
     public function getLoopItemSource()
     {
-        if ($this->node instanceof Block) {
+        if ($this->node instanceof NodeBlockInterface) {
             if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
                 return $this->lexicon->getEnvironmentVariable();
             } elseif ($this->parent and !$this->parent->isRoot()) {
@@ -104,6 +109,8 @@ class ContextFinder
                 return $this->lexicon->getEnvironmentVariable();
             }
         }
+
+        return null;
     }
 
     public function isRootContextName()
