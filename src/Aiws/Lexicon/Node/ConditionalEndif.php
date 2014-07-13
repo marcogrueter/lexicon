@@ -1,18 +1,16 @@
 <?php namespace Aiws\Lexicon\Node;
 
 use Aiws\Lexicon\Contract\NodeConditionalInterface;
-use Aiws\Lexicon\Util\Conditional\ConditionalValidator;
-use Aiws\Lexicon\Util\Conditional\ConditionalValidatorElse;
-use Aiws\Lexicon\Util\Conditional\ConditionalValidatorIf;
+use Aiws\Lexicon\Util\Conditional\ConditionalValidatorEndif;
 
-class ConditionalElse extends Single implements NodeConditionalInterface
+class ConditionalEndif extends Single implements NodeConditionalInterface
 {
     /**
      * Name
      *
      * @var string
      */
-    public $name ='else';
+    public $name = 'endif';
 
     /**
      * Get setup from regex match
@@ -23,7 +21,7 @@ class ConditionalElse extends Single implements NodeConditionalInterface
     {
         $this
             ->setExtractionContent($match[0])
-            ->setValidator(new ConditionalValidatorElse($this));
+            ->setValidator(new ConditionalValidatorEndif($this));
     }
 
     /**
@@ -33,7 +31,7 @@ class ConditionalElse extends Single implements NodeConditionalInterface
      */
     public function compile()
     {
-        return '<?php else: ?>';
+        return '<?php endif; ?>';
     }
 
 }

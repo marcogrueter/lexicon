@@ -3,7 +3,7 @@
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\PluginHandlerInterface;
-use Aiws\Lexicon\Util\ConditionalHandler;
+use Aiws\Lexicon\Util\Conditional\ConditionalHandler;
 use Aiws\Lexicon\Util\Context;
 use Aiws\Lexicon\Util\Regex;
 use Aiws\Lexicon\Util\Type;

@@ -2,6 +2,7 @@
 
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
+use Aiws\Lexicon\Contract\NodeValidatorInterface;
 use Aiws\Lexicon\Util\ContextFinder;
 
 abstract class Node implements NodeInterface
@@ -72,11 +73,6 @@ abstract class Node implements NodeInterface
     protected $parsedContent;
 
     /**
-     * @var bool
-     */
-    protected $trash = false;
-
-    /**
      * @var EnvironmentInterface
      */
     protected $lexicon;
@@ -104,6 +100,18 @@ abstract class Node implements NodeInterface
      * @var string|null
      */
     protected $loopItemName;
+
+    /**
+     * Is valid for compile
+     *
+     * @var bool
+     */
+    protected $isValid = true;
+
+    /**
+     * @var
+     */
+    protected $validator;
 
     /**
      * Make a new node instance
@@ -141,7 +149,9 @@ abstract class Node implements NodeInterface
             ->setCount($count)
             ->setDepth($depth)
             ->setId($node->getContent() . $node->getName() . $node->getDepth() . $node->getCount())
-            ->setItemName(str_replace(' ', '', str_replace($this->lexicon->getScopeGlue(), ' ', $node->getName())) . 'Item')
+            ->setItemName(
+                str_replace(' ', '', str_replace($this->lexicon->getScopeGlue(), ' ', $node->getName())) . 'Item'
+            )
             ->setContextName($node->getName())
             ->setParsedContent($node->getContent())
             ->setParent($parent)
@@ -195,7 +205,7 @@ abstract class Node implements NodeInterface
      * Set parsed content
      *
      * @param $parsedContent
-     * @return $this
+     * @return NodeInterface
      */
     public function setParsedContent($parsedContent)
     {
@@ -214,13 +224,36 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Set children
+     *
+     * @param array $children
+     * @return NodeInterface
+     */
+    public function addChild(NodeInterface $node)
+    {
+        $this->children[] = $node;
+        return $this;
+    }
+
+    /**
      * Get child nodes
      *
+     * @param $class mixed
      * @return array
      */
-    public function getChildren()
+    public function getChildren($class = null)
     {
-        return $this->children;
+        $children = $this->children;
+
+        if (is_string($class)) {
+            foreach($this->children as $key => $node) {
+                if (!is_subclass_of($node, $class)) {
+                    unset($children[$key]);
+                }
+            }
+        }
+
+        return $children;
     }
 
     /**
@@ -270,7 +303,7 @@ abstract class Node implements NodeInterface
      * Set count
      *
      * @param int $count
-     * @return Node
+     * @return NodeInterface
      */
     public function setCount($count = 0)
     {
@@ -292,7 +325,7 @@ abstract class Node implements NodeInterface
      * Set name
      *
      * @param $name
-     * @return Node
+     * @return NodeInterface
      */
     public function setName($name)
     {
@@ -324,7 +357,7 @@ abstract class Node implements NodeInterface
      * Set parent node
      *
      * @param Node $parentNode
-     * @return Node
+     * @return NodeInterface
      */
     public function setParent(Node $parentNode = null)
     {
@@ -335,7 +368,7 @@ abstract class Node implements NodeInterface
     /**
      * Get root
      *
-     * @return Node
+     * @return NodeInterface
      */
     public function getParent()
     {
@@ -371,7 +404,7 @@ abstract class Node implements NodeInterface
      * Set item name
      *
      * @param $itemName
-     * @return $this
+     * @return NodeInterface
      */
     public function setItemName($itemName)
     {
@@ -403,7 +436,7 @@ abstract class Node implements NodeInterface
      * Set context item name
      *
      * @param $contextItemName
-     * @return $this
+     * @return NodeInterface
      */
     public function setContextName($contextItemName)
     {
@@ -415,7 +448,7 @@ abstract class Node implements NodeInterface
      * Set parsed attributes
      *
      * @param $parsedAttributes
-     * @return $this
+     * @return NodeInterface
      */
     public function setParsedAttributes($parsedAttributes)
     {
@@ -436,7 +469,7 @@ abstract class Node implements NodeInterface
     /**
      * Set attributes
      *
-     * @return Node
+     * @return NodeInterface
      */
     public function setAttributes($attributes = [])
     {
@@ -492,7 +525,7 @@ abstract class Node implements NodeInterface
      * Set environment
      *
      * @param EnvironmentInterface $lexicon
-     * @return $this
+     * @return NodeInterface
      */
     public function setEnvironment(EnvironmentInterface $lexicon)
     {
@@ -518,28 +551,6 @@ abstract class Node implements NodeInterface
     public function getFooter()
     {
         return $this->footer;
-    }
-
-    /**
-     * Set is trashable
-     *
-     * @param bool $isTrashable
-     * @return $this
-     */
-    public function setIsTrashable($isTrashable = false)
-    {
-        $this->trash = $isTrashable;
-        return $this;
-    }
-
-    /**
-     * Is the node trashable?
-     *
-     * @return bool
-     */
-    public function isTrashable()
-    {
-        return $this->trash;
     }
 
     /**
@@ -590,7 +601,7 @@ abstract class Node implements NodeInterface
     {
         $rootNodeType = $this->lexicon->getRootNodeType();
 
-        if ($rootNodeType instanceof Node) {
+        if ($rootNodeType instanceof NodeInterface) {
             $rootNodeType->setEnvironment($this->lexicon);
             foreach ($rootNodeType->getMatches($this->parsedContent) as $count => $match) {
                 $this->createChildNode($rootNodeType, $match, $count);
@@ -598,12 +609,16 @@ abstract class Node implements NodeInterface
         }
 
         foreach ($this->lexicon->getNodeTypes() as $nodeType) {
-            if ($nodeType instanceof Node) {
+            if ($nodeType instanceof NodeInterface) {
                 $nodeType->setEnvironment($this->lexicon);
                 foreach ($nodeType->getMatches($this->parsedContent) as $count => $match) {
                     $this->createChildNode($nodeType, $match, $count);
                 }
             }
+        }
+
+        foreach($this->getChildren() as $node) {
+            $node->validate();
         }
 
         return $this;
@@ -626,7 +641,9 @@ abstract class Node implements NodeInterface
             $count
         );
 
-        $this->extract($node->createChildNodes());
+        $node->createChildNodes();
+
+        $this->extract($node);
 
         return $node;
     }
@@ -640,28 +657,34 @@ abstract class Node implements NodeInterface
     protected function extract(NodeInterface $node)
     {
         if (method_exists($node, 'getExtractionContentOpen')) {
-            $this->setParsedContent(str_replace(
-                $node->getExtractionContentOpen(),
-                $node->getExtractionId('open'),
-                $this->getParsedContent()
-            ));
+            $this->setParsedContent(
+                str_replace(
+                    $node->getExtractionContentOpen(),
+                    $node->getExtractionId('open'),
+                    $this->getParsedContent()
+                )
+            );
         }
 
         if (method_exists($node, 'getExtractionContentClose')) {
-            $this->setParsedContent(str_replace(
+            $this->setParsedContent(
+                str_replace(
                     $node->getExtractionContentClose(),
                     $node->getExtractionId('close'),
                     $this->getParsedContent()
-                ));
+                )
+            );
         }
 
-        $this->setParsedContent(str_replace(
-            $node->getExtractionContent(),
-            $node->getExtractionId(),
-            $this->getParsedContent()
-        ));
+        $this->setParsedContent(
+            str_replace(
+                $node->getExtractionContent(),
+                $node->getExtractionId(),
+                $this->getParsedContent()
+            )
+        );
 
-        $this->children[] = $node;
+        $this->addChild($node);
 
         return $this;
     }
@@ -674,27 +697,34 @@ abstract class Node implements NodeInterface
      */
     protected function inject(NodeInterface $node)
     {
+
         if (method_exists($node, 'compileOpen')) {
-            $this->setParsedContent(str_replace(
-                $node->getExtractionId('open'),
-                $node->compileOpen(),
-                $this->getParsedContent()
-            ));
+            $this->setParsedContent(
+                str_replace(
+                    $node->getExtractionId('open'),
+                    $node->isValid() ? $node->compileOpen() : null,
+                    $this->getParsedContent()
+                )
+            );
         }
 
         if (method_exists($node, 'compileClose')) {
-            $this->setParsedContent(str_replace(
+            $this->setParsedContent(
+                str_replace(
                     $node->getExtractionId('close'),
-                    $node->compileClose(),
+                    $node->isValid() ? $node->compileClose() : null,
                     $this->getParsedContent()
-                ));
+                )
+            );
         }
 
-        $this->setParsedContent(str_replace(
-            $node->getExtractionId(),
-            $node->compile(),
-            $this->getParsedContent()
-        ));
+        $this->setParsedContent(
+            str_replace(
+                $node->getExtractionId(),
+                $node->isValid() ? $node->compile() : null,
+                $this->getParsedContent()
+            )
+        );
 
         return $this;
     }
@@ -719,6 +749,7 @@ abstract class Node implements NodeInterface
 
     /**
      * Get loop item name
+     *
      * @return null|string
      */
     public function getLoopItemName()
@@ -726,4 +757,50 @@ abstract class Node implements NodeInterface
         return $this->loopItemName;
     }
 
+    /**
+     * Set node validator
+     *
+     * @param NodeValidatorInterface $validator
+     * @return NodeInterface
+     */
+    public function setValidator(NodeValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+        return $this;
+    }
+
+    /**
+     * Get node validator
+     *
+     * @return NodeValidatorInterface
+     */
+    public function getValidator()
+    {
+        return $this->validator;
+    }
+
+    /**
+     * Validate the node
+     *
+     * @param bool $isValid
+     * @return NodeInterface
+     */
+    public function validate()
+    {
+        if ($validator = $this->getValidator()) {
+            $this->isValid = $validator->isValid();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Is valid
+     *
+     * @return bool
+     */
+    public function isValid()
+    {
+        return $this->isValid;
+    }
 }

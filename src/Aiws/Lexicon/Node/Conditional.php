@@ -1,8 +1,11 @@
 <?php namespace Aiws\Lexicon\Node;
 
-use Aiws\Lexicon\Util\ConditionalParser;
+use Aiws\Lexicon\Contract\NodeConditionalInterface;
+use Aiws\Lexicon\Util\Conditional\ConditionalParser;
+use Aiws\Lexicon\Util\Conditional\ConditionalValidatorElseif;
+use Aiws\Lexicon\Util\Conditional\ConditionalValidatorIf;
 
-class Conditional extends Single
+class Conditional extends Single implements NodeConditionalInterface
 {
     /**
      * Start conditionals
@@ -24,6 +27,8 @@ class Conditional extends Single
     protected $expression = '';
 
     /**
+     * Conditional parser
+     *
      * @var ConditionalParser
      */
     protected $parser;
@@ -37,9 +42,10 @@ class Conditional extends Single
     }
 
     /**
-     * Get setup
+     * Get setup from regex match
      *
      * @param array $match
+     * @return void
      */
     public function getSetup(array $match)
     {
@@ -47,13 +53,19 @@ class Conditional extends Single
             ->setName($match[1])
             ->setExtractionContent($match[0])
             ->setExpression($match[2])
-            ->setParser(new ConditionalParser($this->expression, $this));
+            ->setParser(new ConditionalParser($this));
+
+        if ($this->getName() == 'if') {
+            $this->setValidator(new ConditionalValidatorIf($this));
+        } elseif ($this->getName('elseif')) {
+            $this->setValidator(new ConditionalValidatorElseif($this));
+        }
     }
 
     /**
-     * Conditional parser
+     * Set conditional parser
      *
-     * @param $parser
+     * @param $parser ConditionalParser
      * @return ConditionalParser
      */
     public function setParser($parser)
@@ -73,26 +85,23 @@ class Conditional extends Single
     }
 
     /**
+     * Get expression
+     *
+     * @return string
+     */
+    public function getExpression()
+    {
+        return $this->expression;
+    }
+
+    /**
      * Compile source
      *
      * @return null|string
      */
     public function compile()
     {
-        $hasConditionalEnd = false;
-
-        foreach ($this->getParent()->getChildren() as $node) {
-            if ($node instanceof ConditionalEnd) {
-                $hasConditionalEnd = true;
-                break;
-            }
-        }
-
-        if ($hasConditionalEnd) {
-            return "<?php {$this->parser->getStart()} ({$this->parser->getExpression()}): ?>";
-        }
-
-        return null;
+        return "<?php {$this->parser->getStart()} ({$this->parser->getExpression()}): ?>";
     }
 
 }
