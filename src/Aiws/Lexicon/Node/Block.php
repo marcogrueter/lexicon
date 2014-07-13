@@ -133,6 +133,10 @@ class Block extends Node implements NodeBlockInterface
      */
     public function compile()
     {
+        if ($this->isFilter()) {
+            return $this->compileFilter();
+        }
+
         /** @var $node Node */
         foreach ($this->getChildren() as $node) {
             $this->inject($node);
@@ -148,7 +152,28 @@ class Block extends Node implements NodeBlockInterface
      */
     public function compileOpen()
     {
+        if ($this->isFilter()) {
+            return null;
+        }
+
         return "<?php foreach ({$this->getIterateableSource()} as \${$this->getItemName()}): ?>";
+    }
+
+    /**
+     * Compile block filter
+     *
+     * @return string
+     */
+    public function compileFilter()
+    {
+        $attributes = var_export($this->getAttributes(), true);
+
+        $finder = $this->getContextFinder();
+
+        $expected = Type::ECHOABLE;
+
+        return "<?php echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
+        )}', {$attributes}, '{$this->getContent()}', '', '{$expected}'); ?>";
     }
 
     /**
@@ -178,6 +203,10 @@ class Block extends Node implements NodeBlockInterface
      */
     public function compileClose()
     {
+        if ($this->isFilter()) {
+            return null;
+        }
+
         return '<?php endforeach; ?>';
     }
 }

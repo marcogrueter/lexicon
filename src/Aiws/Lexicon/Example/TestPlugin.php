@@ -63,4 +63,10 @@ class TestPlugin extends Plugin
             ],
         ];
     }
+
+    public function filterMd5()
+    {
+        return md5($this->getContent());
+    }
+
 }

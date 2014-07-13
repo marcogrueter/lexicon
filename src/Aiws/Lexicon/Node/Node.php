@@ -803,4 +803,14 @@ abstract class Node implements NodeInterface
     {
         return $this->isValid;
     }
+
+    /**
+     * Is filter
+     *
+     * @return mixed
+     */
+    public function isFilter()
+    {
+        return $this->getEnvironment()->isFilter($this->getName());
+    }
 }

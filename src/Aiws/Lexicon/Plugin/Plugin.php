@@ -48,6 +48,16 @@ class Plugin implements PluginInterface
     }
 
     /**
+     * Get content
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
      * Set attributes
      *
      * @param array $attributes
@@ -80,6 +90,17 @@ class Plugin implements PluginInterface
     }
 
     /**
+     * Key is a filter method
+     *
+     * @param $key
+     * @return bool
+     */
+    public function isFilter($name)
+    {
+        return method_exists($this, 'filter'.ucfirst($name));
+    }
+
+    /**
      * Prevent errors if a method that is called does not exists
      *
      * @param $name
@@ -88,6 +109,10 @@ class Plugin implements PluginInterface
      */
     public function __call($name, $arguments)
     {
+        if ($this->isFilter($name)) {
+            return call_user_func([$this, 'filter'.ucfirst($name)]);
+        }
+
         return null;
     }
     

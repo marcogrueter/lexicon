@@ -373,7 +373,7 @@ class Lexicon implements EnvironmentInterface
      */
     public function call($name, $attributes = [], $content = '')
     {
-        return $this->pluginHandler->call($name, $attributes, $content);
+        return $this->getPluginHandler()->call($name, $attributes, $content);
     }
 
     /**
@@ -461,4 +461,19 @@ class Lexicon implements EnvironmentInterface
         return $this;
     }
 
+    /**
+     * Is filter
+     *
+     * @param $name
+     * @return bool
+     */
+    public function isFilter($name)
+    {
+        if ($plugin = $this->getPluginHandler()->get($name)) {
+            $segments = explode('.', $name);
+            return $plugin->isFilter($segments[1]);
+        }
+
+        return false;
+    }
 }
