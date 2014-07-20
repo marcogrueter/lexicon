@@ -12,8 +12,10 @@ use Aiws\Lexicon\Provider\Laravel\Node\SectionExtends;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionShow;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionStop;
 use Aiws\Lexicon\Provider\Laravel\Node\SectionYield;
-use Aiws\Lexicon\Util\Conditional\ConditionalComparisons;
+use Aiws\Lexicon\Provider\Laravel\Node\Set;
 use Aiws\Lexicon\Util\Conditional\ConditionalHandler;
+use Aiws\Lexicon\Util\Conditional\Test\IterateableTest;
+use Aiws\Lexicon\Util\Conditional\Test\StringTest;
 use Aiws\Lexicon\Util\Regex;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -32,9 +34,11 @@ class LexiconServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-       // dd('hello');
-
         $this->package('aiws/lexicon', null, __DIR__.'/../../../..');
+
+        $this
+            ->registerConditionalHandler()
+            ->registerPluginHandler();
 
         /** @var $app Application */
         $app = $this->app;
@@ -45,15 +49,12 @@ class LexiconServiceProvider extends ServiceProvider {
 
                 $allowPhp = $app['config']->get('lexicon::allowPhp', false);
 
-                $conditionalHandler = new ConditionalHandler();
-
-                $conditionalHandler->registerSpecialComparisonClass(new ConditionalComparisons());
-
-                $lexicon = new Lexicon(new Regex($scopeGlue), $conditionalHandler, new PluginHandler());
+                $lexicon = new Lexicon(new Regex($scopeGlue), $app['lexicon.conditional.handler'], $app['lexicon.plugin.handler']);
 
                 $lexicon
                     ->setAllowPhp($allowPhp)
                     ->setIgnoredMatchers(['parent'])
+                    ->registerPlugin('foo', 'Aiws\\Lexicon\\Example\\FooPlugin')
                     ->registerPlugin('test', 'Aiws\\Lexicon\\Example\\TestPlugin')
                     ->registerRootNodeType(new Block())
                     ->registerNodeTypes(
@@ -63,6 +64,7 @@ class LexiconServiceProvider extends ServiceProvider {
                             new SectionShow(),
                             new SectionStop(),
                             new SectionYield(),
+                            new Set(),
                             new Insert(),
                             new Conditional(),
                             new ConditionalElse(),
@@ -137,6 +139,37 @@ class LexiconServiceProvider extends ServiceProvider {
                 return $env;
             }
         );
+    }
+
+    /**
+     * Register conditional handler
+     *
+     * @return LexiconServiceProvider
+     */
+    public function registerConditionalHandler()
+    {
+        $this->app->singleton('lexicon.conditional.handler', function() {
+            $conditionalHandler = new ConditionalHandler();
+            $conditionalHandler
+                ->registerTestType(new StringTest())
+                ->registerTestType(new IterateableTest());
+            return $conditionalHandler;
+        });
+
+        return $this;
+    }
+
+    /**
+     * Register plugin handler
+     *
+     * @return LexiconServiceProvider
+     */
+    public function registerPluginHandler()
+    {
+        $this->app->singleton('lexicon.plugin.handler', function() {
+                return new PluginHandler();
+            });
+        return $this;
     }
 
     /**
