@@ -17,14 +17,34 @@ class PluginHandler implements PluginHandlerInterface
      */
     protected $plugins = [];
 
-    protected $pluginData = array();
 
+    /**
+     * Set environment
+     *
+     * @param EnvironmentInterface $lexicon
+     * @return PluginHandlerInterface
+     */
     public function setEnvironment(EnvironmentInterface $lexicon)
     {
         $this->lexicon = $lexicon;
         return $this;
     }
 
+    /**
+     * @return EnvironmentInterface
+     */
+    public function getEnvironment()
+    {
+        return $this->lexicon;
+    }
+
+    /**
+     * Register plugin
+     *
+     * @param $name
+     * @param $class
+     * @return $this
+     */
     public function register($name, $class)
     {
         \App::singleton("lexicon.plugin.{$name}", function() use ($class) {
@@ -36,23 +56,37 @@ class PluginHandler implements PluginHandlerInterface
         return $this;
     }
 
+    /**
+     * Get plugin
+     *
+     * @param $name
+     * @return PluginInterface|null
+     */
     public function get($name)
     {
-        $segments = explode('.', $name);
+        $parts = explode($this->getEnvironment()->getScopeGlue(), $name);
 
-        $name = $segments[0];
+        if (count($parts) > 1) {
+            $name = $parts[0];
+            return isset($this->plugins[$name]) ? \App::make("lexicon.plugin.{$name}") : null;
+        }
 
-        return isset($this->plugins[$name]) ? \App::make("lexicon.plugin.{$name}") : null;
+        return null;
     }
 
+    /**
+     * Call plugin method
+     *
+     * @param        $name
+     * @param array  $attributes
+     * @param string $content
+     * @return mixed
+     */
     public function call($name, $attributes = [], $content = '')
     {
-        $segments = explode('.', $name);
-
+        $segments = explode($this->getEnvironment()->getScopeGlue(), $name);
         if (count($segments) > 1) {
-            $name   = $segments[0];
             $method = $segments[1];
-
             /** @var $plugin PluginInterface */
             if ($plugin = $this->get($name)) {
                 $plugin->setAttributes($attributes);
