@@ -1,8 +1,8 @@
-<?php namespace Aiws\Lexicon\Util\Conditional;
+<?php namespace Aiws\Lexicon\Util\Conditional\Validator;
 
 use Aiws\Lexicon\Util\NodeValidator;
 
-class ConditionalValidatorElseif extends NodeValidator
+class ElseifValidator extends NodeValidator
 {
 
     /**
