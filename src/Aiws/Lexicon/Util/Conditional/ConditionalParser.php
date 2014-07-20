@@ -120,9 +120,9 @@ class ConditionalParser
     /**
      * @return mixed
      */
-    public function getSpecialComparisonOperators()
+    public function getTestOperators()
     {
-        return $this->lexicon->getConditionalHandler()->getSpecialComparisonOperators();
+        return $this->lexicon->getConditionalHandler()->getTestOperators();
     }
 
     /**
@@ -268,7 +268,7 @@ class ConditionalParser
     {
         return '/\s*(' . implode(
             '|',
-            array_merge($this->comparisonOperators, $this->getSpecialComparisonOperators())
+            array_merge($this->comparisonOperators, $this->getTestOperators())
         ) . ')\s/ms';
     }
 

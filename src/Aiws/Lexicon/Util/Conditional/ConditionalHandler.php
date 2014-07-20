@@ -1,50 +1,116 @@
 <?php namespace Aiws\Lexicon\Util\Conditional;
 
+use Aiws\Lexicon\Contract\TestTypeInterface;
+
 class ConditionalHandler
 {
-    protected $comparisons;
 
-    protected $specialComparisons = [];
+    /**
+     * Tests - array of closures
+     *
+     * @var array
+     */
+    protected $tests = [];
 
-    protected $specialComparisonsClasses = [];
+    /**
+     * Test types - array of TestTypeInterface objects
+     *
+     * @var array
+     */
+    protected $testTypes = [];
 
-    public function registerSpecialComparison($key, \Closure $closure)
+    /**
+     * Register test
+     *
+     * @param          $key
+     * @param callable $closure
+     * @return $this
+     */
+    public function registerTest($key, \Closure $closure)
     {
-        $this->specialComparisons[$key] = $closure;
+        $this->tests[$key] = $closure;
         return $this;
     }
 
-    public function registerSpecialComparisonClass($object)
+    /**
+     * Register test type
+     *
+     * @param TestTypeInterface $test
+     * @return ConditionalHandler
+     */
+    public function registerTestType(TestTypeInterface $test)
     {
-        if (is_object($object)) {
-            $this->specialComparisonsClasses[] = $object;
+        if ($type = $test->getType()) {
+            $this->testTypes[$type] = $test;
+        } elseif (is_null($type)) {
+            $this->testTypes[] = $test;
         }
+
+        return $this;
     }
 
-    public function getSpecialComparisonsClasses()
+    /**
+     * Get test types
+     *
+     * @return array
+     */
+    public function getTestTypes()
     {
-        return $this->specialComparisonsClasses;
+        return $this->testTypes;
     }
 
-    public function getSpecialComparisons()
+    /**
+     * Get tests array
+     *
+     * @return array
+     */
+    public function getTests()
     {
-        return $this->specialComparisons;
+        return $this->tests;
     }
 
-    public function getSpecialComparisonOperators()
+    /**
+     * Get test
+     *
+     * @param $operator
+     * @return \Closure|null
+     */
+    public function getTest($operator)
+    {
+        if (isset($this->tests[$operator])) {
+            return $this->tests[$operator];
+        }
+
+        return null;
+    }
+
+    /**
+     * Get test operators
+     *
+     * @return array
+     */
+    public function getTestOperators()
     {
         $operators = [];
 
-        foreach($this->getSpecialComparisonsClasses() as $object) {
-            $reflection = new \ReflectionClass($object);
-            foreach($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach ($this->getTestTypes() as $testType) {
+            $reflection = new \ReflectionClass($testType);
+            foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
                 $operators[] = $method->name;
             }
         }
 
-        return array_merge($operators, array_keys($this->getSpecialComparisons()));
+        return array_merge($operators, array_keys($this->getTests()));
     }
 
+    /**
+     * Compare
+     *
+     * @param      $left
+     * @param      $right
+     * @param null $operator
+     * @return bool|mixed
+     */
     public function compare($left, $right, $operator = null)
     {
         $operator = trim($operator);
@@ -76,19 +142,27 @@ class ConditionalHandler
                 return ($left < $right);
 
             default:
-                return $this->specialComparison($left, $right, $operator);
+                return $this->runTest($left, $right, $operator);
         }
     }
 
-    public function specialComparison($left, $right, $operator = null)
+    /**
+     * Run test
+     *
+     * @param      $left
+     * @param      $right
+     * @param null $operator
+     * @return bool|mixed
+     */
+    public function runTest($left, $right, $operator = null)
     {
-        if (isset($this->specialComparisons[$operator])) {
-            return call_user_func_array($this->specialComparisons[$operator], [$left, $right]);
+        if ($test = $this->getTest($operator)) {
+            return call_user_func_array($test, [$left, $right]);
         }
 
-        foreach($this->specialComparisonsClasses as $object) {
-            if (method_exists($object, $operator)) {
-                return $object->{$operator}($left, $right);
+        foreach ($this->getTestTypes() as $testType) {
+            if (method_exists($testType, $operator)) {
+                return $testType->{$operator}($left, $right);
             }
         }
 
