@@ -1,7 +1,7 @@
 <?php namespace Aiws\Lexicon\Node;
 
 use Aiws\Lexicon\Contract\NodeConditionalInterface;
-use Aiws\Lexicon\Util\Conditional\ConditionalValidatorEndif;
+use Aiws\Lexicon\Util\Conditional\Validator\EndifValidator;
 
 class ConditionalEndif extends Single implements NodeConditionalInterface
 {
@@ -21,7 +21,7 @@ class ConditionalEndif extends Single implements NodeConditionalInterface
     {
         $this
             ->setExtractionContent($match[0])
-            ->setValidator(new ConditionalValidatorEndif($this));
+            ->setValidator(new EndifValidator($this));
     }
 
     /**

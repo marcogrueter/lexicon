@@ -2,8 +2,8 @@
 
 use Aiws\Lexicon\Contract\NodeConditionalInterface;
 use Aiws\Lexicon\Util\Conditional\ConditionalParser;
-use Aiws\Lexicon\Util\Conditional\ConditionalValidatorElseif;
-use Aiws\Lexicon\Util\Conditional\ConditionalValidatorIf;
+use Aiws\Lexicon\Util\Conditional\Validator\ElseifValidator;
+use Aiws\Lexicon\Util\Conditional\Validator\IfValidator;
 
 class Conditional extends Single implements NodeConditionalInterface
 {
@@ -56,9 +56,9 @@ class Conditional extends Single implements NodeConditionalInterface
             ->setParser(new ConditionalParser($this));
 
         if ($this->getName() == 'if') {
-            $this->setValidator(new ConditionalValidatorIf($this));
+            $this->setValidator(new IfValidator($this));
         } elseif ($this->getName('elseif')) {
-            $this->setValidator(new ConditionalValidatorElseif($this));
+            $this->setValidator(new ElseifValidator($this));
         }
     }
 
