@@ -19,14 +19,14 @@ class TestPlugin extends Plugin
      */
     public function hello()
     {
-        $name = $this->getAttribute('name', 'World');
+        $name = $this->getAttribute('name', 0, 'World');
 
         return "Hello {$name}!";
     }
 
     public function object()
     {
-        $name = $this->getAttribute('name', 'yay');
+        $name = $this->getAttribute('name', 0, 'yay');
 
         $object = new \stdClass();
 
