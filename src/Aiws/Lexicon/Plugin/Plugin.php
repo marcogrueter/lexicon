@@ -82,7 +82,6 @@ class Plugin implements PluginInterface
         if (isset($this->attributes[$name])) {
             return $this->attributes[$name];
         } elseif (isset($this->attributes[$offset])) {
-            $this->attributes[$offset];
             return $this->attributes[$offset];
         }
 
