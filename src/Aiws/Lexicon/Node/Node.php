@@ -3,6 +3,7 @@
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\NodeValidatorInterface;
+use Aiws\Lexicon\Util\AttributeParser;
 use Aiws\Lexicon\Util\ContextFinder;
 
 abstract class Node implements NodeInterface
@@ -154,11 +155,12 @@ abstract class Node implements NodeInterface
             $node->setLoopItemName($asSegments[1]);
         }
 
-        $attributes = $this->lexicon->getRegex()->parseAttributes($parsedAttributes);
-
-        $node->setAttributes($attributes);
-
         return $node;
+    }
+
+    public function newAttributeParser()
+    {
+        return new AttributeParser($this);
     }
 
     /**
@@ -341,7 +343,7 @@ abstract class Node implements NodeInterface
      */
     public function getName()
     {
-        return $this->name;
+        return trim($this->name);
     }
 
     /**

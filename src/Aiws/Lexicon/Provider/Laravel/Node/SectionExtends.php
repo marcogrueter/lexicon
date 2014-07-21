@@ -10,9 +10,12 @@ class SectionExtends extends Single
     {
         $rootNode = $this->getRootNode();
 
-        $rootNode->footer[] = "<?php echo \$__env->make('{$this->getAttribute(
-            'layout'
-        )}', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>";
+        $attribute = $this->newAttributeParser()->compileAttribute('name', 0);
+
+        if (!empty($attribute)) {
+            $rootNode->footer[] = "<?php echo \$__env->make({$attribute},
+            array_except(get_defined_vars(),array('__data','__path')))->render(); ?>";
+        }
 
         return null;
     }

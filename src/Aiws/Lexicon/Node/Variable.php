@@ -12,13 +12,13 @@ class Variable extends Single
 
     public function compile()
     {
-        $attributes = var_export($this->getAttributes(), true);
+        $attributes = $this->newAttributeParser()->compile();
 
         $finder = $this->getContextFinder();
 
         $expected = Type::ECHOABLE;
 
-        return "<?php echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName()}', {$attributes}, '', '', '{$expected}'); ?>";
+        return "<?php echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName()}', {$attributes}, '', null, '{$expected}'); ?>";
     }
 
 }

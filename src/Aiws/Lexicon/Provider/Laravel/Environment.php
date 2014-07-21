@@ -77,4 +77,5 @@ class Environment extends BaseEnvironment
             $this->sections[$section] = $content;
         }
     }
+
 }
