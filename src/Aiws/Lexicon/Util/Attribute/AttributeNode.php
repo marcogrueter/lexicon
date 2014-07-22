@@ -2,18 +2,42 @@
 
 use Aiws\Lexicon\Node\Node;
 use Aiws\Lexicon\Node\Variable;
-use Aiws\Lexicon\Util\Type;
 
 class AttributeNode extends Node
 {
-    protected $embedded;
 
+    /**
+     * @var EmbeddedAttribute
+     */
+    protected $embeddedAttribute;
+
+    /**
+     * The attribute key
+     *
+     * @var string
+     */
     protected $key = '';
 
+    /**
+     * The attribute value
+     *
+     * @var string
+     */
     protected $value = '';
 
+    /**
+     * Is this a named attribute?
+     *
+     * @var bool
+     */
     protected $isNamed = true;
 
+    /**
+     * Get the regex match setup
+     *
+     * @param array $match
+     * @return mixed|void
+     */
     public function getSetup(array $match)
     {
         $this
@@ -21,64 +45,125 @@ class AttributeNode extends Node
             ->setValue(isset($match[3]) ? $match[3] : '');
     }
 
+    /**
+     * Regex matcher
+     *
+     * @param bool $embedded
+     * @return string
+     */
     public function getRegexMatcher($embedded = false)
     {
         return '/(.*?)\s*=(\'|"|&#?\w+;)(.*?)(?<!\\\\)\2/ms';
     }
 
+    /**
+     * Get the array of regex matches
+     *
+     * @param $string
+     * @return array
+     */
     public function getMatches($string)
     {
         return $this->lexicon->getRegex()->getMatches($string, $this->getRegexMatcher());
     }
 
-    public function setEmbedded(EmbeddedAttribute $embedded = null)
+    /**
+     * Set the embedded attribute if it exists
+     *
+     * @param EmbeddedAttribute $embeddedAttribute
+     * @return AttributeNode
+     */
+    public function setEmbeddedAttribute(EmbeddedAttribute $embeddedAttribute = null)
     {
-        $this->embedded = $embedded;
+        $this->embeddedAttribute = $embeddedAttribute;
         return $this;
     }
 
+    /**
+     * Set the key
+     *
+     * @param string $key
+     * @return AttributeNode
+     */
     public function setKey($key = '')
     {
         $this->key = $key;
         return $this;
     }
 
+    /**
+     * Get the key
+     *
+     * @return string
+     */
     public function getKey()
     {
         return trim($this->key);
     }
 
+    /**
+     * Set the value
+     *
+     * @param string $value
+     * @return AttributeNode
+     */
     public function setValue($value = '')
     {
         $this->value = $value;
         return $this;
     }
 
+    /**
+     * Get the value
+     *
+     * @return string
+     */
     public function getValue()
     {
+        // @todo - Use ValueResolver here
         return trim($this->value);
     }
 
+    /**
+     * Get the embedded id which is the same as the extracted value
+     *
+     * @return string
+     */
     public function getEmbeddedId()
     {
         return $this->getValue();
     }
 
-    public function getEmbedded()
+    /**
+     * Get the embedded attribute
+     *
+     * @return EmbeddedAttribute
+     */
+    public function getEmbeddedAttribute()
     {
-        return $this->embedded;
+        return $this->embeddedAttribute;
     }
 
+    /**
+     * Compile key
+     *
+     * @return string
+     */
     public function compileKey()
     {
         return $this->getKey();
     }
 
-    public function compileSharedKey()
+    /**
+     * Compile a named key from an ordered embedded attribute
+     *
+     * @return string
+     */
+    public function compileNamedFromOrderedKey()
     {
-        if (!$this->isNamed and $this->getEmbedded()) {
+        if (!$this->isNamed and $this->getEmbeddedAttribute()) {
 
-            $node = $this->newVariableNode()->make(['name' => $this->getEmbedded()->getName()], $this->getParent());
+            $node = $this->newVariableNode()->make(['name' => $this->getEmbeddedAttribute()->getName()], $this->getParent());
 
             $finder = $node->getContextFinder();
 
@@ -99,7 +184,7 @@ class AttributeNode extends Node
 
     public function compileEmbedded()
     {
-        $node = $this->newVariableNode()->make(['name' => $this->getEmbedded()->getName()], $this->getParent());
+        $node = $this->newVariableNode()->make(['name' => $this->getEmbeddedAttribute()->getName()], $this->getParent());
 
         $finder = $node->getContextFinder();
 
@@ -113,7 +198,7 @@ class AttributeNode extends Node
 
     public function compile()
     {
-        if ($this->getEmbedded()) {
+        if ($this->getEmbeddedAttribute()) {
             return $this->compileEmbedded();
         } else {
             return $this->compileLiteral();

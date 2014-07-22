@@ -158,9 +158,14 @@ abstract class Node implements NodeInterface
         return $node;
     }
 
+    /**
+     * Return a new AttributeParser
+     *
+     * @return AttributeParser
+     */
     public function newAttributeParser()
     {
-        return new AttributeParser($this);
+        return (new AttributeParser($this))->parse();
     }
 
     /**
@@ -467,45 +472,6 @@ abstract class Node implements NodeInterface
     public function getParsedAttributes()
     {
         return $this->parsedAttributes;
-    }
-
-    /**
-     * Set attributes
-     *
-     * @return NodeInterface
-     */
-    public function setAttributes($attributes = [])
-    {
-        $this->attributes = $attributes;
-        return $this;
-    }
-
-    /**
-     * Get attributes
-     *
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * Get attribute
-     *
-     * @param     $name
-     * @param int $default
-     * @return null
-     */
-    public function getAttribute($name, $default = 0)
-    {
-        if (isset($this->attributes[$name])) {
-            return $this->attributes[$name];
-        } elseif (isset($this->attributes[$default])) {
-            return $this->attributes[$default];
-        }
-
-        return null;
     }
 
     /**

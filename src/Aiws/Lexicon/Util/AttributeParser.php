@@ -11,15 +11,38 @@ use Aiws\Lexicon\Util\Conditional\Test\StringTest;
 
 class AttributeParser
 {
+    /**
+     * The node
+     *
+     * @var \Aiws\Lexicon\Contract\NodeInterface
+     */
     protected $node;
 
+    /**
+     * Regex util
+     *
+     * @var Regex
+     */
     protected $regex;
 
+    /**
+     * The raw attributes
+     *
+     * @var string
+     */
     protected $attributes;
 
+    /**
+     * Array of attribute nodes
+     *
+     * @var array
+     */
     protected $attributeNodes = [];
 
-    protected $embedded = [];
+    /**
+     * @var array
+     */
+    protected $embeddedAttributes = [];
 
     public function __construct(NodeInterface $node)
     {
@@ -30,8 +53,6 @@ class AttributeParser
         $this->lexicon      = $node->getEnvironment();
         $this->variableNode->setEnvironment($node->getEnvironment());
         $this->stringTest = new StringTest();
-
-        $this->parse();
     }
 
     public function parse()
@@ -42,17 +63,17 @@ class AttributeParser
         if ($this->stringTest->contains($this->attributes, '="') or
             $this->stringTest->contains($this->attributes, '={')
         ) {
-              $this->createAttributeNodes(new NamedAttributeNode());
+            $this->createAttributeNodes(new NamedAttributeNode());
         } else {
-              $this->createAttributeNodes(new OrderedAttributeNode());
+            $this->createAttributeNodes(new OrderedAttributeNode());
         }
 
         return $this;
     }
 
-    public function getEmbeddedAttribute($id)
+    public function getEmbeddedById($id)
     {
-        return isset($this->embedded[$id]) ? $this->embedded[$id] : null;
+        return isset($this->embeddedAttributes[$id]) ? $this->embeddedAttributes[$id] : null;
     }
 
     public function newEmbeddedAttribute(array $match)
@@ -66,15 +87,15 @@ class AttributeParser
 
         foreach ($embeddedMatches as $match) {
 
-            $embedded         = $this->newEmbeddedAttribute($match);
+            $embeddedAttribute = $this->newEmbeddedAttribute($match);
 
             $this->attributes = str_replace(
-                $embedded->getOriginal(),
-                '"' . $embedded->getId() . '"',
+                $embeddedAttribute->getOriginal(),
+                '"' . $embeddedAttribute->getId() . '"',
                 $this->attributes
             );
 
-            $this->embedded[$embedded->getId()] = $embedded;
+            $this->embeddedAttributes[$embeddedAttribute->getId()] = $embeddedAttribute;
         }
 
         return $this;
@@ -95,7 +116,7 @@ class AttributeParser
                 $count
             );
 
-            $attributeNode->setEmbedded($this->getEmbeddedAttribute($attributeNode->getEmbeddedId()));
+            $attributeNode->setEmbeddedAttribute($this->getEmbeddedById($attributeNode->getEmbeddedId()));
 
             $this->attributeNodes[] = $attributeNode;
         }
@@ -103,34 +124,9 @@ class AttributeParser
         return $this;
     }
 
-    public function getNamedAttributeMatches()
-    {
-
-    }
-
-    public function getOrderedAttributeMatches()
-    {
-
-    }
-
-    public function getNamedAttributeRegex()
-    {
-
-    }
-
-    public function getOrderedAttributeRegex()
-    {
-        return '';
-    }
-
     public function getEmbeddedAttributeRegex()
     {
         return "/\{\s*({$this->getRegex()->getVariableRegexMatcher()})(\s+.*?)?\s*(\/)?\}/ms";
-    }
-
-    public function getParsedAttributes()
-    {
-        return $this->parsedAttributes;
     }
 
     public function getMatches($string, $regex)
@@ -153,12 +149,12 @@ class AttributeParser
         return $this->attributeNodes;
     }
 
-    public function compileAttributes($except = [])
+    public function compileArray($except = [])
     {
         $attributes = array();
 
         /** @var $attributeNode AttributeNode */
-        foreach($this->getAttributeNodes() as $attributeNode) {
+        foreach ($this->getAttributeNodes() as $attributeNode) {
             $key = $attributeNode->compileKey();
             if (!in_array($key, array_keys($except)) or !in_array($key, $except)) {
                 $attributes[$key] = $attributeNode->compile();
@@ -168,13 +164,19 @@ class AttributeParser
         return $attributes;
     }
 
-    public function compileSharedAttributes($except = [])
+    /**
+     * Compiled named array from ordered
+     *
+     * @param array $except
+     * @return array
+     */
+    public function compileNamedFromOrderedArray($except = [])
     {
         $attributes = array();
 
         /** @var $attributeNode AttributeNode */
-        foreach($this->getAttributeNodes() as $attributeNode) {
-            $key = $attributeNode->compileSharedKey();
+        foreach ($this->getAttributeNodes() as $attributeNode) {
+            $key = $attributeNode->compileNamedFromOrderedKey();
             if (!in_array($key, array_keys($except)) or !in_array($key, $except)) {
                 $attributes[$key] = $attributeNode->compile();
             }
@@ -183,9 +185,17 @@ class AttributeParser
         return $attributes;
     }
 
+    /**
+     * Compile a single attribute
+     *
+     * @param        $name
+     * @param int    $offset
+     * @param string $default
+     * @return string
+     */
     public function compileAttribute($name, $offset = 0, $default = '')
     {
-        $attributes = $this->compileAttributes();
+        $attributes = $this->compileArray();
 
         if (isset($attributes[$name])) {
             return $attributes[$name];
@@ -196,33 +206,45 @@ class AttributeParser
         return $default;
     }
 
-    public function compileShared($except = [])
+    /**
+     * Compile named from ordered attributes
+     *
+     * @param array $except
+     * @return string
+     */
+    public function compileNamedFromOrdered($except = [])
     {
         $source = "[\n";
 
         /** @var $attributeNode AttributeNode */
-        foreach($this->compileSharedAttributes($except) as $key => $value) {
+        foreach ($this->compileNamedFromOrderedArray($except) as $key => $value) {
             if (!is_numeric($key)) {
                 $key = "'{$key}'";
             }
             $source .= "{$key} => {$value},\n";
         }
 
-        return $source."]";
+        return $source . "]";
     }
 
+    /**
+     * Compile attributes
+     *
+     * @param array $except
+     * @return string
+     */
     public function compile($except = [])
     {
         $source = "[\n";
 
         /** @var $attributeNode AttributeNode */
-        foreach($this->compileAttributes($except) as $key => $value) {
+        foreach ($this->compileArray($except) as $key => $value) {
             if (!is_numeric($key)) {
                 $key = "'{$key}'";
             }
             $source .= "{$key} => {$value},\n";
         }
 
-        return $source."]";
+        return $source . "]";
     }
 }

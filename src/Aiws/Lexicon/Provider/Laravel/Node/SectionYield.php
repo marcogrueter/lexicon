@@ -5,11 +5,21 @@ use Aiws\Lexicon\Node\Single;
 class SectionYield extends Single
 {
 
+    /**
+     * Name
+     *
+     * @var string
+     */
     public $name = 'yield';
 
+    /**
+     * Compile source
+     *
+     * @return string
+     */
     public function compile()
     {
-        return "<?php echo \$__env->yieldContent('{$this->getAttribute('name')}'); ?>";
+        return "<?php echo \$__env->yieldContent('{$this->newAttributeParser()->compileAttribute('name')}'); ?>";
     }
 
 }

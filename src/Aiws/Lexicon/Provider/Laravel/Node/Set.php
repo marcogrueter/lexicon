@@ -21,8 +21,10 @@ class Set extends Single
     {
         $source = "<?php\n";
 
-        foreach($this->getAttributes() as $key => $value) {
-            $source .= "\${$key} = '{$value}';\n";
+        foreach($this->newAttributeParser()->compileArray() as $key => $value) {
+            if (!is_numeric($key)) {
+                $source .= "\${$key} = {$value};\n";
+            }
         }
 
         return $source."?>";
