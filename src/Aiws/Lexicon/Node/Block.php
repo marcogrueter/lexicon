@@ -166,7 +166,7 @@ class Block extends Node implements NodeBlockInterface
      */
     public function compileFilter()
     {
-        $attributes = var_export($this->getAttributes(), true);
+        $attributes = $this->newAttributeParser()->compile();
 
         $finder = $this->getContextFinder();
 
@@ -183,7 +183,7 @@ class Block extends Node implements NodeBlockInterface
      */
     public function getIterateableSource()
     {
-        $attributes = var_export($this->getAttributes(), true);
+        $attributes = $this->newAttributeParser()->compile();
 
         $expected = Type::ITERATEABLE;
 
