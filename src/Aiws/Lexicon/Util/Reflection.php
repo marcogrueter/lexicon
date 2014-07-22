@@ -41,10 +41,7 @@ class Reflection
     public function hasObjectKey($key)
     {
         if ($this->isObject()) {
-
-            return (property_exists($this->data, $key) or
-                isset($this->data->{$key}) or
-                is_null($this->data->{$key}));
+            return (property_exists($this->data, $key) or isset($this->data->{$key}));
         }
 
         return false;
