@@ -35,6 +35,11 @@ class TestPlugin extends Plugin
         return $object;
     }
 
+    public function books()
+    {
+        return \Book::take((int)$this->getAttribute('limit'))->get();
+    }
+
     public function loop()
     {
         return [
