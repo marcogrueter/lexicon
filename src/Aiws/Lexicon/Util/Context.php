@@ -74,6 +74,8 @@ class Context
                 $data = $data[$part];
             } elseif ($reflection->hasObjectKey($part)) {
                 $data = $data->{$part};
+            } elseif ($reflection->hasMethod($part)) {
+                $data = $data->{$part}();
             } elseif (count($parts) == $count or $this->getData() == $data) {
                 $data = $default;
             }
