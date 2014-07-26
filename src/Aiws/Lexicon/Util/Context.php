@@ -1,28 +1,11 @@
 <?php namespace Aiws\Lexicon\Util;
 
 use Aiws\Lexicon\Contract\EnvironmentInterface;
+use Aiws\Lexicon\Contract\PluginInterface;
 
 class Context
 {
     protected $data;
-
-    protected $name;
-
-    protected $parent;
-
-    protected $currentName;
-
-    protected $key;
-
-    protected $node;
-
-    protected $source;
-
-    protected $segments = [];
-
-    protected $position = 1;
-
-    protected $isRoot = false;
 
     protected $lexicon;
 
@@ -110,49 +93,14 @@ class Context
         return $default;
     }
 
+    /**
+     * Get data
+     *
+     * @return mixed
+     */
     public function getData()
     {
         return $this->data;
-    }
-
-    public function getDataReflection()
-    {
-        return new Reflection($this->data);
-    }
-
-    public function getSource()
-    {
-        return $this->source;
-    }
-
-    public function toString()
-    {
-        return (string)$this->source;
-    }
-
-    public function __toString()
-    {
-        return $this->toString();
-    }
-
-    public function isFirst()
-    {
-        return $this->position == 1;
-    }
-
-    public function isRootKey()
-    {
-        return ($this->isRootContext() and $this->isFirst());
-    }
-
-    public function isRootContext()
-    {
-        return $this->isRoot;
-    }
-
-    public function getName()
-    {
-        return $this->name;
     }
 
     public function newReflection($data)
