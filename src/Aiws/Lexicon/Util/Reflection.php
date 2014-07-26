@@ -18,6 +18,16 @@ class Reflection
     }
 
     /**
+     * Get data
+     *
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
      * Is array accesible
      *
      * @return bool
