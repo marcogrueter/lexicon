@@ -1,7 +1,6 @@
 <?php namespace Aiws\Lexicon\Util;
 
 use Aiws\Lexicon\Contract\EnvironmentInterface;
-use Aiws\Lexicon\Contract\PluginInterface;
 
 class Context
 {
@@ -32,54 +31,64 @@ class Context
         $data       = $this->getData();
         $reflection = $this->newReflection($data);
 
-        $parts = explode($this->scopeGlue, $key);
+        $scopes = $pluginScopes = explode($this->scopeGlue, $key);
 
         $pluginKey = $key;
 
         if ($this->lexicon->getPlugin($pluginKey)) {
 
-            if (count($parts) > 2) {
-                $plugin    = array_shift($parts);
-                $method    = array_shift($parts);
+            $plugin = array_shift($scopes);
+            $method = array_shift($scopes);
+
+            if (count($scopes) > 2) {
                 $pluginKey = $plugin . $this->scopeGlue . $method;
             }
 
             $data = $this->lexicon->call($pluginKey, $attributes, $content);
 
-            $reflection = $this->newReflection($data);
+            $reflection->setData($data);
         }
 
-        $count = 0;
+        $previousScope = null;
+        $invalidScope = null;
 
-        foreach ($parts as $part) {
+        while (count($scopes) > 0) {
 
-            if ($reflection->hasMethod($part)) {
+            $scope = array_shift($scopes);
+
+            if ($reflection->hasMethod($scope)) {
                 try {
-                    $data = call_user_func_array([$data, $part], $attributes);
-                } catch(\InvalidArgumentException $e) {
+                    $data = call_user_func_array([$data, $scope], $attributes);
+                } catch (\InvalidArgumentException $e) {
                     echo "There is a problem with the <b>{$key}</b> variable. One of the attributes maybe incorrect.";
                     // @todo - log exception
                     // @todo - fire exception event
-                } catch(\ErrorException $e) {
+                } catch (\ErrorException $e) {
                     echo "There is a problem with the <b>{$key}</b> variable. One of the attributes maybe incorrect.";
                     // @todo - log exception
                     // @todo - fire exception event
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     echo "There is a problem with the <b>{$key}</b> variable.";
                     // @todo - log exception
                     // @todo - fire exception event
                 }
-            } elseif ($reflection->hasArrayKey($part)) {
-                $data = $data[$part];
-            } elseif ($reflection->hasObjectKey($part)) {
-                $data = $data->{$part};
-            } elseif (count($parts) == $count or $this->getData() == $data) {
-                $data = $default;
+            } elseif ($reflection->hasArrayKey($scope)) {
+                $data = $data[$scope];
+            } elseif ($reflection->hasObjectKey($scope)) {
+                $data = $data->{$scope};
+            } elseif (empty($scopes) and $previousScope != $invalidScope and $scope == 'size' and
+                (is_array($data) or $data instanceof \Countable)
+            ) {
+                $data = count($data);
+            } elseif (empty($scopes) or $this->getData() == $data) {
+                $data         = $default;
+            } else {
+                $invalidScope = $scope;
             }
 
-            $reflection = $this->newReflection($data);
+            $previousScope = $scope;
 
-            $count++;
+            $reflection->setData($data);
         }
 
         if ($expected == Type::ANY) {
@@ -103,6 +112,12 @@ class Context
         return $this->data;
     }
 
+    /**
+     * New reflection
+     *
+     * @param $data
+     * @return Reflection
+     */
     public function newReflection($data)
     {
         return new Reflection($data);
