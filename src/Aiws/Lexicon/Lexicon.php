@@ -202,15 +202,15 @@ class Lexicon implements EnvironmentInterface
 
         foreach (explode("\n", $compiledSource) as $line) {
 
-            $line = $this->getRegex()->compress($line);
+            if (!empty($line)) {
+                if (!$stringTest->startsWith($line, '__COMPILED__')) {
+                    $line = $this->compileStringLine($line);
+                } else {
+                    $line = $this->compileLine($line);
+                }
 
-            if (!empty($line) and !$stringTest->startsWith($line, '__COMPILED__')) {
-                $line = $this->compileStringLine($line);
-            } else {
-                $line = $this->compileLine($line);
+                $source .= $this->spaces(8).$line."\n";
             }
-
-            $source .= $this->spaces(8).$this->getRegex()->compress($line)."\n";
         }
 
         $source = str_replace("\n\n", "\n", $source);
@@ -269,7 +269,7 @@ class Lexicon implements EnvironmentInterface
 
         $view .= "{$this->spaces(8)}extract(\$__data);\n\n";
 
-        $view .= $source;
+        $view .= $source."\n";
 
         $view .= "{$this->spaces(4)}}\n";
 
