@@ -18,6 +18,18 @@ class Reflection
     }
 
     /**
+     * Set data
+     *
+     * @param $data
+     * @return $this
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    /**
      * Get data
      *
      * @return mixed
