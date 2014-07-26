@@ -76,10 +76,17 @@ class Context
                 $data = $data[$scope];
             } elseif ($reflection->hasObjectKey($scope)) {
                 $data = $data->{$scope};
-            } elseif (empty($scopes) and $previousScope != $invalidScope and $scope == 'size' and
+            } elseif (empty($scopes) and
+                $scope == 'size' and
+                (!$invalidScope or $previousScope != $invalidScope) and
                 (is_array($data) or $data instanceof \Countable)
             ) {
                 $data = count($data);
+            } elseif (empty($scopes) and
+                $scope == 'length' and
+                (!$invalidScope or $previousScope != $invalidScope) and
+                is_string($data)) {
+                $data = strlen($data);
             } elseif (empty($scopes) or $this->getData() == $data) {
                 $data         = $default;
             } else {
