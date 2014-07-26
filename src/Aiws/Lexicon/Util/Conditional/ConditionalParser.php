@@ -55,9 +55,11 @@ class ConditionalParser
      * @var array
      */
     protected $operatorReplacements = array(
-        'equals' => '==',
-        //'not equals' => '!',
-        'not'    => '!',
+        'equals'       => '==',
+        'not equals'   => '!=',
+        'not'          => '!',
+        'greater than' => '>',
+        'less than'    => '<',
     );
 
     /**
@@ -130,6 +132,12 @@ class ConditionalParser
      */
     public function parse()
     {
+        $this->expression = str_replace(
+            array_keys($this->operatorReplacements),
+            array_values($this->operatorReplacements),
+            $this->expression
+        );
+
         $this
             ->extractLogicalOperators($this->getLogicalOperatorsMatches())
             ->parseComparisons();
@@ -167,19 +175,16 @@ class ConditionalParser
 
     public function parseComparison($comparison)
     {
-        $comparison = trim($this->replaceOperators($comparison));
-
         $hasNotOperator = (strpos($comparison, '! ') !== false);
 
-        $hasExists = (strpos($comparison, 'exists ') !== false);
-
         $comparison = preg_replace('/! /', '', $comparison);
-        $comparison = preg_replace('/\bexists\b/', '', $comparison);
-
 
         if ($operator = $this->getOperatorMatch($comparison)) {
 
             $parts = explode($operator, $comparison);
+
+            $left = null;
+            $right = null;
 
             if (count($parts) == 2) {
                 $left  = $parts[0];
@@ -189,7 +194,9 @@ class ConditionalParser
             $this->comparisons[] = $this->getComparisonSource($left, $right, $operator);
 
         } else {
-            $this->comparisons[] = $this->getPartSource($part = $comparison);
+
+            $not = $hasNotOperator ? '!' : null;
+            $this->comparisons[] = $not.$this->getPartSource($part = $comparison);
         }
 
         return $this;
