@@ -26,6 +26,17 @@ class Plugin implements PluginInterface
     protected $name;
 
     /**
+     * Set plugin name
+     *
+     * @return string
+     */
+    public function setPluginName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
      * Get plugin name
      *
      * @return string

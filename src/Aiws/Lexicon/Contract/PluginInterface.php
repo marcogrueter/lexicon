@@ -4,17 +4,30 @@ interface PluginInterface
 {
 
     /**
+     * Set plugin name
+     *
+     * @return PluginInterface
+     */
+    public function setPluginName($pluginName);
+
+    /**
+     * Get plugin name
+     *
      * @return string
      */
     public function getPluginName();
 
     /**
+     * Set content
+     *
      * @param $content
-     * @return string
+     * @return PluginInterface
      */
     public function setContent($content);
 
     /**
+     * Set attributes
+     *
      * @param array $attributes
      * @return PluginInterface
      */
