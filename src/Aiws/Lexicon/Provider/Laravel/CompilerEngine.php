@@ -91,7 +91,7 @@ class CompilerEngine extends BaseCompilerEngine
     {
         $lexicon = $this->getCompiler()->getEnvironment();
 
-        if ($lexicon->getIsOptimized()) {
+        if ($lexicon->getOptimize()) {
 
             ob_start();
 
@@ -104,7 +104,7 @@ class CompilerEngine extends BaseCompilerEngine
 
                 $hash = $segments[count($segments) - 1];
 
-                $viewClass = 'LexiconView__' . $hash;
+                $viewClass = $lexicon->getOptimizeViewClass() . $hash;
 
                 if (!isset($this->lexiconViewCache[$__path])) {
                     include $__path;

@@ -6,6 +6,10 @@ return array(
 
     'scopeGlue' => '.',
 
+    'optimize' => true,
+
+    'optimizeViewClass' => 'AiwsLexiconView__',
+
     'allowPhp' => true,
 
 );

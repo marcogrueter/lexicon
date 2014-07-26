@@ -80,7 +80,7 @@ class Lexicon implements EnvironmentInterface
      *
      * @var string
      */
-    protected $environmentVariable = "array_except(get_defined_vars(), array('__data', '__path'))";
+    protected $environmentVariable = "array_except(get_defined_vars(),array('__data','__path'))";
 
     /**
      * Root node type
@@ -128,6 +128,14 @@ class Lexicon implements EnvironmentInterface
      * @var bool
      */
     protected $isOptimized = false;
+
+
+    /**
+     * Optimized class prefix. The hash for the view is appended.
+     *
+     * @var string
+     */
+    protected $optimizeViewClass = 'AiwsLexiconView__';
 
     /**
      * @param Regex                  $regex
@@ -219,6 +227,9 @@ class Lexicon implements EnvironmentInterface
 
             foreach ($footer as &$line) {
                 $line = $this->compileLine($line);
+                if ($this->getOptimize()) {
+                    $line = $this->spaces(8).$line."\n";
+                }
             }
 
             $source = ltrim($source, PHP_EOL) . PHP_EOL . implode(PHP_EOL, array_reverse($footer));
@@ -232,14 +243,19 @@ class Lexicon implements EnvironmentInterface
         return str_repeat("\x20", $number);
     }
 
+    public function getOptimizedClass()
+    {
+        return $this->optimizeViewClass;
+    }
+
     public function getCompiledViewClass()
     {
-        return 'LexiconView__' . $this->getCompiledView();
+        return $this->getOptimizedClass() . $this->getCompiledView();
     }
 
     public function compileView($source)
     {
-        if (!$this->getIsOptimized()) {
+        if (!$this->getOptimize()) {
             return $source;
         }
 
@@ -262,15 +278,26 @@ class Lexicon implements EnvironmentInterface
         return $view;
     }
 
-    public function setIsOptimized($isOptimized = true)
+    public function setOptimize($isOptimized = true)
     {
         $this->isOptimized = $isOptimized;
         return $this;
     }
 
-    public function getIsOptimized()
+    public function getOptimize()
     {
         return $this->isOptimized;
+    }
+
+    public function setOptimizeViewClass($optimizeViewClass = '')
+    {
+        $this->optimizeViewClass = $optimizeViewClass;
+        return $this;
+    }
+
+    public function getOptimizeViewClass()
+    {
+        return $this->optimizeViewClass;
     }
 
     public function removeCompiledPrefix($line)
@@ -282,7 +309,7 @@ class Lexicon implements EnvironmentInterface
     {
         $line = $this->removeCompiledPrefix($line);
 
-        if ($this->getIsOptimized()) {
+        if ($this->getOptimize()) {
             return $line;
         }
 
@@ -297,7 +324,7 @@ class Lexicon implements EnvironmentInterface
     {
         $line = $this->removeCompiledPrefix($line);
 
-        if ($this->getIsOptimized()) {
+        if ($this->getOptimize()) {
 
             $stringTest = new StringTest();
 

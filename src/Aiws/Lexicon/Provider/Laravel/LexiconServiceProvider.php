@@ -47,12 +47,18 @@ class LexiconServiceProvider extends ServiceProvider {
 
                 $scopeGlue = $app['config']->get('lexicon::scopeGlue', '.');
 
+                $optimize = $app['config']->get('lexicon::optimize', false);
+
+                $optimizeViewClass = $app['config']->get('lexicon::optimizeViewClass', 'AiwsLexiconView__');
+
                 $allowPhp = $app['config']->get('lexicon::allowPhp', false);
 
                 $lexicon = new Lexicon(new Regex($scopeGlue), $app['lexicon.conditional.handler'], $app['lexicon.plugin.handler']);
 
                 $lexicon
                     ->setAllowPhp($allowPhp)
+                    ->setOptimize($optimize)
+                    ->setOptimizeViewClass($optimizeViewClass)
                     ->setIgnoredMatchers(['parent'])
                     ->registerPlugin('foo', 'Aiws\\Lexicon\\Example\\FooPlugin')
                     ->registerPlugin('test', 'Aiws\\Lexicon\\Example\\TestPlugin')
