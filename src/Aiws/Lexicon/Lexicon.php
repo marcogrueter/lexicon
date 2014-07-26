@@ -4,6 +4,7 @@ use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\PluginHandlerInterface;
 use Aiws\Lexicon\Util\Conditional\ConditionalHandler;
+use Aiws\Lexicon\Util\Conditional\Test\StringTest;
 use Aiws\Lexicon\Util\Context;
 use Aiws\Lexicon\Util\Regex;
 use Aiws\Lexicon\Util\Type;
@@ -117,15 +118,30 @@ class Lexicon implements EnvironmentInterface
     protected $allowPhp = false;
 
     /**
+     * @var
+     */
+    protected $path;
+
+    /**
+     * Is optimized - optimizes view rendering performance, by loading views only once, even within a foreach loop
+     *
+     * @var bool
+     */
+    protected $isOptimized = false;
+
+    /**
      * @param Regex                  $regex
      * @param ConditionalHandler     $conditionalHandler
      * @param PluginHandlerInterface $pluginHandler
      */
-    public function __construct(Regex $regex, ConditionalHandler $conditionalHandler = null, PluginHandlerInterface $pluginHandler = null)
-    {
-        $this->regex = $regex;
-        $this->conditionalHandler  = $conditionalHandler;
-        $this->pluginHandler  = $pluginHandler;
+    public function __construct(
+        Regex $regex,
+        ConditionalHandler $conditionalHandler = null,
+        PluginHandlerInterface $pluginHandler = null
+    ) {
+        $this->regex              = $regex;
+        $this->conditionalHandler = $conditionalHandler;
+        $this->pluginHandler      = $pluginHandler;
     }
 
     /**
@@ -170,23 +186,141 @@ class Lexicon implements EnvironmentInterface
     {
         $parsedNode = $node->createChildNodes();
 
-        $source = $parsedNode->compile();
+        $compiledSource = $parsedNode->compile();
+
+        $source = '';
+
+        $stringTest = new StringTest();
+
+        foreach (explode("\n", $compiledSource) as $line) {
+
+            $line = $this->getRegex()->compress($line);
+
+            if (!empty($line) and !$stringTest->startsWith($line, '__COMPILED__')) {
+                $line = $this->compileStringLine($line);
+            } else {
+                $line = $this->compileLine($line);
+            }
+
+            $source .= $this->spaces(8).$this->getRegex()->compress($line)."\n";
+        }
+
+        $source = str_replace("\n\n", "\n", $source);
 
         $source = $this->injectNoParse($source);
 
         // If there are any footer lines that need to get added to a template we will
         // add them here at the end of the template. This gets used mainly for the
         // template inheritance via the extends keyword that should be appended.
-        if (count($parsedNode->getFooter()) > 0) {
-            $source = ltrim($source, PHP_EOL)
-                . PHP_EOL . implode(PHP_EOL, array_reverse($parsedNode->getFooter()));
+
+        $footer = $parsedNode->getFooter();
+
+        if (count($footer) > 0) {
+
+            foreach ($footer as &$line) {
+                $line = $this->compileLine($line);
+            }
+
+            $source = ltrim($source, PHP_EOL) . PHP_EOL . implode(PHP_EOL, array_reverse($footer));
         }
 
-        if ($this->compress) {
-            $source = $this->regex->compress($source);
+        return $this->compileView($source);
+    }
+
+    public function spaces($number = 1)
+    {
+        return str_repeat("\x20", $number);
+    }
+
+    public function getCompiledViewClass()
+    {
+        return 'LexiconView__' . $this->getCompiledView();
+    }
+
+    public function compileView($source)
+    {
+        if (!$this->getIsOptimized()) {
+            return $source;
         }
 
-        return $source;
+        $view = '<?php class ';
+
+        $view .= $this->getCompiledViewClass()."\n";
+
+        $view .= "{\n";
+
+        $view .= "{$this->spaces(4)}public function render(\$__data) {\n\n";
+
+        $view .= "{$this->spaces(8)}extract(\$__data);\n\n";
+
+        $view .= $source;
+
+        $view .= "{$this->spaces(4)}}\n";
+
+        $view .= "}" . PHP_EOL;
+
+        return $view;
+    }
+
+    public function setIsOptimized($isOptimized = true)
+    {
+        $this->isOptimized = $isOptimized;
+        return $this;
+    }
+
+    public function getIsOptimized()
+    {
+        return $this->isOptimized;
+    }
+
+    public function removeCompiledPrefix($line)
+    {
+        return $line = str_replace('__COMPILED__', '', $line);
+    }
+
+    public function compileLine($line)
+    {
+        $line = $this->removeCompiledPrefix($line);
+
+        if ($this->getIsOptimized()) {
+            return $line;
+        }
+
+        if (!empty($line)) {
+            return "<?php {$line} ?>";
+        }
+
+        return null;
+    }
+
+    public function compileStringLine($line)
+    {
+        $line = $this->removeCompiledPrefix($line);
+
+        if ($this->getIsOptimized()) {
+
+            $stringTest = new StringTest();
+
+            if ($stringTest->contains($line, "'")) {
+                $line = addslashes($line);
+                return "echo stripslashes('{$line}');";
+            } else {
+                return "echo '{$line}';";
+            }
+        }
+
+        return $line;
+    }
+
+    public function setCompiledView($path)
+    {
+        $this->path = $path;
+        return $this;
+    }
+
+    public function getCompiledView()
+    {
+        return $this->path;
     }
 
     /**
@@ -262,7 +396,8 @@ class Lexicon implements EnvironmentInterface
     public function injectNoParse($text)
     {
         foreach ($this->noParseExtractions as $key => $extraction) {
-            $text = str_replace($extraction['id'], $extraction['content'], $text);
+            $extraction['content'] = addslashes($this->getRegex()->compress($extraction['content']));
+            $text                  = str_replace($extraction['id'], $extraction['content'], $text);
             unset($this->noParseExtractions[$key]);
         }
 
@@ -303,7 +438,7 @@ class Lexicon implements EnvironmentInterface
      */
     public function registerNodeTypes(array $nodeTypes)
     {
-        foreach($nodeTypes as $nodeType) {
+        foreach ($nodeTypes as $nodeType) {
             $this->registerNodeType($nodeType);
         }
         return $this;

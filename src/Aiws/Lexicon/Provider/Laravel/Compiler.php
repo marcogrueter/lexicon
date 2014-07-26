@@ -70,6 +70,12 @@ class Compiler extends BladeCompiler
             $this->setPath($path);
         }
 
+        $compiledPath = $this->getCompiledPath($this->getPath());
+
+        $segments = explode('/', $compiledPath);
+
+        $this->lexicon->setCompiledView($segments[count($segments)-1]);
+
         $contents = $this->lexicon->compile($this->files->get($this->getPath()), $this->getData());
 
         if (!is_null($this->cachePath)) {

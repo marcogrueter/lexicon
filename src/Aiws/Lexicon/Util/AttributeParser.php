@@ -214,14 +214,14 @@ class AttributeParser
      */
     public function compileNamedFromOrdered($except = [])
     {
-        $source = "[\n";
+        $source = "[";
 
         /** @var $attributeNode AttributeNode */
         foreach ($this->compileNamedFromOrderedArray($except) as $key => $value) {
             if (!is_numeric($key)) {
                 $key = "'{$key}'";
             }
-            $source .= "{$key} => {$value},\n";
+            $source .= "{$key} => {$value},";
         }
 
         return $source . "]";
@@ -235,14 +235,14 @@ class AttributeParser
      */
     public function compile($except = [])
     {
-        $source = "[\n";
+        $source = "[";
 
         /** @var $attributeNode AttributeNode */
         foreach ($this->compileArray($except) as $key => $value) {
             if (!is_numeric($key)) {
                 $key = "'{$key}'";
             }
-            $source .= "{$key} => {$value},\n";
+            $source .= "{$key} => {$value},";
         }
 
         return $source . "]";

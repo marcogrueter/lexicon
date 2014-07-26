@@ -19,6 +19,11 @@ class CompilerEngine extends BaseCompilerEngine
     protected $parse = false;
 
     /**
+     * @var
+     */
+    protected $lexiconViewCache = [];
+
+    /**
      * Set refresh property
      *
      * @param bool $refresh
@@ -74,5 +79,52 @@ class CompilerEngine extends BaseCompilerEngine
 
         return $results;
     }
+
+    /**
+     * Get the evaluated contents of the view at the given path.
+     *
+     * @param  string $__path
+     * @param  array  $__data
+     * @return string
+     */
+    protected function evaluatePath($__path, $__data)
+    {
+        $lexicon = $this->getCompiler()->getEnvironment();
+
+        if ($lexicon->getIsOptimized()) {
+
+            ob_start();
+
+            // We'll evaluate the contents of the view inside a try/catch block so we can
+            // flush out any stray output that might get out before an error occurs or
+            // an exception is thrown. This prevents any partial views from leaking.
+            try {
+
+                $segments = explode('/', $__path);
+
+                $hash = $segments[count($segments) - 1];
+
+                $viewClass = 'LexiconView__' . $hash;
+
+                if (!isset($this->lexiconViewCache[$__path])) {
+                    include $__path;
+                    $this->lexiconViewCache[$__path] = new $viewClass;
+                }
+
+                $this->lexiconViewCache[$__path]->render($__data);
+
+            } catch (\Exception $e) {
+                $this->handleViewException($e);
+            }
+
+            return ltrim(ob_get_clean());
+
+        } else {
+
+            return parent::evaluatePath($__path, $__data);
+
+        }
+    }
+
 
 }
