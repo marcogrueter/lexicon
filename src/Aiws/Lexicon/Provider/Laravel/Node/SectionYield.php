@@ -19,7 +19,7 @@ class SectionYield extends Single
      */
     public function compile()
     {
-        return "<?php echo \$__env->yieldContent({$this->newAttributeParser()->compileAttribute('name')}); ?>";
+        return "echo \$__env->yieldContent({$this->newAttributeParser()->compileAttribute('name')});";
     }
 
 }

@@ -19,7 +19,7 @@ class SectionShow extends Single
      */
     public function compile()
     {
-        return "<?php echo \$__env->yieldSection(); ?>";
+        return "echo \$__env->yieldSection();";
     }
 
 }

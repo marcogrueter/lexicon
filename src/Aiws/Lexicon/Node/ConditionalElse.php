@@ -31,7 +31,7 @@ class ConditionalElse extends Single implements NodeConditionalInterface
      */
     public function compile()
     {
-        return '<?php else: ?>';
+        return "else:";
     }
 
 }

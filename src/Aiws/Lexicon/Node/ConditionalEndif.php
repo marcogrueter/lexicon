@@ -31,7 +31,7 @@ class ConditionalEndif extends Single implements NodeConditionalInterface
      */
     public function compile()
     {
-        return '<?php endif; ?>';
+        return "endif;";
     }
 
 }

@@ -101,7 +101,7 @@ class Conditional extends Single implements NodeConditionalInterface
      */
     public function compile()
     {
-        return "<?php {$this->parser->getStart()} ({$this->parser->getExpression()}): ?>";
+        return "{$this->parser->getStart()} ({$this->parser->getExpression()}):";
     }
 
 }

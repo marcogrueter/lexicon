@@ -25,8 +25,7 @@ class Insert extends Single
         $share = $attributeParser->compileNamedFromOrdered([0 => 'partial']);
 
         if (!empty($attribute)) {
-            return "<?php echo \$__env->make({$attribute},
-            array_except(array_merge(get_defined_vars(),{$share}),array('__data','__path')))->render(); ?>";
+            return "echo \$__env->make({$attribute},array_except(array_merge(get_defined_vars(),{$share}),array('__data','__path')))->render();";
         }
 
         return null;

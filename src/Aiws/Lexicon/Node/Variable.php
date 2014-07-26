@@ -18,7 +18,8 @@ class Variable extends Single
 
         $expected = Type::ECHOABLE;
 
-        return "<?php echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName()}', {$attributes}, '', null, '{$expected}'); ?>";
+        return "echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
+        )}', {$attributes}, '', null, '{$expected}');";
     }
 
 }

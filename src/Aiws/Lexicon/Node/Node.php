@@ -402,10 +402,10 @@ abstract class Node implements NodeInterface
     public function getExtractionId($suffix = null)
     {
         if ($suffix) {
-            $suffix .= '__ ';
+            $suffix .= '__';
         }
 
-        return ' __' . get_called_class() . '__' . $this->getName() . '__' . $this->getId() . '__' . $suffix;
+        return "__extraction__" . get_called_class() . '__' . $this->getName() . '__' . $this->getId() . '__' . $suffix."__extraction__";
     }
 
     /**
@@ -671,7 +671,7 @@ abstract class Node implements NodeInterface
             $this->setParsedContent(
                 str_replace(
                     $node->getExtractionId('open'),
-                    $node->isValid() ? $node->compileOpen() : null,
+                    $node->isValid() ? $this->compiledLine($node->compileOpen()) : null,
                     $this->getParsedContent()
                 )
             );
@@ -681,7 +681,7 @@ abstract class Node implements NodeInterface
             $this->setParsedContent(
                 str_replace(
                     $node->getExtractionId('close'),
-                    $node->isValid() ? $node->compileClose() : null,
+                    $node->isValid() ? $this->compiledLine($node->compileClose()) : null,
                     $this->getParsedContent()
                 )
             );
@@ -690,12 +690,17 @@ abstract class Node implements NodeInterface
         $this->setParsedContent(
             str_replace(
                 $node->getExtractionId(),
-                $node->isValid() ? $node->compile() : null,
+                $node->isValid() ? $this->compiledLine($node->compile()) : null,
                 $this->getParsedContent()
             )
         );
 
         return $this;
+    }
+
+    public function compiledLine($line)
+    {
+        return "\n__COMPILED__".$line."\n";
     }
 
     /**

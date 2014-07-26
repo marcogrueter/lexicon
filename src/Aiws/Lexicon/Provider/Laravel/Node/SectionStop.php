@@ -19,7 +19,7 @@ class SectionStop extends Single
      */
     public function compile()
     {
-        return "<?php \$__env->stopSection(); ?>";
+        return "\$__env->stopSection();";
     }
 
 }

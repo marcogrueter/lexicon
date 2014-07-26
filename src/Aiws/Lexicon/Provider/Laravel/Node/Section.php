@@ -19,7 +19,7 @@ class Section extends Single
      */
     public function compile()
     {
-        return "<?php \$__env->startSection({$this->newAttributeParser()->compileAttribute('name')}); ?>";
+        return "\$__env->startSection({$this->newAttributeParser()->compileAttribute('name')});";
     }
 
 }

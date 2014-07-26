@@ -1,6 +1,7 @@
 <?php namespace Aiws\Lexicon\Node;
 
 use Aiws\Lexicon\Contract\NodeBlockInterface;
+use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Util\Type;
 
 class Block extends Node implements NodeBlockInterface
@@ -137,7 +138,7 @@ class Block extends Node implements NodeBlockInterface
             return $this->compileFilter();
         }
 
-        /** @var $node Node */
+        /** @var $node NodeInterface */
         foreach ($this->getChildren() as $node) {
             $this->inject($node);
         }
@@ -156,7 +157,7 @@ class Block extends Node implements NodeBlockInterface
             return null;
         }
 
-        return "<?php foreach ({$this->getIterateableSource()} as \${$this->getItemName()}): ?>";
+        return "foreach ({$this->getIterateableSource()} as \${$this->getItemName()}):";
     }
 
     /**
@@ -172,8 +173,8 @@ class Block extends Node implements NodeBlockInterface
 
         $expected = Type::ECHOABLE;
 
-        return "<?php echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
-        )}', {$attributes}, '{$this->getContent()}', '', '{$expected}'); ?>";
+        return "echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
+        )}', {$attributes}, '{$this->getContent()}', '', '{$expected}');";
     }
 
     /**
@@ -207,6 +208,6 @@ class Block extends Node implements NodeBlockInterface
             return null;
         }
 
-        return '<?php endforeach; ?>';
+        return "endforeach;";
     }
 }

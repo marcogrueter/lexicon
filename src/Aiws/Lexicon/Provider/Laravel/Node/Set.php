@@ -19,15 +19,15 @@ class Set extends Single
      */
     public function compile()
     {
-        $source = "<?php\n";
+        $source = '';
 
         foreach($this->newAttributeParser()->compileArray() as $key => $value) {
             if (!is_numeric($key)) {
-                $source .= "\${$key} = {$value};\n";
+                $source .= "\${$key} = {$value}; ";
             }
         }
 
-        return $source."?>";
+        return $source;
     }
 
 }

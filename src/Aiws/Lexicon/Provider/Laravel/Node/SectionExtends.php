@@ -23,8 +23,8 @@ class SectionExtends extends Single
         $attribute = $this->newAttributeParser()->compileAttribute('layout', 0);
 
         if (!empty($attribute)) {
-            $rootNode->footer[] = "<?php echo \$__env->make({$attribute},
-            {$this->getEnvironment()->getEnvironmentVariable()})->render(); ?>";
+            $rootNode->footer[] = "echo \$__env->make({$attribute},
+            {$this->getEnvironment()->getEnvironmentVariable()})->render();";
         }
 
         return null;
