@@ -70,12 +70,26 @@ class Context
 
         foreach ($parts as $part) {
 
-            if ($reflection->hasArrayKey($part)) {
+            if ($reflection->hasMethod($part)) {
+                try {
+                    $data = call_user_func_array([$data, $part], $attributes);
+                } catch(\InvalidArgumentException $e) {
+                    echo "There is a problem with the <b>{$key}</b> variable. One of the attributes maybe incorrect.";
+                    // @todo - log exception
+                    // @todo - fire exception event
+                } catch(\ErrorException $e) {
+                    echo "There is a problem with the <b>{$key}</b> variable. One of the attributes maybe incorrect.";
+                    // @todo - log exception
+                    // @todo - fire exception event
+                } catch(\Exception $e) {
+                    echo "There is a problem with the <b>{$key}</b> variable.";
+                    // @todo - log exception
+                    // @todo - fire exception event
+                }
+            } elseif ($reflection->hasArrayKey($part)) {
                 $data = $data[$part];
             } elseif ($reflection->hasObjectKey($part)) {
                 $data = $data->{$part};
-            } elseif ($reflection->hasMethod($part)) {
-                $data = $data->{$part}();
             } elseif (count($parts) == $count or $this->getData() == $data) {
                 $data = $default;
             }
