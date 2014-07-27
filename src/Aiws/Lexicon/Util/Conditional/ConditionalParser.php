@@ -177,6 +177,8 @@ class ConditionalParser
     {
         $hasNotOperator = (strpos($comparison, '! ') !== false);
 
+        $not = $hasNotOperator ? '!' : null;
+
         $comparison = preg_replace('/! /', '', $comparison);
 
         if ($operator = $this->getOperatorMatch($comparison)) {
@@ -191,11 +193,10 @@ class ConditionalParser
                 $right = $parts[1];
             }
 
-            $this->comparisons[] = $this->getComparisonSource($left, $right, $operator);
+            $this->comparisons[] = $not.$this->getComparisonSource($left, $right, $operator);
 
         } else {
 
-            $not = $hasNotOperator ? '!' : null;
             $this->comparisons[] = $not.$this->getPartSource($part = $comparison);
         }
 
