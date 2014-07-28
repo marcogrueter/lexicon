@@ -62,6 +62,7 @@ class LexiconServiceProvider extends ServiceProvider {
                     ->setIgnoredMatchers(['parent'])
                     ->registerPlugin('foo', 'Aiws\\Lexicon\\Example\\FooPlugin')
                     ->registerPlugin('test', 'Aiws\\Lexicon\\Example\\TestPlugin')
+                    ->registerPlugin('counter', 'Aiws\\Lexicon\\Plugin\\Counter')
                     ->registerRootNodeType(new Block())
                     ->registerNodeTypes(
                         [
