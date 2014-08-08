@@ -1,6 +1,6 @@
 <?php namespace Aiws\Lexicon\Contract;
 
-interface NodeInterface
+interface NodeInterface extends ExtractionInterface
 {
     /**
      * Get Lexicon environment

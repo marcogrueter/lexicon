@@ -71,4 +71,11 @@ interface EnvironmentInterface
      * @return mixed
      */
     public function get($data, $key, $attributes = [], $content = '', $default = null, $expected = null);
+
+    /**
+     * @param $view string
+     * @param $data array|object
+     * @return mixed
+     */
+    public function parse($view, $data);
 }
