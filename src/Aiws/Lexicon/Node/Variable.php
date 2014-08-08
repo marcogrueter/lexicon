@@ -4,6 +4,19 @@ use Aiws\Lexicon\Util\Type;
 
 class Variable extends Single
 {
+    protected $isEmbedded = false;
+
+    public function setIsEmbedded($isEmbedded = false)
+    {
+        $this->isEmbedded = $isEmbedded;
+        return $this;
+    }
+
+    public function getIsEmbedded()
+    {
+        return $this->isEmbedded;
+    }
+
     public function getRegexMatcher()
     {
         return "/\{\{\s*(?!{$this->lexicon->getIgnoredMatchers()})({$this
@@ -18,8 +31,20 @@ class Variable extends Single
 
         $expected = Type::ECHOABLE;
 
-        return "echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
-        )}', {$attributes}, '', null, '{$expected}');";
+        $echo = $end = null;
+
+        if (!$this->getIsEmbedded()) {
+            $echo = 'echo ';
+            $end = ';';
+        }
+
+        return "{$echo}\$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
+        )}', {$attributes}, '', null, '{$expected}'){$end}";
+    }
+
+    public function compileKey()
+    {
+        return $this->getCount();
     }
 
 }
