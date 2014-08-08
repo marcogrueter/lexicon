@@ -14,10 +14,6 @@ class Environment extends BaseEnvironment
 
         $this->callCreator($view = new View($this, $this->getEngineFromPath($path)->parse(false), $view, $path, $data));
 
-        $lexiconCompiler = $this->engines->resolve('lexicon')->getCompiler();
-
-        $lexiconCompiler->setView($view);
-
         return $view;
     }
 
@@ -29,22 +25,16 @@ class Environment extends BaseEnvironment
      * @param  array   $mergeData
      * @return \Illuminate\View\View
      */
-    public function parse($content, $data = [], $mergeData = [])
+    public function parse($view, $data = [], $mergeData = [])
     {
         /** @var $engine CompilerEngine */
-        $engine = $this->engines->resolve('lexicon');
-
-        $compiler = $engine->getCompiler();
-
-        $view = md5($content);
+        $engine = $this->container['lexicon.compiler.engine'];
 
         $data = array_merge($mergeData, $this->parseData($data));
 
-        $this->callCreator($view = new View($this, $engine, $view, $content, $data));
+        $this->callCreator($view = new View($this, $engine, md5($view), $view, $data));
 
         $view->parse();
-
-        $compiler->setView($view);
 
         return $view;
     }
