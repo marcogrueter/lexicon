@@ -1,6 +1,8 @@
 <?php namespace Aiws\Lexicon\Plugin;
 
+use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\PluginInterface;
+use Whoops\Example\Exception;
 
 class Plugin implements PluginInterface
 {
@@ -24,6 +26,14 @@ class Plugin implements PluginInterface
      * @var string
      */
     protected $name;
+
+
+    /**
+     * Lexicon
+     *
+     * @var EnvironmentInterface
+     */
+    protected $lexicon;
 
     /**
      * Set plugin name
@@ -100,14 +110,25 @@ class Plugin implements PluginInterface
     }
 
     /**
-     * Key is a filter method
+     * Set environment
      *
-     * @param $key
-     * @return bool
+     * @param EnvironmentInterface $lexicon
+     * @return $this
      */
-    public function isFilter($name)
+    public function setEnvironment(EnvironmentInterface $lexicon)
     {
-        return method_exists($this, 'filter'.ucfirst($name));
+        $this->lexicon = $lexicon;
+        return $this;
+    }
+
+    /**
+     * Get environment
+     *
+     * @return EnvironmentInterface
+     */
+    public function getEnvironment()
+    {
+        return $this->lexicon;
     }
 
     /**
@@ -117,13 +138,22 @@ class Plugin implements PluginInterface
      * @param $arguments
      * @return null
      */
-    public function __call($name, $arguments)
+    public function __call($key, $arguments)
     {
-        if ($this->isFilter($name)) {
-            return call_user_func([$this, 'filter'.ucfirst($name)]);
+        if (!$this->getEnvironment()) {
+            throw new \Exception;
+        }
+
+        $handler = $this->getEnvironment()->getPluginHandler();
+        $name = $this->getPluginName().'.'.$key;
+
+        if ($handler->isFilter($name)) {
+            return $handler->filter($this,$name);
+        } elseif($handler->isParse($name))  {
+            return $handler->filter($this,$name, 'parse');
         }
 
         return null;
     }
-    
+
 }

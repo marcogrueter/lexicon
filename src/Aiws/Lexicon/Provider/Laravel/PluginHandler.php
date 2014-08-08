@@ -47,12 +47,7 @@ class PluginHandler implements PluginHandlerInterface
      */
     public function register($name, $class)
     {
-        \App::singleton("lexicon.plugin.{$name}", function() use ($class) {
-                return new $class;
-            });
-
         $this->plugins[$name] = $class;
-
         return $this;
     }
 
@@ -68,7 +63,7 @@ class PluginHandler implements PluginHandlerInterface
 
         if (count($parts) > 1) {
             $name = $parts[0];
-            return isset($this->plugins[$name]) ? \App::make("lexicon.plugin.{$name}") : null;
+            return isset($this->plugins[$name]) ? new $this->plugins[$name] : null;
         }
 
         return null;
@@ -82,19 +77,79 @@ class PluginHandler implements PluginHandlerInterface
      * @param string $content
      * @return mixed
      */
-    public function call($name, $attributes = [], $content = '')
+    public function call($key, $attributes = [], $content = '')
     {
-        $segments = explode($this->getEnvironment()->getScopeGlue(), $name);
+        $segments = explode($this->getEnvironment()->getScopeGlue(), $key);
         if (count($segments) > 1) {
-            $method = $segments[1];
             /** @var $plugin PluginInterface */
-            if ($plugin = $this->get($name)) {
-                $plugin->setAttributes($attributes);
-                $plugin->setContent($content);
+            if ($plugin = $this->get($key)) {
+
+                $name   = $segments[0];
+                $method = $segments[1];
+
+                $plugin
+                    ->setEnvironment($this->getEnvironment())
+                    //->setPluginName($name)
+                    ->setAttributes($attributes)
+                    ->setContent($content);
                 return $plugin->{$method}();
             }
         }
 
         return null;
     }
+
+    /**
+     * Does this call have to be filtered?
+     *
+     * @param $key
+     * @return bool
+     */
+    public function isFilter($key)
+    {
+        if ($plugin = $this->get($key)) {
+            $segments = explode('.', $key);
+            if (count($segments) > 1) {
+                return method_exists($plugin, 'filter' . ucfirst($segments[1]));
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Does this call have to be parsed and filtered?
+     *
+     * @param $key
+     * @return bool
+     */
+    public function isParse($key)
+    {
+        if ($plugin = $this->get($key)) {
+            $segments = explode('.', $key);
+            if (count($segments) > 1) {
+                return method_exists($plugin, 'parse' . ucfirst($segments[1]));
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Run the filter from the plugin
+     *
+     * @param PluginInterface $plugin
+     * @param                 $key
+     * @return mixed
+     */
+    public function filter($plugin, $key, $prefix = 'filter')
+    {
+        $segments = explode('.', $key);
+        if (count($segments) > 1) {
+            return call_user_func([$plugin, $prefix . ucfirst($segments[1])]);
+        }
+
+        return null;
+    }
+
 }
