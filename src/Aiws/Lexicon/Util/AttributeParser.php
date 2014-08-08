@@ -1,9 +1,9 @@
 <?php namespace Aiws\Lexicon\Util;
 
+use Aiws\Lexicon\Contract\ExtractionInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Node\Variable;
 use Aiws\Lexicon\Util\Attribute\AttributeNode;
-use Aiws\Lexicon\Util\Attribute\EmbeddedAttribute;
 use Aiws\Lexicon\Util\Attribute\NamedAttribute;
 use Aiws\Lexicon\Util\Attribute\NamedAttributeNode;
 use Aiws\Lexicon\Util\Attribute\OrderedAttributeNode;
@@ -44,29 +44,50 @@ class AttributeParser
      */
     protected $embeddedAttributes = [];
 
+    protected $attributesExtractions = [];
+
+    protected $attributesOrder = [];
+
+    protected $compiledAttributes = [];
+
     public function __construct(NodeInterface $node)
     {
         $this->node         = $node;
         $this->regex        = $node->getEnvironment()->getRegex();
         $this->attributes   = $node->getParsedAttributes();
-        $this->variableNode = new Variable();
+        $this->variableNode = new Variable($node->getEnvironment());
         $this->lexicon      = $node->getEnvironment();
         $this->variableNode->setEnvironment($node->getEnvironment());
         $this->stringTest = new StringTest();
     }
 
+
+    /**
+     * @return $this
+     * 1. Extract named or ordered attributes
+     * 2. Extract embedded attributes
+     * 3. Extract embedded string attributes from named or ordered
+     * 4. Explode all hashes
+     */
     public function parse()
     {
-        $this->createEmbeddedAttributes();
+
 
         // Do we have named attributes?
         if ($this->stringTest->contains($this->attributes, '="') or
             $this->stringTest->contains($this->attributes, '={')
         ) {
-            $this->createAttributeNodes(new NamedAttributeNode());
+            $this->createAttributeNodes(new NamedAttributeNode($this->node->getEnvironment()));
         } else {
-            $this->createAttributeNodes(new OrderedAttributeNode());
+            $this->createAttributeNodes(new OrderedAttributeNode($this->node->getEnvironment()));
         }
+
+        $this->createEmbeddedAttributes();
+
+        $this->attributesOrder = explode(' ', trim($this->getRegex()->compress($this->attributes)));
+if ($this->node->getName() == 'include') {
+    //dd($this->attributesOrder);
+}
 
         return $this;
     }
@@ -78,24 +99,18 @@ class AttributeParser
 
     public function newEmbeddedAttribute(array $match)
     {
-        return new EmbeddedAttribute($match);
+        return $this->variableNode->make($match);
     }
 
     public function createEmbeddedAttributes()
     {
-        $embeddedMatches = $this->getMatches($this->attributes, $this->getEmbeddedAttributeRegex());
+        $embeddedMatches = $this->getRegex()->getEmbeddedMatches($this->attributes);
 
         foreach ($embeddedMatches as $match) {
 
-            $embeddedAttribute = $this->newEmbeddedAttribute($match);
+            $embeddedAttribute = $this->variableNode->make($match, $this->node->getParent(), $this->node->getDepth());
 
-            $this->attributes = str_replace(
-                $embeddedAttribute->getOriginal(),
-                '"' . $embeddedAttribute->getId() . '"',
-                $this->attributes
-            );
-
-            $this->embeddedAttributes[$embeddedAttribute->getId()] = $embeddedAttribute;
+            $this->extract($embeddedAttribute);
         }
 
         return $this;
@@ -103,8 +118,6 @@ class AttributeParser
 
     public function createAttributeNodes(AttributeNode $attributeNodeType)
     {
-        $attributeNodeType->setEnvironment($this->node->getEnvironment());
-
         $matches = $attributeNodeType->getMatches($this->attributes);
 
         foreach ($matches as $count => $match) {
@@ -116,17 +129,29 @@ class AttributeParser
                 $count
             );
 
-            $attributeNode->setEmbeddedAttribute($this->getEmbeddedById($attributeNode->getEmbeddedId()));
+            $this->extract($attributeNode);
 
-            $this->attributeNodes[] = $attributeNode;
+            //$attributeNode->setEmbeddedAttribute($this->getEmbeddedById($attributeNode->getEmbeddedId()));
         }
 
         return $this;
     }
 
+    public function extract(ExtractionInterface $extraction)
+    {
+        //dd($extraction->getExtractionContent());
+        $this->attributes = str_replace(
+            trim($extraction->getExtractionContent()),
+            $extraction->getId(),
+            $this->attributes
+        );
+
+        $this->attributesExtractions[$extraction->getId()] = $extraction;
+    }
+
     public function getEmbeddedAttributeRegex()
     {
-        return "/\{\s*({$this->getRegex()->getVariableRegexMatcher()})(\s+.*?)?\s*(\/)?\}/ms";
+        return $this->getRegex()->getEmbeddedAttributeRegex();
     }
 
     public function getMatches($string, $regex)
@@ -153,11 +178,16 @@ class AttributeParser
     {
         $attributes = array();
 
+        //dd($this->attributesExtractions);
+
         /** @var $attributeNode AttributeNode */
-        foreach ($this->getAttributeNodes() as $attributeNode) {
-            $key = $attributeNode->compileKey();
-            if (!in_array($key, array_keys($except)) or !in_array($key, $except)) {
-                $attributes[$key] = $attributeNode->compile();
+        foreach ($this->attributesOrder as $count => $id) {
+            if (isset($this->attributesExtractions[$id])) {
+                $attributeNode = $this->attributesExtractions[$id];
+                $key = $attributeNode->setIsEmbedded(true)->compileKey();
+                if (!in_array($key, array_keys($except)) or !in_array($key, $except)) {
+                    $attributes[$key] = $attributeNode->compile();
+                }
             }
         }
 
@@ -175,10 +205,13 @@ class AttributeParser
         $attributes = array();
 
         /** @var $attributeNode AttributeNode */
-        foreach ($this->getAttributeNodes() as $attributeNode) {
-            $key = $attributeNode->compileNamedFromOrderedKey();
-            if (!in_array($key, array_keys($except)) or !in_array($key, $except)) {
-                $attributes[$key] = $attributeNode->compile();
+        foreach ($this->attributesOrder as $count => $id) {
+            if (isset($this->attributesExtractions[$id])) {
+                $attributeNode = $this->attributesExtractions[$id];
+                $key           = $attributeNode->compileNamedFromOrderedKey();
+                if (!in_array($key, array_keys($except)) or !in_array($key, $except)) {
+                    $attributes[$key] = $attributeNode->compile();
+                }
             }
         }
 
