@@ -16,7 +16,7 @@ class Regex
 
     public function compress($string)
     {
-        return preg_replace('/\s\s+/', ' ', trim($string));
+        return preg_replace(['/\s\s+/', '/\n+/'], ' ', trim($string));
     }
 
     /**
@@ -101,6 +101,16 @@ class Regex
     public function getClosingTagRegexMatcher($name)
     {
         return '/\{\{\s*(\/' . $name . ')\s*\}\}/m';
+    }
+
+    public function getEmbeddedAttributeRegexMatcher()
+    {
+        return "/\{\s*?({$this->getVariableRegexMatcher()})(\s+.*?)?\s*?(\/)?\}/ms";
+    }
+
+    public function getEmbeddedMatches($string)
+    {
+        return $this->getMatches($string, $this->getEmbeddedAttributeRegexMatcher());
     }
 
     public function getMatch($text, $regex)
