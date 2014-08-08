@@ -136,6 +136,8 @@ class Block extends Node implements NodeBlockInterface
     {
         if ($this->isFilter()) {
             return $this->compileFilter();
+        } elseif ($this->isParse()) {
+            return $this->compileParse();
         }
 
         /** @var $node NodeInterface */
@@ -153,7 +155,7 @@ class Block extends Node implements NodeBlockInterface
      */
     public function compileOpen()
     {
-        if ($this->isFilter()) {
+        if ($this->isFilter() or $this->isParse()) {
             return null;
         }
 
@@ -175,6 +177,29 @@ class Block extends Node implements NodeBlockInterface
 
         return "echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
         )}', {$attributes}, '{$this->getContent()}', '', '{$expected}');";
+    }
+
+    /**
+     * Compile block filter
+     *
+     * @return string
+     */
+    public function compileParse()
+    {
+        $attributes = $this->newAttributeParser()->compile();
+
+        $finder = $this->getContextFinder();
+
+        $expected = Type::ECHOABLE;
+
+        $lexicon = $this->getEnvironment();
+
+        $content = addslashes($lexicon->getRegex()->compress($this->getContent()));
+
+        $variables = $lexicon->getEnvironmentVariable();
+
+        return "echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
+        )}', {$attributes}, \$__lexicon->parse(stripslashes('{$content}'), {$variables}), '', '{$expected}');";
     }
 
     /**
@@ -204,7 +229,7 @@ class Block extends Node implements NodeBlockInterface
      */
     public function compileClose()
     {
-        if ($this->isFilter()) {
+        if ($this->isFilter() or $this->isParse()) {
             return null;
         }
 

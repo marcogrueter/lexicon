@@ -631,11 +631,30 @@ class Lexicon implements EnvironmentInterface
      */
     public function isFilter($name)
     {
-        if ($plugin = $this->getPluginHandler()->get($name)) {
-            $segments = explode('.', $name);
-            return $plugin->isFilter($segments[1]);
-        }
-
-        return false;
+        return $this->getPluginHandler()->isFilter($name);
     }
+
+    /**
+     * Is filter
+     *
+     * @param $name
+     * @return bool
+     */
+    public function isParse($name)
+    {
+        return $this->getPluginHandler()->isParse($name);
+    }
+
+    /**
+     * Parse string
+     *
+     * @param string       $view
+     * @param array|object $data
+     * @return mixed
+     */
+    public function parse($view, $data)
+    {
+        return \View::parse($view, $data)->render();
+    }
+
 }
