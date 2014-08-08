@@ -25,7 +25,8 @@ use Illuminate\Support\ServiceProvider;
  *
  * @package Aiws\Lexicon\Provider\Laravel
  */
-class LexiconServiceProvider extends ServiceProvider {
+class LexiconServiceProvider extends ServiceProvider
+{
 
     /**
      * Register the service provider.
@@ -34,7 +35,7 @@ class LexiconServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        $this->package('aiws/lexicon', null, __DIR__.'/../../../..');
+        $this->package('aiws/lexicon', null, __DIR__ . '/../../../..');
 
         $this
             ->registerConditionalHandler()
@@ -43,7 +44,9 @@ class LexiconServiceProvider extends ServiceProvider {
         /** @var $app Application */
         $app = $this->app;
 
-        $app->singleton('lexicon', function() use ($app) {
+        $app->singleton(
+            'lexicon',
+            function () use ($app) {
 
                 $scopeGlue = $app['config']->get('lexicon::scopeGlue', '.');
 
@@ -53,7 +56,7 @@ class LexiconServiceProvider extends ServiceProvider {
 
                 $allowPhp = $app['config']->get('lexicon::allowPhp', false);
 
-                $lexicon = new Lexicon(new Regex($scopeGlue), $app['lexicon.conditional.handler'], $app['lexicon.plugin.handler']);
+                $lexicon = new Lexicon(new Regex($scopeGlue), $app['lexicon.conditional.handler'], $app['lexicon.plugin.handler'], $app);
 
                 $lexicon
                     ->setAllowPhp($allowPhp)
@@ -63,49 +66,58 @@ class LexiconServiceProvider extends ServiceProvider {
                     ->registerPlugin('foo', 'Aiws\\Lexicon\\Example\\FooPlugin')
                     ->registerPlugin('test', 'Aiws\\Lexicon\\Example\\TestPlugin')
                     ->registerPlugin('counter', 'Aiws\\Lexicon\\Plugin\\Counter')
-                    ->registerRootNodeType(new Block())
+                    ->registerRootNodeType(new Block($lexicon))
                     ->registerNodeTypes(
                         [
-                            new Section(),
-                            new SectionExtends(),
-                            new SectionShow(),
-                            new SectionStop(),
-                            new SectionYield(),
-                            new Set(),
-                            new Insert(),
-                            new Conditional(),
-                            new ConditionalElse(),
-                            new ConditionalEndif(),
-                            new Variable(),
+                            new Section($lexicon),
+                            new SectionExtends($lexicon),
+                            new SectionShow($lexicon),
+                            new SectionStop($lexicon),
+                            new SectionYield($lexicon),
+                            new Set($lexicon),
+                            new Insert($lexicon),
+                            new Conditional($lexicon),
+                            new ConditionalElse($lexicon),
+                            new ConditionalEndif($lexicon),
+                            new Variable($lexicon),
                         ]
                     );
 
                 return $lexicon;
-            });
+            }
+        );
+
+        $app->singleton(
+            'lexicon.compiler',
+            function () use ($app) {
+                $cachePath = $app['path.storage'] . '/views';
+                // The Compiler engine requires an instance of the CompilerInterface, which in
+                // this case will be the Blade compiler, so we'll first create the compiler
+                // instance to pass into the engine so it can compile the views properly.
+                $compiler = new Compiler($app['files'], $cachePath);
+                $compiler->setEnvironment($app['lexicon']);
+                return $compiler;
+            }
+        );
+
+        $app->singleton(
+            'lexicon.compiler.engine',
+            function () use ($app) {
+                return new CompilerEngine($app['lexicon.compiler'], $app['files']);
+            }
+        );
 
         $app->resolving(
             'view',
             function ($view) use ($app) {
-
-                $extension = $app['config']->get('lexicon::extension', 'html');
-
                 /** @var $view Environment */
                 $view->share('__lexicon', $app['lexicon']);
 
                 $view->addExtension(
-                    $extension,
+                    $extension = $app['config']->get('lexicon::extension', 'html'),
                     'lexicon',
                     function () use ($app) {
-                        $cachePath = $app['path.storage'] . '/views';
-
-                        // The Compiler engine requires an instance of the CompilerInterface, which in
-                        // this case will be the Blade compiler, so we'll first create the compiler
-                        // instance to pass into the engine so it can compile the views properly.
-                        $compiler = new Compiler($app['files'], $cachePath);
-
-                        $compiler->setEnvironment($app['lexicon']);
-
-                        return new CompilerEngine($compiler, $app['files']);
+                        return $app['lexicon.compiler.engine'];
                     }
                 );
             }
@@ -124,17 +136,21 @@ class LexiconServiceProvider extends ServiceProvider {
     {
         $app = $this->app;
 
-        $app->bind(
-            'view',
-            function ($app) {
+        $app->singleton(
+            'lexicon.environment',
+            function () use ($app) {
                 // Next we need to grab the engine resolver instance that will be used by the
                 // environment. The resolver will be used by an environment to get each of
                 // the various engine implementations such as plain PHP or Blade engine.
-                $resolver = $app['view.engine.resolver'];
+                return new Environment($app['view.engine.resolver'], $app['view.finder'], $app['events']);
+            }
+        );
 
-                $finder = $app['view.finder'];
+        $app->bind(
+            'view',
+            function ($app) {
 
-                $env = new Environment($resolver, $finder, $app['events']);
+                $env = $app['lexicon.environment'];
 
                 // We will also set the container instance on this view environment since the
                 // view composers may be classes registered in the container, which allows
@@ -155,13 +171,16 @@ class LexiconServiceProvider extends ServiceProvider {
      */
     public function registerConditionalHandler()
     {
-        $this->app->singleton('lexicon.conditional.handler', function() {
-            $conditionalHandler = new ConditionalHandler();
-            $conditionalHandler
-                ->registerTestType(new StringTest())
-                ->registerTestType(new IterateableTest());
-            return $conditionalHandler;
-        });
+        $this->app->singleton(
+            'lexicon.conditional.handler',
+            function () {
+                $conditionalHandler = new ConditionalHandler();
+                $conditionalHandler
+                    ->registerTestType(new StringTest())
+                    ->registerTestType(new IterateableTest());
+                return $conditionalHandler;
+            }
+        );
 
         return $this;
     }
@@ -173,9 +192,12 @@ class LexiconServiceProvider extends ServiceProvider {
      */
     public function registerPluginHandler()
     {
-        $this->app->singleton('lexicon.plugin.handler', function() {
+        $this->app->singleton(
+            'lexicon.plugin.handler',
+            function () {
                 return new PluginHandler();
-            });
+            }
+        );
         return $this;
     }
 
