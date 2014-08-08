@@ -43,4 +43,12 @@ interface PluginInterface
      */
     public function getAttribute($name, $offset = 0, $default = null);
 
+    /**
+     * Set environment
+     *
+     * @param EnvironmentInterface $lexicon
+     * @return mixed
+     */
+    public function setEnvironment(EnvironmentInterface $lexicon);
+
 }

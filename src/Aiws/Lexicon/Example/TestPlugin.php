@@ -1,5 +1,6 @@
 <?php namespace Aiws\Lexicon\Example;
 
+use dflydev\markdown\MarkdownParser;
 use Aiws\Lexicon\Plugin\Plugin;
 
 class TestPlugin extends Plugin
@@ -22,6 +23,11 @@ class TestPlugin extends Plugin
         $name = $this->getAttribute('name', 0, 'World');
 
         return "Hello {$name}!";
+    }
+
+    public function string()
+    {
+        return 'STRING!';
     }
 
     public function object()
@@ -72,6 +78,18 @@ class TestPlugin extends Plugin
     public function filterMd5()
     {
         return md5($this->getContent());
+    }
+
+    public function parseContent()
+    {
+        return ucwords($this->getContent());
+    }
+
+    public function parseMarkdown()
+    {
+        $markdownParser = new MarkdownParser();
+
+        return $markdownParser->transformMarkdown($this->getContent());
     }
 
 }
