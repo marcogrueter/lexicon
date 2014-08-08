@@ -38,16 +38,6 @@ class Compiler extends BladeCompiler
         //'SectionOverwrite',
     );
 
-    public function setView($view)
-    {
-        $this->view = $view;
-    }
-
-    public function getData()
-    {
-        return $this->view->getData();
-    }
-
     public function setEnvironment(EnvironmentInterface $lexicon)
     {
         $this->lexicon = $lexicon;
@@ -76,7 +66,7 @@ class Compiler extends BladeCompiler
 
         $this->lexicon->setCompiledView($segments[count($segments)-1]);
 
-        $contents = $this->lexicon->compile($this->files->get($this->getPath()), $this->getData());
+        $contents = $this->lexicon->compile($this->files->get($this->getPath()));
 
         if (!is_null($this->cachePath)) {
             $this->files->put($this->getCompiledPath($this->getPath()), $contents);
@@ -112,7 +102,9 @@ class Compiler extends BladeCompiler
      */
     public function parseString($content)
     {
-        $contents = $this->lexicon->compile($content, $this->getData());
+        $this->lexicon->setCompiledView(str_replace('/', '',strrchr($this->getCompiledPath($content), '/')));
+
+        $contents = $this->lexicon->compile($content);
 
         if (!is_null($this->cachePath)) {
             $this->files->put($this->getCompiledPath($content), $contents);
