@@ -1,5 +1,7 @@
 <?php namespace Aiws\Lexicon\Util\Attribute;
 
+use Aiws\Lexicon\Contract\EnvironmentInterface;
+use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Node\Node;
 use Aiws\Lexicon\Node\Variable;
 
@@ -32,6 +34,22 @@ class AttributeNode extends Node
      */
     protected $isNamed = true;
 
+    protected $variableNodes = [];
+
+    protected $extractions = [];
+
+    protected $variableNode;
+
+    protected $attributeSegments = [];
+
+    protected $lexicon;
+
+    public function __construct(EnvironmentInterface $lexicon)
+    {
+        $this->lexicon = $lexicon;
+        $this->variableNode = new Variable($lexicon);
+    }
+
     /**
      * Get the regex match setup
      *
@@ -40,9 +58,50 @@ class AttributeNode extends Node
      */
     public function getSetup(array $match)
     {
+        //dd($match[0]);
+
         $this
+            ->setExtractionContent(isset($match[0]) ? $match[0] : null)
             ->setKey(isset($match[1]) ? $match[1] : null)
             ->setValue(isset($match[3]) ? $match[3] : '');
+
+        $this->parse();
+    }
+
+    public function parse()
+    {
+
+        $embeddedMatches = $this->getEnvironment()->getRegex()->getEmbeddedMatches($this->value);
+
+        foreach($embeddedMatches as $count => $match) {
+
+            $node = $this->variableNode->make(
+                $match,
+                $this->getParent(),
+                $this->getDepth(),
+                $count
+            );
+
+            $this->value = str_replace(
+                trim($node->getExtractionContent()),
+                "\n".$node->getId()."\n",
+                $this->value
+            );
+
+            $this->extractions[$node->getId()] = $node;
+        }
+
+        $this->attributeSegments = explode("\n", $this->value);
+    }
+
+    public function getExtractionIds()
+    {
+        return array_keys($this->extractions);
+    }
+
+    public function getEmbeddedMatches($string)
+    {
+        return $this->lexicon->getRegex()->getMatches($string, $this->getRegexMatcher());
     }
 
     /**
@@ -175,11 +234,7 @@ class AttributeNode extends Node
 
     public function newVariableNode()
     {
-        $node = new Variable();
-
-        $node->setEnvironment($this->getEnvironment());
-
-        return $node;
+        return new Variable($this->getEnvironment());
     }
 
     public function compileEmbedded()
@@ -198,10 +253,16 @@ class AttributeNode extends Node
 
     public function compile()
     {
-        if ($this->getEmbeddedAttribute()) {
-            return $this->compileEmbedded();
-        } else {
-            return $this->compileLiteral();
+        foreach($this->attributeSegments as &$segment) {
+            if (isset($this->extractions[$segment])) {
+                $node = $this->extractions[$segment];
+                /** @var $node NodeInterface */
+                $segment = $node->setIsEmbedded(true)->compile();
+            } else {
+                $segment = "'{$segment}'";
+            }
         }
+
+        return implode('.', $this->attributeSegments);
     }
 }

@@ -1,10 +1,10 @@
 <?php namespace Aiws\Lexicon\Util\Attribute;
 
+use Aiws\Lexicon\Contract\ExtractionInterface;
 
-
-class EmbeddedAttribute
+class EmbeddedAttribute implements ExtractionInterface
 {
-    protected $original;
+    protected $content;
 
     protected $name;
 
@@ -12,14 +12,14 @@ class EmbeddedAttribute
 
     public function __construct($match)
     {
-        $this->original = isset($match[0]) ? $match[0] : '';
-        $this->name = isset($match[1]) ? $match[1] : '';
+        $this->content   = isset($match[0]) ? $match[0] : '';
+        $this->name       = isset($match[1]) ? $match[1] : '';
         $this->attributes = isset($match[2]) ? $match[2] : '';
     }
 
-    public function getOriginal()
+    public function getContent()
     {
-        return $this->original;
+        return $this->content;
     }
 
     public function getName()
@@ -34,7 +34,7 @@ class EmbeddedAttribute
 
     public function getId()
     {
-        return md5($this->original);
+        return md5($this->content);
     }
 
 }

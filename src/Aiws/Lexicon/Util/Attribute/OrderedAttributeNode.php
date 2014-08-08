@@ -6,7 +6,11 @@ class OrderedAttributeNode extends AttributeNode
 
     public function getSetup(array $match)
     {
-        $this->setValue(isset($match[2]) ? $match[2] : '');
+        $this
+            ->setExtractionContent(isset($match[0]) ? $match[0] : null)
+            ->setValue(isset($match[2]) ? $match[2] : '');
+
+        $this->parse();
     }
 
     public function getRegexMatcher()
