@@ -114,6 +114,26 @@ abstract class Node implements NodeInterface
      */
     protected $validator;
 
+    protected $isEmbedded = false;
+
+    public function __construct(EnvironmentInterface $lexicon)
+    {
+        $this->lexicon = $lexicon;
+    }
+
+
+
+    public function setIsEmbedded($isEmbedded = false)
+    {
+        $this->isEmbedded = $isEmbedded;
+        return $this;
+    }
+
+    public function getIsEmbedded()
+    {
+        return $this->isEmbedded;
+    }
+
     /**
      * Make a new node instance
      *
@@ -130,7 +150,7 @@ abstract class Node implements NodeInterface
             : $depth;
 
         /** @var $node Node */
-        $node = new static;
+        $node = new static($this->lexicon);
 
         $node
             ->setEnvironment($this->lexicon)
@@ -254,7 +274,7 @@ abstract class Node implements NodeInterface
         $children = $this->children;
 
         if (is_string($class)) {
-            foreach($this->children as $key => $node) {
+            foreach ($this->children as $key => $node) {
                 if (!is_subclass_of($node, $class)) {
                     unset($children[$key]);
                 }
@@ -405,7 +425,8 @@ abstract class Node implements NodeInterface
             $suffix .= '__';
         }
 
-        return "__extraction__" . get_called_class() . '__' . $this->getName() . '__' . $this->getId() . '__' . $suffix."__extraction__";
+        return "__extraction__" . get_called_class() . '__' . $this->getName() . '__' . $this->getId(
+        ) . '__' . $suffix . "__extraction__";
     }
 
     /**
@@ -586,7 +607,7 @@ abstract class Node implements NodeInterface
             }
         }
 
-        foreach($this->getChildren() as $node) {
+        foreach ($this->getChildren() as $node) {
             $node->validate();
         }
 
@@ -700,7 +721,7 @@ abstract class Node implements NodeInterface
 
     public function compiledLine($line)
     {
-        return "\n__COMPILED__".$line."\n";
+        return "\n__COMPILED__" . $line . "\n";
     }
 
     /**
@@ -787,4 +808,15 @@ abstract class Node implements NodeInterface
     {
         return $this->getEnvironment()->isFilter($this->getName());
     }
+
+    /**
+     * Is parse
+     *
+     * @return mixed
+     */
+    public function isParse()
+    {
+        return $this->getEnvironment()->isParse($this->getName());
+    }
+
 }
