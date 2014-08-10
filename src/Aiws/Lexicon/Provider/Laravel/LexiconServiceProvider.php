@@ -6,13 +6,13 @@ use Aiws\Lexicon\Node\Conditional;
 use Aiws\Lexicon\Node\ConditionalElse;
 use Aiws\Lexicon\Node\ConditionalEndif;
 use Aiws\Lexicon\Node\Variable;
-use Aiws\Lexicon\Provider\Laravel\Node\Insert;
-use Aiws\Lexicon\Provider\Laravel\Node\Section;
-use Aiws\Lexicon\Provider\Laravel\Node\SectionExtends;
-use Aiws\Lexicon\Provider\Laravel\Node\SectionShow;
-use Aiws\Lexicon\Provider\Laravel\Node\SectionStop;
-use Aiws\Lexicon\Provider\Laravel\Node\SectionYield;
-use Aiws\Lexicon\Provider\Laravel\Node\Set;
+use Aiws\Lexicon\Node\Insert;
+use Aiws\Lexicon\Node\Section;
+use Aiws\Lexicon\Node\SectionExtends;
+use Aiws\Lexicon\Node\SectionShow;
+use Aiws\Lexicon\Node\SectionStop;
+use Aiws\Lexicon\Node\SectionYield;
+use Aiws\Lexicon\Node\Set;
 use Aiws\Lexicon\Util\Conditional\ConditionalHandler;
 use Aiws\Lexicon\Util\Conditional\Test\IterateableTest;
 use Aiws\Lexicon\Util\Conditional\Test\StringTest;
@@ -56,7 +56,7 @@ class LexiconServiceProvider extends ServiceProvider
 
                 $allowPhp = $app['config']->get('lexicon::allowPhp', false);
 
-                $lexicon = new Lexicon(new Regex($scopeGlue), $app['lexicon.conditional.handler'], $app['lexicon.plugin.handler'], $app);
+                $lexicon = new Lexicon(new Regex($scopeGlue), $app['lexicon.conditional.handler'], $app['lexicon.plugin.handler']);
 
                 $lexicon
                     ->setAllowPhp($allowPhp)

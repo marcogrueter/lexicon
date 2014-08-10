@@ -1,6 +1,7 @@
 <?php namespace Aiws\Lexicon\Contract;
 
 use Aiws\Lexicon\Util\Regex;
+use Aiws\Lexicon\Util\Type;
 
 interface EnvironmentInterface
 {
@@ -70,7 +71,7 @@ interface EnvironmentInterface
      * @param string $content
      * @return mixed
      */
-    public function get($data, $key, $attributes = [], $content = '', $default = null, $expected = null);
+    public function get($data, $key, array $attributes = [], $content = '', $default = null, $expected = Type::ANY);
 
     /**
      * @param $view string

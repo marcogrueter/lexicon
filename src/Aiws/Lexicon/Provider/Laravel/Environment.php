@@ -2,9 +2,9 @@
 
 use Aiws\Lexicon\Util\Regex;
 use Illuminate\View\Engines\CompilerEngine;
-use Illuminate\View\Environment as BaseEnvironment;
+use Illuminate\View\Factory;
 
-class Environment extends BaseEnvironment
+class Environment extends Factory
 {
     public function make($view, $data = [], $mergeData = [])
     {

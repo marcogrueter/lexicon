@@ -5,7 +5,7 @@ use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\PluginHandlerInterface;
 use Aiws\Lexicon\Util\Conditional\ConditionalHandler;
 use Aiws\Lexicon\Util\Conditional\Test\StringTest;
-use Aiws\Lexicon\Util\Context;
+use Aiws\Lexicon\Util\Reflection;
 use Aiws\Lexicon\Util\Regex;
 use Aiws\Lexicon\Util\Type;
 
@@ -138,6 +138,11 @@ class Lexicon implements EnvironmentInterface
     protected $optimizeViewClass = 'AiwsLexiconView__';
 
     /**
+     * @var bool
+     */
+    protected $development = false;
+
+    /**
      * @param Regex                  $regex
      * @param ConditionalHandler     $conditionalHandler
      * @param PluginHandlerInterface $pluginHandler
@@ -149,7 +154,7 @@ class Lexicon implements EnvironmentInterface
     ) {
         $this->regex              = $regex;
         $this->conditionalHandler = $conditionalHandler;
-        $this->pluginHandler      = $pluginHandler;
+        $this->pluginHandler      = $pluginHandler->setEnvironment($this);
     }
 
     /**
@@ -209,7 +214,7 @@ class Lexicon implements EnvironmentInterface
                     $line = $this->compileLine($line);
                 }
 
-                $source .= $this->spaces(8).$line."\n";
+                $source .= $this->spaces(8) . $line . "\n";
             }
         }
 
@@ -228,7 +233,7 @@ class Lexicon implements EnvironmentInterface
             foreach ($footer as &$line) {
                 $line = $this->compileLine($line);
                 if ($this->getOptimize()) {
-                    $line = $this->spaces(8).$line."\n";
+                    $line = $this->spaces(8) . $line . "\n";
                 }
             }
 
@@ -236,6 +241,11 @@ class Lexicon implements EnvironmentInterface
         }
 
         return $this->compileView($source);
+    }
+
+    public function setDevelopment()
+    {
+
     }
 
     public function spaces($number = 1)
@@ -261,7 +271,7 @@ class Lexicon implements EnvironmentInterface
 
         $view = '<?php class ';
 
-        $view .= $this->getCompiledViewClass()."\n";
+        $view .= $this->getCompiledViewClass() . "\n";
 
         $view .= "{\n";
 
@@ -269,7 +279,7 @@ class Lexicon implements EnvironmentInterface
 
         $view .= "{$this->spaces(8)}extract(\$__data);\n\n";
 
-        $view .= $source."\n";
+        $view .= $source . "\n";
 
         $view .= "{$this->spaces(4)}}\n";
 
@@ -387,7 +397,7 @@ class Lexicon implements EnvironmentInterface
      */
     public function getPluginHandler()
     {
-        return $this->pluginHandler->setEnvironment($this);
+        return $this->pluginHandler;
     }
 
     /**
@@ -506,10 +516,110 @@ class Lexicon implements EnvironmentInterface
      * @param null|string $expected
      * @return mixed
      */
-    public function get($data, $key, $parameters = [], $content = '', $default = null, $expected = Type::ANY)
+    /*    public function get($data, $key, array $attributes = [], $content = '', $default = null, $expected = Type::ANY)
+        {
+            $context = new Context($this, $data);
+            return $context->getVariable($key, $attributes, $content, $default, $expected);
+        }*/
+
+    /**
+     * Takes a dot-notated key and finds the value for it in the given
+     * array or object.
+     *
+     * @param  string       $key     Dot-notated key to find
+     * @param  array|object $data    Array or object to search
+     * @param  mixed        $default Default value to use if not found
+     * @return mixed
+     */
+    public function get($data, $key, array $attributes = [], $content = '', $default = null, $expected = Type::ANY)
     {
-        $context = new Context($this, $data);
-        return $context->getVariable($key, $parameters, $content, $default, $expected);
+        $scopes = $pluginScopes = explode($this->scopeGlue, $key);
+
+        $pluginKey = $key;
+
+        $original = $data;
+
+        if ($this->pluginHandler->get($pluginKey)) {
+
+            $plugin = array_shift($scopes);
+            $method = array_shift($scopes);
+
+            if (count($scopes) > 2) {
+                $pluginKey = $plugin . $this->scopeGlue . $method;
+            }
+
+            $data = $this->pluginHandler->call($pluginKey, $attributes, $content);
+        }
+
+        $previousScope = null;
+        $invalidScope  = null;
+
+        while (count($scopes) > 0) {
+
+            $scope = array_shift($scopes);
+
+            if (is_object($data) and method_exists($data, $scope)) {
+                try {
+                    $data = call_user_func_array([$data, $scope], $attributes);
+                } catch (\InvalidArgumentException $e) {
+                    echo "There is a problem with the <b>{$key}</b> variable. One of the attributes maybe incorrect.";
+                    // @todo - log exception
+                    // @todo - fire exception event
+                } catch (\ErrorException $e) {
+                    echo "There is a problem with the <b>{$key}</b> variable. One of the attributes maybe incorrect.";
+                    // @todo - log exception
+                    // @todo - fire exception event
+                } catch (\Exception $e) {
+                    echo "There is a problem with the <b>{$key}</b> variable.";
+                    // @todo - log exception
+                    // @todo - fire exception event
+                }
+            } elseif ((is_array($data) or $data instanceof \ArrayAccess) and isset($data[$scope])) {
+                $data = $data[$scope];
+            } elseif (is_object($data) and isset($data->{$scope})) {
+                $data = $data->{$scope};
+            } elseif (empty($scopes) and
+                $scope == 'count' and
+                (!$invalidScope or $previousScope != $invalidScope) and
+                (is_array($data) or $data instanceof \Countable or is_string($data))
+            ) {
+                if (is_string($data)) {
+                    $data = strlen($data);
+                } else {
+                    $data = count($data);
+                }
+            } elseif (empty($scopes) or $data == $original) {
+                $data = $default;
+            } else {
+                $invalidScope = $scope;
+            }
+
+            $previousScope = $scope;
+        }
+
+        if ($expected == Type::ANY) {
+            return $data;
+        } elseif ($expected == Type::ECHOABLE and
+            (is_string($data) or is_numeric($data) or is_bool($data) or is_null($data) or is_float($data) or
+                (is_object($data) and method_exists($data, '__toString')))
+        ) {
+            return $data;
+        } elseif ($expected == Type::ITERATEABLE and is_array($data) or $data instanceof \Traversable) {
+            return $data;
+        }
+
+        return $default;
+    }
+
+    /**
+     * New reflection
+     *
+     * @param $data
+     * @return Reflection
+     */
+    public function newReflection($data)
+    {
+        return new Reflection($data);
     }
 
     /**

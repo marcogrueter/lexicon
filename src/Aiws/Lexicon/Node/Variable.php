@@ -47,4 +47,23 @@ class Variable extends Single
         return $this->getCount();
     }
 
+    /**
+     * Compile a named key from an ordered embedded attribute
+     *
+     * @return string
+     */
+    public function compileNamedFromOrderedKey()
+    {
+        if (!$this->getIsEmbedded()) {
+            dd($this->getName());
+            $node = $this->make(['name' => $this->getName()], $this->getParent());
+
+            $finder = $node->getContextFinder();
+
+            return $finder->getName();
+        }
+
+        return $this->getName();
+    }
+
 }

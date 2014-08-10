@@ -1,6 +1,6 @@
-<?php namespace Aiws\Lexicon\Provider\Laravel\Node;
+<?php namespace Aiws\Lexicon\Node;
 
-use Aiws\Lexicon\Node\Single;
+
 
 class SectionStop extends Single
 {
