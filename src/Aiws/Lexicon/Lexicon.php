@@ -143,6 +143,11 @@ class Lexicon implements EnvironmentInterface
     protected $development = false;
 
     /**
+     * @var array
+     */
+    protected $parsePaths = [];
+
+    /**
      * @param Regex                  $regex
      * @param ConditionalHandler     $conditionalHandler
      * @param PluginHandlerInterface $pluginHandler
@@ -756,15 +761,36 @@ class Lexicon implements EnvironmentInterface
     }
 
     /**
-     * Parse string
+     * Add parse path
      *
-     * @param string       $view
-     * @param array|object $data
-     * @return mixed
+     * @param $path string
+     * @return $this
      */
-    public function parse($view, $data)
+    public function addParsePath($path)
     {
-        return \View::parse($view, $data)->render();
+        $this->parsePaths[$path] = $path;
+        return $this;
+    }
+
+    /**
+     * Get parse paths
+     *
+     * @return array
+     */
+    public function getParsePaths()
+    {
+        return $this->parsePaths;
+    }
+
+    /**
+     * Is parse path
+     *
+     * @param $path
+     * @return bool
+     */
+    public function isParsePath($path)
+    {
+        return in_array($path, $this->parsePaths);
     }
 
 }

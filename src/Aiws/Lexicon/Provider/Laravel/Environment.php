@@ -6,17 +6,6 @@ use Illuminate\View\Factory;
 
 class Environment extends Factory
 {
-    public function make($view, $data = [], $mergeData = [])
-    {
-        $path = $this->finder->find($view);
-
-        $data = array_merge($mergeData, $this->parseData($data));
-
-        $this->callCreator($view = new View($this, $this->getEngineFromPath($path)->parse(false), $view, $path, $data));
-
-        return $view;
-    }
-
     /**
      * Get the evaluated view contents for the given view.
      *
@@ -27,14 +16,14 @@ class Environment extends Factory
      */
     public function parse($view, $data = [], $mergeData = [])
     {
+        $this->container['lexicon']->addParsePath($view);
+
         /** @var $engine CompilerEngine */
         $engine = $this->container['lexicon.compiler.engine'];
 
         $data = array_merge($mergeData, $this->parseData($data));
 
         $this->callCreator($view = new View($this, $engine, md5($view), $view, $data));
-
-        $view->parse();
 
         return $view;
     }

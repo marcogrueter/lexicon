@@ -1,22 +1,21 @@
 <?php namespace Aiws\Lexicon\Provider\Laravel;
 
+use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Illuminate\View\Engines\CompilerEngine as BaseCompilerEngine;
 
 class CompilerEngine extends BaseCompilerEngine
 {
+    /**
+     * @var EnvironmentInterface
+     */
+    protected $lexicon;
+
     /**
      * Refresh
      *
      * @var bool
      */
     protected $refresh = true;
-
-    /**
-     * Enable string parsing
-     *
-     * @var bool
-     */
-    protected $parse = false;
 
     /**
      * @var
@@ -36,18 +35,6 @@ class CompilerEngine extends BaseCompilerEngine
     }
 
     /**
-     * Set the parse flag
-     *
-     * @param bool $parse
-     * @return $this
-     */
-    public function parse($parse = true)
-    {
-        $this->parse = $parse;
-        return $this;
-    }
-
-    /**
      * Get the evaluated contents of the view.
      *
      * @param  string $path
@@ -62,9 +49,9 @@ class CompilerEngine extends BaseCompilerEngine
         // it was last compiled, we will re-compile the views so we can evaluate a
         // fresh copy of the view. We'll pass the compiler the path of the view.
 
-        if ($this->parse and ($this->refresh or $this->compiler->isNotParsed($path))) {
+        if ($this->getLexicon()->isParsePath($path) and ($this->refresh or $this->compiler->isNotParsed($path))) {
             $this->compiler->parseString($path);
-        } elseif (!$this->parse and ($this->refresh or $this->compiler->isExpired($path))) {
+        } elseif (!$this->getLexicon()->isParsePath($path) and ($this->refresh or $this->compiler->isExpired($path))) {
             $this->compiler->compile($path);
         }
 
@@ -126,5 +113,23 @@ class CompilerEngine extends BaseCompilerEngine
         }
     }
 
+    /**
+     * Set Lexicon
+     *
+     * @param $lexicon EnvironmentInterface
+     * @return $this
+     */
+    public function setLexicon($lexicon)
+    {
+        $this->lexicon = $lexicon;
+        return $this;
+    }
 
+    /**
+     * @return EnvironmentInterface
+     */
+    public function getLexicon()
+    {
+        return $this->lexicon;
+    }
 }

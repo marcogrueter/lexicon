@@ -73,10 +73,4 @@ interface EnvironmentInterface
      */
     public function get($data, $key, array $attributes = [], $content = '', $default = null, $expected = Type::ANY);
 
-    /**
-     * @param $view string
-     * @param $data array|object
-     * @return mixed
-     */
-    public function parse($view, $data);
 }

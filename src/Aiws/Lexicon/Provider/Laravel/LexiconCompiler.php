@@ -1,42 +1,13 @@
 <?php namespace Aiws\Lexicon\Provider\Laravel;
 
 use Aiws\Lexicon\Contract\EnvironmentInterface;
-use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\Compilers\Compiler;
+use Illuminate\View\Compilers\CompilerInterface;
 
-class Compiler extends BladeCompiler
+class LexiconCompiler extends Compiler implements CompilerInterface
 {
-    /**
-     * @var
-     */
-    protected $view;
 
     protected $lexicon;
-
-    /**
-     * All of the available compiler functions.
-     *
-     * @var array
-     */
-    protected $compilers = array(
-        'Extensions',
-        'Extends',
-        //'Comments',
-        //'Echos',
-        //'Openings',
-        //'Closings',
-        //'Else',
-        //'Unless',
-        //'EndUnless',
-        //'Includes',
-        //'Each',
-        //'Yields',
-        //'Shows',
-        //'Language',
-        //'SectionStart',
-        //'SectionStop',
-        //'SectionAppend',
-        //'SectionOverwrite',
-    );
 
     public function setEnvironment(EnvironmentInterface $lexicon)
     {
@@ -75,6 +46,7 @@ class Compiler extends BladeCompiler
 
     /**
      * Get the path currently being compiled.
+     *
      *
      * @return string
      */
