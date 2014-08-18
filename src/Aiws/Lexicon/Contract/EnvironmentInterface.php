@@ -1,6 +1,6 @@
 <?php namespace Aiws\Lexicon\Contract;
 
-use Aiws\Lexicon\Util\Regex;
+use Aiws\Lexicon\Regex;
 use Aiws\Lexicon\Expected;
 
 interface EnvironmentInterface

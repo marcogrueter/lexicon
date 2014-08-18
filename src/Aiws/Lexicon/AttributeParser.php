@@ -1,13 +1,13 @@
-<?php namespace Aiws\Lexicon\Util;
+<?php namespace Aiws\Lexicon;
 
 use Aiws\Lexicon\Contract\ExtractionInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Node\Variable;
-use Aiws\Lexicon\Util\Attribute\AttributeNode;
-use Aiws\Lexicon\Util\Attribute\NamedAttribute;
-use Aiws\Lexicon\Util\Attribute\NamedAttributeNode;
-use Aiws\Lexicon\Util\Attribute\OrderedAttributeNode;
-use Aiws\Lexicon\Util\Conditional\Test\StringTest;
+use Aiws\Lexicon\Attribute\AttributeNode;
+use Aiws\Lexicon\Attribute\NamedAttribute;
+use Aiws\Lexicon\Attribute\NamedAttributeNode;
+use Aiws\Lexicon\Attribute\OrderedAttributeNode;
+use Aiws\Lexicon\Conditional\Test\StringTest;
 
 class AttributeParser
 {

@@ -1,7 +1,7 @@
 <?php namespace Aiws\Lexicon\Node;
 
 use Aiws\Lexicon\Contract\NodeConditionalInterface;
-use Aiws\Lexicon\Util\Conditional\Validator\EndifValidator;
+use Aiws\Lexicon\Conditional\Validator\EndifValidator;
 
 class ConditionalEndif extends Single implements NodeConditionalInterface
 {

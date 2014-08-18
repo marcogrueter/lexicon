@@ -1,7 +1,7 @@
 <?php namespace Aiws\Lexicon\Node;
 
 use Aiws\Lexicon\Contract\NodeConditionalInterface;
-use Aiws\Lexicon\Util\Conditional\Validator\ElseValidator;
+use Aiws\Lexicon\Conditional\Validator\ElseValidator;
 
 class ConditionalElse extends Single implements NodeConditionalInterface
 {

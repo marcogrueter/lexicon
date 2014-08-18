@@ -1,6 +1,6 @@
 <?php namespace Aiws\Lexicon\Provider\Laravel;
 
-use Aiws\Lexicon\Util\Regex;
+use Aiws\Lexicon\Regex;
 use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Factory;
 

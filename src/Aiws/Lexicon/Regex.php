@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon\Util;
+<?php namespace Aiws\Lexicon;
 
 class Regex
 {

@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon\Util;
+<?php namespace Aiws\Lexicon;
 
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\NodeValidatorInterface;

@@ -1,9 +1,9 @@
 <?php namespace Aiws\Lexicon\Node;
 
 use Aiws\Lexicon\Contract\NodeConditionalInterface;
-use Aiws\Lexicon\Util\Conditional\ConditionalParser;
-use Aiws\Lexicon\Util\Conditional\Validator\ElseifValidator;
-use Aiws\Lexicon\Util\Conditional\Validator\IfValidator;
+use Aiws\Lexicon\Conditional\ConditionalParser;
+use Aiws\Lexicon\Conditional\Validator\ElseifValidator;
+use Aiws\Lexicon\Conditional\Validator\IfValidator;
 
 class Conditional extends Single implements NodeConditionalInterface
 {

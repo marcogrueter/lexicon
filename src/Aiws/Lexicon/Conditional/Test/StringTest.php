@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon\Util\Conditional\Test;
+<?php namespace Aiws\Lexicon\Conditional\Test;
 
 class StringTest extends TestType
 {

@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon\Util\Attribute;
+<?php namespace Aiws\Lexicon\Attribute;
 
 class OrderedAttributeNode extends AttributeNode
 {

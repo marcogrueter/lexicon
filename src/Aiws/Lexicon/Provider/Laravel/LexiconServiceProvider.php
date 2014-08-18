@@ -13,10 +13,10 @@ use Aiws\Lexicon\Node\SectionShow;
 use Aiws\Lexicon\Node\SectionStop;
 use Aiws\Lexicon\Node\SectionYield;
 use Aiws\Lexicon\Node\Set;
-use Aiws\Lexicon\Util\Conditional\ConditionalHandler;
-use Aiws\Lexicon\Util\Conditional\Test\IterateableTest;
-use Aiws\Lexicon\Util\Conditional\Test\StringTest;
-use Aiws\Lexicon\Util\Regex;
+use Aiws\Lexicon\Conditional\ConditionalHandler;
+use Aiws\Lexicon\Conditional\Test\IterateableTest;
+use Aiws\Lexicon\Conditional\Test\StringTest;
+use Aiws\Lexicon\Regex;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 

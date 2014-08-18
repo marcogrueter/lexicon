@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon\Util\Attribute;
+<?php namespace Aiws\Lexicon\Attribute;
 
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;

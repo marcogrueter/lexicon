@@ -1,4 +1,4 @@
-<?php namespace Aiws\Lexicon\Util\Conditional;
+<?php namespace Aiws\Lexicon\Conditional;
 
 use Aiws\Lexicon\Contract\TestTypeInterface;
 

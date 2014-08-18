@@ -3,10 +3,8 @@
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\PluginHandlerInterface;
-use Aiws\Lexicon\Util\Conditional\ConditionalHandler;
-use Aiws\Lexicon\Util\Conditional\Test\StringTest;
-use Aiws\Lexicon\Util\Reflection;
-use Aiws\Lexicon\Util\Regex;
+use Aiws\Lexicon\Conditional\ConditionalHandler;
+use Aiws\Lexicon\Conditional\Test\StringTest;
 
 class Lexicon implements EnvironmentInterface
 {
@@ -596,17 +594,6 @@ class Lexicon implements EnvironmentInterface
         }
 
         return $default;
-    }
-
-    /**
-     * New reflection
-     *
-     * @param $data
-     * @return Reflection
-     */
-    public function newReflection($data)
-    {
-        return new Reflection($data);
     }
 
     /**

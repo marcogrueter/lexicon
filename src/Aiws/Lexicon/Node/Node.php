@@ -3,8 +3,8 @@
 use Aiws\Lexicon\Contract\EnvironmentInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
 use Aiws\Lexicon\Contract\NodeValidatorInterface;
-use Aiws\Lexicon\Util\AttributeParser;
-use Aiws\Lexicon\Util\ContextFinder;
+use Aiws\Lexicon\AttributeParser;
+use Aiws\Lexicon\ContextFinder;
 
 abstract class Node implements NodeInterface
 {
