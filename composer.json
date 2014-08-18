@@ -14,6 +14,9 @@
         "php": ">=5.4.0",
         "illuminate/view": "4.2.*"
     },
+    "require-dev": {
+        "barryvdh/laravel-ide-helper": "1.*"
+    },
     "autoload": {
         "psr-0": {
             "Aiws\\Lexicon": "src/"
