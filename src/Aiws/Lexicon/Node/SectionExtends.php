@@ -20,7 +20,7 @@ class SectionExtends extends Single
     {
         $rootNode = $this->getRootNode();
 
-        $attribute = $this->newAttributeParser()->compileAttribute('layout', 0);
+        $attribute = $this->newAttributeParser()->compileAttribute('layout');
 
         if (!empty($attribute)) {
             $source = "echo \$__env->make({$attribute},{$this->getEnvironment()->getEnvironmentVariable()})->render();";

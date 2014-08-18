@@ -85,9 +85,6 @@ class AttributeParser
         $this->createEmbeddedAttributes();
 
         $this->attributesOrder = explode(' ', trim($this->getRegex()->compress($this->attributes)));
-if ($this->node->getName() == 'include') {
-    //dd($this->attributesOrder);
-}
 
         return $this;
     }
@@ -130,8 +127,6 @@ if ($this->node->getName() == 'include') {
             );
 
             $this->extract($attributeNode);
-
-            //$attributeNode->setEmbeddedAttribute($this->getEmbeddedById($attributeNode->getEmbeddedId()));
         }
 
         return $this;
@@ -139,7 +134,6 @@ if ($this->node->getName() == 'include') {
 
     public function extract(ExtractionInterface $extraction)
     {
-        //dd($extraction->getExtractionContent());
         $this->attributes = str_replace(
             trim($extraction->getExtractionContent()),
             $extraction->getId(),
@@ -177,8 +171,6 @@ if ($this->node->getName() == 'include') {
     public function compileArray($except = [])
     {
         $attributes = array();
-
-        //dd($this->attributesExtractions);
 
         /** @var $attributeNode AttributeNode */
         foreach ($this->attributesOrder as $count => $id) {

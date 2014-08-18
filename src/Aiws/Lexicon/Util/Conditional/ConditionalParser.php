@@ -232,7 +232,6 @@ class ConditionalParser
             return $matches[1];
         }
 
-
         $finder = $this->variableNode->make(['name' => $key], $this->node->getParent())->getContextFinder();
 
         return "\$__lexicon->get({$finder->getItemName()}, '{$finder->getName()}')";

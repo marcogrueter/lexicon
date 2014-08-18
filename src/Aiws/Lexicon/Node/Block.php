@@ -2,7 +2,7 @@
 
 use Aiws\Lexicon\Contract\NodeBlockInterface;
 use Aiws\Lexicon\Contract\NodeInterface;
-use Aiws\Lexicon\Util\Type;
+use Aiws\Lexicon\Expected;
 
 class Block extends Node implements NodeBlockInterface
 {
@@ -173,7 +173,7 @@ class Block extends Node implements NodeBlockInterface
 
         $finder = $this->getContextFinder();
 
-        $expected = Type::ECHOABLE;
+        $expected = Expected::ECHOABLE;
 
         return "echo \$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
         )}', {$attributes}, '{$this->getContent()}', '', '{$expected}');";
@@ -190,7 +190,7 @@ class Block extends Node implements NodeBlockInterface
 
         $finder = $this->getContextFinder();
 
-        $expected = Type::ECHOABLE;
+        $expected = Expected::ECHOABLE;
 
         $lexicon = $this->getEnvironment();
 
@@ -211,7 +211,7 @@ class Block extends Node implements NodeBlockInterface
     {
         $attributes = $this->newAttributeParser()->compile();
 
-        $expected = Type::ITERATEABLE;
+        $expected = Expected::TRAVERSABLE;
 
         $finder = $this->getContextFinder();
 

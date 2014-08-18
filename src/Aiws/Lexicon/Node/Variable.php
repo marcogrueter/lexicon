@@ -1,6 +1,6 @@
 <?php namespace Aiws\Lexicon\Node;
 
-use Aiws\Lexicon\Util\Type;
+use Aiws\Lexicon\Expected;
 
 class Variable extends Single
 {
@@ -29,7 +29,7 @@ class Variable extends Single
 
         $finder = $this->getContextFinder();
 
-        $expected = Type::ECHOABLE;
+        $expected = Expected::ECHOABLE;
 
         $echo = $end = null;
 
@@ -55,7 +55,7 @@ class Variable extends Single
     public function compileNamedFromOrderedKey()
     {
         if (!$this->getIsEmbedded()) {
-            dd($this->getName());
+
             $node = $this->make(['name' => $this->getName()], $this->getParent());
 
             $finder = $node->getContextFinder();

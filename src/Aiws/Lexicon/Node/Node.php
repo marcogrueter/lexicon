@@ -607,10 +607,6 @@ abstract class Node implements NodeInterface
             }
         }
 
-        foreach ($this->getChildren() as $node) {
-            $node->validate();
-        }
-
         return $this;
     }
 
@@ -692,7 +688,7 @@ abstract class Node implements NodeInterface
             $this->setParsedContent(
                 str_replace(
                     $node->getExtractionId('open'),
-                    $node->isValid() ? $this->compiledLine($node->compileOpen()) : null,
+                    $node->validate() ? $this->compiledLine($node->compileOpen()) : null,
                     $this->getParsedContent()
                 )
             );
@@ -702,7 +698,7 @@ abstract class Node implements NodeInterface
             $this->setParsedContent(
                 str_replace(
                     $node->getExtractionId('close'),
-                    $node->isValid() ? $this->compiledLine($node->compileClose()) : null,
+                    $node->validate() ? $this->compiledLine($node->compileClose()) : null,
                     $this->getParsedContent()
                 )
             );
@@ -711,7 +707,7 @@ abstract class Node implements NodeInterface
         $this->setParsedContent(
             str_replace(
                 $node->getExtractionId(),
-                $node->isValid() ? $this->compiledLine($node->compile()) : null,
+                $node->validate() ? $this->compiledLine($node->compile()) : null,
                 $this->getParsedContent()
             )
         );
@@ -783,10 +779,10 @@ abstract class Node implements NodeInterface
     public function validate()
     {
         if ($validator = $this->getValidator()) {
-            $this->isValid = $validator->isValid();
+            return $validator->isValid();
         }
 
-        return $this;
+        return $this->isValid();
     }
 
     /**

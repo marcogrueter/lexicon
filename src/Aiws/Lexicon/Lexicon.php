@@ -7,7 +7,6 @@ use Aiws\Lexicon\Util\Conditional\ConditionalHandler;
 use Aiws\Lexicon\Util\Conditional\Test\StringTest;
 use Aiws\Lexicon\Util\Reflection;
 use Aiws\Lexicon\Util\Regex;
-use Aiws\Lexicon\Util\Type;
 
 class Lexicon implements EnvironmentInterface
 {
@@ -511,23 +510,6 @@ class Lexicon implements EnvironmentInterface
     }
 
     /**
-     * Get variable
-     *
-     * @param             $data
-     * @param             $key
-     * @param array       $parameters
-     * @param string      $content
-     * @param null        $default
-     * @param null|string $expected
-     * @return mixed
-     */
-    /*    public function get($data, $key, array $attributes = [], $content = '', $default = null, $expected = Type::ANY)
-        {
-            $context = new Context($this, $data);
-            return $context->getVariable($key, $attributes, $content, $default, $expected);
-        }*/
-
-    /**
      * Takes a dot-notated key and finds the value for it in the given
      * array or object.
      *
@@ -536,7 +518,7 @@ class Lexicon implements EnvironmentInterface
      * @param  mixed        $default Default value to use if not found
      * @return mixed
      */
-    public function get($data, $key, array $attributes = [], $content = '', $default = null, $expected = Type::ANY)
+    public function get($data, $key, array $attributes = [], $content = '', $default = null, $expected = Expected::ANY)
     {
         $scopes = $pluginScopes = explode($this->scopeGlue, $key);
 
@@ -602,14 +584,14 @@ class Lexicon implements EnvironmentInterface
             $previousScope = $scope;
         }
 
-        if ($expected == Type::ANY) {
+        if ($expected == Expected::ANY) {
             return $data;
-        } elseif ($expected == Type::ECHOABLE and
+        } elseif ($expected == Expected::ECHOABLE and
             (is_string($data) or is_numeric($data) or is_bool($data) or is_null($data) or is_float($data) or
                 (is_object($data) and method_exists($data, '__toString')))
         ) {
             return $data;
-        } elseif ($expected == Type::ITERATEABLE and is_array($data) or $data instanceof \Traversable) {
+        } elseif ($expected == Expected::TRAVERSABLE and is_array($data) or $data instanceof \Traversable) {
             return $data;
         }
 

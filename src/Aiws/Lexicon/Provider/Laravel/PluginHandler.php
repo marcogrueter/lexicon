@@ -108,7 +108,7 @@ class PluginHandler implements PluginHandlerInterface
     public function isFilter($key)
     {
         if ($plugin = $this->get($key)) {
-            $segments = explode('.', $key);
+            $segments = explode($this->getEnvironment()->getScopeGlue(), $key);
             if (count($segments) > 1) {
                 return method_exists($plugin, 'filter' . ucfirst($segments[1]));
             }
@@ -126,7 +126,7 @@ class PluginHandler implements PluginHandlerInterface
     public function isParse($key)
     {
         if ($plugin = $this->get($key)) {
-            $segments = explode('.', $key);
+            $segments = explode($this->getEnvironment()->getScopeGlue(), $key);
             if (count($segments) > 1) {
                 return method_exists($plugin, 'parse' . ucfirst($segments[1]));
             }
@@ -144,7 +144,7 @@ class PluginHandler implements PluginHandlerInterface
      */
     public function filter($plugin, $key, $prefix = 'filter')
     {
-        $segments = explode('.', $key);
+        $segments = explode($this->getEnvironment()->getScopeGlue(), $key);
         if (count($segments) > 1) {
             return call_user_func([$plugin, $prefix . ucfirst($segments[1])]);
         }
