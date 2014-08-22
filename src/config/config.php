@@ -8,7 +8,7 @@ return array(
 
     'optimize' => true,
 
-    'optimizeViewClass' => 'AiwsLexiconView__',
+    'optimizeViewClass' => 'AnomalyLexiconView__',
 
     'allowPhp' => true,
 

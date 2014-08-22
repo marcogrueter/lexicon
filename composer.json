@@ -1,9 +1,6 @@
 {
-    "name": "aiws/lexicon",
-    "type":"library",
-    "description": "A lightweight PHP template engine.",
-    "homepage": "https://github.com/AIWebSystems/Lexicon",
-    "keywords": ["template","parser"],
+    "name": "anomaly/lexicon",
+    "description": "",
     "authors": [
         {
             "name": "Osvaldo Brignoni",
@@ -19,7 +16,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Aiws\\Lexicon": "src/"
+            "Anomaly\\Lexicon": "src/"
         }
     },
     "minimum-stability": "stable",
