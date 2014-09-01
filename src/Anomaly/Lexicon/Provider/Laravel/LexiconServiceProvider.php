@@ -18,6 +18,8 @@ class LexiconServiceProvider extends ServiceProvider
 
     protected $nodeTypes = [
         'Anomaly\Lexicon\Node\Comment',
+        'Anomaly\Lexicon\Node\ParentRemain',
+        'Anomaly\Lexicon\Node\RecursiveRemain',
         'Anomaly\Lexicon\Node\Block',
         'Anomaly\Lexicon\Node\Section',
         'Anomaly\Lexicon\Node\SectionExtends',
