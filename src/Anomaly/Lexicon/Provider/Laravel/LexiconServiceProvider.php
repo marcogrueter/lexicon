@@ -1,18 +1,6 @@
 <?php namespace Anomaly\Lexicon\Provider\Laravel;
 
 use Anomaly\Lexicon\Lexicon;
-use Anomaly\Lexicon\Node\Block;
-use Anomaly\Lexicon\Node\Conditional;
-use Anomaly\Lexicon\Node\ConditionalElse;
-use Anomaly\Lexicon\Node\ConditionalEndif;
-use Anomaly\Lexicon\Node\Variable;
-use Anomaly\Lexicon\Node\Insert;
-use Anomaly\Lexicon\Node\Section;
-use Anomaly\Lexicon\Node\SectionExtends;
-use Anomaly\Lexicon\Node\SectionShow;
-use Anomaly\Lexicon\Node\SectionStop;
-use Anomaly\Lexicon\Node\SectionYield;
-use Anomaly\Lexicon\Node\Set;
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Conditional\Test\IterateableTest;
 use Anomaly\Lexicon\Conditional\Test\StringTest;
@@ -27,6 +15,29 @@ use Illuminate\Support\ServiceProvider;
  */
 class LexiconServiceProvider extends ServiceProvider
 {
+
+    protected $nodeTypes = [
+        'Anomaly\Lexicon\Node\Comment',
+        'Anomaly\Lexicon\Node\Block',
+        'Anomaly\Lexicon\Node\Section',
+        'Anomaly\Lexicon\Node\SectionExtends',
+        'Anomaly\Lexicon\Node\SectionShow',
+        'Anomaly\Lexicon\Node\SectionStop',
+        'Anomaly\Lexicon\Node\SectionYield',
+        'Anomaly\Lexicon\Node\Includes',
+        'Anomaly\Lexicon\Node\Conditional',
+        'Anomaly\Lexicon\Node\ConditionalElse',
+        'Anomaly\Lexicon\Node\ConditionalEndif',
+        'Anomaly\Lexicon\Node\Variable',
+    ];
+
+    protected $plugins = [
+        'Anomaly\Lexicon\Plugin\Counter'
+    ];
+
+    protected $pluginHandler = '';
+
+    protected $conditionalHandler = '';
 
     /**
      * Register the service provider.
@@ -66,22 +77,7 @@ class LexiconServiceProvider extends ServiceProvider
                     ->registerPlugin('foo', 'Anomaly\\Lexicon\\Example\\FooPlugin')
                     ->registerPlugin('test', 'Anomaly\\Lexicon\\Example\\TestPlugin')
                     ->registerPlugin('counter', 'Anomaly\\Lexicon\\Plugin\\Counter')
-                    ->registerRootNodeType(new Block($lexicon))
-                    ->registerNodeTypes(
-                        [
-                            new Section($lexicon),
-                            new SectionExtends($lexicon),
-                            new SectionShow($lexicon),
-                            new SectionStop($lexicon),
-                            new SectionYield($lexicon),
-                            new Set($lexicon),
-                            new Insert($lexicon),
-                            new Conditional($lexicon),
-                            new ConditionalElse($lexicon),
-                            new ConditionalEndif($lexicon),
-                            new Variable($lexicon),
-                        ]
-                    );
+                    ->registerNodeTypes($this->nodeTypes);
 
                 return $lexicon;
             }

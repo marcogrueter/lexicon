@@ -27,7 +27,7 @@ class Regex
      */
     public function parseComments($string)
     {
-        return preg_replace('/\{\{#.*?#\}\}/s', '', $string);
+        return preg_replace('/\{\{--.*?--\}\}/s', '', $string);
     }
 
     /**

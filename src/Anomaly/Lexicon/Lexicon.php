@@ -1,10 +1,11 @@
 <?php namespace Anomaly\Lexicon;
 
-use Anomaly\Lexicon\Contract\EnvironmentInterface;
-use Anomaly\Lexicon\Contract\NodeInterface;
-use Anomaly\Lexicon\Contract\PluginHandlerInterface;
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Conditional\Test\StringTest;
+use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\NodeBlockInterface;
+use Anomaly\Lexicon\Contract\NodeInterface;
+use Anomaly\Lexicon\Contract\PluginHandlerInterface;
 
 class Lexicon implements EnvironmentInterface
 {
@@ -80,11 +81,11 @@ class Lexicon implements EnvironmentInterface
     protected $environmentVariable = "array_except(get_defined_vars(),array('__data','__path'))";
 
     /**
-     * Root node type
+     * Block node type offset
      *
-     * @var NodeInterface
+     * @var int
      */
-    public $rootNodeType;
+    public $blockNodeTypeOffset;
 
     /**
      * Node types
@@ -175,8 +176,6 @@ class Lexicon implements EnvironmentInterface
             $content = $this->escapePhp($content);
         }
 
-        $content = $this->regex->parseComments($content);
-
         $noParse = $this->regex->extractNoParse($content);
 
         $content = $noParse['content'];
@@ -188,7 +187,7 @@ class Lexicon implements EnvironmentInterface
             'content' => $content,
         );
 
-        return $this->compileRootNode($this->rootNodeType->make($setup));
+        return $this->compileRootNode($this->getBlockNodeType()->make($setup));
     }
 
     /**
@@ -411,18 +410,6 @@ class Lexicon implements EnvironmentInterface
     }
 
     /**
-     * Set environment variable
-     *
-     * @param $environmentVariable
-     * @return $this
-     */
-    public function setEnvironmentVariable($environmentVariable)
-    {
-        $this->environmentVariable = $environmentVariable;
-        return $this;
-    }
-
-    /**
      * Get environment variable
      *
      * @return string
@@ -444,28 +431,21 @@ class Lexicon implements EnvironmentInterface
     }
 
     /**
-     * Register root node type
-     *
-     * @param NodeInterface $nodeType
-     * @return EnvironmentInterface
-     */
-    public function registerRootNodeType(NodeInterface $nodeType)
-    {
-        $nodeType->setEnvironment($this);
-        $this->rootNodeType = $nodeType;
-        return $this;
-    }
-
-    /**
      * Register node type
      *
      * @param NodeInterface $nodeType
      * @return EnvironmentInterface
      */
-    public function registerNodeType(NodeInterface $nodeType)
+    public function registerNodeType($nodeType)
     {
-        $nodeType->setEnvironment($this);
-        $this->nodeTypes[] = $nodeType;
+        $nodeType = new $nodeType($this);
+        if ($nodeType instanceof NodeInterface) {
+            $this->nodeTypes[] = $nodeType;
+            if ($nodeType instanceof NodeBlockInterface) {
+                end($this->nodeTypes);
+                $this->blockNodeTypeOffset = key($this->nodeTypes);
+            }
+        }
         return $this;
     }
 
@@ -649,9 +629,9 @@ class Lexicon implements EnvironmentInterface
      *
      * @return NodeInterface
      */
-    public function getRootNodeType()
+    public function getBlockNodeType()
     {
-        return $this->rootNodeType;
+        return $this->nodeTypes[$this->blockNodeTypeOffset];
     }
 
     /**
