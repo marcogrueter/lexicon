@@ -13,7 +13,7 @@ class OrderedAttributeNode extends AttributeNode
         $this->parse();
     }
 
-    public function getRegexMatcher()
+    public function regex()
     {
         return '/(\'|"|&#?\w+;)\s*(.*?)\s*\1/s';
     }

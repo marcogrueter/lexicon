@@ -17,7 +17,7 @@ class Variable extends Single
         return $this->isEmbedded;
     }
 
-    public function getRegexMatcher()
+    public function regex()
     {
         return "/\{\{\s*(?!{$this->lexicon->getIgnoredMatchers()})({$this
             ->lexicon->getRegex()->getVariableRegexMatcher()})(\s+.*?)?\s*(\/)?\}\}/ms";

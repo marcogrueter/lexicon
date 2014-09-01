@@ -33,7 +33,7 @@ class Block extends Node implements NodeBlockInterface
      *
      * @return string
      */
-    public function getRegexMatcher()
+    public function regex()
     {
         return '/\{\{\s*(' . $this->lexicon->getRegex()->getVariableRegexMatcher(
         ) . ')(\s.*?)\}\}(.*?)\{\{\s*\/\1\s*\}\}/ms';

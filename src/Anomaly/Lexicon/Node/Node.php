@@ -551,7 +551,7 @@ abstract class Node implements NodeInterface
      */
     public function getOpenTagMatches($text)
     {
-        return $this->lexicon->getRegex()->getMatches($text, $this->getRegexMatcher());
+        return $this->lexicon->getRegex()->getMatches($text, $this->regex());
     }
 
     /**

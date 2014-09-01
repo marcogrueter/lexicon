@@ -2,7 +2,7 @@
 
 abstract class Single extends Node
 {
-    public function getRegexMatcher()
+    public function regex()
     {
         return "/\{\{\s*({$this->getNameMatcher()})(\s.*?)?\s*(\/)?\}\}/ms";
     }

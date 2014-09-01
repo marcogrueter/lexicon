@@ -101,7 +101,7 @@ class AttributeNode extends Node
 
     public function getEmbeddedMatches($string)
     {
-        return $this->lexicon->getRegex()->getMatches($string, $this->getRegexMatcher());
+        return $this->lexicon->getRegex()->getMatches($string, $this->regex());
     }
 
     /**
@@ -110,7 +110,7 @@ class AttributeNode extends Node
      * @param bool $embedded
      * @return string
      */
-    public function getRegexMatcher($embedded = false)
+    public function regex($embedded = false)
     {
         return '/(.*?)\s*=(\'|"|&#?\w+;)(.*?)(?<!\\\\)\2/ms';
     }
@@ -123,7 +123,7 @@ class AttributeNode extends Node
      */
     public function getMatches($string)
     {
-        return $this->lexicon->getRegex()->getMatches($string, $this->getRegexMatcher());
+        return $this->lexicon->getRegex()->getMatches($string, $this->regex());
     }
 
     /**

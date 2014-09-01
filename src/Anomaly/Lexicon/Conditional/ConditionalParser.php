@@ -261,7 +261,7 @@ class ConditionalParser
         );
     }
 
-    public function getRegexMatcher()
+    public function regex()
     {
         return '/\{\{\s*(' . implode('|', $this->startConditionals) . ')\s*((?:\()?(.*?)(?:\))?)\s*\}\}/ms';
     }

@@ -41,7 +41,7 @@ interface NodeInterface extends ExtractionInterface
      *
      * @return string
      */
-    public function getRegexMatcher();
+    public function regex();
 
     /**
      * Get matches

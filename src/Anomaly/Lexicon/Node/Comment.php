@@ -1,14 +1,14 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-class Comment extends Single
+class Comment extends SingleNull
 {
-    public function getRegexMatcher()
+    /**
+     * Regex
+     *
+     * @return string
+     */
+    public function regex()
     {
         return '/\{\{--.*?--\}\}/s';
-    }
-
-    public function compile()
-    {
-        return null;
     }
 }
