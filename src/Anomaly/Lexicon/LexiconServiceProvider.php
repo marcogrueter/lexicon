@@ -32,6 +32,7 @@ class LexiconServiceProvider extends ServiceProvider
         'Anomaly\Lexicon\Node\Conditional',
         'Anomaly\Lexicon\Node\ConditionalElse',
         'Anomaly\Lexicon\Node\ConditionalEndif',
+        'Anomaly\Lexicon\Node\VariableEscaped',
         'Anomaly\Lexicon\Node\Variable',
     ];
 

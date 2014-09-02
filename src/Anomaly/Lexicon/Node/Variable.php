@@ -25,11 +25,7 @@ class Variable extends Single
 
     public function compile()
     {
-        $attributes = $this->newAttributeParser()->compile();
 
-        $finder = $this->getContextFinder();
-
-        $expected = Expected::ECHOABLE;
 
         $echo = $end = null;
 
@@ -38,8 +34,7 @@ class Variable extends Single
             $end  = ';';
         }
 
-        return "{$echo}\$__data['__env']->variable({$finder->getItemName()}, '{$finder->getName(
-        )}', {$attributes}, '', null, '{$expected}'){$end}";
+        return "{$echo}{$this->compileVariable()}{$end}";
     }
 
     public function compileKey()
@@ -66,4 +61,15 @@ class Variable extends Single
         return $this->getName();
     }
 
+    public function compileVariable()
+    {
+        $attributes = $this->newAttributeParser()->compile();
+
+        $finder = $this->getContextFinder();
+
+        $expected = Expected::ECHOABLE;
+
+        return "\$__data['__env']->variable({$finder->getItemName()}, '{$finder->getName(
+        )}', {$attributes}, '', null, '{$expected}')";
+    }
 }
