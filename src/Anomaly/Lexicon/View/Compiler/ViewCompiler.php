@@ -32,10 +32,12 @@ class ViewCompiler
 
     public function view($source)
     {
+        $newline = $this->getCompiler()->getLexicon()->isDebug() ? "\n" : null;
+
         return $this->template(
             [
                 '[class]'  => $this->getCompiler()->getHash(),
-                '[source]' => "\n".trim($source),
+                '[source]' => $newline . trim($source),
             ]
         );
     }

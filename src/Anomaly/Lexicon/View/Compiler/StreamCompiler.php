@@ -104,7 +104,9 @@ class StreamCompiler
             }
         }
 
-        return $this->compileFooter(implode("\n", $this->stream));
+
+
+        return $this->compileFooter(implode($this->getImplodeGlue(), $this->stream));
     }
 
     /**
@@ -127,13 +129,16 @@ class StreamCompiler
                 $segment = $this->clean($segment);
             }
 
-            $glue = $this->getBlockNode()->getLexicon() ? "\n" : PHP_EOL;
-
             $source = str_replace('{{ parent }}', '', $source);
-            $source = ltrim($source, PHP_EOL) . PHP_EOL . implode($glue, array_reverse($footer));
+            $source = ltrim($source, PHP_EOL) . PHP_EOL . implode($this->getImplodeGlue(), array_reverse($footer));
         }
 
         return $source;
+    }
+
+    public function getImplodeGlue()
+    {
+        return $this->getBlockNode()->getLexicon()->isDebug() ? "\n" : PHP_EOL;
     }
 
     /**
@@ -161,17 +166,6 @@ class StreamCompiler
         }
 
         return "echo '{$segment}';";
-    }
-
-    /**
-     * Spaces
-     *
-     * @param int $number
-     * @return string
-     */
-    public function spaces($number = 1)
-    {
-        return str_repeat("\x20", $number);
     }
 
 }
