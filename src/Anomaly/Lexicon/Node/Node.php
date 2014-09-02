@@ -132,7 +132,7 @@ abstract class Node implements NodeInterface
         return $this;
     }
 
-    public function getIsEmbedded()
+    public function isEmbedded()
     {
         return $this->isEmbedded;
     }
@@ -714,13 +714,21 @@ abstract class Node implements NodeInterface
         return $this;
     }
 
-    public function compileSegment($line)
+    public function compileSegment($segment)
     {
-        if (!$this->prefixCompiled or empty($line)) {
-            return $line;
+        if (!$this->prefixCompiled or empty($segment)) {
+            return $segment;
         }
 
-        return StreamCompiler::OPEN . StreamCompiler::COMPILED . '<?php ' . $line . '?>' . StreamCompiler::CLOSE;
+        return StreamCompiler::OPEN . StreamCompiler::COMPILED . $this->php($segment) . StreamCompiler::CLOSE;
+    }
+
+    public function php($segment = null)
+    {
+        if (empty($segment)) {
+            return null;
+        }
+        return '<?php ' . $segment . '?>';
     }
 
     /**

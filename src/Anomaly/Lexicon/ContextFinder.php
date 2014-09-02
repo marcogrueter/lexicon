@@ -58,13 +58,13 @@ class ContextFinder
     public function getItemName()
     {
         if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
-            return $this->lexicon->getLexiconVariable();
+            return '$__data';
         } elseif ($prefix = $this->getPrefix() and $node = $this->findLoopItemNode($prefix)) {
             return '$' . $node->getItemName();
         } elseif ($this->parent and !$this->parent->isRoot()) {
             return '$' . $this->parent->getItemName();
         } else {
-            return $this->lexicon->getLexiconVariable();
+            return '$__data';
         }
 
     }

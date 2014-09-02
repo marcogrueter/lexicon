@@ -36,11 +36,6 @@ interface EnvironmentInterface
     public function getIgnoredMatchers();
 
     /**
-     * @return string
-     */
-    public function getLexiconVariable();
-
-    /**
      * @return Regex
      */
     public function getRegex();

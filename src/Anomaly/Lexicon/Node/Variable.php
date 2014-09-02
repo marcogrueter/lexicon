@@ -4,32 +4,45 @@ use Anomaly\Lexicon\Expected;
 
 class Variable extends Single
 {
+    /**
+     * Is embedded
+     *
+     * @var bool
+     */
     protected $isEmbedded = false;
 
+    /**
+     * Set is embedded
+     *
+     * @param bool $isEmbedded
+     * @return $this
+     */
     public function setIsEmbedded($isEmbedded = false)
     {
         $this->isEmbedded = $isEmbedded;
         return $this;
     }
 
-    public function getIsEmbedded()
+    /**
+     * Is embedded
+     *
+     * @return bool
+     */
+    public function isEmbedded()
     {
         return $this->isEmbedded;
     }
 
     public function regex()
     {
-        return "/\{\{\s*({$this
-            ->lexicon->getRegex()->getVariableRegexMatcher()})(\s+.*?)?\s*(\/)?\}\}/ms";
+        return "/\{\{\s*({$this->getLexicon()->getRegex()->getVariableRegexMatcher()})(\s+.*?)?\s*(\/)?\}\}/ms";
     }
 
     public function compile()
     {
-
-
         $echo = $end = null;
 
-        if (!$this->getIsEmbedded()) {
+        if (!$this->isEmbedded()) {
             $echo = 'echo ';
             $end  = ';';
         }
@@ -49,7 +62,7 @@ class Variable extends Single
      */
     public function compileNamedFromOrderedKey()
     {
-        if (!$this->getIsEmbedded()) {
+        if (!$this->isEmbedded()) {
 
             $node = $this->make(['name' => $this->getName()], $this->getParent());
 

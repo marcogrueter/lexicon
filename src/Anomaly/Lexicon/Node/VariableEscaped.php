@@ -9,8 +9,7 @@ class VariableEscaped extends Variable
      */
     public function regex()
     {
-        return "/\{\{\{\s*({$this
-            ->lexicon->getRegex()->getVariableRegexMatcher()})(\s+.*?)?\s*(\/)?\}\}\}/ms";
+        return "/\{\{\{\s*({$this->getLexicon()->getRegex()->getVariableRegexMatcher()})(\s+.*?)?\s*(\/)?\}\}\}/ms";
     }
 
     /**
@@ -20,6 +19,6 @@ class VariableEscaped extends Variable
      */
     public function compileVariable()
     {
-        return 'e('.parent::compileVariable().')';
+        return 'e(' . parent::compileVariable() . ')';
     }
 }

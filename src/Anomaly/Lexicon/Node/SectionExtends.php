@@ -1,7 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
 
-
 class SectionExtends extends Single
 {
     /**
@@ -23,8 +22,9 @@ class SectionExtends extends Single
         $attribute = $this->newAttributeParser()->compileAttribute('layout');
 
         if (!empty($attribute)) {
-            $source = "echo \$__data['__env']->make({$attribute},{$this->getLexicon()->getLexiconVariable()})->render();";
-            $rootNode->footer[] = $source;
+            $rootNode->footer[] = $this->php(
+                "echo \$__data['__env']->make({$attribute},\$__data)->render();"
+            );
         }
 
         return null;

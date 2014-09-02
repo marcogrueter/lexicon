@@ -313,7 +313,7 @@ class Lexicon implements EnvironmentInterface
     public function injectNoParse($text)
     {
         foreach ($this->noParseExtractions as $key => $extraction) {
-            $extraction['content'] = addslashes($this->getRegex()->compress($extraction['content']));
+            $extraction['content'] = $this->getRegex()->compress($extraction['content']);
             $text                  = str_replace($extraction['id'], $extraction['content'], $text);
             unset($this->noParseExtractions[$key]);
         }

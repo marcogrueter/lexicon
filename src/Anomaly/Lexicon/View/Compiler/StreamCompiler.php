@@ -8,17 +8,17 @@ class StreamCompiler
     /**
      * Opening string for segment
      */
-    const OPEN = ' __LEXICON';
+    const OPEN = '{{@LEXICON@';
 
     /**
      * Closing string for segment
      */
-    const CLOSE = 'LEXICON__ ';
+    const CLOSE = '@LEXICON@}}';
 
     /**
      * Prefix for segments compiled from nodes
      */
-    const COMPILED = '*COMPILED*';
+    const COMPILED = '@COMPILED@';
 
     /**
      * Block node
@@ -132,6 +132,11 @@ class StreamCompiler
         return $source;
     }
 
+    /**
+     * Get implode glue
+     *
+     * @return null|string
+     */
     public function getImplodeGlue()
     {
         return $this->getBlockNode()->getLexicon()->isDebug() ? PHP_EOL : null;
@@ -146,22 +151,6 @@ class StreamCompiler
     public function clean($segment)
     {
         return str_replace(static::COMPILED, '', $segment);
-    }
-
-    /**
-     * String
-     *
-     * @param $segment
-     * @return string
-     */
-    public function string($segment)
-    {
-        if (str_contains($segment = $this->clean($segment), '\'')) {
-            $segment = addslashes($segment);
-            return "echo stripslashes('{$segment}');";
-        }
-
-        return "echo '{$segment}';";
     }
 
 }
