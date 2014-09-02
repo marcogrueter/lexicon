@@ -138,7 +138,7 @@ class Block extends Node implements NodeBlockInterface
 
         if ($this->hasRecursive()) {
             $content = $this->getLexicon()->getRegex()->compress($this->getContent());
-            return "echo \$this->view()->recursive('{$content}', {$finder->getItemName()});";
+            return "echo \$__data['__env']->recursive('{$content}', {$finder->getItemName()});";
         }
 
 
@@ -183,7 +183,7 @@ class Block extends Node implements NodeBlockInterface
 
         $expected = Expected::ECHOABLE;
 
-        return "echo \$this->view()->variable({$finder->getItemName()}, '{$finder->getName(
+        return "echo \$__data['__env']->variable({$finder->getItemName()}, '{$finder->getName(
         )}', {$attributes}, '{$this->getContent()}', '', '{$expected}');";
     }
 
@@ -206,7 +206,7 @@ class Block extends Node implements NodeBlockInterface
 
         $variables = $lexicon->getLexiconVariable();
 
-        return "echo \$this->view()->variable({$finder->getItemName()}, '{$finder->getName(
+        return "echo \$__data['__env']->variable({$finder->getItemName()}, '{$finder->getName(
         )}', {$attributes}, \$__lexicon->parse(stripslashes('{$content}'), {$variables}), '', '{$expected}');";
     }
 
@@ -227,7 +227,7 @@ class Block extends Node implements NodeBlockInterface
 
         $name = $finder->getName();
 
-        return "\$this->view()->variable({$itemName}, '{$name}', {$attributes}, '', [], '{$expected}')";
+        return "\$__data['__env']->variable({$itemName}, '{$name}', {$attributes}, '', [], '{$expected}')";
     }
 
     /**

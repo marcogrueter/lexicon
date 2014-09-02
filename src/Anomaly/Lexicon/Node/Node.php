@@ -3,6 +3,7 @@
 use Anomaly\Lexicon\AttributeParser;
 use Anomaly\Lexicon\ContextFinder;
 use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\NodeValidatorInterface;
 use Anomaly\Lexicon\View\Compiler\StreamCompiler;
@@ -427,8 +428,7 @@ abstract class Node implements NodeInterface
             $suffix .= '__';
         }
 
-        return "__extraction__" . get_called_class() . '__' . $this->getName() . '__' . $this->getId(
-        ) . '__' . $suffix . "__extraction__";
+        return get_called_class() . '__' . $this->getName() . '__' . $this->getId() . '__' . $suffix;
     }
 
     /**
@@ -681,7 +681,7 @@ abstract class Node implements NodeInterface
             $this->setParsedContent(
                 str_replace(
                     $node->getExtractionId('open'),
-                    $node->validate() ? $this->compiledLine($node->compileOpen()) : null,
+                    $node->validate() ? $this->compileSegment($node->compileOpen()) : null,
                     $this->getParsedContent()
                 )
             );
@@ -691,16 +691,22 @@ abstract class Node implements NodeInterface
             $this->setParsedContent(
                 str_replace(
                     $node->getExtractionId('close'),
-                    $node->validate() ? $this->compiledLine($node->compileClose()) : null,
+                    $node->validate() ? $this->compileSegment($node->compileClose()) : null,
                     $this->getParsedContent()
                 )
             );
         }
 
+        if ($node instanceof NodeBlockInterface) {
+            $compile = $node->compile();
+        } else {
+            $compile = $this->compileSegment($node->compile());
+        }
+
         $this->setParsedContent(
             str_replace(
                 $node->getExtractionId(),
-                $node->validate() ? $this->compiledLine($node->compile()) : null,
+                $node->validate() ? $compile : null,
                 $this->getParsedContent()
             )
         );
@@ -708,13 +714,13 @@ abstract class Node implements NodeInterface
         return $this;
     }
 
-    public function compiledLine($line)
+    public function compileSegment($line)
     {
-        if (!$this->prefixCompiled) {
+        if (!$this->prefixCompiled or empty($line)) {
             return $line;
         }
 
-        return StreamCompiler::OPEN . StreamCompiler::COMPILED . $line . StreamCompiler::CLOSE;
+        return StreamCompiler::OPEN . StreamCompiler::COMPILED . '<?php ' . $line . '?>' . StreamCompiler::CLOSE;
     }
 
     /**

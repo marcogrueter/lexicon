@@ -86,10 +86,10 @@ class CompilerEngine extends BaseCompilerEngine
 
             if (!isset($this->lexiconViewCache[$__path])) {
                 include $__path;
-                $this->lexiconViewCache[$__path] = new $viewClass($__data);
+                $this->lexiconViewCache[$__path] = new $viewClass;
             }
 
-            $this->lexiconViewCache[$__path]->render();
+            $this->lexiconViewCache[$__path]->render($__data);
 
         } catch (\Exception $e) {
             $this->handleViewException($e);

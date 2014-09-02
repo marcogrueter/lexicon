@@ -1,1 +1,1 @@
-<?php namespace Anomaly\Lexicon\View;class View_[class] extends View {public function render(){[source]}}
+<?php namespace Anomaly\Lexicon\View; class View_[class] { public function render($__data) { ?>[source]<?php }} ?>

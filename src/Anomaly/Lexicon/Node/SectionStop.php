@@ -19,7 +19,7 @@ class SectionStop extends Single
      */
     public function compile()
     {
-        return "\$this->view()->stopSection();";
+        return "\$__data['__env']->stopSection();";
     }
 
 }

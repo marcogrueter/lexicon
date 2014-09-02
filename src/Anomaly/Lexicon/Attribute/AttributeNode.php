@@ -91,7 +91,7 @@ class AttributeNode extends Node
             $this->extractions[$node->getId()] = $node;
         }
 
-        $this->attributeSegments = explode("\n", $this->value);
+        $this->attributeSegments = explode(PHP_EOL, $this->value);
     }
 
     public function getExtractionIds()
@@ -243,7 +243,7 @@ class AttributeNode extends Node
 
         $finder = $node->getContextFinder();
 
-        return "\$this->view()->variable({$finder->getItemName()},'{$finder->getName()}', [])";
+        return "\$__data['__env']->variable({$finder->getItemName()},'{$finder->getName()}', [])";
     }
 
     public function compileLiteral()

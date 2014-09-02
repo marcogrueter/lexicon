@@ -32,7 +32,7 @@ class ViewCompiler
 
     public function view($source)
     {
-        $newline = $this->getCompiler()->getLexicon()->isDebug() ? "\n" : null;
+        $newline = $this->getCompiler()->getLexicon()->isDebug() ? PHP_EOL : null;
 
         return $this->template(
             [

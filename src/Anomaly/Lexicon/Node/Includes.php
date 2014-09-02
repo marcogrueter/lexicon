@@ -25,7 +25,7 @@ class Includes extends Single
         $share = $attributeParser->compileNamedFromOrdered([0 => 'partial']);
 
         if (!empty($attribute)) {
-            return "echo \$this->view()->make({$attribute},array_except(array_merge(get_defined_vars(),{$share}),array('__data','__path')))->render();";
+            return "echo \$__data['__env']->make({$attribute},array_merge(\$__data,{$share}))->render();";
         }
 
         return null;

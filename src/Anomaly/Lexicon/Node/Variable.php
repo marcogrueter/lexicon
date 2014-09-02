@@ -38,7 +38,7 @@ class Variable extends Single
             $end  = ';';
         }
 
-        return "{$echo}\$this->view()->variable({$finder->getItemName()}, '{$finder->getName(
+        return "{$echo}\$__data['__env']->variable({$finder->getItemName()}, '{$finder->getName(
         )}', {$attributes}, '', null, '{$expected}'){$end}";
     }
 

@@ -8,12 +8,12 @@ class StreamCompiler
     /**
      * Opening string for segment
      */
-    const OPEN = '__LEXICON';
+    const OPEN = ' __LEXICON';
 
     /**
      * Closing string for segment
      */
-    const CLOSE = 'LEXICON__';
+    const CLOSE = 'LEXICON__ ';
 
     /**
      * Prefix for segments compiled from nodes
@@ -99,12 +99,8 @@ class StreamCompiler
         foreach ($this->stream as &$segment) {
             if (starts_with($segment, static::COMPILED)) {
                 $segment = $this->clean($segment);
-            } elseif (!empty($segment)) {
-                $segment = $this->string($segment);
             }
         }
-
-
 
         return $this->compileFooter(implode($this->getImplodeGlue(), $this->stream));
     }
@@ -138,7 +134,7 @@ class StreamCompiler
 
     public function getImplodeGlue()
     {
-        return $this->getBlockNode()->getLexicon()->isDebug() ? "\n" : PHP_EOL;
+        return $this->getBlockNode()->getLexicon()->isDebug() ? PHP_EOL : null;
     }
 
     /**

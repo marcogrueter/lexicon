@@ -102,11 +102,11 @@ class ContextFinder
     {
         if ($this->node instanceof NodeBlockInterface) {
             if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
-                return '$this->data';
+                return '$__data';
             } elseif ($this->parent and !$this->parent->isRoot()) {
                 return '$' . $this->parent->getItemName();
             } else {
-                return '$this->data';
+                return '$__data';
             }
         }
 

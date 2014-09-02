@@ -79,7 +79,7 @@ class Lexicon implements EnvironmentInterface
      *
      * @var string
      */
-    protected $environmentVariable = '$this->data';
+    protected $environmentVariable = '$__data';
 
     /**
      * Block node type offset
@@ -155,6 +155,9 @@ class Lexicon implements EnvironmentInterface
      */
     protected $viewTemplate;
 
+    /**
+     * @var string
+     */
     protected $viewNamespace = 'Anomaly\Lexicon\View';
 
     /**
