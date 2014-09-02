@@ -52,4 +52,10 @@ interface NodeBlockInterface extends NodeInterface
      */
     public function getIterateableSource();
 
+    /**
+     * Get footer
+     *
+     * @return array
+     */
+    public function getFooter();
 }

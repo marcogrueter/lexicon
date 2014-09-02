@@ -22,7 +22,7 @@ class SectionYield extends Single
         $name = $this->newAttributeParser()->compileAttribute('name');
 
         if (!empty($name)) {
-            return "echo \$__env->yieldContent({$name});";
+            return "echo \$this->view()->yieldContent({$name});";
         }
 
         return null;

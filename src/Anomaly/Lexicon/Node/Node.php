@@ -117,6 +117,8 @@ abstract class Node implements NodeInterface
 
     protected $isEmbedded = false;
 
+    protected $prefixCompiled = true;
+
     public function __construct(EnvironmentInterface $lexicon)
     {
         $this->lexicon = $lexicon;
@@ -528,7 +530,7 @@ abstract class Node implements NodeInterface
      *
      * @return EnvironmentInterface
      */
-    public function getEnvironment()
+    public function getLexicon()
     {
         return $this->lexicon;
     }
@@ -708,6 +710,10 @@ abstract class Node implements NodeInterface
 
     public function compiledLine($line)
     {
+        if (!$this->prefixCompiled) {
+            return $line;
+        }
+
         return StreamCompiler::OPEN . StreamCompiler::COMPILED . $line . StreamCompiler::CLOSE;
     }
 
@@ -793,7 +799,7 @@ abstract class Node implements NodeInterface
      */
     public function isFilter()
     {
-        return $this->getEnvironment()->isFilter($this->getName());
+        return $this->getLexicon()->isFilter($this->getName());
     }
 
     /**
@@ -803,7 +809,7 @@ abstract class Node implements NodeInterface
      */
     public function isParse()
     {
-        return $this->getEnvironment()->isParse($this->getName());
+        return $this->getLexicon()->isParse($this->getName());
     }
 
 }

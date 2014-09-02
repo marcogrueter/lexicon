@@ -33,7 +33,7 @@ class PluginHandler implements PluginHandlerInterface
     /**
      * @return EnvironmentInterface
      */
-    public function getEnvironment()
+    public function getLexicon()
     {
         return $this->lexicon;
     }
@@ -59,7 +59,7 @@ class PluginHandler implements PluginHandlerInterface
      */
     public function get($name)
     {
-        $parts = explode($this->getEnvironment()->getScopeGlue(), $name);
+        $parts = explode($this->getLexicon()->getScopeGlue(), $name);
 
         if (count($parts) > 1) {
             $name = $parts[0];
@@ -79,7 +79,7 @@ class PluginHandler implements PluginHandlerInterface
      */
     public function call($key, $attributes = [], $content = '')
     {
-        $segments = explode($this->getEnvironment()->getScopeGlue(), $key);
+        $segments = explode($this->getLexicon()->getScopeGlue(), $key);
         if (count($segments) > 1) {
             /** @var $plugin PluginInterface */
             if ($plugin = $this->get($key)) {
@@ -88,7 +88,7 @@ class PluginHandler implements PluginHandlerInterface
                 $method = $segments[1];
 
                 $plugin
-                    ->setEnvironment($this->getEnvironment())
+                    ->setEnvironment($this->getLexicon())
                     //->setPluginName($name)
                     ->setAttributes($attributes)
                     ->setContent($content);
@@ -108,7 +108,7 @@ class PluginHandler implements PluginHandlerInterface
     public function isFilter($key)
     {
         if ($plugin = $this->get($key)) {
-            $segments = explode($this->getEnvironment()->getScopeGlue(), $key);
+            $segments = explode($this->getLexicon()->getScopeGlue(), $key);
             if (count($segments) > 1) {
                 return method_exists($plugin, 'filter' . ucfirst($segments[1]));
             }
@@ -126,7 +126,7 @@ class PluginHandler implements PluginHandlerInterface
     public function isParse($key)
     {
         if ($plugin = $this->get($key)) {
-            $segments = explode($this->getEnvironment()->getScopeGlue(), $key);
+            $segments = explode($this->getLexicon()->getScopeGlue(), $key);
             if (count($segments) > 1) {
                 return method_exists($plugin, 'parse' . ucfirst($segments[1]));
             }
@@ -144,7 +144,7 @@ class PluginHandler implements PluginHandlerInterface
      */
     public function filter($plugin, $key, $prefix = 'filter')
     {
-        $segments = explode($this->getEnvironment()->getScopeGlue(), $key);
+        $segments = explode($this->getLexicon()->getScopeGlue(), $key);
         if (count($segments) > 1) {
             return call_user_func([$plugin, $prefix . ucfirst($segments[1])]);
         }

@@ -1,12 +1,12 @@
 <?php namespace Anomaly\Lexicon;
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
-use Anomaly\Lexicon\Conditional\Test\StringTest;
 use Anomaly\Lexicon\Contract\EnvironmentInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\PluginHandlerInterface;
 use Anomaly\Lexicon\View\Compiler\StreamCompiler;
+use Anomaly\Lexicon\View\Compiler\ViewCompiler;
 
 class Lexicon implements EnvironmentInterface
 {
@@ -79,7 +79,7 @@ class Lexicon implements EnvironmentInterface
      *
      * @var string
      */
-    protected $environmentVariable = "array_except(get_defined_vars(),array('__data','__path'))";
+    protected $environmentVariable = '$this->data';
 
     /**
      * Block node type offset
@@ -147,6 +147,15 @@ class Lexicon implements EnvironmentInterface
     protected $parsePaths = [];
 
     /**
+     * View template
+     *
+     * @var string
+     */
+    protected $viewTemplate;
+
+    protected $viewNamespace = 'Anomaly\Lexicon\View';
+
+    /**
      * @param Regex                  $regex
      * @param ConditionalHandler     $conditionalHandler
      * @param PluginHandlerInterface $pluginHandler
@@ -199,56 +208,9 @@ class Lexicon implements EnvironmentInterface
      */
     public function compileRootNode(NodeInterface $node)
     {
-        $parsedNode = $node->createChildNodes();
+        $view = new ViewCompiler(new StreamCompiler($node), $this);
 
-        $stream = new StreamCompiler();
-
-        $stream->setSource($parsedNode->compile());
-
-        dd($stream->compile());
-
-        $compiledSource = $parsedNode->compile();
-
-        $source = '';
-
-        $stringTest = new StringTest();
-
-        foreach (explode("\n", $compiledSource) as $line) {
-
-            if (!empty($line)) {
-                if (!$stringTest->startsWith($line, '*compiled*')) {
-                    $line = $this->compileStringLine($line);
-                } else {
-                    $line = $this->compileLine($line);
-                }
-
-                $source .= $this->spaces(8) . $line . "\n";
-            }
-        }
-
-        $source = str_replace("\n\n", "\n", $source);
-
-        $source = $this->injectNoParse($source);
-
-        // If there are any footer lines that need to get added to a template we will
-        // add them here at the end of the template. This gets used mainly for the
-        // template inheritance via the extends keyword that should be appended.
-
-        $footer = $parsedNode->getFooter();
-
-        if (count($footer) > 0) {
-
-            foreach ($footer as &$line) {
-                $line = $this->compileLine($line);
-                if ($this->getOptimize()) {
-                    $line = $this->spaces(8) . $line . "\n";
-                }
-            }
-            $source = str_replace('{{ parent }}', '', $content);
-            $source = ltrim($source, PHP_EOL) . PHP_EOL . implode(PHP_EOL, array_reverse($footer));
-        }
-
-        return $this->compileView($source);
+        return $view->compile();
     }
 
     public function setDevelopment()
@@ -271,30 +233,6 @@ class Lexicon implements EnvironmentInterface
         return $this->getOptimizedClass() . $this->getCompiledView();
     }
 
-    public function compileView($source)
-    {
-        if (!$this->getOptimize()) {
-            return $source;
-        }
-
-        $view = '<?php class ';
-
-        $view .= $this->getCompiledViewClass() . "\n";
-
-        $view .= "{\n";
-
-        $view .= "{$this->spaces(4)}public function render(\$__data) {\n\n";
-
-        $view .= "{$this->spaces(8)}extract(\$__data);\n\n";
-
-        $view .= $source . "\n";
-
-        $view .= "{$this->spaces(4)}}\n";
-
-        $view .= "}" . PHP_EOL;
-
-        return $view;
-    }
 
     public function setOptimize($isOptimized = true)
     {
@@ -316,45 +254,6 @@ class Lexicon implements EnvironmentInterface
     public function getOptimizeViewClass()
     {
         return $this->optimizeViewClass;
-    }
-
-    public function removeCompiledPrefix($line)
-    {
-        return $line = str_replace('*compiled*', '', $line);
-    }
-
-    public function compileLine($line)
-    {
-        $line = $this->removeCompiledPrefix($line);
-
-        if ($this->getOptimize()) {
-            return $line;
-        }
-
-        if (!empty($line)) {
-            return "<?php {$line} ?>";
-        }
-
-        return null;
-    }
-
-    public function compileStringLine($line)
-    {
-        $line = $this->removeCompiledPrefix($line);
-
-        if ($this->getOptimize()) {
-
-            $stringTest = new StringTest();
-
-            if ($stringTest->contains($line, "'")) {
-                $line = addslashes($line);
-                return "echo stripslashes('{$line}');";
-            } else {
-                return "echo '{$line}';";
-            }
-        }
-
-        return $line;
     }
 
     public function setCompiledView($path)
@@ -421,7 +320,7 @@ class Lexicon implements EnvironmentInterface
      *
      * @return string
      */
-    public function getEnvironmentVariable()
+    public function getLexiconVariable()
     {
         return $this->environmentVariable;
     }
@@ -747,6 +646,25 @@ class Lexicon implements EnvironmentInterface
     public function isParsePath($path)
     {
         return in_array($path, $this->parsePaths);
+    }
+
+    /**
+     * Get view template
+     *
+     * @return string
+     */
+    public function getViewTemplate()
+    {
+        if ($this->viewTemplate) {
+            return $this->viewTemplate;
+        }
+
+        return $this->viewTemplate = file_get_contents(__DIR__ . '/../../../assets/view.txt');
+    }
+
+    public function getViewNamespace()
+    {
+        return $this->viewNamespace;
     }
 
 }

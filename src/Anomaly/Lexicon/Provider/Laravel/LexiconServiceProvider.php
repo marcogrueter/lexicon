@@ -1,10 +1,12 @@
 <?php namespace Anomaly\Lexicon\Provider\Laravel;
 
+use Anomaly\Lexicon\View\Compiler\Compiler;
 use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Conditional\Test\IterateableTest;
 use Anomaly\Lexicon\Conditional\Test\StringTest;
 use Anomaly\Lexicon\Regex;
+use Anomaly\Lexicon\View\Compiler\CompilerEngine;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -92,8 +94,8 @@ class LexiconServiceProvider extends ServiceProvider
                 // The Compiler engine requires an instance of the CompilerInterface, which in
                 // this case will be the Blade compiler, so we'll first create the compiler
                 // instance to pass into the engine so it can compile the views properly.
-                $compiler = new LexiconCompiler($app['files'], $cachePath);
-                $compiler->setEnvironment($app['lexicon']);
+                $compiler = new Compiler($app['files'], $cachePath);
+                $compiler->setLexicon($app['lexicon']);
                 return $compiler;
             }
         );

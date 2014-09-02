@@ -22,7 +22,7 @@ class Section extends Single
         $name = $this->newAttributeParser()->compileAttribute('name');
 
         if (!empty($name)) {
-            return "\$__env->startSection({$name});";
+            return "\$this->view()->startSection({$name});";
         }
 
         return null;

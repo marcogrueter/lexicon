@@ -38,7 +38,7 @@ interface EnvironmentInterface
     /**
      * @return string
      */
-    public function getEnvironmentVariable();
+    public function getLexiconVariable();
 
     /**
      * @return Regex
@@ -57,6 +57,11 @@ interface EnvironmentInterface
     public function getRootContextName();
 
     /**
+     * @return NodeBlockInterface
+     */
+    public function getBlockNodeType();
+
+    /**
      * @param        $name
      * @param array  $attributes
      * @param string $content
@@ -73,4 +78,10 @@ interface EnvironmentInterface
      */
     public function get($data, $key, array $attributes = [], $content = '', $default = null, $expected = Expected::ANY);
 
+    /**
+     * Get view template
+     *
+     * @return string
+     */
+    public function getViewTemplate();
 }

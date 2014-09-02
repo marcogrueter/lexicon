@@ -109,9 +109,9 @@ class ConditionalParser
     public function __construct(NodeInterface $node)
     {
         $this->node         = $node;
-        $this->lexicon      = $node->getEnvironment();
+        $this->lexicon      = $node->getLexicon();
         $this->expression   = $this->lexicon->getRegex()->compress($node->getExpression());
-        $this->variableNode = new Variable($node->getEnvironment());
+        $this->variableNode = new Variable($node->getLexicon());
         $this->variableNode->setEnvironment($this->lexicon);
         $this->start = $node->getName();
 
@@ -234,7 +234,7 @@ class ConditionalParser
 
         $finder = $this->variableNode->make(['name' => $key], $this->node->getParent())->getContextFinder();
 
-        return "\$__lexicon->get({$finder->getItemName()}, '{$finder->getName()}')";
+        return "\$this->view()->variable({$finder->getItemName()}, '{$finder->getName()}')";
     }
 
     public function getComparisonSource($left, $right, $operator = null)

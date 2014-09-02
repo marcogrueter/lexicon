@@ -1,4 +1,4 @@
-<?php namespace Anomaly\Lexicon\Provider\Laravel;
+<?php namespace Anomaly\Lexicon\View\Compiler;
 
 use Anomaly\Lexicon\Contract\EnvironmentInterface;
 use Illuminate\View\Engines\CompilerEngine as BaseCompilerEngine;
@@ -50,7 +50,7 @@ class CompilerEngine extends BaseCompilerEngine
         // fresh copy of the view. We'll pass the compiler the path of the view.
 
         if ($this->getLexicon()->isParsePath($path) and ($this->refresh or $this->compiler->isNotParsed($path))) {
-            $this->compiler->parseString($path);
+            $this->compiler->compileParse($path);
         } elseif (!$this->getLexicon()->isParsePath($path) and ($this->refresh or $this->compiler->isExpired($path))) {
             $this->compiler->compile($path);
         }
@@ -76,7 +76,7 @@ class CompilerEngine extends BaseCompilerEngine
      */
     protected function evaluatePath($__path, $__data)
     {
-        $lexicon = $this->getCompiler()->getEnvironment();
+        $lexicon = $this->getCompiler()->getLexicon();
 
         if ($lexicon->getOptimize()) {
 
@@ -91,14 +91,14 @@ class CompilerEngine extends BaseCompilerEngine
 
                 $hash = $segments[count($segments) - 1];
 
-                $viewClass = $lexicon->getOptimizeViewClass() . $hash;
+                $viewClass = $lexicon->getViewNamespace() . '\\' . $hash;
 
                 if (!isset($this->lexiconViewCache[$__path])) {
                     include $__path;
-                    $this->lexiconViewCache[$__path] = new $viewClass;
+                    $this->lexiconViewCache[$__path] = new $viewClass($__data);
                 }
 
-                $this->lexiconViewCache[$__path]->render($__data);
+                $this->lexiconViewCache[$__path]->render();
 
             } catch (\Exception $e) {
                 $this->handleViewException($e);

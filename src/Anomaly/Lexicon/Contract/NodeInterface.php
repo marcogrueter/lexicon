@@ -15,7 +15,7 @@ interface NodeInterface extends ExtractionInterface
      *
      * @return EnvironmentInterface
      */
-    public function getEnvironment();
+    public function getLexicon();
 
     /**
      * Make a new instance of this object

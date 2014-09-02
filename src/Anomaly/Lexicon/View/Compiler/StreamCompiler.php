@@ -1,5 +1,7 @@
 <?php namespace Anomaly\Lexicon\View\Compiler;
 
+use Anomaly\Lexicon\Contract\NodeBlockInterface;
+
 class StreamCompiler
 {
 
@@ -19,11 +21,11 @@ class StreamCompiler
     const COMPILED = '*COMPILED*';
 
     /**
-     * Original source
+     * Block node
      *
-     * @var string
+     * @var NodeBlockInterface
      */
-    protected $source = '';
+    protected $blockNode;
 
     /**
      * Stream array of segments
@@ -38,10 +40,19 @@ class StreamCompiler
      * @param $source
      * @return $this
      */
-    public function setSource($source)
+    public function __construct(NodeBlockInterface $blockNode)
     {
-        $this->source = $source;
-        return $this;
+        $this->blockNode = $blockNode->createChildNodes();
+    }
+
+    /**
+     * Get block node
+     *
+     * @return NodeBlockInterface
+     */
+    public function getBlockNode()
+    {
+        return $this->blockNode;
     }
 
     /**
@@ -57,13 +68,23 @@ class StreamCompiler
     }
 
     /**
+     * Source
+     *
+     * @return string
+     */
+    public function source()
+    {
+        return $this->blockNode->compile();
+    }
+
+    /**
      * Parse
      *
      * @return array
      */
     public function parse()
     {
-        return preg_split($this->regex(), $this->source, -1, PREG_SPLIT_DELIM_CAPTURE);
+        return preg_split($this->regex(), $this->source(), -1, PREG_SPLIT_DELIM_CAPTURE);
     }
 
     /**
@@ -83,6 +104,32 @@ class StreamCompiler
             } elseif (!empty($segment)) {
                 $source .= $this->spaces(8) . $this->string($segment) . "\n";
             }
+        }
+
+        return $this->compileFooter($source);
+    }
+
+    /**
+     * Compile footer
+     *
+     * @param $source
+     * @return mixed|string
+     */
+    public function compileFooter($source)
+    {
+        // If there are any footer lines that need to get added to a template we will
+        // add them here at the end of the template. This gets used mainly for the
+        // template inheritance via the extends keyword that should be appended.
+
+        $footer = $this->getBlockNode()->getFooter();
+
+        if (count($footer) > 0) {
+
+            foreach ($footer as &$segment) {
+                $segment = $this->spaces(8) . $this->clean($segment) . "\n";
+            }
+            $source = str_replace('{{ parent }}', '', $source);
+            $source = ltrim($source, PHP_EOL) . PHP_EOL . implode(PHP_EOL, array_reverse($footer));
         }
 
         return $source;

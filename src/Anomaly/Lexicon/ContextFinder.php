@@ -31,7 +31,7 @@ class ContextFinder
     public function __construct(NodeInterface $node)
     {
         $this->node    = $node;
-        $this->lexicon = $this->node->getEnvironment();
+        $this->lexicon = $this->node->getLexicon();
         $this->parent  = $this->node->getParent();
     }
 
@@ -58,13 +58,13 @@ class ContextFinder
     public function getItemName()
     {
         if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
-            return $this->lexicon->getEnvironmentVariable();
+            return $this->lexicon->getLexiconVariable();
         } elseif ($prefix = $this->getPrefix() and $node = $this->findLoopItemNode($prefix)) {
             return '$' . $node->getItemName();
         } elseif ($this->parent and !$this->parent->isRoot()) {
             return '$' . $this->parent->getItemName();
         } else {
-            return $this->lexicon->getEnvironmentVariable();
+            return $this->lexicon->getLexiconVariable();
         }
 
     }
@@ -102,11 +102,11 @@ class ContextFinder
     {
         if ($this->node instanceof NodeBlockInterface) {
             if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
-                return $this->lexicon->getEnvironmentVariable();
+                return '$this->data';
             } elseif ($this->parent and !$this->parent->isRoot()) {
                 return '$' . $this->parent->getItemName();
             } else {
-                return $this->lexicon->getEnvironmentVariable();
+                return '$this->data';
             }
         }
 

@@ -38,7 +38,7 @@ class Variable extends Single
             $end  = ';';
         }
 
-        return "{$echo}\$__lexicon->get({$finder->getItemName()}, '{$finder->getName(
+        return "{$echo}\$this->view()->variable({$finder->getItemName()}, '{$finder->getName(
         )}', {$attributes}, '', null, '{$expected}'){$end}";
     }
 

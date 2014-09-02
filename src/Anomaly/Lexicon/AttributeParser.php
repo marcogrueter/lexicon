@@ -53,11 +53,11 @@ class AttributeParser
     public function __construct(NodeInterface $node)
     {
         $this->node         = $node;
-        $this->regex        = $node->getEnvironment()->getRegex();
+        $this->regex        = $node->getLexicon()->getRegex();
         $this->attributes   = $node->getParsedAttributes();
-        $this->variableNode = new Variable($node->getEnvironment());
-        $this->lexicon      = $node->getEnvironment();
-        $this->variableNode->setEnvironment($node->getEnvironment());
+        $this->variableNode = new Variable($node->getLexicon());
+        $this->lexicon      = $node->getLexicon();
+        $this->variableNode->setEnvironment($node->getLexicon());
         $this->stringTest = new StringTest();
     }
 
@@ -77,9 +77,9 @@ class AttributeParser
         if ($this->stringTest->contains($this->attributes, '="') or
             $this->stringTest->contains($this->attributes, '={')
         ) {
-            $this->createAttributeNodes(new NamedAttributeNode($this->node->getEnvironment()));
+            $this->createAttributeNodes(new NamedAttributeNode($this->node->getLexicon()));
         } else {
-            $this->createAttributeNodes(new OrderedAttributeNode($this->node->getEnvironment()));
+            $this->createAttributeNodes(new OrderedAttributeNode($this->node->getLexicon()));
         }
 
         $this->createEmbeddedAttributes();
@@ -155,10 +155,10 @@ class AttributeParser
 
     public function getRegex()
     {
-        return $this->getEnvironment()->getRegex();
+        return $this->getLexicon()->getRegex();
     }
 
-    public function getEnvironment()
+    public function getLexicon()
     {
         return $this->lexicon;
     }

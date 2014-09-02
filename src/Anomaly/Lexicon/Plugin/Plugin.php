@@ -126,7 +126,7 @@ class Plugin implements PluginInterface
      *
      * @return EnvironmentInterface
      */
-    public function getEnvironment()
+    public function getLexicon()
     {
         return $this->lexicon;
     }
@@ -140,11 +140,11 @@ class Plugin implements PluginInterface
      */
     public function __call($key, $arguments)
     {
-        if (!$this->getEnvironment()) {
+        if (!$this->getLexicon()) {
             throw new \Exception;
         }
 
-        $handler = $this->getEnvironment()->getPluginHandler();
+        $handler = $this->getLexicon()->getPluginHandler();
         $name = $this->getPluginName().'.'.$key;
 
         if ($handler->isFilter($name)) {

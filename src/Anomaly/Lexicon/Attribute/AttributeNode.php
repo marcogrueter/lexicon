@@ -71,7 +71,7 @@ class AttributeNode extends Node
     public function parse()
     {
 
-        $embeddedMatches = $this->getEnvironment()->getRegex()->getEmbeddedMatches($this->value);
+        $embeddedMatches = $this->getLexicon()->getRegex()->getEmbeddedMatches($this->value);
 
         foreach($embeddedMatches as $count => $match) {
 
@@ -234,7 +234,7 @@ class AttributeNode extends Node
 
     public function newVariableNode()
     {
-        return new Variable($this->getEnvironment());
+        return new Variable($this->getLexicon());
     }
 
     public function compileEmbedded()
@@ -243,7 +243,7 @@ class AttributeNode extends Node
 
         $finder = $node->getContextFinder();
 
-        return "\$__lexicon->get({$finder->getItemName()},'{$finder->getName()}', [])";
+        return "\$this->view()->variable({$finder->getItemName()},'{$finder->getName()}', [])";
     }
 
     public function compileLiteral()
