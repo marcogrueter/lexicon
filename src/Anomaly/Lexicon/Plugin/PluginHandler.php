@@ -1,4 +1,4 @@
-<?php namespace Anomaly\Lexicon\Provider\Laravel;
+<?php namespace Anomaly\Lexicon\Plugin;
 
 use Anomaly\Lexicon\Contract\EnvironmentInterface;
 use Anomaly\Lexicon\Contract\PluginHandlerInterface;

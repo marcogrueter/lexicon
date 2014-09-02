@@ -1,11 +1,10 @@
-<?php namespace Anomaly\Lexicon\Provider\Laravel;
+<?php namespace Anomaly\Lexicon;
 
+use Anomaly\Lexicon\Plugin\PluginHandler;
 use Anomaly\Lexicon\View\Compiler\Compiler;
-use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Conditional\Test\IterateableTest;
 use Anomaly\Lexicon\Conditional\Test\StringTest;
-use Anomaly\Lexicon\Regex;
 use Anomaly\Lexicon\View\Compiler\CompilerEngine;
 use Anomaly\Lexicon\View\Factory;
 use Illuminate\Foundation\Application;
@@ -51,7 +50,7 @@ class LexiconServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->package('anomaly/lexicon', null, __DIR__ . '/../../../..');
+        $this->package('anomaly/lexicon', null, __DIR__ . '/../..');
 
         $this
             ->registerConditionalHandler()

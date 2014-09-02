@@ -1,7 +1,7 @@
 <?php namespace Anomaly\Lexicon\Plugin;
 
 
-class Counter extends Plugin
+class CounterPlugin extends Plugin
 {
     /**
      * Increment
