@@ -146,6 +146,8 @@ class Lexicon implements EnvironmentInterface
      */
     protected $parsePaths = [];
 
+    protected $debug = true;
+
     /**
      * View template
      *
@@ -170,47 +172,15 @@ class Lexicon implements EnvironmentInterface
         $this->pluginHandler      = $pluginHandler->setEnvironment($this);
     }
 
-    /**
-     * Compile
-     *
-     * @param null $content
-     * @return string
-     */
-    public function compile($content = null)
+    public function setDebug($debug)
     {
-        if (!$content) {
-            return null;
-        }
-
-        if (!$this->getAllowPhp()) {
-            $content = $this->escapePhp($content);
-        }
-
-        $noParse = $this->regex->extractNoParse($content);
-
-        $content = $noParse['content'];
-
-        $this->noParseExtractions = $noParse['extractions'];
-
-        $setup = array(
-            'name'    => 'root',
-            'content' => $content,
-        );
-
-        return $this->compileRootNode($this->getBlockNodeType()->make($setup));
+        $this->debug = $debug;
+        return $this;
     }
 
-    /**
-     * Compile root node
-     *
-     * @param NodeInterface $node
-     * @return mixed|string
-     */
-    public function compileRootNode(NodeInterface $node)
+    public function isDebug()
     {
-        $view = new ViewCompiler(new StreamCompiler($node), $this);
-
-        return $view->compile();
+        return $this->debug;
     }
 
     public function setDevelopment()

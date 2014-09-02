@@ -126,8 +126,11 @@ class StreamCompiler
             foreach ($footer as &$segment) {
                 $segment = $this->clean($segment);
             }
+
+            $glue = $this->getBlockNode()->getLexicon() ? "\n" : PHP_EOL;
+
             $source = str_replace('{{ parent }}', '', $source);
-            $source = ltrim($source, PHP_EOL) . PHP_EOL . implode(PHP_EOL, array_reverse($footer));
+            $source = ltrim($source, PHP_EOL) . PHP_EOL . implode($glue, array_reverse($footer));
         }
 
         return $source;

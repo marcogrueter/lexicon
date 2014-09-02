@@ -1,10 +1,10 @@
 <?php namespace Anomaly\Lexicon;
 
-use Anomaly\Lexicon\Plugin\PluginHandler;
-use Anomaly\Lexicon\View\Compiler\Compiler;
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Conditional\Test\IterateableTest;
 use Anomaly\Lexicon\Conditional\Test\StringTest;
+use Anomaly\Lexicon\Plugin\PluginHandler;
+use Anomaly\Lexicon\View\Compiler\Compiler;
 use Anomaly\Lexicon\View\Compiler\CompilerEngine;
 use Anomaly\Lexicon\View\Factory;
 use Illuminate\Foundation\Application;
@@ -37,8 +37,8 @@ class LexiconServiceProvider extends ServiceProvider
 
     protected $plugins = [
         'counter' => 'Anomaly\Lexicon\Plugin\CounterPlugin',
-        'foo' => 'Anomaly\Lexicon\Plugin\FooPlugin',
-        'test' => 'Anomaly\Lexicon\Plugin\TestPlugin',
+        'foo'     => 'Anomaly\Lexicon\Plugin\FooPlugin',
+        'test'    => 'Anomaly\Lexicon\Plugin\TestPlugin',
     ];
 
     protected $pluginHandler = '';
@@ -67,11 +67,18 @@ class LexiconServiceProvider extends ServiceProvider
 
                 $scopeGlue = $app['config']->get('lexicon::scopeGlue', '.');
 
-                $lexicon = new Lexicon(new Regex($scopeGlue), $app['lexicon.conditional.handler'], $app['lexicon.plugin.handler']);
+                $debug = $app['config']->get('lexicon::debug', true);
+
+                $lexicon = new Lexicon(
+                    new Regex($scopeGlue),
+                    $app['lexicon.conditional.handler'],
+                    $app['lexicon.plugin.handler']
+                );
 
                 $lexicon
                     ->setAllowPhp(false)
                     ->setOptimize(true)
+                    ->setDebug($debug)
                     ->setIgnoredMatchers(['parent'])
                     ->setScopeGlue($scopeGlue)
                     ->registerPlugins($this->plugins)
