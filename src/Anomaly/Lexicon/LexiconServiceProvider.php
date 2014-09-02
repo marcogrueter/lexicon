@@ -97,11 +97,7 @@ class LexiconServiceProvider extends ServiceProvider
         $app->singleton(
             'lexicon.compiler.engine',
             function () use ($app) {
-                $engine = new CompilerEngine($app['lexicon.compiler'], $app['files']);
-
-                $engine->setLexicon($app['lexicon']);
-
-                return $engine;
+                return new CompilerEngine($app['lexicon.compiler'], $app['files']);
             }
         );
 

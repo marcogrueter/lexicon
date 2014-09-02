@@ -6,11 +6,6 @@ use Illuminate\View\Engines\CompilerEngine as BaseCompilerEngine;
 class CompilerEngine extends BaseCompilerEngine
 {
     /**
-     * @var EnvironmentInterface
-     */
-    protected $lexicon;
-
-    /**
      * Refresh
      *
      * @var bool
@@ -76,53 +71,31 @@ class CompilerEngine extends BaseCompilerEngine
      */
     protected function evaluatePath($__path, $__data)
     {
-        $lexicon = $this->getCompiler()->getLexicon();
+        ob_start();
 
-        if ($lexicon->getOptimize()) {
+        // We'll evaluate the contents of the view inside a try/catch block so we can
+        // flush out any stray output that might get out before an error occurs or
+        // an exception is thrown. This prevents any partial views from leaking.
+        try {
 
-            ob_start();
+            $segments = explode('/', $__path);
 
-            // We'll evaluate the contents of the view inside a try/catch block so we can
-            // flush out any stray output that might get out before an error occurs or
-            // an exception is thrown. This prevents any partial views from leaking.
-            try {
+            $hash = $segments[count($segments) - 1];
 
-                $segments = explode('/', $__path);
+            $viewClass = $this->getLexicon()->getViewClass($hash);
 
-                $hash = $segments[count($segments) - 1];
-
-                $viewClass = $lexicon->getViewClass($hash);
-
-                if (!isset($this->lexiconViewCache[$__path])) {
-                    include $__path;
-                    $this->lexiconViewCache[$__path] = new $viewClass($__data);
-                }
-
-                $this->lexiconViewCache[$__path]->render();
-
-            } catch (\Exception $e) {
-                $this->handleViewException($e);
+            if (!isset($this->lexiconViewCache[$__path])) {
+                include $__path;
+                $this->lexiconViewCache[$__path] = new $viewClass($__data);
             }
 
-            return ltrim(ob_get_clean());
+            $this->lexiconViewCache[$__path]->render();
 
-        } else {
-
-            return parent::evaluatePath($__path, $__data);
-
+        } catch (\Exception $e) {
+            $this->handleViewException($e);
         }
-    }
 
-    /**
-     * Set Lexicon
-     *
-     * @param $lexicon EnvironmentInterface
-     * @return $this
-     */
-    public function setLexicon($lexicon)
-    {
-        $this->lexicon = $lexicon;
-        return $this;
+        return ltrim(ob_get_clean());
     }
 
     /**
@@ -130,6 +103,6 @@ class CompilerEngine extends BaseCompilerEngine
      */
     public function getLexicon()
     {
-        return $this->lexicon;
+        return $this->getCompiler()->getLexicon();
     }
 }
