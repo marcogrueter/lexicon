@@ -96,17 +96,15 @@ class StreamCompiler
     {
         $this->stream = $this->parse();
 
-        $source = '';
-
-        foreach ($this->stream as $segment) {
+        foreach ($this->stream as &$segment) {
             if (starts_with($segment, static::COMPILED)) {
-                $source .= $this->spaces(8) . $this->clean($segment) . "\n";
+                $segment = $this->clean($segment);
             } elseif (!empty($segment)) {
-                $source .= $this->spaces(8) . $this->string($segment) . "\n";
+                $segment = $this->string($segment);
             }
         }
 
-        return $this->compileFooter($source);
+        return $this->compileFooter(implode("\n", $this->stream));
     }
 
     /**
@@ -126,7 +124,7 @@ class StreamCompiler
         if (count($footer) > 0) {
 
             foreach ($footer as &$segment) {
-                $segment = $this->spaces(8) . $this->clean($segment) . "\n";
+                $segment = $this->clean($segment);
             }
             $source = str_replace('{{ parent }}', '', $source);
             $source = ltrim($source, PHP_EOL) . PHP_EOL . implode(PHP_EOL, array_reverse($footer));

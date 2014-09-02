@@ -34,8 +34,8 @@ class ViewCompiler
     {
         return $this->template(
             [
-                '{{class}}'  => $this->getCompiler()->getHash(),
-                '{{source}}' => $source,
+                '[class]'  => $this->getCompiler()->getHash(),
+                '[source]' => "\n".trim($source),
             ]
         );
     }

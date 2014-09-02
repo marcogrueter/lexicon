@@ -2,14 +2,10 @@
 
 return array(
 
+    'debug' => true,
+
     'extension' => 'html',
 
     'scopeGlue' => '.',
-
-    'optimize' => true,
-
-    'optimizeViewClass' => 'AnomalyLexiconView__',
-
-    'allowPhp' => true,
 
 );

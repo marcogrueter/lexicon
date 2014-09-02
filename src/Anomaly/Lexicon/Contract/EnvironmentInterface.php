@@ -70,15 +70,6 @@ interface EnvironmentInterface
     public function call($name, $attributes = [], $content = '');
 
     /**
-     * @param        $data
-     * @param        $key
-     * @param array  $attributes
-     * @param string $content
-     * @return mixed
-     */
-    public function get($data, $key, array $attributes = [], $content = '', $default = null, $expected = Expected::ANY);
-
-    /**
      * Get view template
      *
      * @return string

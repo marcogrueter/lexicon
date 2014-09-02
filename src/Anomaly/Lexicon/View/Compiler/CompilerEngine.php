@@ -91,7 +91,7 @@ class CompilerEngine extends BaseCompilerEngine
 
                 $hash = $segments[count($segments) - 1];
 
-                $viewClass = $lexicon->getViewNamespace() . '\\' . $hash;
+                $viewClass = $lexicon->getViewClass($hash);
 
                 if (!isset($this->lexiconViewCache[$__path])) {
                     include $__path;

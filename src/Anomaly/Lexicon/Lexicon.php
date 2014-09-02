@@ -268,6 +268,18 @@ class Lexicon implements EnvironmentInterface
     }
 
     /**
+     * Set scope glue
+     *
+     * @param $scopeGlue
+     * @return $this
+     */
+    public function setScopeGlue($scopeGlue)
+    {
+        $this->scopeGlue = $scopeGlue;
+        return $this;
+    }
+
+    /**
      * Get scope glue
      *
      * @return string
@@ -383,6 +395,21 @@ class Lexicon implements EnvironmentInterface
     }
 
     /**
+     * Register plugins
+     *
+     * @param array $plugins
+     * @return EnvironmentInterface
+     */
+    public function registerPlugins(array $plugins)
+    {
+        foreach ($plugins as $name => $plugin) {
+            $this->registerPlugin($name, $plugin);
+        }
+        return $this;
+    }
+
+
+    /**
      * Get plugin
      *
      * @param $name
@@ -393,94 +420,7 @@ class Lexicon implements EnvironmentInterface
         return $this->pluginHandler->get($name);
     }
 
-    /**
-     * Takes a dot-notated key and finds the value for it in the given
-     * array or object.
-     *
-     * @param  string       $key     Dot-notated key to find
-     * @param  array|object $data    Array or object to search
-     * @param  mixed        $default Default value to use if not found
-     * @return mixed
-     */
-    public function get($data, $key, array $attributes = [], $content = '', $default = null, $expected = Expected::ANY)
-    {
-        $scopes = $pluginScopes = explode($this->scopeGlue, $key);
 
-        $pluginKey = $key;
-
-        $original = $data;
-
-        if ($this->pluginHandler->get($pluginKey)) {
-
-            $plugin = array_shift($scopes);
-            $method = array_shift($scopes);
-
-            if (count($scopes) > 2) {
-                $pluginKey = $plugin . $this->scopeGlue . $method;
-            }
-
-            $data = $this->pluginHandler->call($pluginKey, $attributes, $content);
-        }
-
-        $previousScope = null;
-        $invalidScope  = null;
-
-        while (count($scopes) > 0) {
-
-            $scope = array_shift($scopes);
-
-            if (is_object($data) and method_exists($data, $scope)) {
-                try {
-                    $data = call_user_func_array([$data, $scope], $attributes);
-                } catch (\InvalidArgumentException $e) {
-                    echo "There is a problem with the <b>{$key}</b> variable. One of the attributes maybe incorrect.";
-                    // @todo - log exception
-                    // @todo - fire exception event
-                } catch (\ErrorException $e) {
-                    echo "There is a problem with the <b>{$key}</b> variable. One of the attributes maybe incorrect.";
-                    // @todo - log exception
-                    // @todo - fire exception event
-                } catch (\Exception $e) {
-                    echo "There is a problem with the <b>{$key}</b> variable.";
-                    // @todo - log exception
-                    // @todo - fire exception event
-                }
-            } elseif ((is_array($data) or $data instanceof \ArrayAccess) and isset($data[$scope])) {
-                $data = $data[$scope];
-            } elseif (is_object($data) and isset($data->{$scope})) {
-                $data = $data->{$scope};
-            } elseif (empty($scopes) and
-                $scope == 'count' and
-                (!$invalidScope or $previousScope != $invalidScope) and
-                (is_array($data) or $data instanceof \Countable or is_string($data))
-            ) {
-                if (is_string($data)) {
-                    $data = strlen($data);
-                } else {
-                    $data = count($data);
-                }
-            } elseif (empty($scopes) or $data == $original) {
-                $data = $default;
-            } else {
-                $invalidScope = $scope;
-            }
-
-            $previousScope = $scope;
-        }
-
-        if ($expected == Expected::ANY) {
-            return $data;
-        } elseif ($expected == Expected::ECHOABLE and
-            (is_string($data) or is_numeric($data) or is_bool($data) or is_null($data) or is_float($data) or
-                (is_object($data) and method_exists($data, '__toString')))
-        ) {
-            return $data;
-        } elseif ($expected == Expected::TRAVERSABLE and is_array($data) or $data instanceof \Traversable) {
-            return $data;
-        }
-
-        return $default;
-    }
 
     /**
      * Compare in conditional expression
@@ -667,4 +607,8 @@ class Lexicon implements EnvironmentInterface
         return $this->viewNamespace;
     }
 
+    public function getViewClass($hash)
+    {
+        return $this->getViewNamespace().'\\View_'.$hash;
+    }
 }

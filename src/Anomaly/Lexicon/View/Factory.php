@@ -1,11 +1,13 @@
 <?php namespace Anomaly\Lexicon\View;
 
+use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\FactoryInterface;
 use Anomaly\Lexicon\Expected;
 use Anomaly\Lexicon\Regex;
 use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Factory as BaseFactory;
 
-class Factory extends BaseFactory
+class Factory extends BaseFactory implements FactoryInterface
 {
     /**
      * Get the evaluated view contents for the given view.
@@ -17,7 +19,7 @@ class Factory extends BaseFactory
      */
     public function parse($view, $data = [], $mergeData = [])
     {
-        $this->container['lexicon']->addParsePath($view);
+        $this->getLexicon()->addParsePath($view);
 
         /** @var $engine CompilerEngine */
         $engine = $this->container['lexicon.compiler.engine'];
@@ -27,6 +29,14 @@ class Factory extends BaseFactory
         $this->callCreator($view = new View($this, $engine, md5($view), $view, $data));
 
         return $view;
+    }
+
+    /**
+     * @return EnvironmentInterface
+     */
+    public function getLexicon()
+    {
+        return $this->container['lexicon'];
     }
 
     /**
@@ -64,6 +74,19 @@ class Factory extends BaseFactory
     }
 
     /**
+     * Compare in conditional expression
+     *
+     * @param      $left
+     * @param      $right
+     * @param null $operator
+     * @return bool
+     */
+    public function compare($left, $right, $operator = null)
+    {
+        return $this->getLexicon()->getConditionalHandler()->compare($left, $right, $operator);
+    }
+
+    /**
      * Takes a dot-notated key and finds the value for it in the given
      * array or object.
      *
@@ -74,22 +97,22 @@ class Factory extends BaseFactory
      */
     public function variable($data, $key, array $attributes = [], $content = '', $default = null, $expected = Expected::ANY)
     {
-        $scopes = $pluginScopes = explode($this->container['lexicon']->getScopeGlue(), $key);
+        $scopes = $pluginScopes = explode($this->getLexicon()->getScopeGlue(), $key);
 
         $pluginKey = $key;
 
         $original = $data;
 
-        if ($this->container['lexicon']->getPluginhandler()->get($pluginKey)) {
+        if ($this->getLexicon()->getPluginHandler()->get($pluginKey)) {
 
             $plugin = array_shift($scopes);
             $method = array_shift($scopes);
 
             if (count($scopes) > 2) {
-                $pluginKey = $plugin . $this->scopeGlue . $method;
+                $pluginKey = $plugin . $this->getLexicon()->getScopeGlue() . $method;
             }
 
-            $data = $this->container['lexicon']->getPluginhandler()->call($pluginKey, $attributes, $content);
+            $data = $this->getLexicon()->getPluginHandler()->call($pluginKey, $attributes, $content);
         }
 
         $previousScope = null;

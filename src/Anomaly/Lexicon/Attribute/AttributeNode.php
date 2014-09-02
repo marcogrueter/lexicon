@@ -84,7 +84,7 @@ class AttributeNode extends Node
 
             $this->value = str_replace(
                 trim($node->getExtractionContent()),
-                "\n".$node->getId()."\n",
+                $node->getId(),
                 $this->value
             );
 
