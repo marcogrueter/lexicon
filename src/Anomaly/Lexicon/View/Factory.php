@@ -1,11 +1,11 @@
-<?php namespace Anomaly\Lexicon\Provider\Laravel;
+<?php namespace Anomaly\Lexicon\View;
 
 use Anomaly\Lexicon\Expected;
 use Anomaly\Lexicon\Regex;
 use Illuminate\View\Engines\CompilerEngine;
-use Illuminate\View\Factory;
+use Illuminate\View\Factory as BaseFactory;
 
-class Environment extends Factory
+class Factory extends BaseFactory
 {
     /**
      * Get the evaluated view contents for the given view.

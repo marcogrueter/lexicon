@@ -7,6 +7,7 @@ use Anomaly\Lexicon\Conditional\Test\IterateableTest;
 use Anomaly\Lexicon\Conditional\Test\StringTest;
 use Anomaly\Lexicon\Regex;
 use Anomaly\Lexicon\View\Compiler\CompilerEngine;
+use Anomaly\Lexicon\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -127,7 +128,7 @@ class LexiconServiceProvider extends ServiceProvider
             }
         );
 
-        $this->registerEnvironment();
+        $this->registerFactory();
 
     }
 
@@ -136,7 +137,7 @@ class LexiconServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function registerEnvironment()
+    public function registerFactory()
     {
         $app = $this->app;
 
@@ -146,7 +147,7 @@ class LexiconServiceProvider extends ServiceProvider
                 // Next we need to grab the engine resolver instance that will be used by the
                 // environment. The resolver will be used by an environment to get each of
                 // the various engine implementations such as plain PHP or Blade engine.
-                return new Environment($app['view.engine.resolver'], $app['view.finder'], $app['events']);
+                return new Factory($app['view.engine.resolver'], $app['view.finder'], $app['events']);
             }
         );
 
