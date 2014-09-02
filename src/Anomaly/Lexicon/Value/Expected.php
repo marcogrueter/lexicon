@@ -1,4 +1,4 @@
-<?php namespace Anomaly\Lexicon;
+<?php namespace Anomaly\Lexicon\Value;
 
 class Expected
 {

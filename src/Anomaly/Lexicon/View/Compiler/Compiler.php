@@ -2,8 +2,6 @@
 
 use Anomaly\Lexicon\Contract\EnvironmentInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
-use Anomaly\Lexicon\View\Compiler\StreamCompiler;
-use Anomaly\Lexicon\View\Compiler\ViewCompiler;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
 use Illuminate\View\Compilers\CompilerInterface;
 
@@ -90,20 +88,24 @@ class Compiler extends BaseCompiler implements CompilerInterface
             return null;
         }
 
+        if (!$this->getLexicon()->allowPhp()) {
+            $content = $this->escapePhp($content);
+        }
+
         //$noParse = $this->getLexicon()->getRegex()->extractNoParse($content);
 
         //$content = $noParse['content'];
 
         //$this->noParseExtractions = $noParse['extractions'];
 
-        $setup = array(
-            'name'    => 'root',
-            'content' => $content,
+        return $this->compileView(
+            $this->getLexicon()->getBlockNodeType()->make(
+                array(
+                    'name'    => 'root',
+                    'content' => $content,
+                )
+            )
         );
-
-        $block = $this->getLexicon()->getBlockNodeType()->make($setup);
-
-        return $this->compileView($block);
     }
 
     /**
@@ -132,6 +134,17 @@ class Compiler extends BaseCompiler implements CompilerInterface
         if (!is_null($this->cachePath)) {
             $this->files->put($this->getCompiledPath($content), $contents);
         }
+    }
+
+    /**
+     * Escape PHP
+     *
+     * @param $content
+     * @return mixed
+     */
+    public function escapePhp($content)
+    {
+        return str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $content);
     }
 
     /**

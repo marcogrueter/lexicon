@@ -2,7 +2,7 @@
 
 use Anomaly\Lexicon\Contract\EnvironmentInterface;
 use Anomaly\Lexicon\Contract\FactoryInterface;
-use Anomaly\Lexicon\Expected;
+use Anomaly\Lexicon\Value\Expected;
 use Anomaly\Lexicon\Regex;
 use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Factory as BaseFactory;

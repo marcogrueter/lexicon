@@ -5,8 +5,6 @@ use Anomaly\Lexicon\Contract\EnvironmentInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\PluginHandlerInterface;
-use Anomaly\Lexicon\View\Compiler\StreamCompiler;
-use Anomaly\Lexicon\View\Compiler\ViewCompiler;
 
 class Lexicon implements EnvironmentInterface
 {
@@ -75,13 +73,6 @@ class Lexicon implements EnvironmentInterface
     protected $conditionalHandler;
 
     /**
-     * Environment variable source
-     *
-     * @var string
-     */
-    protected $environmentVariable = '$__data';
-
-    /**
      * Block node type offset
      *
      * @var int
@@ -122,21 +113,6 @@ class Lexicon implements EnvironmentInterface
     protected $path;
 
     /**
-     * Is optimized - optimizes view rendering performance, by loading views only once, even within a foreach loop
-     *
-     * @var bool
-     */
-    protected $isOptimized = false;
-
-
-    /**
-     * Optimized class prefix. The hash for the view is appended.
-     *
-     * @var string
-     */
-    protected $optimizeViewClass = 'AnomalyLexiconView__';
-
-    /**
      * @var bool
      */
     protected $development = false;
@@ -146,6 +122,11 @@ class Lexicon implements EnvironmentInterface
      */
     protected $parsePaths = [];
 
+    /**
+     * Debug mode
+     *
+     * @var bool
+     */
     protected $debug = true;
 
     /**
@@ -159,6 +140,21 @@ class Lexicon implements EnvironmentInterface
      * @var string
      */
     protected $viewNamespace = 'Anomaly\Lexicon\View';
+
+    /**
+     * View class prefix constant
+     */
+    const VIEW_CLASS_PREFIX = '\\View_';
+
+    /**
+     * Data constant
+     */
+    const DATA = '$__data';
+
+    /**
+     * Environment (Factory) constant
+     */
+    const ENV = '$__data[\'__env\']';
 
     /**
      * @param Regex                  $regex
@@ -175,69 +171,26 @@ class Lexicon implements EnvironmentInterface
         $this->pluginHandler      = $pluginHandler->setEnvironment($this);
     }
 
+    /**
+     * Set debug
+     *
+     * @param $debug
+     * @return $this
+     */
     public function setDebug($debug)
     {
         $this->debug = $debug;
         return $this;
     }
 
+    /**
+     * Is debug
+     *
+     * @return bool
+     */
     public function isDebug()
     {
         return $this->debug;
-    }
-
-    public function setDevelopment()
-    {
-
-    }
-
-    public function spaces($number = 1)
-    {
-        return str_repeat("\x20", $number);
-    }
-
-    public function getOptimizedClass()
-    {
-        return $this->optimizeViewClass;
-    }
-
-    public function getCompiledViewClass()
-    {
-        return $this->getOptimizedClass() . $this->getCompiledView();
-    }
-
-
-    public function setOptimize($isOptimized = true)
-    {
-        $this->isOptimized = $isOptimized;
-        return $this;
-    }
-
-    public function getOptimize()
-    {
-        return $this->isOptimized;
-    }
-
-    public function setOptimizeViewClass($optimizeViewClass = '')
-    {
-        $this->optimizeViewClass = $optimizeViewClass;
-        return $this;
-    }
-
-    public function getOptimizeViewClass()
-    {
-        return $this->optimizeViewClass;
-    }
-
-    public function setCompiledView($path)
-    {
-        $this->path = $path;
-        return $this;
-    }
-
-    public function getCompiledView()
-    {
-        return $this->path;
     }
 
     /**
@@ -298,16 +251,6 @@ class Lexicon implements EnvironmentInterface
     public function getConditionalHandler()
     {
         return $this->conditionalHandler;
-    }
-
-    /**
-     * Get environment variable
-     *
-     * @return string
-     */
-    public function getLexiconVariable()
-    {
-        return $this->environmentVariable;
     }
 
     public function injectNoParse($text)
@@ -393,21 +336,6 @@ class Lexicon implements EnvironmentInterface
         return $this->pluginHandler->get($name);
     }
 
-
-
-    /**
-     * Compare in conditional expression
-     *
-     * @param      $left
-     * @param      $right
-     * @param null $operator
-     * @return bool
-     */
-    public function compare($left, $right, $operator = null)
-    {
-        return $this->getConditionalHandler()->compare($left, $right, $operator);
-    }
-
     /**
      * Call plugin method
      *
@@ -474,22 +402,11 @@ class Lexicon implements EnvironmentInterface
     }
 
     /**
-     * Escape PHP
-     *
-     * @param $content
-     * @return mixed
-     */
-    public function escapePhp($content)
-    {
-        return str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $content);
-    }
-
-    /**
      * Get allow PHP
      *
      * @return bool
      */
-    public function getAllowPhp()
+    public function allowPhp()
     {
         return $this->allowPhp;
     }
@@ -575,13 +492,24 @@ class Lexicon implements EnvironmentInterface
         return $this->viewTemplate = file_get_contents(__DIR__ . '/../../../assets/view.txt');
     }
 
+    /**
+     * Get view namespace
+     *
+     * @return string
+     */
     public function getViewNamespace()
     {
         return $this->viewNamespace;
     }
 
+    /**
+     * Get view class
+     *
+     * @param $hash
+     * @return string
+     */
     public function getViewClass($hash)
     {
-        return $this->getViewNamespace().'\\View_'.$hash;
+        return $this->getViewNamespace() . static::VIEW_CLASS_PREFIX . $hash;
     }
 }

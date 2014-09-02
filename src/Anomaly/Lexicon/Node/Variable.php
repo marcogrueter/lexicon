@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Expected;
+use Anomaly\Lexicon\Value\Expected;
 
 class Variable extends Single
 {

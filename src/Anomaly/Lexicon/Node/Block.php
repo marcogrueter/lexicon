@@ -2,7 +2,7 @@
 
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
-use Anomaly\Lexicon\Expected;
+use Anomaly\Lexicon\Value\Expected;
 
 class Block extends Node implements NodeBlockInterface
 {

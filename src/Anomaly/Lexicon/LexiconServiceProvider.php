@@ -68,8 +68,6 @@ class LexiconServiceProvider extends ServiceProvider
 
                 $scopeGlue = $app['config']->get('lexicon::scopeGlue', '.');
 
-                $debug = $app['config']->get('lexicon::debug', true);
-
                 $lexicon = new Lexicon(
                     new Regex($scopeGlue),
                     $app['lexicon.conditional.handler'],
@@ -77,13 +75,12 @@ class LexiconServiceProvider extends ServiceProvider
                 );
 
                 $lexicon
-                    ->setAllowPhp(false)
-                    ->setOptimize(true)
-                    ->setDebug($debug)
-                    ->setIgnoredMatchers(['parent'])
+                    ->setAllowPhp($app['config']->get('lexicon::allowPhp', false))
+                    ->setDebug($app['config']->get('lexicon::debug', true))
                     ->setScopeGlue($scopeGlue)
                     ->registerPlugins($this->plugins)
-                    ->registerNodeTypes($this->nodeTypes);
+                    ->registerNodeTypes($this->nodeTypes)
+                    ->setIgnoredMatchers(['parent']);
 
                 return $lexicon;
             }

@@ -1,17 +1,22 @@
 <?php namespace Anomaly\Lexicon\Contract;
 
+use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Regex;
-use Anomaly\Lexicon\Expected;
 
 interface EnvironmentInterface
 {
+    /**
+     * @return bool
+     */
+    public function allowPhp();
+
     /**
      * @return PluginHandlerInterface
      */
     public function getPluginHandler();
 
     /**
-     * @return mixed
+     * @return ConditionalHandler
      */
     public function getConditionalHandler();
 
@@ -70,4 +75,18 @@ interface EnvironmentInterface
      * @return string
      */
     public function getViewTemplate();
+
+    /**
+     * @param array $nodeTypes
+     * @return EnvironmentInterface
+     */
+    public function registerNodeTypes(array $nodeTypes);
+
+    /**
+     * Register plugins
+     *
+     * @param array $plugins
+     * @return EnvironmentInterface
+     */
+    public function registerPlugins(array $plugins);
 }
