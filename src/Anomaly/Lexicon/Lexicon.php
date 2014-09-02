@@ -6,6 +6,7 @@ use Anomaly\Lexicon\Contract\EnvironmentInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\PluginHandlerInterface;
+use Anomaly\Lexicon\View\Compiler\StreamCompiler;
 
 class Lexicon implements EnvironmentInterface
 {
@@ -200,6 +201,12 @@ class Lexicon implements EnvironmentInterface
     {
         $parsedNode = $node->createChildNodes();
 
+        $stream = new StreamCompiler();
+
+        $stream->setSource($parsedNode->compile());
+
+        dd($stream->compile());
+
         $compiledSource = $parsedNode->compile();
 
         $source = '';
@@ -209,7 +216,7 @@ class Lexicon implements EnvironmentInterface
         foreach (explode("\n", $compiledSource) as $line) {
 
             if (!empty($line)) {
-                if (!$stringTest->startsWith($line, '__COMPILED__')) {
+                if (!$stringTest->startsWith($line, '*compiled*')) {
                     $line = $this->compileStringLine($line);
                 } else {
                     $line = $this->compileLine($line);
@@ -237,7 +244,7 @@ class Lexicon implements EnvironmentInterface
                     $line = $this->spaces(8) . $line . "\n";
                 }
             }
-
+            $source = str_replace('{{ parent }}', '', $content);
             $source = ltrim($source, PHP_EOL) . PHP_EOL . implode(PHP_EOL, array_reverse($footer));
         }
 
@@ -313,7 +320,7 @@ class Lexicon implements EnvironmentInterface
 
     public function removeCompiledPrefix($line)
     {
-        return $line = str_replace('__COMPILED__', '', $line);
+        return $line = str_replace('*compiled*', '', $line);
     }
 
     public function compileLine($line)

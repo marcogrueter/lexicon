@@ -19,7 +19,7 @@ class Variable extends Single
 
     public function regex()
     {
-        return "/\{\{\s*(?!{$this->lexicon->getIgnoredMatchers()})({$this
+        return "/\{\{\s*({$this
             ->lexicon->getRegex()->getVariableRegexMatcher()})(\s+.*?)?\s*(\/)?\}\}/ms";
     }
 
@@ -35,7 +35,7 @@ class Variable extends Single
 
         if (!$this->getIsEmbedded()) {
             $echo = 'echo ';
-            $end = ';';
+            $end  = ';';
         }
 
         return "{$echo}\$__lexicon->get({$finder->getItemName()}, '{$finder->getName(

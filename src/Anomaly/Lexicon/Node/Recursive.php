@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-class RecursiveRemain extends SingleRemain
+class Recursive extends SingleNull
 {
     /**
      * Node name

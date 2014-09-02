@@ -134,6 +134,14 @@ class Block extends Node implements NodeBlockInterface
      */
     public function compile()
     {
+        $finder = $this->getContextFinder();
+
+        if ($this->hasRecursive()) {
+            $content = $this->getEnvironment()->getRegex()->compress($this->getContent());
+            return "echo \$__env->recursive('{$content}', {$finder->getItemName()});";
+        }
+
+
         if ($this->isFilter()) {
             return $this->compileFilter();
         } elseif ($this->isParse()) {
@@ -155,7 +163,7 @@ class Block extends Node implements NodeBlockInterface
      */
     public function compileOpen()
     {
-        if ($this->isFilter() or $this->isParse()) {
+        if ($this->isFilter() or $this->isParse() or $this->hasRecursive()) {
             return null;
         }
 
@@ -223,13 +231,29 @@ class Block extends Node implements NodeBlockInterface
     }
 
     /**
+     * Has recursive node
+     *
+     * @return bool
+     */
+    public function hasRecursive()
+    {
+        foreach($this->getChildren() as $node) {
+            if ($node instanceof Recursive) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Compile closing source
      *
      * @return string
      */
     public function compileClose()
     {
-        if ($this->isFilter() or $this->isParse()) {
+        if ($this->isFilter() or $this->isParse() or $this->hasRecursive()) {
             return null;
         }
 

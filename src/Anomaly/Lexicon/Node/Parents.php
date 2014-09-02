@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-class ParentRemain extends SingleRemain
+class Parents extends SingleRemain
 {
     /**
      * Node name

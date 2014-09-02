@@ -57,4 +57,8 @@ class Environment extends Factory
         }
     }
 
+    public function recursive($template, $data)
+    {
+        return $this->parse(str_replace('{{ recursive }}', $template, $template), $data);
+    }
 }

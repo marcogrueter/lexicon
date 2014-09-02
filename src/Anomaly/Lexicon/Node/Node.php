@@ -1,10 +1,11 @@
 <?php namespace Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\AttributeParser;
+use Anomaly\Lexicon\ContextFinder;
 use Anomaly\Lexicon\Contract\EnvironmentInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\NodeValidatorInterface;
-use Anomaly\Lexicon\AttributeParser;
-use Anomaly\Lexicon\ContextFinder;
+use Anomaly\Lexicon\View\Compiler\StreamCompiler;
 
 abstract class Node implements NodeInterface
 {
@@ -120,7 +121,6 @@ abstract class Node implements NodeInterface
     {
         $this->lexicon = $lexicon;
     }
-
 
 
     public function setIsEmbedded($isEmbedded = false)
@@ -708,7 +708,7 @@ abstract class Node implements NodeInterface
 
     public function compiledLine($line)
     {
-        return "\n__COMPILED__" . $line . "\n";
+        return StreamCompiler::OPEN . StreamCompiler::COMPILED . $line . StreamCompiler::CLOSE;
     }
 
     /**
