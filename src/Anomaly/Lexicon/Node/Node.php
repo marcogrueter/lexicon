@@ -2,7 +2,7 @@
 
 use Anomaly\Lexicon\AttributeParser;
 use Anomaly\Lexicon\ContextFinder;
-use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\NodeValidatorInterface;
@@ -76,7 +76,7 @@ abstract class Node implements NodeInterface
     protected $parsedContent;
 
     /**
-     * @var EnvironmentInterface
+     * @var LexiconInterface
      */
     protected $lexicon;
 
@@ -120,7 +120,7 @@ abstract class Node implements NodeInterface
 
     protected $prefixCompiled = true;
 
-    public function __construct(EnvironmentInterface $lexicon)
+    public function __construct(LexiconInterface $lexicon)
     {
         $this->lexicon = $lexicon;
     }
@@ -516,10 +516,10 @@ abstract class Node implements NodeInterface
     /**
      * Set environment
      *
-     * @param EnvironmentInterface $lexicon
+     * @param LexiconInterface $lexicon
      * @return NodeInterface
      */
-    public function setEnvironment(EnvironmentInterface $lexicon)
+    public function setEnvironment(LexiconInterface $lexicon)
     {
         $this->lexicon = $lexicon;
         return $this;
@@ -528,7 +528,7 @@ abstract class Node implements NodeInterface
     /**
      * Get environment
      *
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function getLexicon()
     {

@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\View\Compiler;
 
-use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Illuminate\View\Engines\CompilerEngine as BaseCompilerEngine;
 
 class CompilerEngine extends BaseCompilerEngine
@@ -99,7 +99,7 @@ class CompilerEngine extends BaseCompilerEngine
     }
 
     /**
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function getLexicon()
     {

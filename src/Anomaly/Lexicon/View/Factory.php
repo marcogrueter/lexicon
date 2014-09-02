@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\View;
 
-use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\FactoryInterface;
 use Anomaly\Lexicon\Value\Expected;
 use Anomaly\Lexicon\Regex;
@@ -32,7 +32,7 @@ class Factory extends BaseFactory implements FactoryInterface
     }
 
     /**
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function getLexicon()
     {

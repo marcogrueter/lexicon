@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
-use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Node\Node;
 use Anomaly\Lexicon\Node\Variable;
@@ -44,7 +44,7 @@ class AttributeNode extends Node
 
     protected $lexicon;
 
-    public function __construct(EnvironmentInterface $lexicon)
+    public function __construct(LexiconInterface $lexicon)
     {
         $this->lexicon = $lexicon;
         $this->variableNode = new Variable($lexicon);

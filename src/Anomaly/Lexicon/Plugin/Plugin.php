@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Plugin;
 
-use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\PluginInterface;
 use Whoops\Example\Exception;
 
@@ -31,7 +31,7 @@ class Plugin implements PluginInterface
     /**
      * Lexicon
      *
-     * @var EnvironmentInterface
+     * @var LexiconInterface
      */
     protected $lexicon;
 
@@ -112,10 +112,10 @@ class Plugin implements PluginInterface
     /**
      * Set environment
      *
-     * @param EnvironmentInterface $lexicon
+     * @param LexiconInterface $lexicon
      * @return $this
      */
-    public function setEnvironment(EnvironmentInterface $lexicon)
+    public function setEnvironment(LexiconInterface $lexicon)
     {
         $this->lexicon = $lexicon;
         return $this;
@@ -124,7 +124,7 @@ class Plugin implements PluginInterface
     /**
      * Get environment
      *
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function getLexicon()
     {

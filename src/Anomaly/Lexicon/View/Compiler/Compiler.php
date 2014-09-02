@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\View\Compiler;
 
-use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
 use Illuminate\View\Compilers\CompilerInterface;
@@ -8,7 +8,7 @@ use Illuminate\View\Compilers\CompilerInterface;
 class Compiler extends BaseCompiler implements CompilerInterface
 {
     /**
-     * @var EnvironmentInterface
+     * @var LexiconInterface
      */
     protected $lexicon;
 
@@ -34,7 +34,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
     }
 
     /**
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function getLexicon()
     {

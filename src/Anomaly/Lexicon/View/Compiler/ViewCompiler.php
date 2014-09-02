@@ -1,7 +1,7 @@
 <?php namespace Anomaly\Lexicon\View\Compiler;
 
 
-use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\LexiconInterface;
 
 class ViewCompiler
 {
@@ -11,7 +11,7 @@ class ViewCompiler
     protected $compiler;
 
     /**
-     * @var EnvironmentInterface
+     * @var LexiconInterface
      */
     protected $lexicon;
 

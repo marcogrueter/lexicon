@@ -3,7 +3,7 @@
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Regex;
 
-interface EnvironmentInterface
+interface LexiconInterface
 {
     /**
      * @return bool
@@ -78,7 +78,7 @@ interface EnvironmentInterface
 
     /**
      * @param array $nodeTypes
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function registerNodeTypes(array $nodeTypes);
 
@@ -86,7 +86,7 @@ interface EnvironmentInterface
      * Register plugins
      *
      * @param array $plugins
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function registerPlugins(array $plugins);
 }

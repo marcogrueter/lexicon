@@ -1,12 +1,12 @@
 <?php namespace Anomaly\Lexicon;
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
-use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\PluginHandlerInterface;
 
-class Lexicon implements EnvironmentInterface
+class Lexicon implements LexiconInterface
 {
 
     /**
@@ -268,7 +268,7 @@ class Lexicon implements EnvironmentInterface
      * Register node type
      *
      * @param NodeInterface $nodeType
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function registerNodeType($nodeType)
     {
@@ -287,7 +287,7 @@ class Lexicon implements EnvironmentInterface
      * Register node types
      *
      * @param array $nodeTypes
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function registerNodeTypes(array $nodeTypes)
     {
@@ -302,7 +302,7 @@ class Lexicon implements EnvironmentInterface
      *
      * @param $name
      * @param $class
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function registerPlugin($name, $class)
     {
@@ -314,7 +314,7 @@ class Lexicon implements EnvironmentInterface
      * Register plugins
      *
      * @param array $plugins
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function registerPlugins(array $plugins)
     {
@@ -353,7 +353,7 @@ class Lexicon implements EnvironmentInterface
      * Set ignored matchers
      *
      * @param array $ignoredMatchers
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function setIgnoredMatchers(array $ignoredMatchers = [])
     {

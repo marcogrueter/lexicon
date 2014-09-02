@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon;
 
-use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Node\Node;
@@ -16,7 +16,7 @@ class ContextFinder
     /**
      * Lexicon environment
      *
-     * @var EnvironmentInterface
+     * @var LexiconInterface
      */
     protected $lexicon;
 

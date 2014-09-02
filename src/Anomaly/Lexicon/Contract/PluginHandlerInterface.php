@@ -2,7 +2,7 @@
 
 interface PluginHandlerInterface
 {
-    public function setEnvironment(EnvironmentInterface $lexicon);
+    public function setEnvironment(LexiconInterface $lexicon);
 
     public function register($name, $class);
 

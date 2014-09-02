@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Plugin;
 
-use Anomaly\Lexicon\Contract\EnvironmentInterface;
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\PluginHandlerInterface;
 use Anomaly\Lexicon\Contract\PluginInterface;
 
@@ -8,7 +8,7 @@ class PluginHandler implements PluginHandlerInterface
 {
 
     /**
-     * @var EnvironmentInterface
+     * @var LexiconInterface
      */
     protected $lexicon;
 
@@ -21,17 +21,17 @@ class PluginHandler implements PluginHandlerInterface
     /**
      * Set environment
      *
-     * @param EnvironmentInterface $lexicon
+     * @param LexiconInterface $lexicon
      * @return PluginHandlerInterface
      */
-    public function setEnvironment(EnvironmentInterface $lexicon)
+    public function setEnvironment(LexiconInterface $lexicon)
     {
         $this->lexicon = $lexicon;
         return $this;
     }
 
     /**
-     * @return EnvironmentInterface
+     * @return LexiconInterface
      */
     public function getLexicon()
     {
