@@ -1,5 +1,6 @@
 <?php namespace Anomaly\Lexicon;
 
+use Anomaly\Lexicon\Contract\ConditionalHandlerInterface;
 use Anomaly\Lexicon\View\Compiler\Compiler;
 use Anomaly\Lexicon\View\Compiler\CompilerEngine;
 use Anomaly\Lexicon\View\Factory;
@@ -32,8 +33,9 @@ class LexiconServiceProvider extends ServiceProvider
                     'lexicon::conditionalHandler',
                     'Anomaly\Lexicon\Conditional\ConditionalHandler'
                 );
+                /** @var ConditionalHandlerInterface $conditionalHandler */
                 $conditionalHandler = new $conditionalHandler;
-                return $conditionalHandler->registerBooleanTestTypes(config('lexicon::booleanTestTypes'));
+                return $conditionalHandler->registerBooleanTestTypes(config('lexicon::booleanTestTypes'), []);
             }
         );
 

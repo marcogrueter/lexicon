@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Contract;
 
-use Anomaly\Lexicon\Value\Expected;
+use Anomaly\Lexicon\Lexicon;
 
 interface FactoryInterface
 {
@@ -11,5 +11,5 @@ interface FactoryInterface
      * @param string $content
      * @return mixed
      */
-    public function variable($data, $key, array $attributes = [], $content = '', $default = null, $expected = Expected::ANY);
+    public function variable($data, $key, array $attributes = [], $content = '', $default = null, $expected = Lexicon::ANY);
 }

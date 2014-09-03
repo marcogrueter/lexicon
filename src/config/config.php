@@ -43,7 +43,7 @@ return array(
      */
     'booleanTestTypes' => [
         'stringTest' => 'Anomaly\Lexicon\Conditional\Test\StringTest',
-        'iterateableTest' => 'Anomaly\Lexicon\Conditional\Test\IterateableTest',
+        'traversableTest' => 'Anomaly\Lexicon\Conditional\Test\TraversableTest',
     ],
 
 

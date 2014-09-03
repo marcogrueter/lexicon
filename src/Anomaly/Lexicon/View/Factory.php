@@ -2,7 +2,7 @@
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\FactoryInterface;
-use Anomaly\Lexicon\Value\Expected;
+use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Regex;
 use Anomaly\Lexicon\View\Compiler\CompilerEngine;
 use Illuminate\View\Factory as BaseFactory;
@@ -112,7 +112,7 @@ class Factory extends BaseFactory implements FactoryInterface
      * @param  mixed        $default Default value to use if not found
      * @return mixed
      */
-    public function variable($data, $key, array $attributes = [], $content = '', $default = null, $expected = Expected::ANY)
+    public function variable($data, $key, array $attributes = [], $content = '', $default = null, $expected = Lexicon::ANY)
     {
         $scopes = $pluginScopes = explode($this->getLexicon()->getScopeGlue(), $key);
 
@@ -178,14 +178,14 @@ class Factory extends BaseFactory implements FactoryInterface
             $previousScope = $scope;
         }
 
-        if ($expected == Expected::ANY) {
+        if ($expected == Lexicon::ANY) {
             return $data;
-        } elseif ($expected == Expected::ECHOABLE and
+        } elseif ($expected == Lexicon::ECHOABLE and
             (is_string($data) or is_numeric($data) or is_bool($data) or is_null($data) or is_float($data) or
                 (is_object($data) and method_exists($data, '__toString')))
         ) {
             return $data;
-        } elseif ($expected == Expected::TRAVERSABLE and is_array($data) or $data instanceof \Traversable) {
+        } elseif ($expected == Lexicon::TRAVERSABLE and is_array($data) or $data instanceof \Traversable) {
             return $data;
         }
 

@@ -2,7 +2,7 @@
 
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
-use Anomaly\Lexicon\Value\Expected;
+use Anomaly\Lexicon\Lexicon;
 
 class Block extends Node implements NodeBlockInterface
 {
@@ -181,7 +181,7 @@ class Block extends Node implements NodeBlockInterface
 
         $finder = $this->getContextFinder();
 
-        $expected = Expected::ECHOABLE;
+        $expected = Lexicon::ECHOABLE;
 
         return "echo \$__data['__env']->variable({$finder->getItemName()}, '{$finder->getName(
         )}', {$attributes}, '{$this->getContent()}', '', '{$expected}');";
@@ -198,7 +198,7 @@ class Block extends Node implements NodeBlockInterface
 
         $finder = $this->getContextFinder();
 
-        $expected = Expected::ECHOABLE;
+        $expected = Lexicon::ECHOABLE;
 
         $lexicon = $this->getLexicon();
 
@@ -217,7 +217,7 @@ class Block extends Node implements NodeBlockInterface
     {
         $attributes = $this->newAttributeParser()->compile();
 
-        $expected = Expected::TRAVERSABLE;
+        $expected = Lexicon::TRAVERSABLE;
 
         $finder = $this->getContextFinder();
 

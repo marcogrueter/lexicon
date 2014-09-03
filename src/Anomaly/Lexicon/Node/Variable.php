@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Value\Expected;
+use Anomaly\Lexicon\Lexicon;
 
 class Variable extends Single
 {
@@ -80,7 +80,7 @@ class Variable extends Single
 
         $finder = $this->getContextFinder();
 
-        $expected = Expected::ECHOABLE;
+        $expected = Lexicon::ECHOABLE;
 
         return "\$__data['__env']->variable({$finder->getItemName()}, '{$finder->getName(
         )}', {$attributes}, '', null, '{$expected}')";

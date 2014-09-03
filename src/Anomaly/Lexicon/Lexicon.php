@@ -135,6 +135,21 @@ class Lexicon implements LexiconInterface
     const ENV = '$__data[\'__env\']';
 
     /**
+     * Any expected constant
+     */
+    const ANY = 'any';
+
+    /**
+     * Traversable
+     */
+    const TRAVERSABLE = 'traversable';
+
+    /**
+     * Echo able
+     */
+    const ECHOABLE = 'echoable';
+
+    /**
      * @param Regex                  $regex
      * @param ConditionalHandler     $conditionalHandler
      * @param PluginHandlerInterface $pluginHandler

@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Conditional\Test;
 
-class IterateableTest
+class TraversableTest
 {
 
     /**
