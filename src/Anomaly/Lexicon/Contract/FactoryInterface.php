@@ -1,5 +1,7 @@
 <?php namespace Anomaly\Lexicon\Contract;
 
+use Anomaly\Lexicon\Value\Expected;
+
 interface FactoryInterface
 {
     /**

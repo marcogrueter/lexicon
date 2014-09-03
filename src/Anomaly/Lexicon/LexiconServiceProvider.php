@@ -53,9 +53,7 @@ class LexiconServiceProvider extends ServiceProvider
             function () use ($app) {
 
                 $scopeGlue = config('lexicon::scopeGlue', '.');
-                $plugins   = config('lexicon::plugins', []);
-                $nodeTypes = config('lexicon::nodeTypes', []);
-
+                
                 $lexicon = new Lexicon(
                     new Regex($scopeGlue),
                     $app['anomaly.lexicon.conditional.handler'],
@@ -67,7 +65,7 @@ class LexiconServiceProvider extends ServiceProvider
                     ->setAllowPhp(config('lexicon::allowPhp', false))
                     ->setDebug(config('lexicon::debug', true))
                     ->registerPlugins(config('lexicon::plugins', []))
-                    ->registerNodeTypes($nodeTypes)
+                    ->registerNodeTypes(config('lexicon::nodeTypes', []))
                     ->setIgnoredMatchers(['parent']);
 
                 return $lexicon;
