@@ -94,15 +94,7 @@ class StreamCompiler
      */
     public function compile()
     {
-        $this->stream = $this->parse();
-
-        foreach ($this->stream as &$segment) {
-            if (starts_with($segment, static::COMPILED)) {
-                $segment = $this->clean($segment);
-            }
-        }
-
-        return $this->compileFooter(implode('', $this->stream));
+        return $this->compileFooter($this->source());
     }
 
     /**
