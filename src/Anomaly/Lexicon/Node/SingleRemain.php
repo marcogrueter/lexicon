@@ -2,13 +2,26 @@
 
 abstract class SingleRemain extends Single
 {
+
     /**
-     * Compile string
+     * Do not compile as PHP
      *
-     * @return string
+     * @var bool
+     */
+    protected $isPhp = false;
+
+    /**
+     * Delay compilation after non-defered
+     *
+     * @var bool
+     */
+    protected $deferCompile = true;
+
+    /**
+     * Compile
      */
     public function compile()
     {
-        return '{{ ' . $this->getName() . ' }}';
+        return $this->getContent();
     }
 }
