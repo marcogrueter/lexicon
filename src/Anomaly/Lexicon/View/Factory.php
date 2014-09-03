@@ -3,7 +3,6 @@
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\FactoryInterface;
 use Anomaly\Lexicon\Lexicon;
-use Anomaly\Lexicon\Regex;
 use Anomaly\Lexicon\View\Compiler\CompilerEngine;
 use Illuminate\View\Factory as BaseFactory;
 use Illuminate\View\View;
@@ -48,21 +47,6 @@ class Factory extends BaseFactory implements FactoryInterface
     public function getLexiconEngine()
     {
         return $this->engines->resolve('anomaly.lexicon');
-    }
-
-    /**
-     * Append content to a given section.
-     *
-     * @param  string  $section
-     * @param  string  $content
-     * @return void
-     */
-    protected function extendSection($section, $content)
-    {
-        if (isset($this->sections[$section])) {
-            $content = str_replace('{{ parent }}', $content, $this->sections[$section]);
-        }
-        $this->sections[$section] = $content;
     }
 
     /**

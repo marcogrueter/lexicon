@@ -63,7 +63,8 @@ return array(
      */
     'nodeTypes' => [
         'Anomaly\Lexicon\Node\Comment',
-        'Anomaly\Lexicon\Node\Parents',
+        'Anomaly\Lexicon\Node\IgnoreBlock',
+        'Anomaly\Lexicon\Node\IgnoreVariable',
         'Anomaly\Lexicon\Node\Block',
         'Anomaly\Lexicon\Node\Recursive',
         'Anomaly\Lexicon\Node\Section',
