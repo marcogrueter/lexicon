@@ -6,7 +6,6 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\NodeValidatorInterface;
-use Anomaly\Lexicon\View\Compiler\StreamCompiler;
 
 abstract class Node implements NodeInterface
 {
@@ -116,25 +115,71 @@ abstract class Node implements NodeInterface
      */
     protected $validator;
 
+    /**
+     * @var bool
+     */
     protected $isEmbedded = false;
 
-    protected $prefixCompiled = true;
+    /**
+     * Should compile as PHP or not?
+     *
+     * @var bool
+     */
+    protected $isPhp = true;
 
+    /**
+     * Defer compile
+     *
+     * @var bool
+     */
+    protected $deferCompile = false;
+
+    /**
+     * @param LexiconInterface $lexicon
+     */
     public function __construct(LexiconInterface $lexicon)
     {
         $this->lexicon = $lexicon;
     }
 
-
+    /**
+     * @param bool $isEmbedded
+     * @return $this
+     */
     public function setIsEmbedded($isEmbedded = false)
     {
         $this->isEmbedded = $isEmbedded;
         return $this;
     }
 
+    /**
+     * Is embedded
+     *
+     * @return bool
+     */
     public function isEmbedded()
     {
         return $this->isEmbedded;
+    }
+
+    /**
+     * Should this node be compiled as PHP?
+     *
+     * @return bool
+     */
+    public function isPhp()
+    {
+        return $this->isPhp;
+    }
+
+    /**
+     * Delay compilation after non-deferred nodes
+     *
+     * @return bool
+     */
+    public function deferCompile()
+    {
+        return $this->deferCompile;
     }
 
     /**
@@ -572,7 +617,7 @@ abstract class Node implements NodeInterface
          */
         foreach ($this->getOpenTagMatches($text) as $match) {
             if (!preg_match(
-                $this->lexicon->getRegex()->getClosingTagRegexMatcher($this->getName()),
+                $this->getLexicon()->getRegex()->getClosingTagRegexMatcher($this->getName()),
                 $text,
                 $closingTagMatch
             )
@@ -681,7 +726,7 @@ abstract class Node implements NodeInterface
             $this->setParsedContent(
                 str_replace(
                     $node->getExtractionId('open'),
-                    $node->validate() ? $this->compileSegment($node->compileOpen()) : null,
+                    $node->validate() ? $this->php($node->compileOpen()) : null,
                     $this->getParsedContent()
                 )
             );
@@ -691,16 +736,16 @@ abstract class Node implements NodeInterface
             $this->setParsedContent(
                 str_replace(
                     $node->getExtractionId('close'),
-                    $node->validate() ? $this->compileSegment($node->compileClose()) : null,
+                    $node->validate() ? $this->php($node->compileClose()) : null,
                     $this->getParsedContent()
                 )
             );
         }
 
-        if ($node instanceof NodeBlockInterface) {
+        if ($node instanceof NodeBlockInterface or !$node->isPhp()) {
             $compile = $node->compile();
         } else {
-            $compile = $this->compileSegment($node->compile());
+            $compile = $this->php($node->compile());
         }
 
         $this->setParsedContent(
@@ -714,15 +759,12 @@ abstract class Node implements NodeInterface
         return $this;
     }
 
-    public function compileSegment($segment)
-    {
-        if (!$this->prefixCompiled or empty($segment)) {
-            return $segment;
-        }
-
-        return StreamCompiler::OPEN . StreamCompiler::COMPILED . $this->php($segment) . StreamCompiler::CLOSE;
-    }
-
+    /**
+     * Surround node source with PHP tags
+     *
+     * @param null $segment
+     * @return null|string
+     */
     public function php($segment = null)
     {
         if (empty($segment)) {

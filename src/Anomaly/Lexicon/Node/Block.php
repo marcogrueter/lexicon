@@ -68,6 +68,7 @@ class Block extends Node implements NodeBlockInterface
 
         $this
             ->setName($name)
+            ->setFullContent($fullContent)
             ->setContent($content)
             ->setExtractionContent($content)
             ->setParsedAttributes($parsedAttributes);
@@ -81,6 +82,28 @@ class Block extends Node implements NodeBlockInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Set full content
+     *
+     * @param $fullContent string
+     * @return $this
+     */
+    public function setFullContent($fullContent)
+    {
+        $this->fullContent = $fullContent;
+        return $this;
+    }
+
+    /**
+     * Get full content
+     *
+     * @return string
+     */
+    public function getFullContent()
+    {
+        return $this->fullContent;
     }
 
     /**
@@ -134,14 +157,6 @@ class Block extends Node implements NodeBlockInterface
      */
     public function compile()
     {
-        $finder = $this->getContextFinder();
-
-        if ($this->hasRecursive()) {
-            $content = $this->getLexicon()->getRegex()->compress($this->getContent());
-            return "<?php echo \$__data['__env']->recursive('{$content}',{$finder->getItemName()}); ?>";
-        }
-
-
         if ($this->isFilter()) {
             return $this->compileFilter();
         } elseif ($this->isParse()) {
@@ -150,7 +165,15 @@ class Block extends Node implements NodeBlockInterface
 
         /** @var $node NodeInterface */
         foreach ($this->getChildren() as $node) {
-            $this->inject($node);
+            if (!$node->deferCompile()) {
+                $this->inject($node);
+            }
+        }
+
+        foreach ($this->getChildren() as $node) {
+            if ($node->deferCompile()) {
+                $this->inject($node);
+            }
         }
 
         return $this->getParsedContent();
@@ -163,11 +186,11 @@ class Block extends Node implements NodeBlockInterface
      */
     public function compileOpen()
     {
-        if ($this->isFilter() or $this->isParse() or $this->hasRecursive()) {
+        if (!$this->isPhp() or $this->isFilter() or $this->isParse()) {
             return null;
         }
 
-        return "foreach ({$this->getIterateableSource()} as \${$this->getItemName()}):";
+        return "foreach ({$this->getIterateableSource()} as \$i => \${$this->getItemName()}):";
     }
 
     /**
@@ -229,29 +252,13 @@ class Block extends Node implements NodeBlockInterface
     }
 
     /**
-     * Has recursive node
-     *
-     * @return bool
-     */
-    public function hasRecursive()
-    {
-        foreach($this->getChildren() as $node) {
-            if ($node instanceof Recursive) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Compile closing source
      *
      * @return string
      */
     public function compileClose()
     {
-        if ($this->isFilter() or $this->isParse() or $this->hasRecursive()) {
+        if (!$this->isPhp() or $this->isFilter() or $this->isParse()) {
             return null;
         }
 
