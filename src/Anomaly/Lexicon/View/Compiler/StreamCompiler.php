@@ -102,7 +102,7 @@ class StreamCompiler
             }
         }
 
-        return $this->compileFooter(implode($this->getImplodeGlue(), $this->stream));
+        return $this->compileFooter(implode('', $this->stream));
     }
 
     /**
@@ -126,20 +126,10 @@ class StreamCompiler
             }
 
             $source = str_replace('{{ parent }}', '', $source);
-            $source = ltrim($source, PHP_EOL) . PHP_EOL . implode($this->getImplodeGlue(), array_reverse($footer));
+            $source = ltrim($source, PHP_EOL) . PHP_EOL . implode(PHP_EOL, array_reverse($footer));
         }
 
         return $source;
-    }
-
-    /**
-     * Get implode glue
-     *
-     * @return null|string
-     */
-    public function getImplodeGlue()
-    {
-        return $this->getBlockNode()->getLexicon()->isDebug() ? PHP_EOL : null;
     }
 
     /**

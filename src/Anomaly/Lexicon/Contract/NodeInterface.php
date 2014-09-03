@@ -111,10 +111,19 @@ interface NodeInterface extends ExtractionInterface
     public function getDepth();
 
     /**
+     * Set parsed content
+     *
      * @param $parsedContent
      * @return NodeInterface
      */
     public function setParsedContent($parsedContent);
+
+    /**
+     * Get parsed content
+     *
+     * @return string
+     */
+    public function getParsedContent();
 
     /**
      * Set node validator
