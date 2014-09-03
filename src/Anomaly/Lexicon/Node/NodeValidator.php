@@ -1,4 +1,4 @@
-<?php namespace Anomaly\Lexicon;
+<?php namespace Anomaly\Lexicon\Node;
 
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\NodeValidatorInterface;

@@ -1,13 +1,10 @@
-<?php namespace Anomaly\Lexicon;
+<?php namespace Anomaly\Lexicon\Attribute;
 
+use Anomaly\Lexicon\Conditional\Test\StringTest;
 use Anomaly\Lexicon\Contract\ExtractionInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Node\Variable;
-use Anomaly\Lexicon\Attribute\AttributeNode;
-use Anomaly\Lexicon\Attribute\NamedAttribute;
-use Anomaly\Lexicon\Attribute\NamedAttributeNode;
-use Anomaly\Lexicon\Attribute\OrderedAttributeNode;
-use Anomaly\Lexicon\Conditional\Test\StringTest;
+use Anomaly\Lexicon\Regex;
 
 class AttributeParser
 {
@@ -176,7 +173,7 @@ class AttributeParser
         foreach ($this->attributesOrder as $count => $id) {
             if (isset($this->attributesExtractions[$id])) {
                 $attributeNode = $this->attributesExtractions[$id];
-                $key = $attributeNode->setIsEmbedded(true)->compileKey();
+                $key           = $attributeNode->setIsEmbedded(true)->compileKey();
                 if (!in_array($key, array_keys($except)) or !in_array($key, $except)) {
                     $attributes[$key] = $attributeNode->compile();
                 }

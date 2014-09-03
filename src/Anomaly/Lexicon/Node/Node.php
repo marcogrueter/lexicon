@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\AttributeParser;
+use Anomaly\Lexicon\Attribute\AttributeParser;
 use Anomaly\Lexicon\ContextFinder;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;

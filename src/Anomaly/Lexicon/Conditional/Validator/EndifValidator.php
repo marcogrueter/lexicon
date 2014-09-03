@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Conditional\Validator;
 
-use Anomaly\Lexicon\NodeValidator;
+use Anomaly\Lexicon\Node\NodeValidator;
 
 class EndifValidator extends NodeValidator
 {
