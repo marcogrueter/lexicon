@@ -59,36 +59,10 @@ class Factory extends BaseFactory implements FactoryInterface
      */
     protected function extendSection($section, $content)
     {
-        $engine = $this->getLexiconEngine();
-
-        $lexicon = $engine->getCompiler()->getLexicon();
-
-        $regex = new Regex($lexicon);
-
-        $content = $regex->compress($content);
-
-        if (isset($this->sections[$section]))
-        {
+        if (isset($this->sections[$section])) {
             $content = str_replace('{{ parent }}', $content, $this->sections[$section]);
-
-            $this->sections[$section] = $content;
         }
-        else
-        {
-            $this->sections[$section] = $content;
-        }
-    }
-
-    /**
-     * Parse and evaluate a segment recursively
-     *
-     * @param $template
-     * @param $data
-     * @return \Illuminate\View\View
-     */
-    public function recursive($template, $data)
-    {
-        return $this->parse(str_replace('{{ recursive }}', $template, $template), $data);
+        $this->sections[$section] = $content;
     }
 
     /**
