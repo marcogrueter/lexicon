@@ -6,30 +6,6 @@ use Illuminate\View\Engines\CompilerEngine as BaseCompilerEngine;
 class CompilerEngine extends BaseCompilerEngine
 {
     /**
-     * Refresh
-     *
-     * @var bool
-     */
-    protected $refresh = true;
-
-    /**
-     * @var
-     */
-    protected $lexiconViewCache = [];
-
-    /**
-     * Set refresh property
-     *
-     * @param bool $refresh
-     * @return $this
-     */
-    public function refresh($refresh = true)
-    {
-        $this->refresh = $refresh;
-        return $this;
-    }
-
-    /**
      * Get the evaluated contents of the view.
      *
      * @param  string $path
@@ -40,13 +16,15 @@ class CompilerEngine extends BaseCompilerEngine
     {
         $this->lastCompiled[] = $path;
 
+        $lexicon = $this->getLexicon();
+
         // If this given view has expired, which means it has simply been edited since
         // it was last compiled, we will re-compile the views so we can evaluate a
         // fresh copy of the view. We'll pass the compiler the path of the view.
 
-        if ($this->getLexicon()->isParsePath($path) and ($this->refresh or $this->compiler->isNotParsed($path))) {
+        if ($lexicon->isParsePath($path) and ($lexicon->isDebug() or $this->compiler->isNotParsed($path))) {
             $this->compiler->compileParse($path);
-        } elseif (!$this->getLexicon()->isParsePath($path) and ($this->refresh or $this->compiler->isExpired($path))) {
+        } elseif (!$lexicon->isParsePath($path) and ($lexicon->isDebug() or $this->compiler->isExpired($path))) {
             $this->compiler->compile($path);
         }
 
@@ -71,28 +49,20 @@ class CompilerEngine extends BaseCompilerEngine
      */
     protected function evaluatePath($__path, $__data)
     {
+        $obLevel = ob_get_level();
+
         ob_start();
 
         // We'll evaluate the contents of the view inside a try/catch block so we can
         // flush out any stray output that might get out before an error occurs or
         // an exception is thrown. This prevents any partial views from leaking.
-        try {
-
-            $segments = explode('/', $__path);
-
-            $hash = $segments[count($segments) - 1];
-
-            $viewClass = $this->getLexicon()->getViewClass($hash);
-
-            if (!isset($this->lexiconViewCache[$__path])) {
-                include $__path;
-                $this->lexiconViewCache[$__path] = new $viewClass;
-            }
-
-            $this->lexiconViewCache[$__path]->render($__data);
-
-        } catch (\Exception $e) {
-            $this->handleViewException($e);
+        try
+        {
+            $this->getLexicon()->render($__path, $__data);
+        }
+        catch (\Exception $e)
+        {
+            $this->handleViewException($e, $obLevel);
         }
 
         return ltrim(ob_get_clean());

@@ -51,6 +51,13 @@ class Lexicon implements LexiconInterface
     protected $conditionalHandler;
 
     /**
+     * Runtime view cache
+     *
+     * @var
+     */
+    protected $cache = [];
+
+    /**
      * Block node type offset
      *
      * @var int
@@ -162,6 +169,19 @@ class Lexicon implements LexiconInterface
         $this->regex              = $regex;
         $this->conditionalHandler = $conditionalHandler;
         $this->pluginHandler      = $pluginHandler->setEnvironment($this);
+    }
+
+    public function render($__path, $__data)
+    {
+        if (!isset($this->cache[$__path])) {
+            include $__path;
+            $segments = explode('/', $__path);
+            $hash = $segments[count($segments) - 1];
+            $viewClass = $this->getViewClass($hash);
+            $this->cache[$__path] = new $viewClass;
+        }
+
+        $this->cache[$__path]->render($__data);
     }
 
     /**
