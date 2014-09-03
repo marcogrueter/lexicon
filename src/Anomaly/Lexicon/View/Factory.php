@@ -6,6 +6,7 @@ use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Regex;
 use Anomaly\Lexicon\View\Compiler\CompilerEngine;
 use Illuminate\View\Factory as BaseFactory;
+use Illuminate\View\View;
 
 class Factory extends BaseFactory implements FactoryInterface
 {
