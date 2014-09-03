@@ -18,6 +18,21 @@ interface NodeBlockInterface extends NodeInterface
     public function getExtractionContentClose();
 
     /**
+     * Set full content
+     *
+     * @param $fullContent
+     * @return NodeBlockInterface
+     */
+    public function setFullContent($fullContent);
+
+    /**
+     * Get full content
+     *
+     * @return string
+     */
+    public function getFullContent();
+
+    /**
      * Set content open
      *
      * @param $contentOpen
