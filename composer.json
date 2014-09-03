@@ -1,18 +1,12 @@
 {
     "name": "anomaly/lexicon",
-    "description": "",
+    "description": "A lightweight template engine for PHP.",
     "authors": [
         {
             "name": "Osvaldo Brignoni",
             "email": "obrignoni@aiwebsystems.com"
         }
     ],
-    "require": {
-        "illuminate/view": "4.3.*"
-    },
-    "require-dev": {
-        "barryvdh/laravel-ide-helper": "1.*"
-    },
     "autoload": {
         "psr-0": {
             "Anomaly\\Lexicon": "src/"
