@@ -1,9 +1,7 @@
 <?php namespace Anomaly\Lexicon\Conditional\Test;
 
-class IterateableTest extends TestType
+class IterateableTest
 {
-
-    protected $type = 'iterateable';
 
     /**
      * Check if value is in array or \IteratorAggregate

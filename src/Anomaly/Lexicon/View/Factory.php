@@ -4,7 +4,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\FactoryInterface;
 use Anomaly\Lexicon\Value\Expected;
 use Anomaly\Lexicon\Regex;
-use Illuminate\View\Engines\CompilerEngine;
+use Anomaly\Lexicon\View\Compiler\CompilerEngine;
 use Illuminate\View\Factory as BaseFactory;
 
 class Factory extends BaseFactory implements FactoryInterface
@@ -22,7 +22,7 @@ class Factory extends BaseFactory implements FactoryInterface
         $this->getLexicon()->addParsePath($view);
 
         /** @var $engine CompilerEngine */
-        $engine = $this->container['lexicon.compiler.engine'];
+        $engine = $this->getLexiconEngine();
 
         $data = array_merge($mergeData, $this->parseData($data));
 
@@ -36,7 +36,17 @@ class Factory extends BaseFactory implements FactoryInterface
      */
     public function getLexicon()
     {
-        return $this->container['lexicon'];
+        return $this->container['anomaly.lexicon'];
+    }
+
+    /**
+     * CompilerEngine
+     *
+     * @return mixed
+     */
+    public function getLexiconEngine()
+    {
+        return $this->engines->resolve('anomaly.lexicon');
     }
 
     /**
@@ -48,7 +58,7 @@ class Factory extends BaseFactory implements FactoryInterface
      */
     protected function extendSection($section, $content)
     {
-        $engine = $this->engines->resolve('lexicon');
+        $engine = $this->getLexiconEngine();
 
         $lexicon = $engine->getCompiler()->getLexicon();
 
@@ -68,6 +78,13 @@ class Factory extends BaseFactory implements FactoryInterface
         }
     }
 
+    /**
+     * Parse and evaluate a segment recursively
+     *
+     * @param $template
+     * @param $data
+     * @return \Illuminate\View\View
+     */
     public function recursive($template, $data)
     {
         return $this->parse(str_replace('{{ recursive }}', $template, $template), $data);

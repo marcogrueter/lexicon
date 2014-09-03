@@ -89,4 +89,12 @@ interface LexiconInterface
      * @return LexiconInterface
      */
     public function registerPlugins(array $plugins);
+
+    /**
+     * Add parse path
+     *
+     * @param $path
+     * @return string
+     */
+    public function addParsePath($path);
 }

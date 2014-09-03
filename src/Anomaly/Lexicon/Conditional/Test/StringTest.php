@@ -1,9 +1,7 @@
 <?php namespace Anomaly\Lexicon\Conditional\Test;
 
-class StringTest extends TestType
+class StringTest
 {
-
-    protected $type = 'string';
 
     /**
      * Contains

@@ -1,9 +1,5 @@
 <?php namespace Anomaly\Lexicon;
 
-use Anomaly\Lexicon\Conditional\ConditionalHandler;
-use Anomaly\Lexicon\Conditional\Test\IterateableTest;
-use Anomaly\Lexicon\Conditional\Test\StringTest;
-use Anomaly\Lexicon\Plugin\PluginHandler;
 use Anomaly\Lexicon\View\Compiler\Compiler;
 use Anomaly\Lexicon\View\Compiler\CompilerEngine;
 use Anomaly\Lexicon\View\Factory;
@@ -17,35 +13,6 @@ use Illuminate\Support\ServiceProvider;
  */
 class LexiconServiceProvider extends ServiceProvider
 {
-
-    protected $nodeTypes = [
-        'Anomaly\Lexicon\Node\Comment',
-        'Anomaly\Lexicon\Node\Parents',
-        'Anomaly\Lexicon\Node\Block',
-        'Anomaly\Lexicon\Node\Recursive',
-        'Anomaly\Lexicon\Node\Section',
-        'Anomaly\Lexicon\Node\SectionExtends',
-        'Anomaly\Lexicon\Node\SectionShow',
-        'Anomaly\Lexicon\Node\SectionStop',
-        'Anomaly\Lexicon\Node\SectionYield',
-        'Anomaly\Lexicon\Node\Includes',
-        'Anomaly\Lexicon\Node\Conditional',
-        'Anomaly\Lexicon\Node\ConditionalElse',
-        'Anomaly\Lexicon\Node\ConditionalEndif',
-        'Anomaly\Lexicon\Node\VariableEscaped',
-        'Anomaly\Lexicon\Node\Variable',
-    ];
-
-    protected $plugins = [
-        'counter' => 'Anomaly\Lexicon\Plugin\CounterPlugin',
-        'foo'     => 'Anomaly\Lexicon\Plugin\FooPlugin',
-        'test'    => 'Anomaly\Lexicon\Plugin\TestPlugin',
-    ];
-
-    protected $pluginHandler = '';
-
-    protected $conditionalHandler = '';
-
     /**
      * Register the service provider.
      *
@@ -53,33 +20,54 @@ class LexiconServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->package('anomaly/lexicon', null, __DIR__ . '/../..');
-
-        $this
-            ->registerConditionalHandler()
-            ->registerPluginHandler();
-
         /** @var $app Application */
         $app = $this->app;
 
+        $this->package('anomaly/lexicon', null, __DIR__ . '/../..');
+
         $app->singleton(
-            'lexicon',
+            'anomaly.lexicon.conditional.handler',
+            function () {
+                $conditionalHandler = config(
+                    'lexicon::conditionalHandler',
+                    'Anomaly\Lexicon\Conditional\ConditionalHandler'
+                );
+                $conditionalHandler = new $conditionalHandler;
+                return $conditionalHandler->registerBooleanTestTypes(config('lexicon::booleanTestTypes'));
+            }
+        );
+
+        $app->singleton(
+            'anomaly.lexicon.plugin.handler',
+            function () {
+                $pluginHandler = config(
+                    'lexicon::pluginHandler',
+                    'Anomaly\Lexicon\Plugin\PluginHandler'
+                );
+                return new $pluginHandler;
+            }
+        );
+
+        $app->singleton(
+            'anomaly.lexicon',
             function () use ($app) {
 
-                $scopeGlue = $app['config']->get('lexicon::scopeGlue', '.');
+                $scopeGlue = config('lexicon::scopeGlue', '.');
+                $plugins   = config('lexicon::plugins', []);
+                $nodeTypes = config('lexicon::nodeTypes', []);
 
                 $lexicon = new Lexicon(
                     new Regex($scopeGlue),
-                    $app['lexicon.conditional.handler'],
-                    $app['lexicon.plugin.handler']
+                    $app['anomaly.lexicon.conditional.handler'],
+                    $app['anomaly.lexicon.plugin.handler']
                 );
 
                 $lexicon
-                    ->setAllowPhp($app['config']->get('lexicon::allowPhp', false))
-                    ->setDebug($app['config']->get('lexicon::debug', true))
                     ->setScopeGlue($scopeGlue)
-                    ->registerPlugins($this->plugins)
-                    ->registerNodeTypes($this->nodeTypes)
+                    ->setAllowPhp(config('lexicon::allowPhp', false))
+                    ->setDebug(config('lexicon::debug', true))
+                    ->registerPlugins(config('lexicon::plugins', []))
+                    ->registerNodeTypes($nodeTypes)
                     ->setIgnoredMatchers(['parent']);
 
                 return $lexicon;
@@ -87,56 +75,41 @@ class LexiconServiceProvider extends ServiceProvider
         );
 
         $app->singleton(
-            'lexicon.compiler',
+            'anomaly.lexicon.compiler',
             function () use ($app) {
                 $cachePath = $app['path.storage'] . '/views';
                 // The Compiler engine requires an instance of the CompilerInterface, which in
                 // this case will be the Blade compiler, so we'll first create the compiler
                 // instance to pass into the engine so it can compile the views properly.
                 $compiler = new Compiler($app['files'], $cachePath);
-                $compiler->setLexicon($app['lexicon']);
+                $compiler->setLexicon($app['anomaly.lexicon']);
                 return $compiler;
             }
         );
 
         $app->singleton(
-            'lexicon.compiler.engine',
+            'anomaly.lexicon.compiler.engine',
             function () use ($app) {
-                return new CompilerEngine($app['lexicon.compiler'], $app['files']);
+                return new CompilerEngine($app['anomaly.lexicon.compiler'], $app['files']);
             }
         );
 
         $app->resolving(
             'view',
             function ($view) use ($app) {
-                /** @var $view Environment */
-                $view->share('__lexicon', $app['lexicon']);
-
+                /** @var Factory $view */
                 $view->addExtension(
-                    $extension = $app['config']->get('lexicon::extension', 'html'),
-                    'lexicon',
+                    config('lexicon::extension', 'html'),
+                    'anomaly.lexicon',
                     function () use ($app) {
-                        return $app['lexicon.compiler.engine'];
+                        return $app['anomaly.lexicon.compiler.engine'];
                     }
                 );
             }
         );
 
-        $this->registerFactory();
-
-    }
-
-    /**
-     * Register the view environment.
-     *
-     * @return void
-     */
-    public function registerFactory()
-    {
-        $app = $this->app;
-
         $app->singleton(
-            'lexicon.environment',
+            'anomaly.lexicon.factory',
             function () use ($app) {
                 // Next we need to grab the engine resolver instance that will be used by the
                 // environment. The resolver will be used by an environment to get each of
@@ -149,7 +122,7 @@ class LexiconServiceProvider extends ServiceProvider
             'view',
             function ($app) {
 
-                $env = $app['lexicon.environment'];
+                $env = $app['anomaly.lexicon.factory'];
 
                 // We will also set the container instance on this view environment since the
                 // view composers may be classes registered in the container, which allows
@@ -161,43 +134,7 @@ class LexiconServiceProvider extends ServiceProvider
                 return $env;
             }
         );
-    }
 
-    /**
-     * Register conditional handler
-     *
-     * @return LexiconServiceProvider
-     */
-    public function registerConditionalHandler()
-    {
-        $this->app->singleton(
-            'lexicon.conditional.handler',
-            function () {
-                $conditionalHandler = new ConditionalHandler();
-                $conditionalHandler
-                    ->registerTestType(new StringTest())
-                    ->registerTestType(new IterateableTest());
-                return $conditionalHandler;
-            }
-        );
-
-        return $this;
-    }
-
-    /**
-     * Register plugin handler
-     *
-     * @return LexiconServiceProvider
-     */
-    public function registerPluginHandler()
-    {
-        $this->app->singleton(
-            'lexicon.plugin.handler',
-            function () {
-                return new PluginHandler();
-            }
-        );
-        return $this;
     }
 
     /**
@@ -207,7 +144,7 @@ class LexiconServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return array('lexicon');
+        return array('anomaly.lexicon');
     }
 
 }

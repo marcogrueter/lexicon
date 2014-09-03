@@ -6,35 +6,6 @@
 return array(
 
     /**
-     * Plugins used for interpreting and outputting custom data. You can add you custom plugins here. Each one must be
-     *
-     */
-    'plugins' => [
-
-    ],
-
-    /**
-     * Node types used for parsing and compiling
-     */
-    'nodeTypes' => [
-        'Anomaly\Lexicon\Node\Comment',
-        'Anomaly\Lexicon\Node\Parents',
-        'Anomaly\Lexicon\Node\Block',
-        'Anomaly\Lexicon\Node\Recursive',
-        'Anomaly\Lexicon\Node\Section',
-        'Anomaly\Lexicon\Node\SectionExtends',
-        'Anomaly\Lexicon\Node\SectionShow',
-        'Anomaly\Lexicon\Node\SectionStop',
-        'Anomaly\Lexicon\Node\SectionYield',
-        'Anomaly\Lexicon\Node\Includes',
-        'Anomaly\Lexicon\Node\Conditional',
-        'Anomaly\Lexicon\Node\ConditionalElse',
-        'Anomaly\Lexicon\Node\ConditionalEndif',
-        'Anomaly\Lexicon\Node\VariableEscaped',
-        'Anomaly\Lexicon\Node\Variable',
-    ],
-
-    /**
      * The extension that tells the view environment when to use the Lexicon view engine to process views.
      */
     'extension' => 'html',
@@ -53,8 +24,60 @@ return array(
     'debug' => true,
 
     /**
-     * PHP is escaped from views by default but you can enable it if you need it for any reason.
+     * PHP is escaped from views by default but you can enable it if you need it for any reason. It is highly
+     * recommended that you keep this disabled as it will make templates insecure.
      */
     'allowPhp' => false,
+
+    /**
+     * Plugins used for interpreting and outputting custom data. You can add you custom plugins here. Each one must have
+     * a key that will represent the tag. i.e {{ counter.count }}
+     */
+    'plugins' => [
+        'counter' => 'Anomaly\Lexicon\Plugin\CounterPlugin',
+        'foo'     => 'Anomaly\Lexicon\Plugin\FooPlugin',
+        'test'    => 'Anomaly\Lexicon\Plugin\TestPlugin',
+    ],
+
+    /**
+     * Conditional boolean test types
+     */
+    'booleanTestTypes' => [
+        'stringTest' => 'Anomaly\Lexicon\Conditional\Test\StringTest',
+        'iterateableTest' => 'Anomaly\Lexicon\Conditional\Test\IterateableTest',
+    ],
+
+
+    /**
+     * Conditional handler class
+     */
+    'conditionalHandler' => 'Anomaly\Lexicon\Conditional\ConditionalHandler',
+
+    /**
+     * Plugin handler class
+     */
+    'pluginHandler' => 'Anomaly\Lexicon\Plugin\PluginHandler',
+
+    /**
+     * Node types used for parsing and compiling.
+     * The order is very important as it will affect parsing.
+     */
+    'nodeTypes' => [
+        'Anomaly\Lexicon\Node\Comment',
+        'Anomaly\Lexicon\Node\Parents',
+        'Anomaly\Lexicon\Node\Block',
+        'Anomaly\Lexicon\Node\Recursive',
+        'Anomaly\Lexicon\Node\Section',
+        'Anomaly\Lexicon\Node\SectionExtends',
+        'Anomaly\Lexicon\Node\SectionShow',
+        'Anomaly\Lexicon\Node\SectionStop',
+        'Anomaly\Lexicon\Node\SectionYield',
+        'Anomaly\Lexicon\Node\Includes',
+        'Anomaly\Lexicon\Node\Conditional',
+        'Anomaly\Lexicon\Node\ConditionalElse',
+        'Anomaly\Lexicon\Node\ConditionalEndif',
+        'Anomaly\Lexicon\Node\VariableEscaped',
+        'Anomaly\Lexicon\Node\Variable',
+    ],
 
 );

@@ -1,51 +1,37 @@
 <?php namespace Anomaly\Lexicon\Conditional;
 
-use Anomaly\Lexicon\Contract\TestTypeInterface;
-
 class ConditionalHandler
 {
-
     /**
-     * Tests - array of closures
-     *
-     * @var array
-     */
-    protected $tests = [];
-
-    /**
-     * Test types - array of TestTypeInterface objects
+     * Test types - array of BooleanTestTypeInterface objects
      *
      * @var array
      */
     protected $testTypes = [];
 
     /**
-     * Register test
+     * Register test type
      *
-     * @param          $key
-     * @param callable $closure
-     * @return $this
+     * @param string $test
+     * @return ConditionalHandler
      */
-    public function registerTest($key, \Closure $closure)
+    public function registerBooleanTestType($name, $booleanTestType)
     {
-        $this->tests[$key] = $closure;
+        $this->testTypes[$name] = new $booleanTestType;
         return $this;
     }
 
     /**
-     * Register test type
+     * Register boolean test types
      *
-     * @param TestTypeInterface $test
-     * @return ConditionalHandler
+     * @param array $booleanTestTypes
+     * @return $this
      */
-    public function registerTestType(TestTypeInterface $test)
+    public function registerBooleanTestTypes(array $booleanTestTypes)
     {
-        if ($type = $test->getType()) {
-            $this->testTypes[$type] = $test;
-        } elseif (is_null($type)) {
-            $this->testTypes[] = $test;
+        foreach($booleanTestTypes as $name => $booleanTestType) {
+            $this->registerBooleanTestType($name, $booleanTestType);
         }
-
         return $this;
     }
 
@@ -57,31 +43,6 @@ class ConditionalHandler
     public function getTestTypes()
     {
         return $this->testTypes;
-    }
-
-    /**
-     * Get tests array
-     *
-     * @return array
-     */
-    public function getTests()
-    {
-        return $this->tests;
-    }
-
-    /**
-     * Get test
-     *
-     * @param $operator
-     * @return \Closure|null
-     */
-    public function getTest($operator)
-    {
-        if (isset($this->tests[$operator])) {
-            return $this->tests[$operator];
-        }
-
-        return null;
     }
 
     /**
@@ -100,7 +61,7 @@ class ConditionalHandler
             }
         }
 
-        return array_merge($operators, array_keys($this->getTests()));
+        return $operators;
     }
 
     /**
@@ -156,10 +117,6 @@ class ConditionalHandler
      */
     public function runTest($left, $right, $operator = null)
     {
-        if ($test = $this->getTest($operator)) {
-            return call_user_func_array($test, [$left, $right]);
-        }
-
         foreach ($this->getTestTypes() as $testType) {
             if (method_exists($testType, $operator)) {
                 return $testType->{$operator}($left, $right);

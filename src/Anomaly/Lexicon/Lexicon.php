@@ -8,28 +8,6 @@ use Anomaly\Lexicon\Contract\PluginHandlerInterface;
 
 class Lexicon implements LexiconInterface
 {
-
-    /**
-     * Cache path
-     *
-     * @var
-     */
-    public $cachePath;
-
-    /**
-     * Disable cache
-     *
-     * @var bool
-     */
-    public $disableCache = true;
-
-    /**
-     * Compress source / remove excess white space
-     *
-     * @var bool
-     */
-    public $compress = false;
-
     /**
      * Scope glue
      *
@@ -42,7 +20,7 @@ class Lexicon implements LexiconInterface
      *
      * @var int
      */
-    public $maxDepth = 20;
+    public $maxDepth = 100;
 
     /**
      * Ignored matchers
@@ -144,7 +122,7 @@ class Lexicon implements LexiconInterface
     /**
      * View class prefix constant
      */
-    const VIEW_CLASS_PREFIX = '\\View_';
+    const VIEW_PREFIX = '\\View_';
 
     /**
      * Data constant
@@ -510,6 +488,6 @@ class Lexicon implements LexiconInterface
      */
     public function getViewClass($hash)
     {
-        return $this->getViewNamespace() . static::VIEW_CLASS_PREFIX . $hash;
+        return $this->getViewNamespace() . static::VIEW_PREFIX . $hash;
     }
 }
