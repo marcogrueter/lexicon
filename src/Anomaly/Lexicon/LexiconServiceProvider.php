@@ -9,7 +9,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class LexiconServiceProvider
  *
- * @package Anomaly\Lexicon\Provider\Laravel
+ * @package Anomaly\Lexicon
  */
 class LexiconServiceProvider extends ServiceProvider
 {
@@ -53,7 +53,7 @@ class LexiconServiceProvider extends ServiceProvider
             function () use ($app) {
 
                 $scopeGlue = config('lexicon::scopeGlue', '.');
-                
+
                 $lexicon = new Lexicon(
                     new Regex($scopeGlue),
                     $app['anomaly.lexicon.conditional.handler'],

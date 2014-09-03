@@ -18,8 +18,7 @@ return array(
 
     /**
      * When debug is turned on it enables exceptions on certain parts where things fail silently. Generic exceptions
-     * will always be logged. Also php segments on the view will be compiled each on a new line for readability but
-     * will compile compressed when debug is off.
+     * will always be logged.
      */
     'debug' => true,
 
