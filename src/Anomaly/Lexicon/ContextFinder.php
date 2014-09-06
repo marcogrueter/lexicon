@@ -35,6 +35,11 @@ class ContextFinder
         $this->parent  = $this->node->getParent();
     }
 
+    /**
+     * Strip special prefixes and get the real the name
+     *
+     * @return string
+     */
     public function getName()
     {
         $string = $this->node->getName();
@@ -55,6 +60,11 @@ class ContextFinder
         return $string;
     }
 
+    /**
+     * Get item name
+     *
+     * @return string
+     */
     public function getItemName()
     {
         if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
@@ -69,6 +79,11 @@ class ContextFinder
 
     }
 
+    /**
+     * Get prefix
+     *
+     * @return null
+     */
     public function getPrefix()
     {
         $name = $this->node->getName();
@@ -84,6 +99,12 @@ class ContextFinder
         return $prefix;
     }
 
+    /**
+     * Find loop item node
+     *
+     * @param $prefix
+     * @return NodeInterface|null
+     */
     public function findLoopItemNode($prefix)
     {
         if ($node = $this->node->getParent()) {
@@ -98,29 +119,20 @@ class ContextFinder
         return $node;
     }
 
-    public function getLoopItemSource()
-    {
-        if ($this->node instanceof NodeBlockInterface) {
-            if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
-                return '$__data';
-            } elseif ($this->parent and !$this->parent->isRoot()) {
-                return '$' . $this->parent->getItemName();
-            } else {
-                return '$__data';
-            }
-        }
-
-        return null;
-    }
-
+    /**
+     * Is root context name
+     *
+     * @return bool
+     */
     public function isRootContextName()
     {
         return $this->isAlternateContextName($this->lexicon->getRootContextName() . $this->lexicon->getScopeGlue());
     }
 
+
     public function isAlternateContextName($start)
     {
-        return $this->hasMultipleScopes() and $this->startsWith($this->node->getContextName(), $start);
+        return $this->hasMultipleScopes() and starts_with($this->node->getContextName(), $start);
     }
 
     public function hasMultipleScopes()
@@ -128,16 +140,6 @@ class ContextFinder
         $segments = explode('.', $this->node->getContextName());
 
         return count($segments) > 1;
-    }
-
-    public function contains($haystack, $needle = '.')
-    {
-        return (strpos($haystack, $needle) !== false);
-    }
-
-    public function startsWith($haystack, $needle)
-    {
-        return (strpos($haystack, $needle) === 0);
     }
 
     public function getRootStart()
