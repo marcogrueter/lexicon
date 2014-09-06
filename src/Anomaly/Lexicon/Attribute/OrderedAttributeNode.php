@@ -4,7 +4,7 @@ class OrderedAttributeNode extends AttributeNode
 {
     protected $isNamed = false;
 
-    public function getSetup(array $match)
+    public function setup(array $match)
     {
         $this
             ->setExtractionContent(isset($match[0]) ? $match[0] : null)

@@ -47,7 +47,7 @@ class Conditional extends Single implements NodeConditionalInterface
      * @param array $match
      * @return void
      */
-    public function getSetup(array $match)
+    public function setup(array $match)
     {
         $this
             ->setName($match[1])

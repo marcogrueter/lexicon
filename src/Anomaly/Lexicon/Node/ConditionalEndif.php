@@ -17,7 +17,7 @@ class ConditionalEndif extends Single implements NodeConditionalInterface
      *
      * @param array $match
      */
-    public function getSetup(array $match)
+    public function setup(array $match)
     {
         $this
             ->setExtractionContent($match[0])

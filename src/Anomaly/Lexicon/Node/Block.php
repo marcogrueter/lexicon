@@ -56,7 +56,7 @@ class Block extends Node implements NodeBlockInterface
      * @param array $match
      * @return $this
      */
-    public function getSetup(array $match)
+    public function setup(array $match)
     {
         $fullContent = isset($match[0]) ? $match[0] : '';
 

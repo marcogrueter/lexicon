@@ -34,7 +34,7 @@ interface NodeInterface extends ExtractionInterface
      * @param array $match
      * @return mixed
      */
-    public function getSetup(array $match);
+    public function setup(array $match);
 
     /**
      * Get regex matcher

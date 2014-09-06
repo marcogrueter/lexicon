@@ -7,7 +7,7 @@ abstract class Single extends Node
         return "/\{\{\s*({$this->getNameMatcher()})(\s.*?)?\s*(\/)?\}\}/ms";
     }
 
-    public function getSetup(array $match)
+    public function setup(array $match)
     {
         $name = isset($match[1]) ? $match[1] : null;
 

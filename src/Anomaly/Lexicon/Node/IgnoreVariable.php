@@ -15,7 +15,7 @@ class IgnoreVariable extends SingleRemain
      *
      * @param array $match
      */
-    public function getSetup(array $match)
+    public function setup(array $match)
     {
         $this
             ->setName(isset($match[2]) ? $match[2] : null)

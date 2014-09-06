@@ -56,7 +56,7 @@ class AttributeNode extends Node
      * @param array $match
      * @return mixed|void
      */
-    public function getSetup(array $match)
+    public function setup(array $match)
     {
         //dd($match[0]);
 

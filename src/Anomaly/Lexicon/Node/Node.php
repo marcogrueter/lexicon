@@ -205,7 +205,7 @@ abstract class Node implements NodeInterface
             ->setParent($parent)
             ->setCount($count)
             ->setDepth($depth)
-            ->getSetup($match);
+            ->setup($match);
 
         $node
             ->setId($node->getContent() . $node->getName() . $node->getDepth() . $node->getCount())
@@ -317,19 +317,9 @@ abstract class Node implements NodeInterface
      * @param $class mixed
      * @return array
      */
-    public function getChildren($class = null)
+    public function getChildren()
     {
-        $children = $this->children;
-
-        if (is_string($class)) {
-            foreach ($this->children as $key => $node) {
-                if (!is_subclass_of($node, $class)) {
-                    unset($children[$key]);
-                }
-            }
-        }
-
-        return $children;
+        return $this->children;
     }
 
     /**
