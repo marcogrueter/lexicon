@@ -239,7 +239,7 @@ class ConditionalParser
 
     public function getComparisonSource($left, $right, $operator = null)
     {
-        return "\$__lexicon->compare({$this->getPartSource($left)}, {$this->getPartSource($right)}, '{$operator}') ";
+        return "\$__data['__env']->compare({$this->getPartSource($left)}, {$this->getPartSource($right)}, '{$operator}') ";
     }
 
     public function getOperatorMatch($comparison)

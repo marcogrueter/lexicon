@@ -228,7 +228,7 @@ class Block extends Node implements NodeBlockInterface
         $content = addslashes($lexicon->getRegex()->compress($this->getContent()));
 
         return "echo \$__data['__env']->variable({$finder->getItemName()},'{$finder->getName(
-        )}',{$attributes},\$__lexicon->parse(stripslashes('{$content}'),\$__data),'','{$expected}');";
+        )}',{$attributes},\$__data['__env']->parse(stripslashes('{$content}'),\$__data),'','{$expected}');";
     }
 
     /**
