@@ -1,0 +1,17 @@
+TAP version 13
+ok 1 - LexiconTest::testRegisterAndInstantiateOneNodeType
+ok 2 - LexiconTest::testGetBlockNodeType
+ok 3 - LexiconTest::testAddTemplateAsParsePath
+ok 4 - LexiconTest::testGetViewTemplate
+ok 5 - LexiconTest::testGetFullViewClass
+ok 6 - BlockTest::testRegisterAndInstantiateOneNodeType
+ok 7 - BlockTest::testGetBlockNodeType
+ok 8 - BlockTest::testAddTemplateAsParsePath
+ok 9 - BlockTest::testGetViewTemplate
+ok 10 - BlockTest::testGetFullViewClass
+ok 11 - CompilerEngineTest::testRegisterAndInstantiateOneNodeType
+ok 12 - CompilerEngineTest::testGetBlockNodeType
+ok 13 - CompilerEngineTest::testAddTemplateAsParsePath
+ok 14 - CompilerEngineTest::testGetViewTemplate
+ok 15 - CompilerEngineTest::testGetFullViewClass
+1..15

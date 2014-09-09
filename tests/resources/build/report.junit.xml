@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Lexicon Test Suite" tests="15" assertions="18" failures="0" errors="0" time="3.822061">
+    <testsuite name="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" tests="5" assertions="6" failures="0" errors="0" time="1.411041">
+      <testcase name="testRegisterAndInstantiateOneNodeType" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="47" assertions="1" time="0.428658"/>
+      <testcase name="testGetBlockNodeType" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="52" assertions="1" time="0.241392"/>
+      <testcase name="testAddTemplateAsParsePath" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="57" assertions="2" time="0.239392"/>
+      <testcase name="testGetViewTemplate" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="65" assertions="1" time="0.252260"/>
+      <testcase name="testGetFullViewClass" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="70" assertions="1" time="0.249339"/>
+    </testsuite>
+    <testsuite name="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" tests="5" assertions="6" failures="0" errors="0" time="1.197896">
+      <testcase name="testRegisterAndInstantiateOneNodeType" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="47" assertions="1" time="0.233542"/>
+      <testcase name="testGetBlockNodeType" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="52" assertions="1" time="0.239612"/>
+      <testcase name="testAddTemplateAsParsePath" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="57" assertions="2" time="0.244448"/>
+      <testcase name="testGetViewTemplate" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="65" assertions="1" time="0.241212"/>
+      <testcase name="testGetFullViewClass" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="70" assertions="1" time="0.239082"/>
+    </testsuite>
+    <testsuite name="CompilerEngineTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/resources/View/Compiler/CompilerEngineTest.php" tests="5" assertions="6" failures="0" errors="0" time="1.213124">
+      <testcase name="testRegisterAndInstantiateOneNodeType" class="CompilerEngineTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/resources/View/Compiler/CompilerEngineTest.php" line="47" assertions="1" time="0.234940"/>
+      <testcase name="testGetBlockNodeType" class="CompilerEngineTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/resources/View/Compiler/CompilerEngineTest.php" line="52" assertions="1" time="0.248676"/>
+      <testcase name="testAddTemplateAsParsePath" class="CompilerEngineTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/resources/View/Compiler/CompilerEngineTest.php" line="57" assertions="2" time="0.243688"/>
+      <testcase name="testGetViewTemplate" class="CompilerEngineTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/resources/View/Compiler/CompilerEngineTest.php" line="65" assertions="1" time="0.236992"/>
+      <testcase name="testGetFullViewClass" class="CompilerEngineTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/resources/View/Compiler/CompilerEngineTest.php" line="70" assertions="1" time="0.248828"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

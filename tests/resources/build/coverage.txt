@@ -1,0 +1,18 @@
+
+
+Code Coverage Report:     
+  2014-09-09 14:54:02     
+                          
+ Summary:                 
+  Classes:  0.00% (0/28)  
+  Methods: 10.81% (16/148)
+  Lines:   15.69% (96/612)
+
+\Anomaly\Lexicon::Lexicon
+  Methods:  91.67% (11/12)   Lines:  96.77% ( 30/ 31)
+\Anomaly\Lexicon\Conditional::ConditionalHandler
+  Methods:  33.33% ( 2/ 6)   Lines:  15.00% (  6/ 40)
+\Anomaly\Lexicon\Node::Node
+  Methods:   1.67% ( 1/60)   Lines:   1.02% (  2/196)
+\Anomaly\Lexicon\Plugin::PluginHandler
+  Methods:  25.00% ( 2/ 8)   Lines:  10.81% (  4/ 37)
