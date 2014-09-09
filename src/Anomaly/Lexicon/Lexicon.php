@@ -122,6 +122,13 @@ class Lexicon implements LexiconInterface
     protected $viewTemplate;
 
     /**
+     * View template path
+     *
+     * @var string
+     */
+    protected $viewTemplatePath;
+
+    /**
      * @var string
      */
     protected $viewNamespace = 'Anomaly\Lexicon\View';
@@ -129,7 +136,7 @@ class Lexicon implements LexiconInterface
     /**
      * View class prefix constant
      */
-    const VIEW_PREFIX = '\\View_';
+    const VIEW_PREFIX = 'View_';
 
     /**
      * Data constant
@@ -418,11 +425,18 @@ class Lexicon implements LexiconInterface
      */
     public function getViewTemplate()
     {
-        if ($this->viewTemplate) {
-            return $this->viewTemplate;
-        }
+        return file_get_contents($this->viewTemplatePath);
+    }
 
-        return $this->viewTemplate = file_get_contents(__DIR__ . '/../../../assets/view.txt');
+    /**
+     * Set view template path
+     *
+     * @return LexiconInterface
+     */
+    public function setViewTemplatePath($viewTemplatePath)
+    {
+        $this->viewTemplatePath = $viewTemplatePath;
+        return $this;
     }
 
     /**
@@ -444,6 +458,17 @@ class Lexicon implements LexiconInterface
      */
     public function getViewClass($hash)
     {
-        return $this->getViewNamespace() . static::VIEW_PREFIX . $hash;
+        return static::VIEW_PREFIX . $hash;
+    }
+
+    /**
+     * Get full view class
+     *
+     * @param $hash
+     * @return string
+     */
+    public function getFullViewClass($hash)
+    {
+        return $this->getViewNamespace() . '\\' . $this->getViewClass($hash);
     }
 }
