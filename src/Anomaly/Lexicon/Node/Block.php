@@ -35,19 +35,8 @@ class Block extends Node implements NodeBlockInterface
      */
     public function regex()
     {
-        return '/\{\{\s*(' . $this->lexicon->getRegex()->getVariableRegexMatcher(
+        return '/\{\{\s*(' . $this->getVariableRegex(
         ) . ')(\s.*?)\}\}(.*?)\{\{\s*\/\1\s*\}\}/ms';
-    }
-
-    /**
-     * Get matches
-     *
-     * @param $text
-     * @return array
-     */
-    public function getMatches($text)
-    {
-        return $this->getOpenTagMatches($text);
     }
 
     /**
@@ -60,9 +49,13 @@ class Block extends Node implements NodeBlockInterface
     {
         $fullContent = isset($match[0]) ? $match[0] : '';
 
-        $content = isset($match['content']) ? $match['content'] : $match[3];
+        $content = isset($match[3]) ? $match[3] : null;
 
-        $name = isset($match['name']) ? $match['name'] : $match[1];
+        $content = isset($match['content']) ? $match['content'] : $content;
+
+        $name = isset($match[1]) ? $match[1] : null;
+
+        $name = isset($match['name']) ? $match['name'] : $name;
 
         $parsedAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
 
@@ -73,7 +66,11 @@ class Block extends Node implements NodeBlockInterface
             ->setExtractionContent($content)
             ->setParsedAttributes($parsedAttributes);
 
-        $parts = explode($content, $fullContent);
+        $parts = [];
+
+        if (is_string($content) and is_string($fullContent) and !empty($content) and !empty($fullContent)) {
+            $parts = explode($content, $fullContent);
+        }
 
         if (count($parts) == 2) {
             $this
@@ -163,6 +160,18 @@ class Block extends Node implements NodeBlockInterface
             return $this->compileParse();
         }
 
+        $this->compileChildren();
+
+        return $this->getParsedContent();
+    }
+
+    /**
+     * Compile children
+     *
+     * @return $this
+     */
+    public function compileChildren()
+    {
         /** @var $node NodeInterface */
         foreach ($this->getChildren() as $node) {
             if (!$node->deferCompile()) {
@@ -176,7 +185,7 @@ class Block extends Node implements NodeBlockInterface
             }
         }
 
-        return $this->getParsedContent();
+        return $this;
     }
 
     /**
@@ -223,9 +232,7 @@ class Block extends Node implements NodeBlockInterface
 
         $expected = Lexicon::ECHOABLE;
 
-        $lexicon = $this->getLexicon();
-
-        $content = addslashes($lexicon->getRegex()->compress($this->getContent()));
+        $content = addslashes($this->getContent());
 
         return "echo \$__data['__env']->variable({$finder->getItemName()},'{$finder->getName(
         )}',{$attributes},\$__data['__env']->parse(stripslashes('{$content}'),\$__data),'','{$expected}');";
