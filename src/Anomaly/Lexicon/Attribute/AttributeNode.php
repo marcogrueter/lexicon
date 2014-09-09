@@ -71,7 +71,7 @@ class AttributeNode extends Node
     public function parse()
     {
 
-        $embeddedMatches = $this->getLexicon()->getRegex()->getEmbeddedMatches($this->value);
+        $embeddedMatches = $this->getMatches($this->value);
 
         foreach($embeddedMatches as $count => $match) {
 
@@ -99,11 +99,6 @@ class AttributeNode extends Node
         return array_keys($this->extractions);
     }
 
-    public function getEmbeddedMatches($string)
-    {
-        return $this->lexicon->getRegex()->getMatches($string, $this->regex());
-    }
-
     /**
      * Regex matcher
      *
@@ -113,17 +108,6 @@ class AttributeNode extends Node
     public function regex($embedded = false)
     {
         return '/(.*?)\s*=(\'|"|&#?\w+;)(.*?)(?<!\\\\)\2/ms';
-    }
-
-    /**
-     * Get the array of regex matches
-     *
-     * @param $string
-     * @return array
-     */
-    public function getMatches($string)
-    {
-        return $this->lexicon->getRegex()->getMatches($string, $this->regex());
     }
 
     /**
