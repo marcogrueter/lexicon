@@ -1,0 +1,2 @@
+<?php namespace [namespace]; use Anomaly\Lexicon\Contract\View\ViewTemplateInterface; class [class] implements ViewTemplateInterface { public function render($__data) {
+?>[source]<?php }} ?>
