@@ -26,9 +26,5 @@ abstract class Single extends Node
             ->setParsedAttributes($parsedAttributes)
             ->setExtractionContent($extractionContent);
     }
-
-    public function getMatches($text)
-    {
-        return $this->getSingleTagMatches($text);
-    }
+    
 }
