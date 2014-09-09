@@ -11,6 +11,12 @@ interface LexiconInterface
     public function allowPhp();
 
     /**
+     * @param $allowPhp bool
+     * @return LexiconInterface
+     */
+    public function setAllowPhp($allowPhp);
+
+    /**
      * @return PluginHandlerInterface
      */
     public function getPluginHandler();
@@ -53,10 +59,25 @@ interface LexiconInterface
     public function getViewTemplate();
 
     /**
+     * Get view namespace
+     *
+     * @return string
+     */
+    public function getViewNamespace();
+
+    /**
      * @param $string
      * @return string
      */
     public function getViewClass($string);
+
+    /**
+     * Get full view class
+     *
+     * @param $hash
+     * @return string
+     */
+    public function getFullViewClass($hash);
 
     /**
      * @param array $nodeTypes
@@ -82,7 +103,7 @@ interface LexiconInterface
 
     /**
      * @param $path
-     * @return mixed
+     * @return bool
      */
     public function isParsePath($path);
 
@@ -92,5 +113,11 @@ interface LexiconInterface
      * @return bool
      */
     public function isDebug();
+
+    /**
+     * @param $degug bool
+     * @return LexiconInterface
+     */
+    public function setDebug($degug);
 
 }
