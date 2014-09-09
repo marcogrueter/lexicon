@@ -141,7 +141,7 @@ class Factory extends BaseFactory implements FactoryInterface
             return $data;
         } elseif ($expected == Lexicon::ECHOABLE and
             (is_string($data) or is_numeric($data) or is_bool($data) or is_null($data) or is_float($data) or
-                (is_object($data) and method_exists($data, '__toString')))
+            (is_object($data) and method_exists($data, '__toString')))
         ) {
             return $data;
         } elseif ($expected == Lexicon::TRAVERSABLE and is_array($data) or $data instanceof \Traversable) {
