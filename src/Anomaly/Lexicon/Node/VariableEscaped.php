@@ -9,7 +9,7 @@ class VariableEscaped extends Variable
      */
     public function regex()
     {
-        return "/\{\{\{\s*({$this->getLexicon()->getRegex()->getVariableRegexMatcher()})(\s+.*?)?\s*(\/)?\}\}\}/ms";
+        return "/\{\{\{\s*({$this->getVariableRegex()})(\s+.*?)?\s*(\/)?\}\}\}/ms";
     }
 
     /**
