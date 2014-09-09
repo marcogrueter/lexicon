@@ -44,14 +44,6 @@ interface NodeInterface extends ExtractionInterface
     public function regex();
 
     /**
-     * Get matches
-     *
-     * @param $text
-     * @return array
-     */
-    public function getMatches($text);
-
-    /**
      * Create child nodes
      *
      * @return NodeInterface
@@ -144,5 +136,17 @@ interface NodeInterface extends ExtractionInterface
      * @return bool
      */
     public function isValid();
+
+    /**
+     * @return string
+     */
+    public function getVariableRegex();
+
+    /**
+     * @param      $string
+     * @param null $regex
+     * @return array
+     */
+    public function getMatches($string, $regex = null);
 
 }
