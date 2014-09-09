@@ -110,7 +110,7 @@ class ConditionalParser
     {
         $this->node         = $node;
         $this->lexicon      = $node->getLexicon();
-        $this->expression   = $this->lexicon->getRegex()->compress($node->getExpression());
+        $this->expression   = $this->node->compress($node->getExpression());
         $this->variableNode = new Variable($node->getLexicon());
         $this->variableNode->setEnvironment($this->lexicon);
         $this->start = $node->getName();
@@ -244,7 +244,7 @@ class ConditionalParser
 
     public function getOperatorMatch($comparison)
     {
-        $match = $this->lexicon->getRegex()->getMatch($comparison, $this->getComparisonOperatorsRegexMatcher());
+        $match = $this->node->getMatch($comparison, $this->getComparisonOperatorsRegexMatcher());
 
         if (is_array($match) and !empty($match)) {
             return $match[1];
@@ -255,7 +255,7 @@ class ConditionalParser
 
     public function getLogicalOperatorsMatches()
     {
-        return $this->lexicon->getRegex()->getMatches(
+        return $this->node->getMatches(
             $this->expression,
             $this->getLogicalOperatorsRegexMatcher()
         );
