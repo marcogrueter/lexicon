@@ -5,7 +5,6 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\PluginHandlerInterface;
-use Anomaly\Lexicon\Exception\BlockNodeTypeNotRegisteredException;
 
 class Lexicon implements LexiconInterface
 {
@@ -340,11 +339,7 @@ class Lexicon implements LexiconInterface
      */
     public function getBlockNodeType()
     {
-        if (!isset($this->nodeTypes[$this->blockNodeTypeOffset])) {
-            throw new BlockNodeTypeNotRegisteredException;
-        }
-
-        return $this->nodeTypes[$this->blockNodeTypeOffset];
+        return isset($this->nodeTypes[$this->blockNodeTypeOffset]) ? $this->nodeTypes[$this->blockNodeTypeOffset] : null;
     }
 
     /**
