@@ -1,6 +1,4 @@
-<?php namespace Anomaly\Lexicon\Example;
-
-use Anomaly\Lexicon\Plugin\Plugin;
+<?php namespace Anomaly\Lexicon\Plugin;
 
 class FooPlugin extends Plugin
 {

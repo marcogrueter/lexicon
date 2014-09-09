@@ -2,7 +2,6 @@
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\PluginInterface;
-use Whoops\Example\Exception;
 
 class Plugin implements PluginInterface
 {
@@ -145,12 +144,12 @@ class Plugin implements PluginInterface
         }
 
         $handler = $this->getLexicon()->getPluginHandler();
-        $name = $this->getPluginName().'.'.$key;
+        $name    = $this->getPluginName() . '.' . $key;
 
         if ($handler->isFilter($name)) {
-            return $handler->filter($this,$name);
-        } elseif($handler->isParse($name))  {
-            return $handler->filter($this,$name, 'parse');
+            return $handler->filter($this, $name);
+        } elseif ($handler->isParse($name)) {
+            return $handler->filter($this, $name, 'parse');
         }
 
         return null;

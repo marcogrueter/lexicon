@@ -1,7 +1,4 @@
-<?php namespace Anomaly\Lexicon\Example;
-
-use dflydev\markdown\MarkdownParser;
-use Anomaly\Lexicon\Plugin\Plugin;
+<?php namespace Anomaly\Lexicon\Plugin;
 
 class TestPlugin extends Plugin
 {
@@ -85,11 +82,9 @@ class TestPlugin extends Plugin
         return ucwords($this->getContent());
     }
 
-    public function parseMarkdown()
+    public function parseFoo()
     {
-        $markdownParser = new MarkdownParser();
-
-        return $markdownParser->transformMarkdown($this->getContent());
+        return '{{ foo }}';
     }
 
 }
