@@ -32,10 +32,13 @@ class ViewCompiler
 
     public function view($source)
     {
+        $lexicon = $this->getCompiler()->getLexicon();
+
         return $this->template(
             [
-                '[class]'  => $this->getCompiler()->getHash(),
-                '[source]' => $source,
+                '[namespace]' => $lexicon->getViewNamespace(),
+                '[class]'     => $lexicon->getViewClass($this->getCompiler()->getHash()),
+                '[source]'    => $source,
             ]
         );
     }

@@ -3,6 +3,7 @@
 use Anomaly\Lexicon\Contract\CompiledViewInterface;
 use Anomaly\Lexicon\Contract\CompilerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\View\ViewTemplateInterface;
 use Illuminate\View\Engines\CompilerEngine as BaseCompilerEngine;
 
 class CompilerEngine extends BaseCompilerEngine
@@ -71,23 +72,23 @@ class CompilerEngine extends BaseCompilerEngine
         // We'll evaluate the contents of the view inside a try/catch block so we can
         // flush out any stray output that might get out before an error occurs or
         // an exception is thrown. This prevents any partial views from leaking.
-        try
-        {
+        try {
             if (!isset($this->cache[$__path])) {
                 include $__path;
-                $segments = explode('/', $__path);
-                $hash = $segments[count($segments) - 1];
-                $viewClass = $this->getLexicon()->getViewClass($hash);
+                $segments             = explode('/', $__path);
+                $hash                 = $segments[count($segments) - 1];
+                $viewClass            = $this->getLexicon()->getFullViewClass($hash);
                 $this->cache[$__path] = new $viewClass;
             }
 
-            /** @var CompiledViewInterface $view */
             $view = $this->cache[$__path];
-            $view->render($__data);
+            if ($view instanceof ViewTemplateInterface) {
+                $view->render($__data);
+            } else {
+                // @todo throw exception - must implement interface
+            }
 
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->handleViewException($e, $obLevel);
         }
 
