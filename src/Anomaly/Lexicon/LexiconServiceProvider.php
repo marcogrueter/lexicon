@@ -10,6 +10,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class LexiconServiceProvider
  *
+ * @codeCoverageIgnore
  * @package Anomaly\Lexicon
  */
 class LexiconServiceProvider extends ServiceProvider
@@ -63,11 +64,12 @@ class LexiconServiceProvider extends ServiceProvider
 
                 $lexicon
                     ->setScopeGlue($scopeGlue)
+                    ->setViewTemplatePath(config('lexicon::viewTemplatePath', 'View_'))
                     ->setAllowPhp(config('lexicon::allowPhp', false))
                     ->setDebug(config('lexicon::debug', true))
                     ->registerPlugins(config('lexicon::plugins', []))
-                    ->registerNodeTypes(config('lexicon::nodeTypes', []))
-                    ->setIgnoredMatchers(['parent']);
+                    ->registerNodeTypes(config('lexicon::nodeTypes.default', []));
+                    //->setIgnoredMatchers(['parent']);
 
                 return $lexicon;
             }
