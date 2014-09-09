@@ -5,6 +5,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\PluginHandlerInterface;
+use Anomaly\Lexicon\Exception\BlockNodeTypeNotRegisteredException;
 
 class Lexicon implements LexiconInterface
 {
@@ -157,36 +158,21 @@ class Lexicon implements LexiconInterface
     const ECHOABLE = 'echoable';
 
     /**
-     * @param Regex                  $regex
      * @param ConditionalHandler     $conditionalHandler
      * @param PluginHandlerInterface $pluginHandler
      */
     public function __construct(
-        Regex $regex,
         ConditionalHandler $conditionalHandler = null,
         PluginHandlerInterface $pluginHandler = null
     ) {
-        $this->regex              = $regex;
         $this->conditionalHandler = $conditionalHandler;
         $this->pluginHandler      = $pluginHandler->setEnvironment($this);
-    }
-
-    public function render($__path, $__data)
-    {
-        if (!isset($this->cache[$__path])) {
-            include $__path;
-            $segments = explode('/', $__path);
-            $hash = $segments[count($segments) - 1];
-            $viewClass = $this->getViewClass($hash);
-            $this->cache[$__path] = new $viewClass;
-        }
-
-        $this->cache[$__path]->render($__data);
     }
 
     /**
      * Set debug
      *
+     * @codeCoverageIgnore
      * @param $debug
      * @return $this
      */
@@ -199,6 +185,7 @@ class Lexicon implements LexiconInterface
     /**
      * Is debug
      *
+     * @codeCoverageIgnore
      * @return bool
      */
     public function isDebug()
@@ -209,6 +196,7 @@ class Lexicon implements LexiconInterface
     /**
      * Set scope glue
      *
+     * @codeCoverageIgnore
      * @param $scopeGlue
      * @return $this
      */
@@ -221,6 +209,7 @@ class Lexicon implements LexiconInterface
     /**
      * Get scope glue
      *
+     * @codeCoverageIgnore
      * @return string
      */
     public function getScopeGlue()
@@ -231,6 +220,7 @@ class Lexicon implements LexiconInterface
     /**
      * Get node types
      *
+     * @codeCoverageIgnore
      * @return array
      */
     public function getNodeTypes()
@@ -241,6 +231,7 @@ class Lexicon implements LexiconInterface
     /**
      * Get max depth
      *
+     * @codeCoverageIgnore
      * @return int
      */
     public function getMaxDepth()
@@ -251,6 +242,7 @@ class Lexicon implements LexiconInterface
     /**
      * Get plugin handler
      *
+     * @codeCoverageIgnore
      * @return PluginHandlerInterface
      */
     public function getPluginHandler()
@@ -259,22 +251,12 @@ class Lexicon implements LexiconInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * @return ConditionalHandler|mixed
      */
     public function getConditionalHandler()
     {
         return $this->conditionalHandler;
-    }
-
-    public function injectNoParse($text)
-    {
-        foreach ($this->noParseExtractions as $key => $extraction) {
-            $extraction['content'] = $this->getRegex()->compress($extraction['content']);
-            $text                  = str_replace($extraction['id'], $extraction['content'], $text);
-            unset($this->noParseExtractions[$key]);
-        }
-
-        return $text;
     }
 
     /**
@@ -337,34 +319,10 @@ class Lexicon implements LexiconInterface
         return $this;
     }
 
-
-    /**
-     * Get plugin
-     *
-     * @param $name
-     * @return Contract\PluginInterface
-     */
-    public function getPlugin($name)
-    {
-        return $this->pluginHandler->get($name);
-    }
-
-    /**
-     * Call plugin method
-     *
-     * @param        $name
-     * @param array  $attributes
-     * @param string $content
-     * @return mixed
-     */
-    public function call($name, $attributes = [], $content = '')
-    {
-        return $this->getPluginHandler()->call($name, $attributes, $content);
-    }
-
     /**
      * Set ignored matchers
      *
+     * @codeCoverageIgnore
      * @param array $ignoredMatchers
      * @return LexiconInterface
      */
@@ -374,15 +332,6 @@ class Lexicon implements LexiconInterface
         return $this;
     }
 
-    /**
-     * Get ignored matchers
-     *
-     * @return string
-     */
-    public function getIgnoredMatchers()
-    {
-        return implode('|', $this->ignoredMatchers);
-    }
 
     /**
      * Get root node type
@@ -391,22 +340,17 @@ class Lexicon implements LexiconInterface
      */
     public function getBlockNodeType()
     {
-        return $this->nodeTypes[$this->blockNodeTypeOffset];
-    }
+        if (!isset($this->nodeTypes[$this->blockNodeTypeOffset])) {
+            throw new BlockNodeTypeNotRegisteredException;
+        }
 
-    /**
-     * Get regex
-     *
-     * @return Regex
-     */
-    public function getRegex()
-    {
-        return $this->regex;
+        return $this->nodeTypes[$this->blockNodeTypeOffset];
     }
 
     /**
      * Get root context name
      *
+     * @codeCoverageIgnore
      * @return string
      */
     public function getRootContextName()
@@ -417,6 +361,7 @@ class Lexicon implements LexiconInterface
     /**
      * Get allow PHP
      *
+     * @codeCoverageIgnore
      * @return bool
      */
     public function allowPhp()
@@ -427,6 +372,7 @@ class Lexicon implements LexiconInterface
     /**
      * Set allow PHP
      *
+     * @codeCoverageIgnore
      * @param $allowPhp
      * @return $this
      */
@@ -434,28 +380,6 @@ class Lexicon implements LexiconInterface
     {
         $this->allowPhp = $allowPhp;
         return $this;
-    }
-
-    /**
-     * Is filter
-     *
-     * @param $name
-     * @return bool
-     */
-    public function isFilter($name)
-    {
-        return $this->getPluginHandler()->isFilter($name);
-    }
-
-    /**
-     * Is filter
-     *
-     * @param $name
-     * @return bool
-     */
-    public function isParse($name)
-    {
-        return $this->getPluginHandler()->isParse($name);
     }
 
     /**
@@ -473,6 +397,7 @@ class Lexicon implements LexiconInterface
     /**
      * Get parse paths
      *
+     * @codeCoverageIgnore
      * @return array
      */
     public function getParsePaths()
@@ -508,6 +433,7 @@ class Lexicon implements LexiconInterface
     /**
      * Get view namespace
      *
+     * @codeCoverageIgnore
      * @return string
      */
     public function getViewNamespace()

@@ -36,22 +36,6 @@ interface LexiconInterface
     public function getNodeTypes();
 
     /**
-     * @return array
-     */
-    public function getIgnoredMatchers();
-
-    /**
-     * @return Regex
-     */
-    public function getRegex();
-
-    /**
-     * @param        $name
-     * @return PluginInterface
-     */
-    public function getPlugin($name);
-
-    /**
      * @return string
      */
     public function getRootContextName();
@@ -62,19 +46,17 @@ interface LexiconInterface
     public function getBlockNodeType();
 
     /**
-     * @param        $name
-     * @param array  $attributes
-     * @param string $content
-     * @return mixed
-     */
-    public function call($name, $attributes = [], $content = '');
-
-    /**
      * Get view template
      *
      * @return string
      */
     public function getViewTemplate();
+
+    /**
+     * @param $string
+     * @return string
+     */
+    public function getViewClass($string);
 
     /**
      * @param array $nodeTypes
@@ -97,4 +79,18 @@ interface LexiconInterface
      * @return string
      */
     public function addParsePath($path);
+
+    /**
+     * @param $path
+     * @return mixed
+     */
+    public function isParsePath($path);
+
+    /**
+     * Is debug enabled
+     *
+     * @return bool
+     */
+    public function isDebug();
+
 }
