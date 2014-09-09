@@ -50,11 +50,10 @@ class AttributeParser
     public function __construct(NodeInterface $node)
     {
         $this->node         = $node;
-        $this->regex        = $node->getLexicon()->getRegex();
+        $this->regex        = $node;
         $this->attributes   = $node->getParsedAttributes();
         $this->variableNode = new Variable($node->getLexicon());
         $this->lexicon      = $node->getLexicon();
-        $this->variableNode->setEnvironment($node->getLexicon());
         $this->stringTest = new StringTest();
     }
 
@@ -81,7 +80,7 @@ class AttributeParser
 
         $this->createEmbeddedAttributes();
 
-        $this->attributesOrder = explode(' ', trim($this->getRegex()->compress($this->attributes)));
+        $this->attributesOrder = explode(' ', trim($this->node->compress($this->attributes)));
 
         return $this;
     }
@@ -98,7 +97,7 @@ class AttributeParser
 
     public function createEmbeddedAttributes()
     {
-        $embeddedMatches = $this->getRegex()->getEmbeddedMatches($this->attributes);
+        $embeddedMatches = $this->node->getEmbeddedMatches($this->attributes);
 
         foreach ($embeddedMatches as $match) {
 
@@ -142,17 +141,17 @@ class AttributeParser
 
     public function getEmbeddedAttributeRegex()
     {
-        return $this->getRegex()->getEmbeddedAttributeRegex();
+        return $this->node->getEmbeddedAttributeRegex();
     }
 
     public function getMatches($string, $regex)
     {
-        return $this->getRegex()->getMatches($string, $regex);
+        return $this->node->getMatches($string, $regex);
     }
 
     public function getRegex()
     {
-        return $this->getLexicon()->getRegex();
+        return $this;
     }
 
     public function getLexicon()
