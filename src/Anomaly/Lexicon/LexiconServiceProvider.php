@@ -57,7 +57,6 @@ class LexiconServiceProvider extends ServiceProvider
                 $scopeGlue = config('lexicon::scopeGlue', '.');
 
                 $lexicon = new Lexicon(
-                    new Regex($scopeGlue),
                     $app['anomaly.lexicon.conditional.handler'],
                     $app['anomaly.lexicon.plugin.handler']
                 );
