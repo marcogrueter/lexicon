@@ -581,17 +581,6 @@ abstract class Node implements NodeInterface
     }
 
     /**
-     * Get open tag matches
-     *
-     * @param $text
-     * @return array
-     */
-    public function getOpenTagMatches($text)
-    {
-        return $this->lexicon->getRegex()->getMatches($text, $this->regex());
-    }
-
-    /**
      * Get single tag matches
      *
      * @param $text
@@ -605,9 +594,9 @@ abstract class Node implements NodeInterface
          * $data_matches[0] is the raw data tag
          * $data_matches[1] is the data variable (dot notated)
          */
-        foreach ($this->getOpenTagMatches($text) as $match) {
+        foreach ($this->getMatches($text) as $match) {
             if (!preg_match(
-                $this->getLexicon()->getRegex()->getClosingTagRegexMatcher($this->getName()),
+                $this->getClosingTagRegex($this->getName()),
                 $text,
                 $closingTagMatch
             )
@@ -629,7 +618,7 @@ abstract class Node implements NodeInterface
         foreach ($this->lexicon->getNodeTypes() as $nodeType) {
             if ($nodeType instanceof NodeInterface) {
                 $nodeType->setEnvironment($this->lexicon);
-                foreach ($nodeType->getMatches($this->parsedContent) as $count => $match) {
+                foreach ($nodeType->getMatches($this->parsedContent, null) as $count => $match) {
                     $this->createChildNode($nodeType, $match, $count);
                 }
             }
@@ -845,7 +834,7 @@ abstract class Node implements NodeInterface
      */
     public function isFilter()
     {
-        return $this->getLexicon()->isFilter($this->getName());
+        return $this->getLexicon()->getPluginHandler()->isFilter($this->getName());
     }
 
     /**
@@ -855,7 +844,93 @@ abstract class Node implements NodeInterface
      */
     public function isParse()
     {
-        return $this->getLexicon()->isParse($this->getName());
+        return $this->getLexicon()->getPluginHandler()->isParse($this->getName());
     }
 
+    /**
+     * Get variable regex
+     *
+     * @return string
+     */
+    public function getVariableRegex()
+    {
+        $glue = preg_quote($this->getLexicon()->getScopeGlue(), '/');
+
+        return $glue === '\\.' ? '[a-zA-Z0-9_' . $glue . ']+' : '[a-zA-Z0-9_\.' . $glue . ']+';
+    }
+
+    /**
+     * Get closing tag regex
+     *
+     * @param $name
+     * @return string
+     */
+    public function getClosingTagRegex($name)
+    {
+        return '/\{\{\s*(\/' . $name . ')\s*\}\}/m';
+    }
+
+    /**
+     * Get embedded attribute regex
+     *
+     * @return string
+     */
+    public function getEmbeddedAttributeRegexMatcher()
+    {
+        return "/\{\s*?({$this->getVariableRegex()})(\s+.*?)?\s*?(\/)?\}/ms";
+    }
+
+    /**
+     * Get embedded matches
+     *
+     * @param $string
+     * @return array
+     */
+    public function getEmbeddedMatches($string)
+    {
+        return $this->getMatches($string, $this->getEmbeddedAttributeRegexMatcher());
+    }
+
+    /**
+     * Get match
+     *
+     * @param $text
+     * @param $regex
+     * @return array
+     */
+    public function getMatch($text, $regex)
+    {
+        $match = [];
+        preg_match($regex, $text, $match);
+        return $match;
+    }
+
+    /**
+     * Get matches
+     *
+     * @param $string
+     * @param $regex
+     * @return array
+     */
+    public function getMatches($string, $regex = null)
+    {
+        if (!$regex) {
+            $regex = $this->regex();
+        }
+
+        $matches = [];
+        preg_match_all($regex, $string, $matches, PREG_SET_ORDER);
+        return $matches;
+    }
+
+    /**
+     * Compress
+     *
+     * @param $string
+     * @return mixed
+     */
+    public function compress($string)
+    {
+        return preg_replace(['/\s\s+/', '/\n+/'], ' ', trim($string));
+    }
 }
