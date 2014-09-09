@@ -1,10 +1,22 @@
 <?php namespace Anomaly\Lexicon\View\Compiler;
 
+use Anomaly\Lexicon\Contract\CompiledViewInterface;
+use Anomaly\Lexicon\Contract\CompilerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Illuminate\View\Engines\CompilerEngine as BaseCompilerEngine;
 
 class CompilerEngine extends BaseCompilerEngine
 {
+    /**
+     * @var array|null
+     */
+    protected $cache;
+
+    /**
+     * @var CompilerInterface
+     */
+    protected $compiler;
+
     /**
      * Get the evaluated contents of the view.
      *
@@ -16,19 +28,22 @@ class CompilerEngine extends BaseCompilerEngine
     {
         $this->lastCompiled[] = $path;
 
+        /** @var LexiconInterface $lexicon */
         $lexicon = $this->getLexicon();
+
+        $compiler = $this->getCompiler();
 
         // If this given view has expired, which means it has simply been edited since
         // it was last compiled, we will re-compile the views so we can evaluate a
         // fresh copy of the view. We'll pass the compiler the path of the view.
 
-        if ($lexicon->isParsePath($path) and ($lexicon->isDebug() or $this->compiler->isNotParsed($path))) {
-            $this->compiler->compileParse($path);
-        } elseif (!$lexicon->isParsePath($path) and ($lexicon->isDebug() or $this->compiler->isExpired($path))) {
-            $this->compiler->compile($path);
+        if ($lexicon->isParsePath($path) and ($lexicon->isDebug() or $compiler->isNotParsed($path))) {
+            $compiler->compileParse($path);
+        } elseif (!$lexicon->isParsePath($path) and ($lexicon->isDebug() or $compiler->isExpired($path))) {
+            $compiler->compile($path);
         }
 
-        $compiled = $this->compiler->getCompiledPath($path);
+        $compiled = $compiler->getCompiledPath($path);
 
         // Once we have the path to the compiled file, we will evaluate the paths with
         // typical PHP just like any other templates. We also keep a stack of views
@@ -58,7 +73,18 @@ class CompilerEngine extends BaseCompilerEngine
         // an exception is thrown. This prevents any partial views from leaking.
         try
         {
-            $this->getLexicon()->render($__path, $__data);
+            if (!isset($this->cache[$__path])) {
+                include $__path;
+                $segments = explode('/', $__path);
+                $hash = $segments[count($segments) - 1];
+                $viewClass = $this->getLexicon()->getViewClass($hash);
+                $this->cache[$__path] = new $viewClass;
+            }
+
+            /** @var CompiledViewInterface $view */
+            $view = $this->cache[$__path];
+            $view->render($__data);
+
         }
         catch (\Exception $e)
         {
@@ -74,5 +100,13 @@ class CompilerEngine extends BaseCompilerEngine
     public function getLexicon()
     {
         return $this->getCompiler()->getLexicon();
+    }
+
+    /**
+     * @var CompilerInterface
+     */
+    public function getCompiler()
+    {
+        return $this->compiler;
     }
 }
