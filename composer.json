@@ -1,13 +1,17 @@
 {
     "name": "anomaly/lexicon",
-    "description": "A lightweight template engine for PHP.",
+    "description": "An expressive template engine with extensible vocabulary.",
     "authors": [
         {
             "name": "Osvaldo Brignoni",
             "email": "obrignoni@aiwebsystems.com"
         }
     ],
+    "require": {
+        "illuminate/view": "dev-master"
+    },
     "require-dev": {
+        "laravel/framework": "dev-master",
         "phpunit/phpunit": "~4.0",
         "mockery/mockery": "~0.9",
         "squizlabs/php_codesniffer": "~1.5"
@@ -17,7 +21,7 @@
             "Anomaly\\Lexicon": "src/"
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
