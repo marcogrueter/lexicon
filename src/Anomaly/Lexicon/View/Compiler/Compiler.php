@@ -1,9 +1,9 @@
 <?php namespace Anomaly\Lexicon\View\Compiler;
 
+use Anomaly\Lexicon\Contract\CompilerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
-use Illuminate\View\Compilers\CompilerInterface;
 
 class Compiler extends BaseCompiler implements CompilerInterface
 {
@@ -91,12 +91,6 @@ class Compiler extends BaseCompiler implements CompilerInterface
         if (!$this->getLexicon()->allowPhp()) {
             $content = $this->escapePhp($content);
         }
-
-        //$noParse = $this->getLexicon()->getRegex()->extractNoParse($content);
-
-        //$content = $noParse['content'];
-
-        //$this->noParseExtractions = $noParse['extractions'];
 
         return $this->compileView(
             $this->getLexicon()->getBlockNodeType()->make(
