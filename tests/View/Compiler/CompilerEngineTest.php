@@ -13,7 +13,7 @@ use Illuminate\Filesystem\Filesystem;
 class CompilerEngineTest extends LexiconTestCase
 {
 
-    public function testEvaluatePath()
+    public function testEvaluatePathWithException()
     {
 
     }

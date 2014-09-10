@@ -95,6 +95,7 @@ class CompilerEngine extends BaseCompilerEngine
     }
 
     /**
+     * @codeCoverageIgnore
      * @return LexiconInterface
      */
     public function getLexicon()
@@ -103,6 +104,7 @@ class CompilerEngine extends BaseCompilerEngine
     }
 
     /**
+     * @codeCoverageIgnore
      * @var CompilerInterface
      */
     public function getCompiler()
