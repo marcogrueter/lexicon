@@ -201,7 +201,7 @@ abstract class Node implements NodeInterface
         $node = new static($this->lexicon);
 
         $node
-            ->setEnvironment($this->lexicon)
+            ->setLexicon($this->lexicon)
             ->setParent($parent)
             ->setCount($count)
             ->setDepth($depth)
@@ -554,7 +554,7 @@ abstract class Node implements NodeInterface
      * @param LexiconInterface $lexicon
      * @return NodeInterface
      */
-    public function setEnvironment(LexiconInterface $lexicon)
+    public function setLexicon(LexiconInterface $lexicon)
     {
         $this->lexicon = $lexicon;
         return $this;
@@ -617,7 +617,7 @@ abstract class Node implements NodeInterface
     {
         foreach ($this->lexicon->getNodeTypes() as $nodeType) {
             if ($nodeType instanceof NodeInterface) {
-                $nodeType->setEnvironment($this->lexicon);
+                $nodeType->setLexicon($this->lexicon);
                 foreach ($nodeType->getMatches($this->parsedContent, null) as $count => $match) {
                     $this->createChildNode($nodeType, $match, $count);
                 }

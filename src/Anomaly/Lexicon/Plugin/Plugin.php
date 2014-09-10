@@ -37,6 +37,7 @@ class Plugin implements PluginInterface
     /**
      * Set plugin name
      *
+     * @codeCoverageIgnore
      * @return string
      */
     public function setPluginName($name)
@@ -48,6 +49,7 @@ class Plugin implements PluginInterface
     /**
      * Get plugin name
      *
+     * @codeCoverageIgnore
      * @return string
      */
     public function getPluginName()
@@ -58,6 +60,7 @@ class Plugin implements PluginInterface
     /**
      * Set content
      *
+     * @codeCoverageIgnore
      * @param string $content
      * @return Plugin
      */
@@ -70,6 +73,7 @@ class Plugin implements PluginInterface
     /**
      * Get content
      *
+     * @codeCoverageIgnore
      * @return string
      */
     public function getContent()
@@ -80,6 +84,7 @@ class Plugin implements PluginInterface
     /**
      * Set attributes
      *
+     * @codeCoverageIgnore
      * @param array $attributes
      * @return Plugin
      */
@@ -111,10 +116,11 @@ class Plugin implements PluginInterface
     /**
      * Set environment
      *
+     * @codeCoverageIgnore
      * @param LexiconInterface $lexicon
      * @return $this
      */
-    public function setEnvironment(LexiconInterface $lexicon)
+    public function setLexicon(LexiconInterface $lexicon)
     {
         $this->lexicon = $lexicon;
         return $this;
@@ -123,6 +129,7 @@ class Plugin implements PluginInterface
     /**
      * Get environment
      *
+     * @codeCoverageIgnore
      * @return LexiconInterface
      */
     public function getLexicon()
@@ -139,10 +146,6 @@ class Plugin implements PluginInterface
      */
     public function __call($key, $arguments)
     {
-        if (!$this->getLexicon()) {
-            throw new \Exception;
-        }
-
         $handler = $this->getLexicon()->getPluginHandler();
         $name    = $this->getPluginName() . '.' . $key;
 

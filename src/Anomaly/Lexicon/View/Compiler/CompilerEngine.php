@@ -1,6 +1,5 @@
 <?php namespace Anomaly\Lexicon\View\Compiler;
 
-use Anomaly\Lexicon\Contract\CompiledViewInterface;
 use Anomaly\Lexicon\Contract\CompilerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\ViewTemplateInterface;

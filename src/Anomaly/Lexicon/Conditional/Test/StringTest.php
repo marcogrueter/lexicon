@@ -1,5 +1,12 @@
 <?php namespace Anomaly\Lexicon\Conditional\Test;
 
+
+/**
+ * Class StringTest
+ *
+ * @codeCoverageIgnore
+ * @package Anomaly\Lexicon\Conditional\Test
+ */
 class StringTest
 {
 

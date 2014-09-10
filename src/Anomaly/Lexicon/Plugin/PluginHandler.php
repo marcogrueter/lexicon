@@ -19,18 +19,20 @@ class PluginHandler implements PluginHandlerInterface
 
 
     /**
-     * Set environment
+     * Set lexicon
      *
+     * @codeCoverageIgnore
      * @param LexiconInterface $lexicon
      * @return PluginHandlerInterface
      */
-    public function setEnvironment(LexiconInterface $lexicon)
+    public function setLexicon(LexiconInterface $lexicon)
     {
         $this->lexicon = $lexicon;
         return $this;
     }
 
     /**
+     * @codeCoverageIgnore
      * @return LexiconInterface
      */
     public function getLexicon()
@@ -88,7 +90,7 @@ class PluginHandler implements PluginHandlerInterface
                 $method = $segments[1];
 
                 $plugin
-                    ->setEnvironment($this->getLexicon())
+                    ->setLexicon($this->getLexicon())
                     //->setPluginName($name)
                     ->setAttributes($attributes)
                     ->setContent($content);
@@ -107,14 +109,16 @@ class PluginHandler implements PluginHandlerInterface
      */
     public function isFilter($key)
     {
+        $isPlugin = false;
+
         if ($plugin = $this->get($key)) {
             $segments = explode($this->getLexicon()->getScopeGlue(), $key);
             if (count($segments) > 1) {
-                return method_exists($plugin, 'filter' . ucfirst($segments[1]));
+                $isPlugin = method_exists($plugin, 'filter' . studly_case($segments[1]));
             }
         }
 
-        return false;
+        return $isPlugin;
     }
 
     /**
@@ -125,14 +129,16 @@ class PluginHandler implements PluginHandlerInterface
      */
     public function isParse($key)
     {
-        if ($plugin = $this->get($key)) {
+        $isParse = false;
+
+        if ($plugin = $this->get($key) and $plugin instanceof PluginInterface) {
             $segments = explode($this->getLexicon()->getScopeGlue(), $key);
             if (count($segments) > 1) {
-                return method_exists($plugin, 'parse' . ucfirst($segments[1]));
+                $isParse = method_exists($plugin, 'parse' . studly_case($segments[1]));
             }
         }
 
-        return false;
+        return $isParse;
     }
 
     /**
@@ -142,14 +148,18 @@ class PluginHandler implements PluginHandlerInterface
      * @param                 $key
      * @return mixed
      */
-    public function filter($plugin, $key, $prefix = 'filter')
+    public function filter($name, $prefix = 'filter')
     {
-        $segments = explode($this->getLexicon()->getScopeGlue(), $key);
-        if (count($segments) > 1) {
-            return call_user_func([$plugin, $prefix . ucfirst($segments[1])]);
+        $result = null;
+
+        if ($plugin = $this->get($name) and $plugin instanceof PluginInterface) {
+            $segments = explode($this->getLexicon()->getScopeGlue(), $name);
+            if (count($segments) > 1) {
+                $result = call_user_func([$plugin, $prefix . studly_case($segments[1])]);
+            }
         }
 
-        return null;
+        return $result;
     }
 
 }

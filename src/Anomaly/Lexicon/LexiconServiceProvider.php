@@ -64,7 +64,7 @@ class LexiconServiceProvider extends ServiceProvider
 
                 $lexicon
                     ->setScopeGlue($scopeGlue)
-                    ->setViewTemplatePath(config('lexicon::viewTemplatePath', 'View_'))
+                    ->setViewTemplatePath(config('lexicon::viewTemplatePath'))
                     ->setAllowPhp(config('lexicon::allowPhp', false))
                     ->setDebug(config('lexicon::debug', true))
                     ->registerPlugins(config('lexicon::plugins', []))

@@ -9,9 +9,23 @@ ok 7 - BlockTest::testGetBlockNodeType
 ok 8 - BlockTest::testAddTemplateAsParsePath
 ok 9 - BlockTest::testGetViewTemplate
 ok 10 - BlockTest::testGetFullViewClass
-ok 11 - CompilerEngineTest::testRegisterAndInstantiateOneNodeType
-ok 12 - CompilerEngineTest::testGetBlockNodeType
-ok 13 - CompilerEngineTest::testAddTemplateAsParsePath
-ok 14 - CompilerEngineTest::testGetViewTemplate
-ok 15 - CompilerEngineTest::testGetFullViewClass
-1..15
+ok 11 - PluginHandlerTest::testGetInstanceOfPluginByName
+ok 12 - PluginHandlerTest::testGetPluginWithoutScopeReturnsNull
+ok 13 - PluginHandlerTest::testPluginMethodCallReturnsHelloWorld
+ok 14 - PluginHandlerTest::testNonExistentPluginMethodCallReturnsNull
+ok 15 - PluginHandlerTest::testPluginMethodIsAFilter
+ok 16 - PluginHandlerTest::testPluginMethodIsNotAFilter
+ok 17 - PluginHandlerTest::testPluginMethodIsParseAble
+ok 18 - PluginHandlerTest::testPluginMethodIsNotParseAble
+ok 19 - PluginHandlerTest::testNonExistentPluginMethodIsNotAFilter
+ok 20 - PluginHandlerTest::testNonExistentPluginMethodIsNotParseAble
+ok 21 - PluginHandlerTest::testFilterPluginMethodReturnsExpectedMd5String
+ok 22 - PluginHandlerTest::testNonExistentPluginFilterReturnsNull
+ok 23 - PluginHandlerTest::testRegisterAndInstantiateOneNodeType
+ok 24 - PluginHandlerTest::testGetBlockNodeType
+ok 25 - PluginHandlerTest::testAddTemplateAsParsePath
+ok 26 - PluginHandlerTest::testGetViewTemplate
+ok 27 - PluginHandlerTest::testGetFullViewClass
+ok 28 - CompilerEngineTest::testEvaluatePath
+ok 29 - FactoryTest::testMakeAndRenderView
+1..29

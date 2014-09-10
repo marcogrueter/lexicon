@@ -13,7 +13,7 @@ return [
 	|
 	*/
 
-	'app' => __DIR__.'/../../../src',
+	'app' => __DIR__.'/../app',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -65,13 +65,13 @@ return [
 	|
 	*/
 
-	'console' => __DIR__.'/../src/Console',
-	'config' => __DIR__.'/../config',
-	'controllers' => __DIR__.'/../src/Http/Controllers',
+    'config' => __DIR__.'/../config',
+	'console' => __DIR__.'/../../../src/Console',
+	'controllers' => __DIR__.'/../../../src/Http/Controllers',
 	'database' => __DIR__.'/../database',
-	'filters' => __DIR__.'/../src/Http/Filters',
-	'lang' => __DIR__.'/../resources/lang',
-	'providers' => __DIR__.'/../src/Providers',
-	'requests' => __DIR__.'/../src/Http/Requests',
+	'filters' => __DIR__.'/../../../src/Http/Filters',
+	'lang' => __DIR__.'/../lang',
+	'providers' => __DIR__.'/../../../src/Providers',
+	'requests' => __DIR__.'/../../../src/Http/Requests',
 
 ];

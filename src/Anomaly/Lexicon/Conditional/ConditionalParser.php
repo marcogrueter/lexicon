@@ -112,7 +112,6 @@ class ConditionalParser
         $this->lexicon      = $node->getLexicon();
         $this->expression   = $this->node->compress($node->getExpression());
         $this->variableNode = new Variable($node->getLexicon());
-        $this->variableNode->setEnvironment($this->lexicon);
         $this->start = $node->getName();
 
 

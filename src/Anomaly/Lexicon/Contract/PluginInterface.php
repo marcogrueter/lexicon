@@ -49,6 +49,6 @@ interface PluginInterface
      * @param LexiconInterface $lexicon
      * @return mixed
      */
-    public function setEnvironment(LexiconInterface $lexicon);
+    public function setLexicon(LexiconInterface $lexicon);
 
 }

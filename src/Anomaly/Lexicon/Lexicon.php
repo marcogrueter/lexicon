@@ -172,7 +172,7 @@ class Lexicon implements LexiconInterface
         PluginHandlerInterface $pluginHandler = null
     ) {
         $this->conditionalHandler = $conditionalHandler;
-        $this->pluginHandler      = $pluginHandler->setEnvironment($this);
+        $this->pluginHandler      = $pluginHandler->setLexicon($this);
     }
 
     /**

@@ -2,7 +2,13 @@
 
 interface PluginHandlerInterface
 {
-    public function setEnvironment(LexiconInterface $lexicon);
+    /**
+     * Set Lexicon
+     *
+     * @param LexiconInterface $lexicon
+     * @return mixed
+     */
+    public function setLexicon(LexiconInterface $lexicon);
 
     /**
      * Register
@@ -46,4 +52,15 @@ interface PluginHandlerInterface
      * @return bool
      */
     public function isParse($name);
+
+    /**
+     * Call filter method
+     *
+     * @param PluginInterface $plugin
+     * @param                 $name
+     * @param string          $prefix
+     * @return mixed
+     */
+    public function filter($key, $prefix = 'filter');
+
 }

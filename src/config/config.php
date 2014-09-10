@@ -30,8 +30,6 @@ return array(
      */
     'plugins'            => [
         'counter' => 'Anomaly\Lexicon\Plugin\CounterPlugin',
-        'foo'     => 'Anomaly\Lexicon\Plugin\FooPlugin',
-        'test'    => 'Anomaly\Lexicon\Plugin\TestPlugin',
     ],
     /**
      * Conditional boolean test types
@@ -59,6 +57,9 @@ return array(
             'Anomaly\Lexicon\Node\Comment',
             'Anomaly\Lexicon\Node\IgnoreBlock',
             'Anomaly\Lexicon\Node\IgnoreVariable',
+            'Anomaly\Lexicon\Node\Conditional',
+            'Anomaly\Lexicon\Node\ConditionalElse',
+            'Anomaly\Lexicon\Node\ConditionalEndif',
             'Anomaly\Lexicon\Node\Block',
             'Anomaly\Lexicon\Node\Recursive',
             'Anomaly\Lexicon\Node\Section',
@@ -69,9 +70,6 @@ return array(
             'Anomaly\Lexicon\Node\SectionStop',
             'Anomaly\Lexicon\Node\SectionYield',
             'Anomaly\Lexicon\Node\Includes',
-            'Anomaly\Lexicon\Node\Conditional',
-            'Anomaly\Lexicon\Node\ConditionalElse',
-            'Anomaly\Lexicon\Node\ConditionalEndif',
             'Anomaly\Lexicon\Node\VariableEscaped',
             'Anomaly\Lexicon\Node\Variable',
         ],
@@ -80,13 +78,13 @@ return array(
          */
         'simple' => [
             'Anomaly\Lexicon\Node\Comment',
+            'Anomaly\Lexicon\Node\Conditional',
+            'Anomaly\Lexicon\Node\ConditionalElse',
+            'Anomaly\Lexicon\Node\ConditionalEndif',
             'Anomaly\Lexicon\Node\IgnoreBlock',
             'Anomaly\Lexicon\Node\IgnoreVariable',
             'Anomaly\Lexicon\Node\Block',
             'Anomaly\Lexicon\Node\Recursive',
-            'Anomaly\Lexicon\Node\Conditional',
-            'Anomaly\Lexicon\Node\ConditionalElse',
-            'Anomaly\Lexicon\Node\ConditionalEndif',
             'Anomaly\Lexicon\Node\VariableEscaped',
             'Anomaly\Lexicon\Node\Variable',
         ],

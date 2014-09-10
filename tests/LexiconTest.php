@@ -3,7 +3,6 @@
 use Illuminate\Container\Container;
 use Illuminate\Contracts\View\View;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\FileViewFinder;
 
@@ -13,36 +12,8 @@ use Illuminate\View\FileViewFinder;
  * Date: 9/6/14
  * Time: 7:45 PM
  */
-class LexiconTest extends TestCase
+class LexiconTest extends LexiconTestCase
 {
-
-    /**
-     * @var Illuminate\Config\Repository
-     */
-    protected $config;
-
-    /**
-     * @var \Anomaly\Lexicon\Lexicon
-     */
-    protected $lexicon;
-
-    /**
-     * Creates the application.
-     *
-     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
-     */
-    public function createApplication()
-    {
-        $unitTesting = true;
-
-        $testEnvironment = 'testing';
-
-        $app = require __DIR__ . '/resources/bootstrap/start.php';
-
-        $this->lexicon = $app['anomaly.lexicon'];
-
-        return $app;
-    }
 
     public function testRegisterAndInstantiateOneNodeType()
     {
@@ -69,9 +40,11 @@ class LexiconTest extends TestCase
 
     public function testGetFullViewClass()
     {
-        $this->assertEquals('View_test', $this->lexicon->getViewClass('test'));
+        $this->assertEquals(
+            config('lexicon::viewNamespace') . '\\' . config('lexicon::viewClassPrefix') . 'test',
+            $this->lexicon->getFullViewClass('test')
+        );
     }
-
 
 }
  

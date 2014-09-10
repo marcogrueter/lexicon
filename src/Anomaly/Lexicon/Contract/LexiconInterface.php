@@ -102,6 +102,13 @@ interface LexiconInterface
     public function addParsePath($path);
 
     /**
+     * Get the array of parse-able paths
+     *
+     * @return array
+     */
+    public function getParsePaths();
+
+    /**
      * @param $path
      * @return bool
      */

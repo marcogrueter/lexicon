@@ -50,7 +50,14 @@ $app->bindInstallPaths(require __DIR__ . '/paths.php');
 |
 */
 
-require __DIR__ . '/../../../vendor/laravel/framework/src/Illuminate/Foundation/start.php';
+$vendorRoot = basename(dirname(dirname(dirname(dirname(dirname(__DIR__))))));
+
+if ($vendorRoot == 'workbench') {
+    require __DIR__ .'/../../../../../../vendor/laravel/framework/src/Illuminate/Foundation/start.php';
+} else {
+    // We are in the same vendor root
+    require __DIR__ . '/../../../../../laravel/framework/src/Illuminate/Foundation/start.php';
+}
 
 /*
 |--------------------------------------------------------------------------

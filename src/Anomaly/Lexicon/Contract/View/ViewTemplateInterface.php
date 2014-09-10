@@ -9,4 +9,5 @@ interface ViewTemplateInterface
      * @return void
      */
     public function render($__data);
+
 }
