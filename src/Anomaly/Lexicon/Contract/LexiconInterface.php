@@ -49,7 +49,7 @@ interface LexiconInterface
     /**
      * @return NodeBlockInterface
      */
-    public function getBlockNodeType();
+    public function getRootNodeType();
 
     /**
      * Get view template
@@ -59,6 +59,20 @@ interface LexiconInterface
     public function getViewTemplate();
 
     /**
+     * Get view template path
+     *
+     * @return string
+     */
+    public function getViewTemplatePath();
+
+    /**
+     * Set view template path
+     *
+     * @return LexiconInterface
+     */
+    public function setViewTemplatePath($viewTemplatePath);
+
+    /**
      * Get view namespace
      *
      * @return string
@@ -66,10 +80,26 @@ interface LexiconInterface
     public function getViewNamespace();
 
     /**
-     * @param $string
+     * Get view class prefix
+     *
      * @return string
      */
-    public function getViewClass($string);
+    public function getViewClassPrefix();
+
+    /**
+     * Set view class prefix
+     *
+     * @return LexiconInterface
+     */
+    public function setViewClassPrefix($viewClassPrefix);
+
+    /**
+     * Get view class
+     *
+     * @param $hash
+     * @return string
+     */
+    public function getViewClass($hash);
 
     /**
      * Get full view class

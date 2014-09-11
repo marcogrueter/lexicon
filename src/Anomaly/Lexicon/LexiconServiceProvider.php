@@ -55,21 +55,20 @@ class LexiconServiceProvider extends ServiceProvider
             'anomaly.lexicon',
             function () use ($app) {
 
-                $scopeGlue = config('lexicon::scopeGlue', '.');
-
                 $lexicon = new Lexicon(
                     $app['anomaly.lexicon.conditional.handler'],
                     $app['anomaly.lexicon.plugin.handler']
                 );
 
                 $lexicon
-                    ->setScopeGlue($scopeGlue)
-                    ->setViewTemplatePath(config('lexicon::viewTemplatePath'))
+                    ->setScopeGlue(config('lexicon::scopeGlue', '.'))
+                    ->setViewNamespace(config('lexicon::viewNamespace', 'Anomaly\Lexicon\View'))
+                    ->setViewClassPrefix(config('lexicon::viewClassPrefix', 'LexiconView_'))
+                    ->setViewTemplatePath(config('lexicon::viewTemplatePath', __DIR__ . '/../../../resources/ViewTemplate.txt'))
                     ->setAllowPhp(config('lexicon::allowPhp', false))
-                    ->setDebug(config('lexicon::debug', true))
+                    ->setDebug(config('lexicon::debug', false))
                     ->registerPlugins(config('lexicon::plugins', []))
                     ->registerNodeTypes(config('lexicon::nodeTypes.default', []));
-                    //->setIgnoredMatchers(['parent']);
 
                 return $lexicon;
             }

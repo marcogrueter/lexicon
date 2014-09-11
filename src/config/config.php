@@ -101,10 +101,4 @@ return array(
             'Anomaly\Lexicon\Node\Variable',
         ]
     ],
-    /**
-     * View compiler
-     */
-    'viewTemplatePath'   => __DIR__ . '/../../resources/ViewTemplate.txt',
-    'viewNamespace'      => 'Anomaly\Lexicon\View',
-    'viewClassPrefix'    => 'View_',
 );

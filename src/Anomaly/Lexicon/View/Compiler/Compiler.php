@@ -93,7 +93,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
         }
 
         return $this->compileView(
-            $this->getLexicon()->getBlockNodeType()->make(
+            $this->getLexicon()->getRootNodeType()->make(
                 array(
                     'name'    => 'root',
                     'content' => $content,

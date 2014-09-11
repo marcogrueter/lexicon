@@ -135,6 +135,13 @@ abstract class Node implements NodeInterface
     protected $deferCompile = false;
 
     /**
+     * Is this the root node type
+     *
+     * @var bool
+     */
+    protected $root = false;
+
+    /**
      * @param LexiconInterface $lexicon
      */
     public function __construct(LexiconInterface $lexicon)
@@ -198,10 +205,9 @@ abstract class Node implements NodeInterface
             : $depth;
 
         /** @var $node Node */
-        $node = new static($this->lexicon);
+        $node = new static($this->getLexicon());
 
         $node
-            ->setLexicon($this->lexicon)
             ->setParent($parent)
             ->setCount($count)
             ->setDepth($depth)
@@ -448,7 +454,7 @@ abstract class Node implements NodeInterface
      */
     public function isRoot()
     {
-        return !$this->parent;
+        return $this->root;
     }
 
     /**
@@ -617,7 +623,6 @@ abstract class Node implements NodeInterface
     {
         foreach ($this->lexicon->getNodeTypes() as $nodeType) {
             if ($nodeType instanceof NodeInterface) {
-                $nodeType->setLexicon($this->lexicon);
                 foreach ($nodeType->getMatches($this->parsedContent, null) as $count => $match) {
                     $this->createChildNode($nodeType, $match, $count);
                 }

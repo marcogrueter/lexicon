@@ -8,9 +8,11 @@ use Illuminate\View\Engines\CompilerEngine as BaseCompilerEngine;
 class CompilerEngine extends BaseCompilerEngine
 {
     /**
-     * @var array|null
+     * Runtime cache
+     *
+     * @var array
      */
-    protected $cache;
+    protected $cache = [];
 
     /**
      * @var CompilerInterface

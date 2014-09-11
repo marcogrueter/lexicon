@@ -26,6 +26,6 @@ ok 24 - PluginHandlerTest::testGetBlockNodeType
 ok 25 - PluginHandlerTest::testAddTemplateAsParsePath
 ok 26 - PluginHandlerTest::testGetViewTemplate
 ok 27 - PluginHandlerTest::testGetFullViewClass
-ok 28 - CompilerEngineTest::testEvaluatePath
-ok 29 - FactoryTest::testMakeAndRenderView
+ok 28 - CompilerEngineTest::testEvaluatePathWithException
+ok 29 - FactoryTest::testMakeAndRenderHelloView
 1..29

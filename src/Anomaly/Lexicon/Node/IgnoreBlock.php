@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-class IgnoreBlock extends Block
+class IgnoreBlock extends Node
 {
 
     /**
@@ -16,6 +16,16 @@ class IgnoreBlock extends Block
      * @var bool
      */
     protected $deferCompile = true;
+
+    /**
+     * No is setup needed as we are going to output the original template content
+     *
+     * @param array $match
+     * @return void
+     */
+    public function setup(array $match)
+    {
+    }
 
     /**
      * Get regex matcher

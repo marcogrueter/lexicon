@@ -22,7 +22,7 @@ class LexiconTest extends LexiconTestCase
 
     public function testGetBlockNodeType()
     {
-        $this->assertInstanceOf('Anomaly\Lexicon\Contract\NodeBlockInterface', $this->lexicon->getBlockNodeType());
+        $this->assertInstanceOf('Anomaly\Lexicon\Contract\NodeBlockInterface', $this->lexicon->getRootNodeType());
     }
 
     public function testAddTemplateAsParsePath()
@@ -41,7 +41,7 @@ class LexiconTest extends LexiconTestCase
     public function testGetFullViewClass()
     {
         $this->assertEquals(
-            config('lexicon::viewNamespace') . '\\' . config('lexicon::viewClassPrefix') . 'test',
+            'Anomaly\Lexicon\View\LexiconView_test',
             $this->lexicon->getFullViewClass('test')
         );
     }

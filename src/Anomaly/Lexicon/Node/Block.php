@@ -29,6 +29,13 @@ class Block extends Node implements NodeBlockInterface
     protected $contentClose = '';
 
     /**
+     * This is the root node
+     *
+     * @var bool
+     */
+    protected $root = true;
+
+    /**
      * Get regex matcher
      *
      * @return string

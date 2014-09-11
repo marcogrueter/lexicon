@@ -18,6 +18,13 @@ interface NodeInterface extends ExtractionInterface
     public function getLexicon();
 
     /**
+     * Is root
+     *
+     * @return bool
+     */
+    public function isRoot();
+
+    /**
      * Make a new instance of this object
      *
      * @param array $match

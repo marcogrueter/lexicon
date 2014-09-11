@@ -13,14 +13,14 @@ class Lexicon implements LexiconInterface
      *
      * @var string
      */
-    public $scopeGlue = '.';
+    protected $scopeGlue = '.';
 
     /**
      * Max depth
      *
      * @var int
      */
-    public $maxDepth = 100;
+    protected $maxDepth = 100;
 
     /**
      * Ignored matchers
@@ -28,13 +28,6 @@ class Lexicon implements LexiconInterface
      * @var array
      */
     public $ignoredMatchers = [];
-
-    /**
-     * No parse extractions
-     *
-     * @var array
-     */
-    protected $noParseExtractions = array();
 
     /**
      * Plugin handler
@@ -51,32 +44,18 @@ class Lexicon implements LexiconInterface
     protected $conditionalHandler;
 
     /**
-     * Runtime view cache
-     *
-     * @var
-     */
-    protected $cache = [];
-
-    /**
-     * Block node type offset
-     *
-     * @var int
-     */
-    public $blockNodeTypeOffset;
-
-    /**
      * Node types
      *
      * @var array
      */
-    public $nodeTypes = array();
+    public $nodeTypes = [];
 
     /**
      * Plugins
      *
      * @var array
      */
-    protected $plugins = array();
+    protected $plugins = [];
 
     /**
      * Root context name
@@ -98,11 +77,6 @@ class Lexicon implements LexiconInterface
     protected $path;
 
     /**
-     * @var bool
-     */
-    protected $development = false;
-
-    /**
      * @var array
      */
     protected $parsePaths = [];
@@ -113,13 +87,6 @@ class Lexicon implements LexiconInterface
      * @var bool
      */
     protected $debug = true;
-
-    /**
-     * View template
-     *
-     * @var string
-     */
-    protected $viewTemplate;
 
     /**
      * View template path
@@ -134,9 +101,9 @@ class Lexicon implements LexiconInterface
     protected $viewNamespace = 'Anomaly\Lexicon\View';
 
     /**
-     * View class prefix constant
+     * View class prefix
      */
-    const VIEW_PREFIX = 'View_';
+    protected $viewClassPrefix = 'LexiconView_';
 
     /**
      * Data constant
@@ -226,12 +193,17 @@ class Lexicon implements LexiconInterface
     /**
      * Get node types
      *
-     * @codeCoverageIgnore
      * @return array
      */
     public function getNodeTypes()
     {
-        return $this->nodeTypes;
+        $nodeTypes = [];
+
+        foreach($this->nodeTypes as $nodeType) {
+            $nodeTypes[] = new $nodeType($this);
+        }
+
+        return $nodeTypes;
     }
 
     /**
@@ -268,19 +240,12 @@ class Lexicon implements LexiconInterface
     /**
      * Register node type
      *
-     * @param NodeInterface $nodeType
+     * @param $nodeType
      * @return LexiconInterface
      */
     public function registerNodeType($nodeType)
     {
-        $nodeType = new $nodeType($this);
-        if ($nodeType instanceof NodeInterface) {
-            $this->nodeTypes[] = $nodeType;
-            if ($nodeType instanceof NodeBlockInterface) {
-                end($this->nodeTypes);
-                $this->blockNodeTypeOffset = key($this->nodeTypes);
-            }
-        }
+        $this->nodeTypes[$nodeType] = $nodeType;
         return $this;
     }
 
@@ -292,9 +257,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerNodeTypes(array $nodeTypes)
     {
-        foreach ($nodeTypes as $nodeType) {
-            $this->registerNodeType($nodeType);
-        }
+        $this->nodeTypes = $nodeTypes;
         return $this;
     }
 
@@ -307,7 +270,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerPlugin($name, $class)
     {
-        $this->pluginHandler->register($name, $class);
+        $this->getPluginHandler()->register($name, $class);
         return $this;
     }
 
@@ -344,9 +307,22 @@ class Lexicon implements LexiconInterface
      *
      * @return NodeInterface
      */
-    public function getBlockNodeType()
+    public function getRootNodeType()
     {
-        return isset($this->nodeTypes[$this->blockNodeTypeOffset]) ? $this->nodeTypes[$this->blockNodeTypeOffset] : null;
+        $block = null;
+
+        foreach($this->getNodeTypes() as $nodeType) {
+            if ($nodeType instanceof NodeBlockInterface and $nodeType->isRoot()) {
+                $block = $nodeType;
+                break;
+            }
+        }
+
+        if (!$block) {
+            // @todo - throw exception
+        }
+
+        return $block;
     }
 
     /**
@@ -419,13 +395,23 @@ class Lexicon implements LexiconInterface
     }
 
     /**
+     * Get view template path
+     *
+     * @return string
+     */
+    public function getViewTemplatePath()
+    {
+        return $this->viewTemplatePath;
+    }
+
+    /**
      * Get view template
      *
      * @return string
      */
     public function getViewTemplate()
     {
-        return file_get_contents($this->viewTemplatePath);
+        return file_get_contents($this->getViewTemplatePath());
     }
 
     /**
@@ -451,6 +437,40 @@ class Lexicon implements LexiconInterface
     }
 
     /**
+     * Set view namespace
+     *
+     * @param $viewNamespace
+     * @return $this
+     */
+    public function setViewNamespace($viewNamespace)
+    {
+        $this->viewNamespace = $viewNamespace;
+        return $this;
+    }
+
+    /**
+     * Get view class prefix
+     *
+     * @return string
+     */
+    public function getViewClassPrefix()
+    {
+        return $this->viewClassPrefix;
+    }
+
+    /**
+     * Get view class prefix
+     *
+     * @param $viewClassPrefix
+     * @return LexiconInterface
+     */
+    public function setViewClassPrefix($viewClassPrefix)
+    {
+        $this->viewClassPrefix = $viewClassPrefix;
+        return $this;
+    }
+
+    /**
      * Get view class
      *
      * @param $hash
@@ -458,7 +478,7 @@ class Lexicon implements LexiconInterface
      */
     public function getViewClass($hash)
     {
-        return static::VIEW_PREFIX . $hash;
+        return $this->getViewClassPrefix() . $hash;
     }
 
     /**
