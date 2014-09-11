@@ -59,5 +59,20 @@ class FactoryTest extends LexiconTestCase
         $this->view->make('test::exception', [])->using('testing')->render();
     }
 
+    /**
+     *
+     */
+    public function testFooterContentGetsAppendedWhenExtendingALayout()
+    {
+        $expected = '<div class="sidebar">This is some sidebar content.</div>
+<div class="content">Injecting this content into the yield section.</div>
+';
+
+        $this->assertEquals($expected, $this->view->make('test::extends', [])->render());
+    }
+
+
+
+
 }
  

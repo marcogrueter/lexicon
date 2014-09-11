@@ -293,4 +293,17 @@ class Block extends Node implements RootInterface
     {
         return $this->footer;
     }
+
+    /**
+     * Add to footer
+     *
+     * @param $content
+     * @return BlockInterface
+     */
+    public function addToFooter($content)
+    {
+        $this->footer[] = $content;
+        return $this;
+    }
+
 }

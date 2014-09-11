@@ -10,7 +10,7 @@ use Illuminate\Filesystem\Filesystem;
  * Date: 9/7/14
  * Time: 10:55 AM
  */
-class CompilerEngineTest extends LexiconTestCase
+class EngineTest extends LexiconTestCase
 {
 
     public function testEvaluatePathWithException()

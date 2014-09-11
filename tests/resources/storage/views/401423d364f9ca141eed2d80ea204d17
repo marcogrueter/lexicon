@@ -1,0 +1,5 @@
+<?php namespace Anomaly\Lexicon\View; use Anomaly\Lexicon\Contract\View\ViewTemplateInterface; class LexiconView_401423d364f9ca141eed2d80ea204d17 implements ViewTemplateInterface { public function render($__data) {
+?><?php $__data['__env']->startSection('content'); ?>
+<div class="content">Injecting this content into the yield section.</div>
+<?php $__data['__env']->stopSection(); ?>
+<?php echo $__data['__env']->make('test::layout',$__data)->render(); ?><?php }} ?>

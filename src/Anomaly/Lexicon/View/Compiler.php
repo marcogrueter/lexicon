@@ -1,7 +1,8 @@
 <?php namespace Anomaly\Lexicon\View;
 
-use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\Node\RootInterface;
+use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
 
 class Compiler extends BaseCompiler implements CompilerInterface
@@ -106,7 +107,9 @@ class Compiler extends BaseCompiler implements CompilerInterface
             $content = $this->escapePhp($content);
         }
 
-        return $this->compileView($this->compileRootNode($content));
+        $rootNode = $this->getRootNode($content);
+
+        return $this->compileView($this->compileRootNode($rootNode));
     }
 
     /**
@@ -115,10 +118,8 @@ class Compiler extends BaseCompiler implements CompilerInterface
      * @param string $content
      * @return mixed|string
      */
-    public function compileRootNode($content = '')
+    public function compileRootNode(RootInterface $rootNode)
     {
-        $rootNode = $this->getRootNode($content);
-
         $source = $rootNode->compile();
 
         $footer = $rootNode->getFooter();
@@ -141,7 +142,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
     {
         $rootNode = $this->getLexicon()->getRootNodeType()->make(
             array(
-                'id' => 'root',
+                'id'      => 'root',
                 'name'    => 'root',
                 'content' => $content,
             )
@@ -190,16 +191,18 @@ class Compiler extends BaseCompiler implements CompilerInterface
      */
     public function isNotParsed($content)
     {
+        $isNotParsed = false;
+
         $compiled = $this->getCompiledPath($content);
 
         // If the compiled file doesn't exist we will indicate that the view is expired
         // so that it can be re-compiled. Else, we will verify the last modification
         // of the views is less than the modification times of the compiled views.
         if (!$this->cachePath || !$this->files->exists($compiled)) {
-            return true;
+            $isNotParsed = true;
         }
 
-        return false;
+        return $isNotParsed;
     }
 
     /**

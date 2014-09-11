@@ -76,6 +76,11 @@ class LexiconTestCase extends TestCase
         return $app;
     }
 
+    public function getTestsPath($path)
+    {
+        return __DIR__.$path;
+    }
+
 }
 
 class AnomalyLexiconUndefinedNode extends Single
