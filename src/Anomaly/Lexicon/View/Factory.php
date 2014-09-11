@@ -70,6 +70,7 @@ class Factory extends BaseFactory implements FactoryInterface
     /**
      * Compare in conditional expression
      *
+     * @codeCoverageIgnore
      * @param      $left
      * @param      $right
      * @param null $operator

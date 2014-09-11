@@ -121,12 +121,14 @@ class ConditionalHandler implements ConditionalHandlerInterface
      */
     public function runTest($left, $right, $operator = null)
     {
+        $result = false;
+
         foreach ($this->getTestTypes() as $testType) {
             if (method_exists($testType, $operator)) {
-                return $testType->{$operator}($left, $right);
+                $result = $testType->{$operator}($left, $right);
             }
         }
 
-        return false;
+        return $result;
     }
 }
