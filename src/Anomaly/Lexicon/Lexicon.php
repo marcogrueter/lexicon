@@ -5,6 +5,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Contract\PluginHandlerInterface;
+use Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException;
 
 class Lexicon implements LexiconInterface
 {
@@ -206,7 +207,7 @@ class Lexicon implements LexiconInterface
     {
         $nodeTypes = [];
 
-        foreach($this->nodeTypes as $nodeType) {
+        foreach ($this->nodeTypes as $nodeType) {
             $nodeTypes[] = new $nodeType($this);
         }
 
@@ -247,6 +248,7 @@ class Lexicon implements LexiconInterface
     /**
      * Register node type
      *
+     * @codeCoverageIgnore
      * @param $nodeType
      * @return LexiconInterface
      */
@@ -318,7 +320,7 @@ class Lexicon implements LexiconInterface
     {
         $block = null;
 
-        foreach($this->getNodeTypes() as $nodeType) {
+        foreach ($this->getNodeTypes() as $nodeType) {
             if ($nodeType instanceof NodeBlockInterface and $nodeType->isRoot()) {
                 $block = $nodeType;
                 break;
@@ -326,7 +328,7 @@ class Lexicon implements LexiconInterface
         }
 
         if (!$block) {
-            // @todo - throw exception
+            throw new RootNodeTypeNotFoundException;
         }
 
         return $block;
@@ -426,6 +428,7 @@ class Lexicon implements LexiconInterface
     /**
      * Get instantiated nodes
      *
+     * @codeCoverageIgnore
      * @return array
      */
     public function getNodes()

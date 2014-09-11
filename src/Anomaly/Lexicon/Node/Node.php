@@ -580,18 +580,6 @@ abstract class Node implements NodeInterface
     }
 
     /**
-     * Set environment
-     *
-     * @param LexiconInterface $lexicon
-     * @return NodeInterface
-     */
-    public function setLexicon(LexiconInterface $lexicon)
-    {
-        $this->lexicon = $lexicon;
-        return $this;
-    }
-
-    /**
      * Get environment
      *
      * @return LexiconInterface

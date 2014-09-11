@@ -2,13 +2,6 @@
 
 interface NodeInterface extends ExtractionInterface
 {
-    /**
-     * Get Lexicon environment
-     *
-     * @param LexiconInterface $lexicon
-     * @return NodeInterface
-     */
-    public function setLexicon(LexiconInterface $lexicon);
 
     /**
      * Get Lexicon environment

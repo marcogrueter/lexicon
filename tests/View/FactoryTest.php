@@ -15,5 +15,6 @@ class FactoryTest extends LexiconTestCase {
                'variable' => 'Hello World!'
             ])->render());
     }
+
 }
  

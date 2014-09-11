@@ -20,9 +20,18 @@ class LexiconTest extends LexiconTestCase
         $this->assertTrue(class_exists('Anomaly\Lexicon\Node\Variable'));
     }
 
-    public function testGetBlockNodeType()
+    public function testGetRootNodeType()
     {
         $this->assertInstanceOf('Anomaly\Lexicon\Contract\NodeBlockInterface', $this->lexicon->getRootNodeType());
+    }
+
+    /**
+     * @expectedException \Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException
+     */
+    public function testRootNodeTypeNotFoundException()
+    {
+        $this->lexicon->registerNodeTypes([]);
+        $this->lexicon->getRootNodeType();
     }
 
     public function testAddTemplateAsParsePath()
