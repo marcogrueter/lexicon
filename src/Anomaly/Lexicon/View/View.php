@@ -36,7 +36,7 @@ class View extends BaseView
     {
         if (starts_with($method, 'using'))
         {
-            return $this->using(snake_case(substr($method, 4)), $parameters[0]);
+            return $this->using(snake_case(substr($method, 5)));
         }
 
         return parent::__call($method, $parameters);
