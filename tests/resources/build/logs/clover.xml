@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1410403644">
-  <project timestamp="1410403644">
+<coverage generated="1410404948">
+  <project timestamp="1410404948">
     <package name="Anomaly\Lexicon\Attribute">
       <file name="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/src/Anomaly/Lexicon/Attribute/AttributeNode.php">
         <class name="AttributeNode" namespace="Anomaly\Lexicon\Attribute">
@@ -345,68 +345,70 @@
       </file>
       <file name="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/src/Anomaly/Lexicon/Lexicon.php">
         <class name="Lexicon" namespace="Anomaly\Lexicon">
-          <metrics methods="18" coveredmethods="18" conditionals="0" coveredconditionals="0" statements="41" coveredstatements="41" elements="59" coveredelements="59"/>
+          <metrics methods="18" coveredmethods="18" conditionals="0" coveredconditionals="0" statements="43" coveredstatements="43" elements="61" coveredelements="61"/>
         </class>
-        <line num="145" type="method" name="__construct" crap="1" count="32"/>
-        <line num="149" type="stmt" count="32"/>
-        <line num="150" type="stmt" count="32"/>
+        <line num="147" type="method" name="__construct" crap="1" count="32"/>
         <line num="151" type="stmt" count="32"/>
-        <line num="206" type="method" name="getNodeTypes" crap="2" count="7"/>
-        <line num="208" type="stmt" count="7"/>
+        <line num="152" type="stmt" count="32"/>
+        <line num="153" type="stmt" count="32"/>
+        <line num="208" type="method" name="getNodeTypes" crap="3" count="7"/>
         <line num="210" type="stmt" count="7"/>
-        <line num="211" type="stmt" count="4"/>
         <line num="212" type="stmt" count="7"/>
-        <line num="214" type="stmt" count="7"/>
-        <line num="267" type="method" name="registerNodeTypes" crap="1" count="32"/>
-        <line num="269" type="stmt" count="32"/>
-        <line num="270" type="stmt" count="32"/>
-        <line num="280" type="method" name="registerPlugin" crap="1" count="32"/>
-        <line num="282" type="stmt" count="32"/>
-        <line num="283" type="stmt" count="32"/>
-        <line num="292" type="method" name="registerPlugins" crap="2" count="32"/>
-        <line num="294" type="stmt" count="32"/>
-        <line num="295" type="stmt" count="32"/>
-        <line num="296" type="stmt" count="32"/>
-        <line num="297" type="stmt" count="32"/>
-        <line num="319" type="method" name="getRootNodeType" crap="5" count="7"/>
-        <line num="321" type="stmt" count="7"/>
-        <line num="323" type="stmt" count="7"/>
-        <line num="324" type="stmt" count="4"/>
-        <line num="325" type="stmt" count="4"/>
-        <line num="326" type="stmt" count="4"/>
-        <line num="328" type="stmt" count="7"/>
-        <line num="330" type="stmt" count="7"/>
-        <line num="331" type="stmt" count="3"/>
-        <line num="334" type="stmt" count="4"/>
-        <line num="378" type="method" name="addParsePath" crap="1" count="3"/>
-        <line num="380" type="stmt" count="3"/>
-        <line num="381" type="stmt" count="3"/>
-        <line num="401" type="method" name="isParsePath" crap="1" count="4"/>
-        <line num="403" type="stmt" count="4"/>
-        <line num="412" type="method" name="addNode" crap="1" count="1"/>
-        <line num="414" type="stmt" count="1"/>
-        <line num="423" type="method" name="getNodeById" crap="2" count="1"/>
-        <line num="425" type="stmt" count="1"/>
-        <line num="444" type="method" name="getViewTemplatePath" crap="1" count="4"/>
-        <line num="446" type="stmt" count="4"/>
-        <line num="454" type="method" name="getViewTemplate" crap="1" count="4"/>
-        <line num="456" type="stmt" count="4"/>
-        <line num="464" type="method" name="setViewTemplatePath" crap="1" count="32"/>
-        <line num="466" type="stmt" count="32"/>
-        <line num="467" type="stmt" count="32"/>
-        <line num="487" type="method" name="setViewNamespace" crap="1" count="32"/>
-        <line num="489" type="stmt" count="32"/>
-        <line num="490" type="stmt" count="32"/>
-        <line num="498" type="method" name="getViewClassPrefix" crap="1" count="4"/>
-        <line num="500" type="stmt" count="4"/>
-        <line num="509" type="method" name="setViewClassPrefix" crap="1" count="32"/>
-        <line num="511" type="stmt" count="32"/>
-        <line num="512" type="stmt" count="32"/>
-        <line num="521" type="method" name="getViewClass" crap="1" count="4"/>
-        <line num="523" type="stmt" count="4"/>
-        <line num="532" type="method" name="getFullViewClass" crap="1" count="4"/>
-        <line num="534" type="stmt" count="4"/>
-        <metrics loc="535" ncloc="254" classes="1" methods="18" coveredmethods="18" conditionals="0" coveredconditionals="0" statements="41" coveredstatements="41" elements="59" coveredelements="59"/>
+        <line num="213" type="stmt" count="4"/>
+        <line num="214" type="stmt" count="4"/>
+        <line num="215" type="stmt" count="4"/>
+        <line num="216" type="stmt" count="4"/>
+        <line num="218" type="stmt" count="7"/>
+        <line num="271" type="method" name="registerNodeTypes" crap="1" count="32"/>
+        <line num="273" type="stmt" count="32"/>
+        <line num="274" type="stmt" count="32"/>
+        <line num="284" type="method" name="registerPlugin" crap="1" count="32"/>
+        <line num="286" type="stmt" count="32"/>
+        <line num="287" type="stmt" count="32"/>
+        <line num="296" type="method" name="registerPlugins" crap="2" count="32"/>
+        <line num="298" type="stmt" count="32"/>
+        <line num="299" type="stmt" count="32"/>
+        <line num="300" type="stmt" count="32"/>
+        <line num="301" type="stmt" count="32"/>
+        <line num="323" type="method" name="getRootNodeType" crap="5" count="7"/>
+        <line num="325" type="stmt" count="7"/>
+        <line num="327" type="stmt" count="7"/>
+        <line num="328" type="stmt" count="4"/>
+        <line num="329" type="stmt" count="4"/>
+        <line num="330" type="stmt" count="4"/>
+        <line num="332" type="stmt" count="7"/>
+        <line num="334" type="stmt" count="7"/>
+        <line num="335" type="stmt" count="3"/>
+        <line num="338" type="stmt" count="4"/>
+        <line num="382" type="method" name="addParsePath" crap="1" count="3"/>
+        <line num="384" type="stmt" count="3"/>
+        <line num="385" type="stmt" count="3"/>
+        <line num="405" type="method" name="isParsePath" crap="1" count="4"/>
+        <line num="407" type="stmt" count="4"/>
+        <line num="416" type="method" name="addNode" crap="1" count="1"/>
+        <line num="418" type="stmt" count="1"/>
+        <line num="427" type="method" name="getNodeById" crap="2" count="1"/>
+        <line num="429" type="stmt" count="1"/>
+        <line num="448" type="method" name="getViewTemplatePath" crap="1" count="4"/>
+        <line num="450" type="stmt" count="4"/>
+        <line num="458" type="method" name="getViewTemplate" crap="1" count="4"/>
+        <line num="460" type="stmt" count="4"/>
+        <line num="468" type="method" name="setViewTemplatePath" crap="1" count="32"/>
+        <line num="470" type="stmt" count="32"/>
+        <line num="471" type="stmt" count="32"/>
+        <line num="491" type="method" name="setViewNamespace" crap="1" count="32"/>
+        <line num="493" type="stmt" count="32"/>
+        <line num="494" type="stmt" count="32"/>
+        <line num="502" type="method" name="getViewClassPrefix" crap="1" count="4"/>
+        <line num="504" type="stmt" count="4"/>
+        <line num="513" type="method" name="setViewClassPrefix" crap="1" count="32"/>
+        <line num="515" type="stmt" count="32"/>
+        <line num="516" type="stmt" count="32"/>
+        <line num="525" type="method" name="getViewClass" crap="1" count="4"/>
+        <line num="527" type="stmt" count="4"/>
+        <line num="536" type="method" name="getFullViewClass" crap="1" count="4"/>
+        <line num="538" type="stmt" count="4"/>
+        <metrics loc="539" ncloc="258" classes="1" methods="18" coveredmethods="18" conditionals="0" coveredconditionals="0" statements="43" coveredstatements="43" elements="61" coveredelements="61"/>
       </file>
     </package>
     <package name="Anomaly\Lexicon\Node">
@@ -1348,10 +1350,6 @@
       <line num="40" type="stmt" count="32"/>
       <line num="44" type="stmt" count="32"/>
       <line num="48" type="stmt" count="32"/>
-      <line num="57" type="stmt" count="32"/>
-      <line num="58" type="stmt" count="32"/>
-      <line num="59" type="stmt" count="32"/>
-      <line num="60" type="stmt" count="32"/>
       <line num="61" type="stmt" count="32"/>
       <line num="62" type="stmt" count="32"/>
       <line num="63" type="stmt" count="32"/>
@@ -1367,10 +1365,10 @@
       <line num="73" type="stmt" count="32"/>
       <line num="74" type="stmt" count="32"/>
       <line num="75" type="stmt" count="32"/>
-      <line num="80" type="stmt" count="32"/>
-      <line num="81" type="stmt" count="32"/>
-      <line num="82" type="stmt" count="32"/>
-      <line num="83" type="stmt" count="32"/>
+      <line num="76" type="stmt" count="32"/>
+      <line num="77" type="stmt" count="32"/>
+      <line num="78" type="stmt" count="32"/>
+      <line num="79" type="stmt" count="32"/>
       <line num="84" type="stmt" count="32"/>
       <line num="85" type="stmt" count="32"/>
       <line num="86" type="stmt" count="32"/>
@@ -1378,17 +1376,21 @@
       <line num="88" type="stmt" count="32"/>
       <line num="89" type="stmt" count="32"/>
       <line num="90" type="stmt" count="32"/>
-      <line num="95" type="stmt" count="32"/>
-      <line num="96" type="stmt" count="32"/>
-      <line num="97" type="stmt" count="32"/>
-      <line num="98" type="stmt" count="32"/>
+      <line num="91" type="stmt" count="32"/>
+      <line num="92" type="stmt" count="32"/>
+      <line num="93" type="stmt" count="32"/>
+      <line num="94" type="stmt" count="32"/>
       <line num="99" type="stmt" count="32"/>
       <line num="100" type="stmt" count="32"/>
       <line num="101" type="stmt" count="32"/>
+      <line num="102" type="stmt" count="32"/>
       <line num="103" type="stmt" count="32"/>
       <line num="104" type="stmt" count="32"/>
-      <metrics loc="103" ncloc="60" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="49" coveredstatements="49" elements="49" coveredelements="49"/>
+      <line num="105" type="stmt" count="32"/>
+      <line num="107" type="stmt" count="32"/>
+      <line num="108" type="stmt" count="32"/>
+      <metrics loc="107" ncloc="60" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="49" coveredstatements="49" elements="49" coveredelements="49"/>
     </file>
-    <metrics files="37" loc="4372" ncloc="2667" classes="36" methods="226" coveredmethods="111" conditionals="0" coveredconditionals="0" statements="926" coveredstatements="482" elements="1152" coveredelements="593"/>
+    <metrics files="37" loc="4380" ncloc="2671" classes="36" methods="226" coveredmethods="111" conditionals="0" coveredconditionals="0" statements="928" coveredstatements="484" elements="1154" coveredelements="595"/>
   </project>
 </coverage>

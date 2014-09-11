@@ -1,17 +1,17 @@
 
 
 Code Coverage Report:      
-  2014-09-11 02:47:24      
+  2014-09-11 03:09:08      
                            
  Summary:                  
   Classes: 13.89% (5/36)   
   Methods: 49.12% (111/226)
-  Lines:   52.05% (482/926)
+  Lines:   52.16% (484/928)
 
 \Anomaly\Lexicon::ContextFinder
   Methods:  55.56% ( 5/ 9)   Lines:  55.81% ( 24/ 43)
 \Anomaly\Lexicon::Lexicon
-  Methods: 100.00% (18/18)   Lines: 100.00% ( 41/ 41)
+  Methods: 100.00% (18/18)   Lines: 100.00% ( 43/ 43)
 \Anomaly\Lexicon\Attribute::AttributeNode
   Methods:   5.56% ( 1/18)   Lines:   5.36% (  3/ 56)
 \Anomaly\Lexicon\Attribute::AttributeParser

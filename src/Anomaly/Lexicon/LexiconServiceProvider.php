@@ -68,7 +68,7 @@ class LexiconServiceProvider extends ServiceProvider
                     ->setAllowPhp(config('lexicon::allowPhp', false))
                     ->setDebug(config('lexicon::debug', false))
                     ->registerPlugins(config('lexicon::plugins', []))
-                    ->registerNodeTypes(config('lexicon::nodeTypes.default', []));
+                    ->registerNodeTypes(config('lexicon::nodeTypes', []));
 
                 return $lexicon;
             }

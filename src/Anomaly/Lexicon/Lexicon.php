@@ -123,6 +123,8 @@ class Lexicon implements LexiconInterface
      */
     const ENV = '$__data[\'__env\']';
 
+    const DEFAULT_NODE_SET = 'all';
+
     /**
      * Any expected constant
      */
@@ -203,12 +205,14 @@ class Lexicon implements LexiconInterface
      *
      * @return array
      */
-    public function getNodeTypes()
+    public function getNodeTypes($nodeSet = self::DEFAULT_NODE_SET)
     {
         $nodeTypes = [];
 
-        foreach ($this->nodeTypes as $nodeType) {
-            $nodeTypes[] = new $nodeType($this);
+        if (isset($this->nodeTypes[$nodeSet])) {
+            foreach ($this->nodeTypes[$nodeSet] as $nodeType) {
+                $nodeTypes[] = new $nodeType($this);
+            }
         }
 
         return $nodeTypes;
@@ -252,9 +256,9 @@ class Lexicon implements LexiconInterface
      * @param $nodeType
      * @return LexiconInterface
      */
-    public function registerNodeType($nodeType)
+    public function registerNodeType($nodeType, $nodeSet = self::DEFAULT_NODE_SET)
     {
-        $this->nodeTypes[$nodeType] = $nodeType;
+        $this->nodeTypes[$nodeSet][$nodeType] = $nodeType;
         return $this;
     }
 

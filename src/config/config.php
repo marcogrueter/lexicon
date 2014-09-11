@@ -51,9 +51,13 @@ return array(
      * The order is very important as it will affect parsing.
      * You can define `sets` which allow to create new instances of Lexicon
      * that only compiles templates using a subset of the node types.
+     * Node types are listed here in `node sets`, the `all` node set
+     * is the default, you can use a different node set by using the lexicon() method
+     * in the view. Here is an example.
+     * View::make('foo', $data)->lexicon('simple')->render()
      */
     'nodeTypes'          => [
-        'default'   => [
+        'all'   => [
             'Anomaly\Lexicon\Node\Comment',
             'Anomaly\Lexicon\Node\IgnoreBlock',
             'Anomaly\Lexicon\Node\IgnoreVariable',

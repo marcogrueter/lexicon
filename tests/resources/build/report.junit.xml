@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="Lexicon Test Suite" tests="32" assertions="34" failures="0" errors="0" time="8.448241">
-    <testsuite name="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" tests="6" assertions="7" failures="0" errors="0" time="1.792350">
-      <testcase name="testRegisterAndInstantiateOneNodeType" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="18" assertions="1" time="0.462247"/>
-      <testcase name="testGetRootNodeType" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="23" assertions="1" time="0.276814"/>
-      <testcase name="testRootNodeTypeNotFoundException" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="31" assertions="1" time="0.270490"/>
-      <testcase name="testAddTemplateAsParsePath" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="37" assertions="2" time="0.252382"/>
-      <testcase name="testGetViewTemplate" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="45" assertions="1" time="0.250389"/>
-      <testcase name="testGetFullViewClass" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="50" assertions="1" time="0.280028"/>
+  <testsuite name="Lexicon Test Suite" tests="32" assertions="34" failures="0" errors="0" time="8.568282">
+    <testsuite name="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" tests="6" assertions="7" failures="0" errors="0" time="1.837561">
+      <testcase name="testRegisterAndInstantiateOneNodeType" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="18" assertions="1" time="0.528048"/>
+      <testcase name="testGetRootNodeType" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="23" assertions="1" time="0.278260"/>
+      <testcase name="testRootNodeTypeNotFoundException" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="31" assertions="1" time="0.254459"/>
+      <testcase name="testAddTemplateAsParsePath" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="37" assertions="2" time="0.247603"/>
+      <testcase name="testGetViewTemplate" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="45" assertions="1" time="0.248905"/>
+      <testcase name="testGetFullViewClass" class="LexiconTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/LexiconTest.php" line="50" assertions="1" time="0.280286"/>
     </testsuite>
-    <testsuite name="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" tests="6" assertions="7" failures="0" errors="0" time="1.536703">
-      <testcase name="testRegisterAndInstantiateOneNodeType" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="18" assertions="1" time="0.250232"/>
-      <testcase name="testGetRootNodeType" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="23" assertions="1" time="0.253951"/>
-      <testcase name="testRootNodeTypeNotFoundException" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="31" assertions="1" time="0.249257"/>
-      <testcase name="testAddTemplateAsParsePath" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="37" assertions="2" time="0.280004"/>
-      <testcase name="testGetViewTemplate" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="45" assertions="1" time="0.254129"/>
-      <testcase name="testGetFullViewClass" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="50" assertions="1" time="0.249130"/>
+    <testsuite name="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" tests="6" assertions="7" failures="0" errors="0" time="1.506337">
+      <testcase name="testRegisterAndInstantiateOneNodeType" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="18" assertions="1" time="0.245711"/>
+      <testcase name="testGetRootNodeType" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="23" assertions="1" time="0.241484"/>
+      <testcase name="testRootNodeTypeNotFoundException" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="31" assertions="1" time="0.250387"/>
+      <testcase name="testAddTemplateAsParsePath" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="37" assertions="2" time="0.273796"/>
+      <testcase name="testGetViewTemplate" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="45" assertions="1" time="0.243099"/>
+      <testcase name="testGetFullViewClass" class="BlockTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Node/BlockTest.php" line="50" assertions="1" time="0.251860"/>
     </testsuite>
-    <testsuite name="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" tests="18" assertions="19" failures="0" errors="0" time="4.552106">
-      <testcase name="testGetInstanceOfPluginByName" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="31" assertions="1" time="0.255711"/>
-      <testcase name="testGetPluginWithoutScopeReturnsNull" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="39" assertions="1" time="0.255489"/>
-      <testcase name="testPluginMethodCallReturnsHelloWorld" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="47" assertions="1" time="0.255180"/>
-      <testcase name="testNonExistentPluginMethodCallReturnsNull" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="55" assertions="1" time="0.260441"/>
-      <testcase name="testPluginMethodIsAFilter" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="63" assertions="1" time="0.264885"/>
-      <testcase name="testPluginMethodIsNotAFilter" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="71" assertions="1" time="0.245657"/>
-      <testcase name="testPluginMethodIsParseAble" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="79" assertions="1" time="0.249627"/>
-      <testcase name="testPluginMethodIsNotParseAble" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="87" assertions="1" time="0.250295"/>
-      <testcase name="testNonExistentPluginMethodIsNotAFilter" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="95" assertions="1" time="0.246079"/>
-      <testcase name="testNonExistentPluginMethodIsNotParseAble" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="103" assertions="1" time="0.245947"/>
-      <testcase name="testFilterPluginMethodReturnsExpectedMd5String" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="111" assertions="1" time="0.248680"/>
-      <testcase name="testNonExistentPluginFilterReturnsNull" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="119" assertions="1" time="0.259607"/>
-      <testcase name="testRegisterAndInstantiateOneNodeType" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="18" assertions="1" time="0.249782"/>
-      <testcase name="testGetRootNodeType" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="23" assertions="1" time="0.247029"/>
-      <testcase name="testRootNodeTypeNotFoundException" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="31" assertions="1" time="0.254259"/>
-      <testcase name="testAddTemplateAsParsePath" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="37" assertions="2" time="0.241185"/>
-      <testcase name="testGetViewTemplate" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="45" assertions="1" time="0.244301"/>
-      <testcase name="testGetFullViewClass" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="50" assertions="1" time="0.277952"/>
+    <testsuite name="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" tests="18" assertions="19" failures="0" errors="0" time="4.613017">
+      <testcase name="testGetInstanceOfPluginByName" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="31" assertions="1" time="0.258090"/>
+      <testcase name="testGetPluginWithoutScopeReturnsNull" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="39" assertions="1" time="0.290726"/>
+      <testcase name="testPluginMethodCallReturnsHelloWorld" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="47" assertions="1" time="0.251592"/>
+      <testcase name="testNonExistentPluginMethodCallReturnsNull" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="55" assertions="1" time="0.250784"/>
+      <testcase name="testPluginMethodIsAFilter" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="63" assertions="1" time="0.254109"/>
+      <testcase name="testPluginMethodIsNotAFilter" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="71" assertions="1" time="0.266894"/>
+      <testcase name="testPluginMethodIsParseAble" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="79" assertions="1" time="0.246503"/>
+      <testcase name="testPluginMethodIsNotParseAble" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="87" assertions="1" time="0.260074"/>
+      <testcase name="testNonExistentPluginMethodIsNotAFilter" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="95" assertions="1" time="0.263360"/>
+      <testcase name="testNonExistentPluginMethodIsNotParseAble" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="103" assertions="1" time="0.247625"/>
+      <testcase name="testFilterPluginMethodReturnsExpectedMd5String" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="111" assertions="1" time="0.258874"/>
+      <testcase name="testNonExistentPluginFilterReturnsNull" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="119" assertions="1" time="0.253019"/>
+      <testcase name="testRegisterAndInstantiateOneNodeType" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="18" assertions="1" time="0.247844"/>
+      <testcase name="testGetRootNodeType" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="23" assertions="1" time="0.252963"/>
+      <testcase name="testRootNodeTypeNotFoundException" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="31" assertions="1" time="0.241644"/>
+      <testcase name="testAddTemplateAsParsePath" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="37" assertions="2" time="0.253881"/>
+      <testcase name="testGetViewTemplate" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="45" assertions="1" time="0.260044"/>
+      <testcase name="testGetFullViewClass" class="PluginHandlerTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/Plugin/PluginHandlerTest.php" line="50" assertions="1" time="0.254991"/>
     </testsuite>
-    <testsuite name="CompilerEngineTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/View/Compiler/CompilerEngineTest.php" tests="1" assertions="0" failures="0" errors="0" time="0.250105">
-      <testcase name="testEvaluatePathWithException" class="CompilerEngineTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/View/Compiler/CompilerEngineTest.php" line="16" assertions="0" time="0.250105"/>
+    <testsuite name="CompilerEngineTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/View/Compiler/CompilerEngineTest.php" tests="1" assertions="0" failures="0" errors="0" time="0.262030">
+      <testcase name="testEvaluatePathWithException" class="CompilerEngineTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/View/Compiler/CompilerEngineTest.php" line="16" assertions="0" time="0.262030"/>
     </testsuite>
-    <testsuite name="FactoryTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/View/FactoryTest.php" tests="1" assertions="1" failures="0" errors="0" time="0.316976">
-      <testcase name="testMakeAndRenderHelloView" class="FactoryTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/View/FactoryTest.php" line="12" assertions="1" time="0.316976"/>
+    <testsuite name="FactoryTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/View/FactoryTest.php" tests="1" assertions="1" failures="0" errors="0" time="0.349338">
+      <testcase name="testMakeAndRenderHelloView" class="FactoryTest" file="/Users/ob/Sites/laravel/laravel43/workbench/anomaly/lexicon/tests/View/FactoryTest.php" line="12" assertions="1" time="0.349338"/>
     </testsuite>
   </testsuite>
 </testsuites>
