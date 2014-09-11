@@ -55,7 +55,7 @@ class LexiconTestCase extends TestCase
 
         $testEnvironment = 'testing';
 
-        $app = require __DIR__ . '/resources/bootstrap/start.php';
+        $app = require __DIR__ . '/../resources/bootstrap/start.php';
 
         $this->lexicon            = $app['anomaly.lexicon'];
         $this->engine             = $app['anomaly.lexicon.engine'];
@@ -71,14 +71,14 @@ class LexiconTestCase extends TestCase
 
         $this->lexicon->registerNodeSet($testingNodeSet, 'testing');
 
-        $this->view->addNamespace('test', __DIR__ . '/resources/views');
+        $this->view->addNamespace('test', __DIR__ . '/../resources/views');
 
         return $app;
     }
 
     public function getTestsPath($path)
     {
-        return __DIR__.$path;
+        return __DIR__ . '/../' . $path;
     }
 
 }

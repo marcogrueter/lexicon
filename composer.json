@@ -18,8 +18,8 @@
             "Anomaly\\Lexicon": "src/"
         },
         "classmap": [
-            "tests/LexiconTestCase.php",
-            "tests/Plugin/TestPlugin.php"
+            "tests/src/LexiconTestCase.php",
+            "tests/src/Plugin/TestPlugin.php"
         ]
     },
     "minimum-stability": "dev",
