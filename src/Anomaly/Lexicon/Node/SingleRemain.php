@@ -11,7 +11,7 @@ abstract class SingleRemain extends Single
     protected $isPhp = false;
 
     /**
-     * Delay compilation after non-defered
+     * Delay compilation after non-deferred
      *
      * @var bool
      */

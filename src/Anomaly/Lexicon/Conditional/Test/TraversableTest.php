@@ -6,8 +6,11 @@ class TraversableTest
     /**
      * Check if value is in array or \IteratorAggregate
      *
-     * @param $left
-     * @param $right
+     * @param $value
+     * @param $iterateable
+     * @internal param $left
+     * @internal param $right
+     * @return bool
      */
     public function in($value, $iterateable)
     {

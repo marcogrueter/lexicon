@@ -1,7 +1,7 @@
 <?php namespace Anomaly\Lexicon\Plugin;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\PluginInterface;
+use Anomaly\Lexicon\Contract\Plugin\PluginInterface;
 
 class Plugin implements PluginInterface
 {
@@ -38,6 +38,7 @@ class Plugin implements PluginInterface
      * Set plugin name
      *
      * @codeCoverageIgnore
+     * @param $name
      * @return string
      */
     public function setPluginName($name)
@@ -140,8 +141,9 @@ class Plugin implements PluginInterface
     /**
      * Prevent errors if a method that is called does not exists
      *
-     * @param $name
+     * @param $key
      * @param $arguments
+     * @internal param $name
      * @return null
      */
     public function __call($key, $arguments)

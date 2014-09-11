@@ -3,19 +3,22 @@
 use Anomaly\Lexicon\Conditional\Validator\ElseValidator;
 use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
 
-class ConditionalElse extends Single implements ConditionalInterface
+class ConditionalElse extends Conditional
 {
+
     /**
-     * Name
-     *
-     * @var string
+     * @return string
      */
-    public $name = 'else';
+    public function getNameMatcher()
+    {
+        return 'else';
+    }
 
     /**
      * Get setup from regex match
      *
      * @param array $match
+     * @return mixed|void
      */
     public function setup(array $match)
     {

@@ -25,7 +25,7 @@ class ContextFinder
     protected $parent;
 
     /**
-     * @param Node $node
+     * @param NodeInterface $node
      */
     public function __construct(NodeInterface $node)
     {
@@ -69,6 +69,7 @@ class ContextFinder
         if (($this->parent instanceof RootInterface) or $this->isRootContextName()) {
             return '$__data';
         } elseif ($prefix = $this->getPrefix() and $node = $this->findLoopItemNode($prefix)) {
+            /** @var NodeInterface $node */
             return '$' . $node->getItemName();
         } elseif ($this->parent instanceof RootInterface) {
             return '$' . $this->parent->getItemName();

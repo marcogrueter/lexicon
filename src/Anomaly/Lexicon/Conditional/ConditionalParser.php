@@ -1,6 +1,7 @@
 <?php namespace Anomaly\Lexicon\Conditional;
 
-use Anomaly\Lexicon\Contract\NodeInterface;
+use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\Variable;
 
 class ConditionalParser
@@ -8,7 +9,7 @@ class ConditionalParser
     protected $expression;
 
     /**
-     * @var \Anomaly\Lexicon\Contract\NodeInterface
+     * @var NodeInterface
      */
     protected $node;
 
@@ -103,10 +104,10 @@ class ConditionalParser
     protected $start;
 
     /**
-     * @param               $expression
      * @param NodeInterface $node
+     * @internal param $expression
      */
-    public function __construct(NodeInterface $node)
+    public function __construct(ConditionalInterface $node)
     {
         $this->node         = $node;
         $this->lexicon      = $node->getLexicon();

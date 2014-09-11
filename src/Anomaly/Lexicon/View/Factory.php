@@ -1,9 +1,8 @@
 <?php namespace Anomaly\Lexicon\View;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\FactoryInterface;
+use Anomaly\Lexicon\Contract\View\FactoryInterface;
 use Anomaly\Lexicon\Lexicon;
-use Anomaly\Lexicon\View\Compiler\CompilerEngine;
 use Illuminate\View\Factory as BaseFactory;
 use Illuminate\View\View;
 
@@ -12,16 +11,15 @@ class Factory extends BaseFactory implements FactoryInterface
     /**
      * Get the evaluated view contents for the given view.
      *
-     * @param  string  $view
-     * @param  array   $data
-     * @param  array   $mergeData
-     * @return \Illuminate\View\View
+     * @param  string $view
+     * @param  array  $data
+     * @param  array  $mergeData
+     * @return View
      */
     public function parse($view, $data = [], $mergeData = [])
     {
         $this->getLexicon()->addParsePath($view);
 
-        /** @var $engine CompilerEngine */
         $engine = $this->getLexiconEngine();
 
         $data = array_merge($mergeData, $this->parseData($data));
@@ -40,7 +38,7 @@ class Factory extends BaseFactory implements FactoryInterface
     }
 
     /**
-     * CompilerEngine
+     * EngineInterface
      *
      * @return mixed
      */
@@ -66,13 +64,22 @@ class Factory extends BaseFactory implements FactoryInterface
      * Takes a dot-notated key and finds the value for it in the given
      * array or object.
      *
-     * @param  string       $key     Dot-notated key to find
-     * @param  array|object $data    Array or object to search
+     * @param  array|object $data Array or object to search
+     * @param  string       $key Dot-notated key to find
+     * @param array         $attributes
+     * @param string        $content
      * @param  mixed        $default Default value to use if not found
+     * @param string        $expected
      * @return mixed
      */
-    public function variable($data, $key, array $attributes = [], $content = '', $default = null, $expected = Lexicon::ANY)
-    {
+    public function variable(
+        $data,
+        $key,
+        array $attributes = [],
+        $content = '',
+        $default = null,
+        $expected = Lexicon::ANY
+    ) {
         $scopes = $pluginScopes = explode($this->getLexicon()->getScopeGlue(), $key);
 
         $pluginKey = $key;
@@ -141,7 +148,7 @@ class Factory extends BaseFactory implements FactoryInterface
             return $data;
         } elseif ($expected == Lexicon::ECHOABLE and
             (is_string($data) or is_numeric($data) or is_bool($data) or is_null($data) or is_float($data) or
-            (is_object($data) and method_exists($data, '__toString')))
+                (is_object($data) and method_exists($data, '__toString')))
         ) {
             return $data;
         } elseif ($expected == Lexicon::TRAVERSABLE and is_array($data) or $data instanceof \Traversable) {

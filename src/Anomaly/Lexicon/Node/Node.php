@@ -3,6 +3,7 @@
 use Anomaly\Lexicon\Attribute\AttributeParser;
 use Anomaly\Lexicon\ContextFinder;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
 
@@ -252,6 +253,7 @@ abstract class Node implements NodeInterface
     /**
      * Set content
      *
+     * @param $content
      * @return NodeInterface
      */
     public function setContent($content)
@@ -315,7 +317,8 @@ abstract class Node implements NodeInterface
     /**
      * Set children
      *
-     * @param array $children
+     * @param NodeInterface $node
+     * @internal param array $children
      * @return NodeInterface
      */
     public function addChild(NodeInterface $node)
@@ -328,7 +331,7 @@ abstract class Node implements NodeInterface
     /**
      * Get child nodes
      *
-     * @param $class mixed
+     * @internal param mixed $class
      * @return array
      */
     public function getChildren()
@@ -367,6 +370,7 @@ abstract class Node implements NodeInterface
     /**
      * Set id
      *
+     * @param $id
      * @return NodeInterface
      */
     public function setId($id)
@@ -637,9 +641,9 @@ abstract class Node implements NodeInterface
     /**
      * Create child node
      *
-     * @param Node $nodeType
-     * @param      $match
-     * @param int  $count
+     * @param NodeInterface|Node $nodeType
+     * @param                    $match
+     * @param int                $count
      * @return mixed
      */
     protected function createChildNode(NodeInterface $nodeType, $match, $count = 0)
@@ -661,7 +665,7 @@ abstract class Node implements NodeInterface
     /**
      * Extract node content
      *
-     * @param Node $node
+     * @param NodeInterface|Node $node
      * @return Node
      */
     protected function extract(NodeInterface $node)
@@ -702,7 +706,7 @@ abstract class Node implements NodeInterface
     /**
      * Inject node content
      *
-     * @param Node $node
+     * @param NodeInterface|Node $node
      * @return NodeInterface
      */
     protected function inject(NodeInterface $node)
@@ -728,7 +732,7 @@ abstract class Node implements NodeInterface
             );
         }
 
-        if ($node instanceof NodeBlockInterface or !$node->isPhp()) {
+        if ($node instanceof BlockInterface or !$node->isPhp()) {
             $compile = $node->compile();
         } else {
             $compile = $this->php($node->compile());
@@ -790,7 +794,7 @@ abstract class Node implements NodeInterface
     /**
      * Set node validator
      *
-     * @param NodeValidatorInterface $validator
+     * @param ValidatorInterface $validator
      * @return NodeInterface
      */
     public function setValidator(ValidatorInterface $validator)
@@ -802,7 +806,7 @@ abstract class Node implements NodeInterface
     /**
      * Get node validator
      *
-     * @return NodeValidatorInterface
+     * @return ValidatorInterface
      */
     public function getValidator()
     {
@@ -812,7 +816,7 @@ abstract class Node implements NodeInterface
     /**
      * Validate the node
      *
-     * @param bool $isValid
+     * @internal param bool $isValid
      * @return NodeInterface
      */
     public function validate()

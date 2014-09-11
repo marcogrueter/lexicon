@@ -1,8 +1,8 @@
 <?php namespace Anomaly\Lexicon\Plugin;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\PluginHandlerInterface;
-use Anomaly\Lexicon\Contract\PluginInterface;
+use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
+use Anomaly\Lexicon\Contract\Plugin\PluginInterface;
 
 class PluginHandler implements PluginHandlerInterface
 {
@@ -74,9 +74,10 @@ class PluginHandler implements PluginHandlerInterface
     /**
      * Call plugin method
      *
-     * @param        $name
+     * @param        $key
      * @param array  $attributes
      * @param string $content
+     * @internal param $name
      * @return mixed
      */
     public function call($key, $attributes = [], $content = '')
@@ -86,12 +87,10 @@ class PluginHandler implements PluginHandlerInterface
             /** @var $plugin PluginInterface */
             if ($plugin = $this->get($key)) {
 
-                $name   = $segments[0];
                 $method = $segments[1];
 
                 $plugin
                     ->setLexicon($this->getLexicon())
-                    //->setPluginName($name)
                     ->setAttributes($attributes)
                     ->setContent($content);
                 return $plugin->{$method}();
@@ -144,8 +143,10 @@ class PluginHandler implements PluginHandlerInterface
     /**
      * Run the filter from the plugin
      *
-     * @param PluginInterface $plugin
-     * @param                 $key
+     * @param        $name
+     * @param string $prefix
+     * @internal param PluginInterface $plugin
+     * @internal param $key
      * @return mixed
      */
     public function filter($name, $prefix = 'filter')

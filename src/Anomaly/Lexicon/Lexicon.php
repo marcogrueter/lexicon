@@ -4,7 +4,7 @@ use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\RootInterface;
-use Anomaly\Lexicon\Contract\PluginHandlerInterface;
+use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException;
 
 class Lexicon implements LexiconInterface
@@ -33,7 +33,7 @@ class Lexicon implements LexiconInterface
     /**
      * Plugin handler
      *
-     * @var Contract\PluginHandlerInterface
+     * @var PluginHandlerInterface
      */
     protected $pluginHandler;
 
@@ -203,6 +203,7 @@ class Lexicon implements LexiconInterface
     /**
      * Get node types
      *
+     * @param string $nodeSet
      * @return array
      */
     public function getNodeTypes($nodeSet = self::DEFAULT_NODE_SET)
@@ -253,7 +254,8 @@ class Lexicon implements LexiconInterface
      * Register node type
      *
      * @codeCoverageIgnore
-     * @param $nodeType
+     * @param        $nodeType
+     * @param string $nodeSet
      * @return LexiconInterface
      */
     public function registerNodeType($nodeType, $nodeSet = self::DEFAULT_NODE_SET)
@@ -318,6 +320,7 @@ class Lexicon implements LexiconInterface
     /**
      * Get root node type
      *
+     * @throws RootNodeTypeNotFoundException
      * @return NodeInterface
      */
     public function getRootNodeType()
@@ -453,6 +456,7 @@ class Lexicon implements LexiconInterface
     /**
      * Set view template path
      *
+     * @param $viewTemplatePath
      * @return LexiconInterface
      */
     public function setViewTemplatePath($viewTemplatePath)

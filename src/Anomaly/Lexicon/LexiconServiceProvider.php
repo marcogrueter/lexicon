@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon;
 
-use Anomaly\Lexicon\Contract\ConditionalHandlerInterface;
+use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 use Anomaly\Lexicon\View\Compiler;
 use Anomaly\Lexicon\View\Engine;
 use Anomaly\Lexicon\View\Factory;
@@ -135,16 +135,6 @@ class LexiconServiceProvider extends ServiceProvider
             }
         );
 
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return array('anomaly.lexicon');
     }
 
 }

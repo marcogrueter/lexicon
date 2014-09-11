@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
-use Anomaly\Lexicon\Contract\ExtractionInterface;
+use Anomaly\Lexicon\Contract\Node\ExtractionInterface;
 
 class EmbeddedAttribute implements ExtractionInterface
 {

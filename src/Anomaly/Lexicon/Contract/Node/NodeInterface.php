@@ -38,9 +38,10 @@ interface NodeInterface extends ExtractionInterface
      * Make a new instance of this object
      *
      * @param array $match
-     * @param null  $parent
+     * @param null  $parentId
      * @param int   $depth
      * @param int   $count
+     * @internal param null $parent
      * @return NodeInterface
      */
     public function make(array $match, $parentId = null, $depth = 0, $count = 0);
@@ -51,6 +52,26 @@ interface NodeInterface extends ExtractionInterface
      * @return NodeInterface
      */
     public function createChildNodes();
+
+    /**
+     * @param $id
+     * @return NodeInterface
+     */
+    public function setId($id);
+
+    /**
+     * Get the node name
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * Set the node name
+     *
+     * @return NodeInterface
+     */
+    public function setName($name);
 
     /**
      * Set item name
@@ -118,7 +139,7 @@ interface NodeInterface extends ExtractionInterface
     /**
      * Set node validator
      *
-     * @param NodeValidatorInterface $validator
+     * @param ValidatorInterface $validator
      * @return NodeInterface
      */
     public function setValidator(ValidatorInterface $validator);
@@ -126,7 +147,7 @@ interface NodeInterface extends ExtractionInterface
     /**
      * Get node validator
      *
-     * @return NodeValidatorInterface
+     * @return ValidatorInterface
      */
     public function getValidator();
 
@@ -154,5 +175,73 @@ interface NodeInterface extends ExtractionInterface
      * @return NodeInterface
      */
     public function setContextName($contextName);
+
+    /**
+     * Get match
+     *
+     * @param $string
+     * @param $regex
+     * @return array
+     */
+    public function getMatch($string, $regex);
+
+    /**
+     * Defer compile
+     *
+     * @return bool
+     */
+    public function deferCompile();
+
+    /**
+     * Set extraction content
+     *
+     * @param $content
+     * @return NodeInterface
+     */
+    public function setExtractionContent($content);
+
+    /**
+     * Get extraction id
+     *
+     * @return string
+     */
+    public function getExtractionId();
+
+    /**
+     * Set content
+     *
+     * @param $content
+     * @return NodeInterface
+     */
+    public function setContent($content);
+
+    /**
+     * Set parsed attributes
+     *
+     * @param $parsedAttributes
+     * @return NodeInterface
+     */
+    public function setParsedAttributes($parsedAttributes);
+
+    /**
+     * Get item name
+     *
+     * @return string
+     */
+    public function getItemName();
+
+    /**
+     * Get loop item name
+     *
+     * @return string
+     */
+    public function getLoopItemName();
+
+    /**
+     * Get context name
+     *
+     * @return string
+     */
+    public function getContextName();
 
 }

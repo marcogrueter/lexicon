@@ -9,16 +9,9 @@ class AttributeParser
     /**
      * The node
      *
-     * @var \Anomaly\Lexicon\Contract\NodeInterface
+     * @var \Anomaly\Lexicon\Contract\Node\NodeInterface
      */
     protected $node;
-
-    /**
-     * Regex util
-     *
-     * @var Regex
-     */
-    protected $regex;
 
     /**
      * The raw attributes
@@ -144,11 +137,6 @@ class AttributeParser
     public function getMatches($string, $regex)
     {
         return $this->node->getMatches($string, $regex);
-    }
-
-    public function getRegex()
-    {
-        return $this;
     }
 
     public function getLexicon()

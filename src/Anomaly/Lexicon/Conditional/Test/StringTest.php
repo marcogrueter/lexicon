@@ -13,8 +13,10 @@ class StringTest
     /**
      * Contains
      *
-     * @param $left
-     * @param $right
+     * @param $haystack
+     * @param $needle
+     * @internal param $left
+     * @internal param $right
      * @return bool
      */
     public function contains($haystack, $needle)
@@ -26,7 +28,8 @@ class StringTest
      * Starts with
      *
      * @param $haystack
-     * @param $needles
+     * @param $needle
+     * @internal param $needles
      * @return bool
      */
     public function startsWith($haystack, $needle)
@@ -38,7 +41,8 @@ class StringTest
      * Ends with
      *
      * @param $haystack
-     * @param $needles
+     * @param $needle
+     * @internal param $needles
      * @return bool
      */
     public function endsWith($haystack, $needle)
@@ -49,8 +53,10 @@ class StringTest
     /**
      * Is
      *
-     * @param $haystack
-     * @param $needles
+     * @param $value
+     * @param $pattern
+     * @internal param $haystack
+     * @internal param $needles
      * @return bool
      */
     public function is($value, $pattern)

@@ -1,8 +1,8 @@
 <?php namespace Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Contract\Node\BlockInterface;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\RootInterface;
-use Anomaly\Lexicon\Contract\NodeBlockInterface;
-use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Lexicon;
 
 class Block extends Node implements RootInterface
@@ -51,7 +51,7 @@ class Block extends Node implements RootInterface
      * Get setup
      *
      * @param array $match
-     * @return $this
+     * @return BlockInterface
      */
     public function setup(array $match)
     {
@@ -93,7 +93,7 @@ class Block extends Node implements RootInterface
      * Set full content
      *
      * @param $fullContent string
-     * @return $this
+     * @return BlockInterface
      */
     public function setFullContent($fullContent)
     {
@@ -147,7 +147,7 @@ class Block extends Node implements RootInterface
      * Set content close
      *
      * @param $contentClose
-     * @return NodeBlockInterface
+     * @return BlockInterface
      */
     public function setContentClose($contentClose)
     {
@@ -176,7 +176,7 @@ class Block extends Node implements RootInterface
     /**
      * Compile children
      *
-     * @return $this
+     * @return BlockInterface
      */
     public function compileChildren()
     {

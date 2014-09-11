@@ -11,12 +11,6 @@ interface ExtractionInterface
     public function getContent();
 
     /**
-     * @param $id
-     * @return NodeInterface
-     */
-    public function setId($id);
-
-    /**
      * Get id
      *
      * @return string

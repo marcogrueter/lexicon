@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\View;
 
-use Anomaly\Lexicon\Contract\CompilerInterface;
+use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
 
@@ -117,7 +117,8 @@ class Compiler extends BaseCompiler implements CompilerInterface
     /**
      * Compile the given string parse-able contents.
      *
-     * @param  string $value
+     * @param $content
+     * @internal param string $value
      * @return string
      */
     public function compileParse($content)
@@ -145,7 +146,8 @@ class Compiler extends BaseCompiler implements CompilerInterface
     /**
      * Determine if the view at the given path is expired.
      *
-     * @param  string $path
+     * @param $content
+     * @internal param string $path
      * @return bool
      */
     public function isNotParsed($content)

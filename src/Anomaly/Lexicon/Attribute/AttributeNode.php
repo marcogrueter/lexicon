@@ -1,7 +1,7 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\NodeInterface;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\Node;
 use Anomaly\Lexicon\Node\Variable;
 

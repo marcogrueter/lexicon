@@ -1,4 +1,4 @@
-<?php namespace Anomaly\Lexicon\Contract;
+<?php namespace Anomaly\Lexicon\Contract\Conditional;
 
 interface ConditionalHandlerInterface
 {

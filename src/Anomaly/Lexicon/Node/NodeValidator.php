@@ -1,9 +1,9 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Contract\NodeInterface;
-use Anomaly\Lexicon\Contract\NodeValidatorInterface;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
+use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
 
-class NodeValidator implements NodeValidatorInterface
+class NodeValidator implements ValidatorInterface
 {
 
     /**
@@ -36,6 +36,7 @@ class NodeValidator implements NodeValidatorInterface
 
         if ($parent = $this->node->getParent()) {
             foreach ($parent->getChildren() as $node) {
+                /** @var NodeInterface $node */
                 if ($node->getName() == $name) {
                     $count++;
                 }
@@ -85,6 +86,7 @@ class NodeValidator implements NodeValidatorInterface
         /** @var $parent NodeInterface */
         if ($parent = $this->node->getParent()) {
             foreach ($parent->getChildren() as $node) {
+                /** @var NodeInterface $node */
                 if ($this->node->getId() == $node->getId()) {
                     $currentOrder = strpos($parent->getParsedContent(), $node->getExtractionId());
                 } elseif ($node->getName() == $name) {

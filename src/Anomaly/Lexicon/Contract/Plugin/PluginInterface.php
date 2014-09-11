@@ -1,4 +1,6 @@
-<?php namespace Anomaly\Lexicon\Contract;
+<?php namespace Anomaly\Lexicon\Contract\Plugin;
+
+use Anomaly\Lexicon\Contract\LexiconInterface;
 
 interface PluginInterface
 {
@@ -6,6 +8,7 @@ interface PluginInterface
     /**
      * Set plugin name
      *
+     * @param $pluginName
      * @return PluginInterface
      */
     public function setPluginName($pluginName);

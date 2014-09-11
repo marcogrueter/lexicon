@@ -1,7 +1,9 @@
 <?php namespace Anomaly\Lexicon\Contract;
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
-use Anomaly\Lexicon\Regex;
+use Anomaly\Lexicon\Contract\Node\BlockInterface;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
+use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 
 interface LexiconInterface
 {
@@ -47,7 +49,7 @@ interface LexiconInterface
     public function getRootContextName();
 
     /**
-     * @return NodeBlockInterface
+     * @return BlockInterface
      */
     public function getRootNodeType();
 
@@ -61,6 +63,7 @@ interface LexiconInterface
     /**
      * Set view template path
      *
+     * @param $viewTemplatePath
      * @return LexiconInterface
      */
     public function setViewTemplatePath($viewTemplatePath);
@@ -82,6 +85,7 @@ interface LexiconInterface
     /**
      * Set view class prefix
      *
+     * @param $viewClassPrefix
      * @return LexiconInterface
      */
     public function setViewClassPrefix($viewClassPrefix);
@@ -145,14 +149,15 @@ interface LexiconInterface
     public function isDebug();
 
     /**
-     * @param $degug bool
+     * @param $debug bool
      * @return LexiconInterface
      */
-    public function setDebug($degug);
+    public function setDebug($debug);
 
     /**
      * Get node by id
      *
+     * @param $id
      * @return NodeInterface|null
      */
     public function getNodeById($id);
@@ -163,5 +168,13 @@ interface LexiconInterface
      * @return array
      */
     public function getNodes();
+
+    /**
+     * Add a node instance
+     *
+     * @param NodeInterface $node
+     * @return LexiconInterface
+     */
+    public function addNode(NodeInterface $node);
 
 }

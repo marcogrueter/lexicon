@@ -1,11 +1,12 @@
 <?php namespace Anomaly\Lexicon\View;
 
-use Anomaly\Lexicon\Contract\CompilerInterface;
+use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Contract\View\ViewTemplateInterface;
 use Illuminate\View\Engines\CompilerEngine;
 
-class Engine extends CompilerEngine
+class Engine extends CompilerEngine implements EngineInterface
 {
     /**
      * Runtime cache
@@ -75,6 +76,7 @@ class Engine extends CompilerEngine
         // an exception is thrown. This prevents any partial views from leaking.
         try {
             if (!isset($this->cache[$__path])) {
+                /** @var string $__path */
                 include $__path;
                 $segments             = explode('/', $__path);
                 $hash                 = $segments[count($segments) - 1];
@@ -107,7 +109,7 @@ class Engine extends CompilerEngine
 
     /**
      * @codeCoverageIgnore
-     * @var CompilerInterface
+     * @return CompilerInterface
      */
     public function getCompiler()
     {

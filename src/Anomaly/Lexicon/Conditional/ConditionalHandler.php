@@ -1,6 +1,8 @@
 <?php namespace Anomaly\Lexicon\Conditional;
 
-class ConditionalHandler
+use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
+
+class ConditionalHandler implements ConditionalHandlerInterface
 {
     /**
      * Test types - array of BooleanTestTypeInterface objects
@@ -12,7 +14,9 @@ class ConditionalHandler
     /**
      * Register test type
      *
-     * @param string $test
+     * @param $name
+     * @param $booleanTestType
+     * @internal param string $test
      * @return ConditionalHandler
      */
     public function registerBooleanTestType($name, $booleanTestType)

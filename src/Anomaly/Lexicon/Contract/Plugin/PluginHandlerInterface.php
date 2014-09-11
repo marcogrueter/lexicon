@@ -1,4 +1,6 @@
-<?php namespace Anomaly\Lexicon\Contract;
+<?php namespace Anomaly\Lexicon\Contract\Plugin;
+
+use Anomaly\Lexicon\Contract\LexiconInterface;
 
 interface PluginHandlerInterface
 {
@@ -56,9 +58,10 @@ interface PluginHandlerInterface
     /**
      * Call filter method
      *
-     * @param PluginInterface $plugin
-     * @param                 $name
-     * @param string          $prefix
+     * @param        $key
+     * @param string $prefix
+     * @internal param PluginInterface $plugin
+     * @internal param $name
      * @return mixed
      */
     public function filter($key, $prefix = 'filter');

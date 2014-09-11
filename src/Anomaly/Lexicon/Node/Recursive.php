@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Contract\NodeBlockInterface;
+use Anomaly\Lexicon\Contract\Node\BlockInterface;
 
 class Recursive extends Single
 {
@@ -19,7 +19,7 @@ class Recursive extends Single
     public function compile()
     {
         if ($parent = $this->getParent() and
-            $parent instanceof NodeBlockInterface and
+            $parent instanceof BlockInterface and
             $content = $parent->getFullContent() and
             !empty($content)
         ) {
