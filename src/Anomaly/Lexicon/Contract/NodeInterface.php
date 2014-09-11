@@ -33,7 +33,7 @@ interface NodeInterface extends ExtractionInterface
      * @param int   $count
      * @return NodeInterface
      */
-    public function make(array $match, $parent = null, $depth = 0, $count = 0);
+    public function make(array $match, $parentId = null, $depth = 0, $count = 0);
 
     /**
      * Get setup from regex match
@@ -110,6 +110,22 @@ interface NodeInterface extends ExtractionInterface
     public function getDepth();
 
     /**
+     * Set count
+     *
+     * @param int $count
+     * @return NodeInterface
+     */
+    public function setCount($count = 0);
+
+    /**
+     * Set parent id
+     *
+     * @param null $parentId
+     * @return NodeInterface
+     */
+    public function setParentId($parentId = null);
+
+    /**
      * Set parsed content
      *
      * @param $parsedContent
@@ -155,5 +171,13 @@ interface NodeInterface extends ExtractionInterface
      * @return array
      */
     public function getMatches($string, $regex = null);
+
+    /**
+     * Set context name
+     *
+     * @param $contextName
+     * @return NodeInterface
+     */
+    public function setContextName($contextName);
 
 }

@@ -1,17 +1,17 @@
 
 
 Code Coverage Report:      
-  2014-09-11 01:27:02      
+  2014-09-11 02:20:18      
                            
  Summary:                  
   Classes: 11.11% (4/36)   
-  Methods: 45.54% (102/224)
-  Lines:   50.60% (467/923)
+  Methods: 48.25% (110/228)
+  Lines:   51.72% (481/930)
 
 \Anomaly\Lexicon::ContextFinder
-  Methods:  22.22% ( 2/ 9)   Lines:  41.86% ( 18/ 43)
+  Methods:  55.56% ( 5/ 9)   Lines:  55.81% ( 24/ 43)
 \Anomaly\Lexicon::Lexicon
-  Methods:  88.24% (15/17)   Lines:  92.68% ( 38/ 41)
+  Methods:  89.47% (17/19)   Lines:  93.02% ( 40/ 43)
 \Anomaly\Lexicon\Attribute::AttributeNode
   Methods:   5.56% ( 1/18)   Lines:   5.36% (  3/ 56)
 \Anomaly\Lexicon\Attribute::AttributeParser
@@ -31,7 +31,7 @@ Code Coverage Report:
 \Anomaly\Lexicon\Node::IgnoreVariable
   Methods:  50.00% ( 1/ 2)   Lines:  16.67% (  1/  6)
 \Anomaly\Lexicon\Node::Node
-  Methods:  70.00% (42/60)   Lines:  62.89% (122/194)
+  Methods:  72.58% (45/62)   Lines:  64.32% (128/199)
 \Anomaly\Lexicon\Node::Single
   Methods: 100.00% ( 2/ 2)   Lines: 100.00% ( 12/ 12)
 \Anomaly\Lexicon\Node::Variable

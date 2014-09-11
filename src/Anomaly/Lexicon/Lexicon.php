@@ -89,6 +89,13 @@ class Lexicon implements LexiconInterface
     protected $debug = true;
 
     /**
+     * All node instances
+     *
+     * @var array
+     */
+    protected $nodes = [];
+
+    /**
      * View template path
      *
      * @var string
@@ -392,6 +399,38 @@ class Lexicon implements LexiconInterface
     public function isParsePath($path)
     {
         return in_array($path, $this->parsePaths);
+    }
+
+    /**
+     * Add a node instance
+     *
+     * @param NodeInterface $node
+     * @return NodeInterface
+     */
+    public function addNode(NodeInterface $node)
+    {
+        return $this->nodes[$node->getId()] = $node;
+    }
+
+    /**
+     * Get node by id
+     *
+     * @param $id
+     * @return null
+     */
+    public function getNodeById($id)
+    {
+        return isset($this->nodes[$id]) ? $this->nodes[$id] : null;
+    }
+
+    /**
+     * Get instantiated nodes
+     *
+     * @return array
+     */
+    public function getNodes()
+    {
+        return $this->nodes;
     }
 
     /**

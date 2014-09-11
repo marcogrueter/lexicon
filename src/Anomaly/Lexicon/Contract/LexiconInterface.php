@@ -157,4 +157,18 @@ interface LexiconInterface
      */
     public function setDebug($degug);
 
+    /**
+     * Get node by id
+     *
+     * @return NodeInterface|null
+     */
+    public function getNodeById($id);
+
+    /**
+     * Get nodes
+     *
+     * @return array
+     */
+    public function getNodes();
+
 }
