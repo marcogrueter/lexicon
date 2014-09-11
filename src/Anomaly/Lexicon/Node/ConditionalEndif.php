@@ -1,9 +1,9 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Contract\NodeConditionalInterface;
 use Anomaly\Lexicon\Conditional\Validator\EndifValidator;
+use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
 
-class ConditionalEndif extends Single implements NodeConditionalInterface
+class ConditionalEndif extends Single implements ConditionalInterface
 {
     /**
      * Name

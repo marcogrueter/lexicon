@@ -1,11 +1,11 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Contract\NodeConditionalInterface;
 use Anomaly\Lexicon\Conditional\ConditionalParser;
 use Anomaly\Lexicon\Conditional\Validator\ElseifValidator;
 use Anomaly\Lexicon\Conditional\Validator\IfValidator;
+use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
 
-class Conditional extends Single implements NodeConditionalInterface
+class Conditional extends Single implements ConditionalInterface
 {
     /**
      * Start conditionals

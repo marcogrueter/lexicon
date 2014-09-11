@@ -40,4 +40,11 @@ interface CompilerInterface extends BaseCompilerInterface
      */
     public function getLexicon();
 
+    /**
+     * Get view template
+     *
+     * @return string
+     */
+    public function getViewTemplate();
+
 }

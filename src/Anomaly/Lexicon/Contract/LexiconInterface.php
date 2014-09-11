@@ -52,13 +52,6 @@ interface LexiconInterface
     public function getRootNodeType();
 
     /**
-     * Get view template
-     *
-     * @return string
-     */
-    public function getViewTemplate();
-
-    /**
      * Get view template path
      *
      * @return string

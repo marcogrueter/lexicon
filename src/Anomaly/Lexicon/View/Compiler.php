@@ -1,8 +1,7 @@
-<?php namespace Anomaly\Lexicon\View\Compiler;
+<?php namespace Anomaly\Lexicon\View;
 
 use Anomaly\Lexicon\Contract\CompilerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
 
 class Compiler extends BaseCompiler implements CompilerInterface
@@ -13,8 +12,6 @@ class Compiler extends BaseCompiler implements CompilerInterface
     protected $lexicon;
 
     protected $hash;
-
-    protected $streamCompiler;
 
     public function setHash($hash)
     {
@@ -42,26 +39,6 @@ class Compiler extends BaseCompiler implements CompilerInterface
     }
 
     /**
-     * Set stream compiler
-     *
-     * @param StreamCompiler $streamCompiler
-     * @return $this
-     */
-    public function setStreamCompiler(StreamCompiler $streamCompiler)
-    {
-        $this->streamCompiler = $streamCompiler;
-        return $this;
-    }
-
-    /**
-     * @return StreamCompiler
-     */
-    public function getStreamCompiler()
-    {
-        return $this->streamCompiler;
-    }
-
-    /**
      * Compile the view at the given path.
      *
      * @param  string $path
@@ -82,35 +59,59 @@ class Compiler extends BaseCompiler implements CompilerInterface
         }
     }
 
-    public function compileString($content)
+    /**
+     * Compile string
+     *
+     * @param string $content
+     * @return string
+     */
+    public function compileString($content = '')
     {
-        if (empty($content)) {
-            return null;
-        }
-
         if (!$this->getLexicon()->allowPhp()) {
             $content = $this->escapePhp($content);
         }
 
-        return $this->compileView(
-            $this->getLexicon()->getRootNodeType()->make(
-                array(
-                    'name'    => 'root',
-                    'content' => $content,
-                )
-            )
-        );
+        return $this->compileView($this->compileRootNode($content));
     }
 
     /**
-     * Compile view
+     * Compile root node
      *
-     * @param NodeBlockInterface $node
-     * @return string
+     * @param string $content
+     * @return mixed|string
      */
-    public function compileView(NodeBlockInterface $block)
+    public function compileRootNode($content = '')
     {
-        return (new ViewCompiler($this->setStreamCompiler(new StreamCompiler($block))))->compile();
+        $rootNode = $this->getRootNode($content);
+
+        $source = $rootNode->compile();
+
+        $footer = $rootNode->getFooter();
+
+        if (count($footer) > 0) {
+            $source = str_replace('@parent', '', $source);
+            $source = ltrim($source, PHP_EOL) . PHP_EOL . implode(PHP_EOL, array_reverse($footer));
+        }
+
+        return $source;
+    }
+
+    /**
+     * Get root node
+     *
+     * @param string $content
+     * @return \Anomaly\Lexicon\Contract\Node\RootInterface
+     */
+    public function getRootNode($content = '')
+    {
+        $rootNode = $this->getLexicon()->getRootNodeType()->make(
+            array(
+                'name'    => 'root',
+                'content' => $content,
+            )
+        );
+
+        return $rootNode->createChildNodes();
     }
 
     /**
@@ -159,6 +160,33 @@ class Compiler extends BaseCompiler implements CompilerInterface
         }
 
         return false;
+    }
+
+    /**
+     * Compile the view from the template
+     *
+     * @param string $source
+     * @return string Compiled template
+     */
+    protected function compileView($source = '')
+    {
+        $data = [
+            '[namespace]' => $this->getLexicon()->getViewNamespace(),
+            '[class]'     => $this->getLexicon()->getViewClass($this->getHash()),
+            '[source]'    => $source,
+        ];
+
+        return str_replace(array_keys($data), $data, $this->getViewTemplate());
+    }
+
+    /**
+     * Get view template
+     *
+     * @return string
+     */
+    public function getViewTemplate()
+    {
+        return file_get_contents($this->getLexicon()->getViewTemplatePath());
     }
 
 }

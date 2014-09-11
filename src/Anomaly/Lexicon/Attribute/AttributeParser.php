@@ -1,10 +1,8 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
-use Anomaly\Lexicon\Conditional\Test\StringTest;
-use Anomaly\Lexicon\Contract\ExtractionInterface;
-use Anomaly\Lexicon\Contract\NodeInterface;
+use Anomaly\Lexicon\Contract\Node\ExtractionInterface;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\Variable;
-use Anomaly\Lexicon\Regex;
 
 class AttributeParser
 {
@@ -54,7 +52,6 @@ class AttributeParser
         $this->attributes   = $node->getParsedAttributes();
         $this->variableNode = new Variable($node->getLexicon());
         $this->lexicon      = $node->getLexicon();
-        $this->stringTest = new StringTest();
     }
 
 
@@ -70,8 +67,8 @@ class AttributeParser
 
 
         // Do we have named attributes?
-        if ($this->stringTest->contains($this->attributes, '="') or
-            $this->stringTest->contains($this->attributes, '={')
+        if (str_contains($this->attributes, '="') or
+            str_contains($this->attributes, '={')
         ) {
             $this->createAttributeNodes(new NamedAttributeNode($this->node->getLexicon()));
         } else {

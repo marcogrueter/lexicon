@@ -2,8 +2,8 @@
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\NodeBlockInterface;
-use Anomaly\Lexicon\Contract\NodeInterface;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
+use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Contract\PluginHandlerInterface;
 use Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException;
 
@@ -325,7 +325,7 @@ class Lexicon implements LexiconInterface
         $block = null;
 
         foreach ($this->getNodeTypes() as $nodeType) {
-            if ($nodeType instanceof NodeBlockInterface and $nodeType->isRoot()) {
+            if ($nodeType instanceof RootInterface) {
                 $block = $nodeType;
                 break;
             }
@@ -448,16 +448,6 @@ class Lexicon implements LexiconInterface
     public function getViewTemplatePath()
     {
         return $this->viewTemplatePath;
-    }
-
-    /**
-     * Get view template
-     *
-     * @return string
-     */
-    public function getViewTemplate()
-    {
-        return file_get_contents($this->getViewTemplatePath());
     }
 
     /**

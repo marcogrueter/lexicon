@@ -1,11 +1,11 @@
-<?php namespace Anomaly\Lexicon\View\Compiler;
+<?php namespace Anomaly\Lexicon\View;
 
 use Anomaly\Lexicon\Contract\CompilerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\ViewTemplateInterface;
-use Illuminate\View\Engines\CompilerEngine as BaseCompilerEngine;
+use Illuminate\View\Engines\CompilerEngine;
 
-class CompilerEngine extends BaseCompilerEngine
+class Engine extends CompilerEngine
 {
     /**
      * Runtime cache

@@ -3,9 +3,8 @@
 use Anomaly\Lexicon\Attribute\AttributeParser;
 use Anomaly\Lexicon\ContextFinder;
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\NodeBlockInterface;
-use Anomaly\Lexicon\Contract\NodeInterface;
-use Anomaly\Lexicon\Contract\NodeValidatorInterface;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
+use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
 
 abstract class Node implements NodeInterface
 {
@@ -336,7 +335,7 @@ abstract class Node implements NodeInterface
     {
         $children = [];
 
-        foreach($this->children as $id) {
+        foreach ($this->children as $id) {
             $children[] = $this->getLexicon()->getNodeById($id);
         }
 
@@ -590,16 +589,6 @@ abstract class Node implements NodeInterface
     }
 
     /**
-     * Array of content to be compiled at the end of a view
-     *
-     * @return array
-     */
-    public function getFooter()
-    {
-        return $this->footer;
-    }
-
-    /**
      * Get single tag matches
      *
      * @param $text
@@ -804,7 +793,7 @@ abstract class Node implements NodeInterface
      * @param NodeValidatorInterface $validator
      * @return NodeInterface
      */
-    public function setValidator(NodeValidatorInterface $validator)
+    public function setValidator(ValidatorInterface $validator)
     {
         $this->validator = $validator;
         return $this;

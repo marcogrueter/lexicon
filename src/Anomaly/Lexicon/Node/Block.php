@@ -1,10 +1,11 @@
 <?php namespace Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Contract\NodeBlockInterface;
 use Anomaly\Lexicon\Contract\NodeInterface;
 use Anomaly\Lexicon\Lexicon;
 
-class Block extends Node implements NodeBlockInterface
+class Block extends Node implements RootInterface
 {
 
     /**
@@ -277,5 +278,15 @@ class Block extends Node implements NodeBlockInterface
         }
 
         return "endforeach;";
+    }
+
+    /**
+     * Array of content to be compiled at the end of a view
+     *
+     * @return array
+     */
+    public function getFooter()
+    {
+        return $this->footer;
     }
 }

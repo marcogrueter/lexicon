@@ -1,16 +1,16 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Contract\NodeConditionalInterface;
 use Anomaly\Lexicon\Conditional\Validator\ElseValidator;
+use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
 
-class ConditionalElse extends Single implements NodeConditionalInterface
+class ConditionalElse extends Single implements ConditionalInterface
 {
     /**
      * Name
      *
      * @var string
      */
-    public $name ='else';
+    public $name = 'else';
 
     /**
      * Get setup from regex match

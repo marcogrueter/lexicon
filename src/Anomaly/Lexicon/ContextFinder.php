@@ -1,15 +1,14 @@
 <?php namespace Anomaly\Lexicon;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\NodeBlockInterface;
-use Anomaly\Lexicon\Contract\NodeInterface;
-use Anomaly\Lexicon\Node\Node;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
+use Anomaly\Lexicon\Contract\Node\RootInterface;
 
 class ContextFinder
 {
 
     /**
-     * @var Node
+     * @var NodeInterface
      */
     protected $node;
 
@@ -67,11 +66,11 @@ class ContextFinder
      */
     public function getItemName()
     {
-        if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
+        if (($this->parent instanceof RootInterface) or $this->isRootContextName()) {
             return '$__data';
         } elseif ($prefix = $this->getPrefix() and $node = $this->findLoopItemNode($prefix)) {
             return '$' . $node->getItemName();
-        } elseif ($this->parent and !$this->parent->isRoot()) {
+        } elseif ($this->parent instanceof RootInterface) {
             return '$' . $this->parent->getItemName();
         } else {
             return '$__data';
@@ -111,7 +110,7 @@ class ContextFinder
             while ($node and $node->getLoopItemName() !== $prefix) {
                 $node = $node->getParent();
             }
-            if ($node and $node->isRoot()) {
+            if ($node instanceof RootInterface) {
                 return null;
             }
         }

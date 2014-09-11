@@ -15,14 +15,16 @@ use Illuminate\View\FileViewFinder;
 class LexiconTest extends LexiconTestCase
 {
 
-    public function testRegisterAndInstantiateOneNodeType()
+    public function testGetNodeTypes()
     {
-        $this->assertTrue(class_exists('Anomaly\Lexicon\Node\Variable'));
+        foreach($this->lexicon->getNodeTypes() as $nodeType) {
+            $this->assertInstanceOf('Anomaly\Lexicon\Contract\Node\NodeInterface', $nodeType);
+        }
     }
 
     public function testGetRootNodeType()
     {
-        $this->assertInstanceOf('Anomaly\Lexicon\Contract\NodeBlockInterface', $this->lexicon->getRootNodeType());
+        $this->assertInstanceOf('Anomaly\Lexicon\Contract\Node\RootInterface', $this->lexicon->getRootNodeType());
     }
 
     /**
@@ -44,14 +46,16 @@ class LexiconTest extends LexiconTestCase
 
     public function testGetViewTemplate()
     {
-        $this->assertInternalType('string', $this->lexicon->getViewTemplate());
+        $this->assertInternalType('string', $this->compiler->getViewTemplate());
     }
 
     public function testGetFullViewClass()
     {
+        $hash = '9238d2c5749ab10ada78ccc540985e82';
+
         $this->assertEquals(
-            'Anomaly\Lexicon\View\LexiconView_test',
-            $this->lexicon->getFullViewClass('test')
+            'Anomaly\Lexicon\View\LexiconView_'.$hash,
+            $this->lexicon->getFullViewClass($hash)
         );
     }
 

@@ -1,8 +1,8 @@
 <?php namespace Anomaly\Lexicon;
 
 use Anomaly\Lexicon\Contract\ConditionalHandlerInterface;
-use Anomaly\Lexicon\View\Compiler\Compiler;
-use Anomaly\Lexicon\View\Compiler\CompilerEngine;
+use Anomaly\Lexicon\View\Compiler;
+use Anomaly\Lexicon\View\Engine;
 use Anomaly\Lexicon\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -88,9 +88,9 @@ class LexiconServiceProvider extends ServiceProvider
         );
 
         $app->singleton(
-            'anomaly.lexicon.compiler.engine',
+            'anomaly.lexicon.engine',
             function () use ($app) {
-                return new CompilerEngine($app['anomaly.lexicon.compiler'], $app['files']);
+                return new Engine($app['anomaly.lexicon.compiler'], $app['files']);
             }
         );
 
@@ -102,7 +102,7 @@ class LexiconServiceProvider extends ServiceProvider
                     config('lexicon::extension', 'html'),
                     'anomaly.lexicon',
                     function () use ($app) {
-                        return $app['anomaly.lexicon.compiler.engine'];
+                        return $app['anomaly.lexicon.engine'];
                     }
                 );
             }

@@ -56,7 +56,7 @@ class LexiconTestCase extends TestCase
         $app = require __DIR__ . '/resources/bootstrap/start.php';
 
         $this->lexicon            = $app['anomaly.lexicon'];
-        $this->engine             = $app['anomaly.lexicon.compiler.engine'];
+        $this->engine             = $app['anomaly.lexicon.engine'];
         $this->compiler           = $app['anomaly.lexicon.compiler'];
         $this->conditionalHandler = $app['anomaly.lexicon.conditional.handler'];
         $this->pluginHandler      = $app['anomaly.lexicon.plugin.handler'];
