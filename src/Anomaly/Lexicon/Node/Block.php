@@ -74,6 +74,10 @@ class Block extends Node implements RootInterface
             ->setExtractionContent($content)
             ->setParsedAttributes($parsedAttributes);
 
+        if (isset($match['id'])) {
+            $this->setId($match['id']);
+        }
+
         $parts = [];
 
         if (is_string($content) and is_string($fullContent) and !empty($content) and !empty($fullContent)) {

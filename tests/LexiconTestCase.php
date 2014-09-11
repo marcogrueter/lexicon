@@ -1,6 +1,8 @@
 <?php
 
 
+use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Node\Single;
 use Illuminate\Foundation\Testing\TestCase;
 
 /**
@@ -23,17 +25,17 @@ class LexiconTestCase extends TestCase
     protected $view;
 
     /**
-     * @var \Anomaly\Lexicon\CompilerEngineInterface
+     * @var \Anomaly\Lexicon\Contract\View\EngineInterface
      */
     protected $engine;
 
     /**
-     * @var \Anomaly\Lexicon\Contract\CompilerInterface
+     * @var \Anomaly\Lexicon\Contract\View\CompilerInterface
      */
     protected $compiler;
 
     /**
-     * @var \Anomaly\Lexicon\Contract\ConditionalHandlerInterface
+     * @var \Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface
      */
     protected $conditionalHandler;
 
@@ -63,9 +65,25 @@ class LexiconTestCase extends TestCase
         $this->view               = $app['anomaly.lexicon.factory'];
         $this->files              = $app['files'];
 
+        $testingNodeSet = $this->lexicon->getNodeSet(Lexicon::DEFAULT_NODE_SET);
+
+        array_unshift($testingNodeSet, 'AnomalyLexiconUndefinedNode');
+
+        $this->lexicon->registerNodeSet($testingNodeSet, 'testing');
+
         $this->view->addNamespace('test', __DIR__ . '/resources/views');
 
         return $app;
     }
 
+}
+
+class AnomalyLexiconUndefinedNode extends Single
+{
+    protected $name = 'undefined';
+
+    public function compile()
+    {
+        return 'echo $testingUndefinedVariableToCauseViewException;';
+    }
 }

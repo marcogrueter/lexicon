@@ -97,6 +97,13 @@ class Lexicon implements LexiconInterface
     protected $nodes = [];
 
     /**
+     * Node set paths
+     *
+     * @var array
+     */
+    protected $nodeSetPaths = [];
+
+    /**
      * View template path
      *
      * @var string
@@ -270,9 +277,52 @@ class Lexicon implements LexiconInterface
      * @param array $nodeTypes
      * @return LexiconInterface
      */
-    public function registerNodeTypes(array $nodeTypes)
+    public function registerNodeSet(array $nodeTypes, $nodeSet = self::DEFAULT_NODE_SET)
     {
-        $this->nodeTypes = $nodeTypes;
+        foreach($nodeTypes as $nodeType) {
+            $this->registerNodeType($nodeType, $nodeSet);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove node type from node set
+     *
+     * @param $nodeType
+     * @param $nodeSet
+     * @return LexiconInterface
+     */
+    public function removeNodeTypeFromNodeSet($nodeType, $nodeSet)
+    {
+        if (isset($this->nodeTypes[$nodeSet]) and isset($this->nodeTypes[$nodeSet][$nodeType])) {
+            unset($this->nodeTypes[$nodeSet][$nodeType]);
+        }
+        return $this;
+    }
+
+    /**
+     * Get node set
+     *
+     * @param string $nodeSet
+     * @return array
+     */
+    public function getNodeSet($nodeSet = self::DEFAULT_NODE_SET)
+    {
+        return isset($this->nodeTypes[$nodeSet]) ? $this->nodeTypes[$nodeSet] : [];
+    }
+
+    /**
+     * Register node types
+     *
+     * @param array $nodeSets
+     * @return LexiconInterface
+     */
+    public function registerNodeSets(array $nodeSets = [])
+    {
+        foreach($nodeSets as $nodeSet => $nodeTypes) {
+            $this->registerNodeSet($nodeTypes, $nodeSet);
+        }
         return $this;
     }
 
@@ -530,5 +580,29 @@ class Lexicon implements LexiconInterface
     public function getFullViewClass($hash)
     {
         return $this->getViewNamespace() . '\\' . $this->getViewClass($hash);
+    }
+
+    /**
+     * Add node set path
+     *
+     * @param        $path
+     * @param string $nodeSet
+     * @return LexiconInterface
+     */
+    public function addNodeSetPath($path, $nodeSet = self::DEFAULT_NODE_SET)
+    {
+        $this->nodeSetPaths[$path] = $nodeSet;
+        return $this;
+    }
+
+    /**
+     * Get node set from path
+     *
+     * @param $path
+     * @return string
+     */
+    public  function getNodeSetFromPath($path)
+    {
+        return isset($this->nodeSetPaths[$path]) ? $this->nodeSetPaths[$path] : self::DEFAULT_NODE_SET;
     }
 }

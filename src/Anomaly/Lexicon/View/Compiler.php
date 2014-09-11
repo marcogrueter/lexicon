@@ -13,6 +13,35 @@ class Compiler extends BaseCompiler implements CompilerInterface
 
     protected $hash;
 
+    /**
+     * Path
+     *
+     * @var string
+     */
+    protected $path;
+
+    /**
+     * Compiler interface
+     *
+     * @param $path
+     * @return CompilerInterface
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+        return $this;
+    }
+
+    /**
+     * Get path
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
     public function setHash($hash)
     {
         $this->hash = $hash;
@@ -24,7 +53,11 @@ class Compiler extends BaseCompiler implements CompilerInterface
         return $this->hash;
     }
 
-    public function setLexicon($lexicon)
+    /**
+     * @param LexiconInterface $lexicon
+     * @return CompilerInterface
+     */
+    public function setLexicon(LexiconInterface $lexicon)
     {
         $this->lexicon = $lexicon;
         return $this;
@@ -46,6 +79,8 @@ class Compiler extends BaseCompiler implements CompilerInterface
      */
     public function compile($path = null)
     {
+        $this->setPath($path);
+
         $compiledPath = $this->getCompiledPath($path);
 
         $segments = explode('/', $compiledPath);
@@ -106,10 +141,13 @@ class Compiler extends BaseCompiler implements CompilerInterface
     {
         $rootNode = $this->getLexicon()->getRootNodeType()->make(
             array(
+                'id' => 'root',
                 'name'    => 'root',
                 'content' => $content,
             )
         );
+
+        $rootNode->setNodeSet($this->getLexicon()->getNodeSetFromPath($this->getPath()));
 
         return $rootNode->createChildNodes();
     }

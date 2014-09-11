@@ -113,7 +113,7 @@ class PluginHandler implements PluginHandlerInterface
         if ($plugin = $this->get($key)) {
             $segments = explode($this->getLexicon()->getScopeGlue(), $key);
             if (count($segments) > 1) {
-                $isPlugin = method_exists($plugin, 'filter' . studly_case($segments[1]));
+                $isPlugin = method_exists($plugin, 'filter' . camel_case($segments[1]));
             }
         }
 
@@ -156,7 +156,7 @@ class PluginHandler implements PluginHandlerInterface
         if ($plugin = $this->get($name) and $plugin instanceof PluginInterface) {
             $segments = explode($this->getLexicon()->getScopeGlue(), $name);
             if (count($segments) > 1) {
-                $result = call_user_func([$plugin, $prefix . studly_case($segments[1])]);
+                $result = call_user_func([$plugin, $prefix . camel_case($segments[1])]);
             }
         }
 

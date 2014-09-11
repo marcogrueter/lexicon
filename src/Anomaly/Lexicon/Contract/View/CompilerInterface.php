@@ -26,7 +26,7 @@ interface CompilerInterface extends BaseCompilerInterface
      * @param $lexicon LexiconInterface
      * @return mixed
      */
-    public function setLexicon($lexicon);
+    public function setLexicon(LexiconInterface $lexicon);
 
     /**
      * @return LexiconInterface

@@ -4,7 +4,6 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\FactoryInterface;
 use Anomaly\Lexicon\Lexicon;
 use Illuminate\View\Factory as BaseFactory;
-use Illuminate\View\View;
 
 class Factory extends BaseFactory implements FactoryInterface
 {
@@ -25,6 +24,27 @@ class Factory extends BaseFactory implements FactoryInterface
         $data = array_merge($mergeData, $this->parseData($data));
 
         $this->callCreator($view = new View($this, $engine, md5($view), $view, $data));
+
+        return $view;
+    }
+
+    /**
+     * Get the evaluated view contents for the given view.
+     *
+     * @param  string  $view
+     * @param  array   $data
+     * @param  array   $mergeData
+     * @return \Illuminate\View\View
+     */
+    public function make($view, $data = array(), $mergeData = array())
+    {
+        if (isset($this->aliases[$view])) $view = $this->aliases[$view];
+
+        $path = $this->finder->find($view);
+
+        $data = array_merge($mergeData, $this->parseData($data));
+
+        $this->callCreator($view = new View($this, $this->getEngineFromPath($path), $view, $path, $data));
 
         return $view;
     }

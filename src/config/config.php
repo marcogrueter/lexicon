@@ -56,7 +56,7 @@ return array(
      * in the view. Here is an example.
      * View::make('foo', $data)->lexicon('simple')->render()
      */
-    'nodeTypes'          => [
+    'nodeSets'          => [
         'all'   => [
             'Anomaly\Lexicon\Node\Comment',
             'Anomaly\Lexicon\Node\IgnoreBlock',

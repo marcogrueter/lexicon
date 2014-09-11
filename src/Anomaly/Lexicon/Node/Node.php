@@ -6,6 +6,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
+use Anomaly\Lexicon\Lexicon;
 
 abstract class Node implements NodeInterface
 {
@@ -142,6 +143,11 @@ abstract class Node implements NodeInterface
     protected $root = false;
 
     /**
+     * @var string
+     */
+    protected $nodeSet = Lexicon::DEFAULT_NODE_SET;
+
+    /**
      * @param LexiconInterface $lexicon
      */
     public function __construct(LexiconInterface $lexicon)
@@ -214,7 +220,7 @@ abstract class Node implements NodeInterface
         $node
             ->setId($node->getContent() . $node->getName() . $node->getDepth() . $node->getCount())
             ->setItemName(
-                studly_case(str_replace($this->getLexicon()->getScopeGlue(), '_', $node->getName())) . 'Item'
+                camel_case(str_replace($this->getLexicon()->getScopeGlue(), '_', $node->getName())) . 'Item'
             )
             ->setContextName($node->getName())
             ->setParsedContent($node->getContent());
@@ -227,7 +233,7 @@ abstract class Node implements NodeInterface
             $node->setLoopItemName($asSegments[1]);
         }
 
-        return $node;
+        return $this->getLexicon()->addNode($node);
     }
 
     /**
@@ -323,7 +329,6 @@ abstract class Node implements NodeInterface
      */
     public function addChild(NodeInterface $node)
     {
-        $this->getLexicon()->addNode($node);
         $this->children[$node->getId()] = $node->getId();
         return $this;
     }
@@ -482,7 +487,7 @@ abstract class Node implements NodeInterface
      */
     public function isRoot()
     {
-        return $this->root;
+        return !$this->getParent();
     }
 
     /**
@@ -621,13 +626,34 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Set node set
+     * @param string $nodeSet
+     * @return NodeInterface
+     */
+    public function setNodeSet($nodeSet = Lexicon::DEFAULT_NODE_SET)
+    {
+        $this->nodeSet = $nodeSet;
+        return $this;
+    }
+
+    /**
+     * Get node set
+     * @param string $nodeSet
+     * @return NodeInterface
+     */
+    public function getNodeSet()
+    {
+        return $this->nodeSet;
+    }
+
+    /**
      * Create child nodes
      *
-     * @return Node
+     * @return NodeInterface
      */
     public function createChildNodes()
     {
-        foreach ($this->lexicon->getNodeTypes() as $nodeType) {
+        foreach ($this->lexicon->getNodeTypes($this->getNodeSet()) as $nodeType) {
             if ($nodeType instanceof NodeInterface) {
                 foreach ($nodeType->getMatches($this->parsedContent) as $count => $match) {
                     $this->createChildNode($nodeType, $match, $count);
@@ -654,6 +680,8 @@ abstract class Node implements NodeInterface
             $this->getDepth(),
             $count
         );
+
+        $node->setNodeSet($this->getNodeSet());
 
         $node->createChildNodes();
 

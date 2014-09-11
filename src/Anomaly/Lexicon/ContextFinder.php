@@ -66,12 +66,12 @@ class ContextFinder
      */
     public function getItemName()
     {
-        if (($this->parent instanceof RootInterface) or $this->isRootContextName()) {
+
+        if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
             return '$__data';
         } elseif ($prefix = $this->getPrefix() and $node = $this->findLoopItemNode($prefix)) {
-            /** @var NodeInterface $node */
             return '$' . $node->getItemName();
-        } elseif ($this->parent instanceof RootInterface) {
+        } elseif ($this->parent and !$this->parent->isRoot()) {
             return '$' . $this->parent->getItemName();
         } else {
             return '$__data';
@@ -111,7 +111,7 @@ class ContextFinder
             while ($node and $node->getLoopItemName() !== $prefix) {
                 $node = $node->getParent();
             }
-            if ($node instanceof RootInterface) {
+            if ($node and $node->isRoot()) {
                 return null;
             }
         }

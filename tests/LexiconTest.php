@@ -1,5 +1,6 @@
 <?php
 
+use Anomaly\Lexicon\Lexicon;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\View\View;
 use Illuminate\Filesystem\Filesystem;
@@ -32,7 +33,7 @@ class LexiconTest extends LexiconTestCase
      */
     public function testRootNodeTypeNotFoundException()
     {
-        $this->lexicon->registerNodeTypes([]);
+        $this->lexicon->removeNodeTypeFromNodeSet('Anomaly\Lexicon\Node\Block', Lexicon::DEFAULT_NODE_SET);
         $this->lexicon->getRootNodeType();
     }
 

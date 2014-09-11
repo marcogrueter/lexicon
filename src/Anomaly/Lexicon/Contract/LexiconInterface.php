@@ -4,6 +4,7 @@ use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
+use Anomaly\Lexicon\Lexicon;
 
 interface LexiconInterface
 {
@@ -110,7 +111,30 @@ interface LexiconInterface
      * @param array $nodeTypes
      * @return LexiconInterface
      */
-    public function registerNodeTypes(array $nodeTypes);
+    public function registerNodeSet(array $nodeTypes, $nodeSet = Lexicon::DEFAULT_NODE_SET);
+
+    /**
+     * @param string $nodeSet
+     * @return array
+     */
+    public function getNodeSet($nodeSet = Lexicon::DEFAULT_NODE_SET);
+
+    /**
+     * Register node sets
+     *
+     * @param array $nodeSets
+     * @return LexiconInterface
+     */
+    public function registerNodeSets(array $nodeTypes = []);
+
+    /**
+     * Remove node type from node set
+     *
+     * @param $nodeType
+     * @param $nodeSet
+     * @return LexiconInterface
+     */
+    public function removeNodeTypeFromNodeSet($nodeType, $nodeSet);
 
     /**
      * Register plugins
@@ -177,4 +201,19 @@ interface LexiconInterface
      */
     public function addNode(NodeInterface $node);
 
+    /**
+     * Add node set path
+     *
+     * @param $path
+     * @return LexiconInterface
+     */
+    public function addNodeSetPath($path);
+
+    /**
+     * Get node set from path
+     *
+     * @param $path
+     * @return string
+     */
+    public function getNodeSetFromPath($path);
 }

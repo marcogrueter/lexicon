@@ -1,6 +1,7 @@
 <?php namespace Anomaly\Lexicon\Contract\Node;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Lexicon;
 
 interface NodeInterface extends ExtractionInterface
 {
@@ -244,4 +245,18 @@ interface NodeInterface extends ExtractionInterface
      */
     public function getContextName();
 
+    /**
+     * Set node set
+     *
+     * @param string $nodeSet
+     * @return LexiconInterface
+     */
+    public function setNodeSet($nodeSet = Lexicon::DEFAULT_NODE_SET);
+
+    /**
+     * Get node set
+     *
+     * @return string
+     */
+    public function getNodeSet();
 }
