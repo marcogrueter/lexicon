@@ -198,13 +198,13 @@ abstract class Node implements NodeInterface
     /**
      * Make a new node instance
      *
-     * @param array $match
-     * @param null  $parentId
-     * @param int   $depth
-     * @param int   $count
+     * @param array         $match
+     * @param NodeInterface $parent
+     * @param int           $depth
+     * @param int           $count
      * @return mixed
      */
-    public function make(array $match, $parentId = null, $depth = 0, $count = 0)
+    public function make(array $match, NodeInterface $parent = null, $depth = 0, $count = 0)
     {
         $depth = $this->incrementDepth() ? $depth + 1 : $depth;
 
@@ -212,7 +212,7 @@ abstract class Node implements NodeInterface
         $node = new static($this->getLexicon());
 
         $node
-            ->setParentId($parentId)
+            ->setParentId($parent ? $parent->getId() : null)
             ->setCount($count)
             ->setDepth($depth)
             ->setup($match);
@@ -627,6 +627,7 @@ abstract class Node implements NodeInterface
 
     /**
      * Set node set
+     *
      * @param string $nodeSet
      * @return NodeInterface
      */
@@ -638,6 +639,7 @@ abstract class Node implements NodeInterface
 
     /**
      * Get node set
+     *
      * @param string $nodeSet
      * @return NodeInterface
      */
@@ -676,7 +678,7 @@ abstract class Node implements NodeInterface
     {
         $node = $nodeType->make(
             $match,
-            $parentId = $this->getId(),
+            $parent = $this,
             $this->getDepth(),
             $count
         );

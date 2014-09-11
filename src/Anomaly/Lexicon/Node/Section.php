@@ -21,11 +21,13 @@ class Section extends Single
     {
         $name = $this->newAttributeParser()->compileAttribute('name');
 
+        $source = null;
+
         if (!empty($name)) {
-            return "\$__data['__env']->startSection({$name});";
+            $source = "\$__data['__env']->startSection({$name});";
         }
 
-        return null;
+        return $source;
     }
 
 }

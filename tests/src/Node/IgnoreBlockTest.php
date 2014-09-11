@@ -13,16 +13,15 @@ class IgnoreBlockTest extends LexiconTestCase
 
     public function testRendersTagWithoutParsingIt()
     {
-        $ignoreBlock = new IgnoreBlock($this->lexicon);
+        $node = new IgnoreBlock($this->lexicon);
 
-        $result = null;
+        $content = '{{ ignore }}{{ tag }}{{ /ignore }}';
 
-        foreach($ignoreBlock->getMatches('{{ ignore }}{{ tag }}{{ /ignore }}') as $match) {
-            $result = $ignoreBlock->make($match)->compile();
-            break;
-        }
+        $expected = '{{ tag }}';
 
-        $this->assertEquals('{{ tag }}', $result);
+        $result = $this->compileNode($node, $parent = null, $content);
+
+        $this->assertEquals($expected, $result);
     }
 }
  

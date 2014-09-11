@@ -21,11 +21,13 @@ class SectionYield extends Single
     {
         $name = $this->newAttributeParser()->compileAttribute('name');
 
+        $source = null;
+
         if (!empty($name)) {
-            return "echo \$__data['__env']->yieldContent({$name});";
+            $source = "echo \$__data['__env']->yieldContent({$name});";
         }
 
-        return null;
+        return $source;
     }
 
 }

@@ -13,14 +13,13 @@ class SingleNullTest extends LexiconTestCase
 
     public function testCommentSingleNullTypeCompilesToNull()
     {
-        $comment = new Comment($this->lexicon);
+        $node = new Comment($this->lexicon);
 
-        $result = 'NOT_NULL';
+        $default = 'NOT_NULL';
 
-        foreach($comment->getMatches('{{-- This comment won\'t render. --}}') as $match) {
-            $result = $comment->make($match)->compile();
-            break;
-        }
+        $content = '{{-- This comment will not be rendered --}}';
+
+        $result = $this->compileNode($node, $parent = null, $content, $default);
 
         $this->assertNull($result);
     }

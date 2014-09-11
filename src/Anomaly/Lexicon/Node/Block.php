@@ -55,6 +55,8 @@ class Block extends Node implements RootInterface
      */
     public function setup(array $match)
     {
+        $fullContent = isset($match['fullcontent']) ? $match['fullcontent'] : null;
+
         $fullContent = isset($match[0]) ? $match[0] : '';
 
         $content = isset($match[3]) ? $match[3] : null;

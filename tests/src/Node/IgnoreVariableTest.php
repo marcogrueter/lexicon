@@ -8,21 +8,20 @@ use Anomaly\Lexicon\Node\IgnoreVariable;
  * Time: 5:51 AM
  */
 
-class SingleRemainTest extends LexiconTestCase
+class IgnoreVariableTest extends LexiconTestCase
 {
 
     public function testRendersTagWithoutParsingIt()
     {
-        $ignoreVariable = new IgnoreVariable($this->lexicon);
+        $node = new IgnoreVariable($this->lexicon);
 
-        $result = null;
+        $content = '@{{ unprocessed }}';
 
-        foreach($ignoreVariable->getMatches('@{{ unprocessed }}') as $match) {
-            $result = $ignoreVariable->make($match)->compile();
-            break;
-        }
+        $expected = '{{ unprocessed }}';
 
-        $this->assertEquals('{{ unprocessed }}', $result);
+        $result = $this->compileNode($node, $parent = null, $content);
+
+        $this->assertEquals($expected, $result);
     }
 }
  

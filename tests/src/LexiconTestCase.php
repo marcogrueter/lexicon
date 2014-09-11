@@ -1,6 +1,7 @@
 <?php
 
 
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Node\Single;
 use Illuminate\Foundation\Testing\TestCase;
@@ -74,6 +75,22 @@ class LexiconTestCase extends TestCase
         $this->view->addNamespace('test', __DIR__ . '/../resources/views');
 
         return $app;
+    }
+
+    public function makeNode(NodeInterface $node, NodeInterface $parent = null, $content = '')
+    {
+        $matches = $node->getMatches($content);
+
+        if (!empty($matches)) {
+            $node = $node->make($matches[0], $parent);
+        }
+
+        return $node;
+    }
+
+    public function compileNode(NodeInterface $node, NodeInterface $parent = null, $content = '', $result = null)
+    {
+        return $this->makeNode($node, $parent, $content)->compile();
     }
 
     public function getTestsPath($path)

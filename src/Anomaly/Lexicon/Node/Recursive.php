@@ -18,15 +18,13 @@ class Recursive extends Single
      */
     public function compile()
     {
-        if ($parent = $this->getParent() and
-            $parent instanceof BlockInterface and
-            $content = $parent->getFullContent() and
-            !empty($content)
-        ) {
+        $source = null;
+
+        if ($parent = $this->getParent() and $parent instanceof BlockInterface) {
             $finder = $this->getContextFinder();
-            return "echo \$__data['__env']->parse('{$content}',{$finder->getItemName()});";
+            $source = "echo \$__data['__env']->parse('{$parent->getFullContent()}',{$finder->getItemName()});";
         }
 
-        return null;
+        return $source;
     }
 }

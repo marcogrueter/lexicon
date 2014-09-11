@@ -45,7 +45,7 @@ interface NodeInterface extends ExtractionInterface
      * @internal param null $parent
      * @return NodeInterface
      */
-    public function make(array $match, $parentId = null, $depth = 0, $count = 0);
+    public function make(array $match, NodeInterface $parent = null, $depth = 0, $count = 0);
 
     /**
      * Create child nodes
