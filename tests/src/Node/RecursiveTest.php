@@ -12,13 +12,20 @@ use Anomaly\Lexicon\Test\LexiconTestCase;
 class RecursiveTest extends LexiconTestCase
 {
 
+    /**
+     * Set up node
+     */
+    public function setUpNode()
+    {
+        $this->node = new Recursive($this->lexicon);
+    }
+
+    /**
+     * Test compiles expected source
+     */
     public function testCompilesExpectedSource()
     {
-        $block = new Block($this->lexicon);
-
-        $recursive = new Recursive($this->lexicon);
-
-        $content =
+        $template =
             '<ul>
             {{ nav }}
             <li>
@@ -32,7 +39,7 @@ class RecursiveTest extends LexiconTestCase
             {{ /nav }}
         </ul>';
 
-        $parent = $this->parseAndMakeNode($block, $parent = null, $content);
+        $parent = $this->parseAndMakeNode($this->makeBlockNode(), $parent = null, $template);
 
         $expected = "echo \$__data['__env']->parse('{{ nav }}
             <li>
@@ -45,7 +52,7 @@ class RecursiveTest extends LexiconTestCase
             </li>
             {{ /nav }}',\$__data);";
 
-        $result = $this->compileNode($recursive, $parent, $content);
+        $result = $this->compileNode($this->node, $parent, $template);
 
         $this->assertEquals($expected, $result);
     }

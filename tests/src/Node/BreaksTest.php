@@ -12,13 +12,22 @@ use Anomaly\Lexicon\Test\LexiconTestCase;
 class BreaksTest extends LexiconTestCase
 {
 
-    public function testGetRegexMatches()
+    /**
+     * Set up node
+     */
+    public function setUpNode()
     {
-        $node = new Breaks($this->lexicon);
+        $this->node = new Breaks($this->lexicon);
+    }
 
+    /**
+     * Test regex matches
+     */
+    public function testRegexMatches()
+    {
         $template = '{{ break }}';
 
-        $matches = $node->getMatches($template);
+        $matches = $this->node->getMatches($template);
 
         // One match
         $this->assertCount(1, $matches);
@@ -36,26 +45,33 @@ class BreaksTest extends LexiconTestCase
         $this->assertEquals(' ', $matches[0][2]);
     }
 
-    public function testCompilesContinueOnlyIfHasParent()
+    /**
+     * Test compiles source only if has a parent node
+     */
+    public function testCompilesSourceOnlyIfHasAParentNode()
     {
         $root = $this->makeBlockNode();
 
         $parent = $this->makeBlockNode('{{ break }}', $root);
 
-        $node = (new Breaks($this->lexicon))->make([], $parent);
+        $node = $this->node->make([], $parent);
 
         $result = $node->isValid() ? $node->compile() : null;
 
         $this->assertEquals('break;', $result);
     }
 
-    public function testCompilesNullIfDoesNotHaveParent()
+    /**
+     * Test compiles to null if it does NOT have a parent node
+     */
+    public function testCompilesNullIfDoesNotHaveAParentNode()
     {
-        $node = (new Breaks($this->lexicon))->make([]);
+        $node = $this->node->make([]);
 
         $result = $node->isValid() ? $node->compile() : null;
 
         $this->assertNull($result);
     }
+
 }
  

@@ -8,6 +8,7 @@ use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Node\Block;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\View\Factory;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -51,19 +52,14 @@ class LexiconTestCase extends TestCase
     protected $pluginHandler;
 
     /**
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var Filesystem
      */
     protected $files;
 
     /**
-     * @var Block
+     * @var NodeInterface
      */
-    protected $blockNode;
-
-    /**
-     * @var \Anomaly\Lexicon\Node\Comment
-     */
-    protected $commentNode;
+    protected $node;
 
     /**
      * Creates the application.
@@ -86,25 +82,56 @@ class LexiconTestCase extends TestCase
         $this->view               = $app['anomaly.lexicon.factory'];
         $this->files              = $app['files'];
 
-        $testingNodeSet = $this->lexicon->getNodeSet(Lexicon::DEFAULT_NODE_SET);
-
-        array_unshift($testingNodeSet, 'Anomaly\Lexicon\Test\Node\Undefined');
-
-        $this->lexicon->registerNodeSet($testingNodeSet, 'testing');
-
-        $this->view->addNamespace('test', $this->getTestsPath('resources/views'));
-
-        // Register the test plugin
-        $this->pluginHandler->register('test', 'Anomaly\Lexicon\Test\Plugin\TestPlugin');
+        $this->setUpNodeTypes();
+        $this->setUpViews();
+        $this->setUpPlugins();
+        $this->setUpNode();
 
         return $app;
     }
 
-    public function setUpNodeTypes()
+    /**
+     * Node type setup
+     */
+    public function setUpNode()
     {
-
     }
 
+    public function setUpNodeTypes()
+    {
+        $testingNodeSet = $this->lexicon->getNodeSet(Lexicon::DEFAULT_NODE_SET);
+
+        // Register `testing` node set based on `all` and prepend the Undefined node
+        array_unshift($testingNodeSet, 'Anomaly\Lexicon\Test\Node\Undefined');
+        $this->lexicon->registerNodeSet($testingNodeSet, 'testing');
+
+        $this->blockNode = new Block($this->lexicon);
+    }
+
+    /**
+     * Set up views
+     */
+    public function setUpViews()
+    {
+        // Add view namespace for tests
+        $this->view->addNamespace('test', $this->getTestsPath('resources/views'));
+    }
+
+    /**
+     * Set up plugins
+     */
+    public function setUpPlugins()
+    {
+        // Register the test plugin
+        $this->pluginHandler->register('test', 'Anomaly\Lexicon\Test\Plugin\TestPlugin');
+    }
+
+    /**
+     * @param NodeInterface $node
+     * @param NodeInterface $parent
+     * @param string        $template
+     * @return NodeInterface
+     */
     public function parseAndMakeNode(NodeInterface $node, NodeInterface $parent = null, $template = '')
     {
         $matches = $node->getMatches($template);
@@ -126,7 +153,7 @@ class LexiconTestCase extends TestCase
     {
         return (new Block($this->lexicon))->make(
             [
-                'name'    => 'root',
+                'name'    => str_random(40),
                 'content' => $template,
             ],
             $parent

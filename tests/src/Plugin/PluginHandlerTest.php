@@ -91,7 +91,7 @@ class PluginHandlerTest extends LexiconTestCase
     }
 
     /**
-     * Assert that the filter returns the expected md5 string
+     * Assert that the plugin filter returns the expected md5 string
      */
     public function testFilterPluginMethodReturnsExpectedMd5String()
     {

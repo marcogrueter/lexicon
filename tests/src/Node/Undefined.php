@@ -10,10 +10,22 @@ use Anomaly\Lexicon\Node\Single;
  */
 class Undefined extends Single
 {
+    
+    /**
+     * Node name
+     *
+     * @var string
+     */
     protected $name = 'undefined';
 
+    /**
+     * Compile source
+     *
+     * @return string
+     */
     public function compile()
     {
         return 'echo $testingUndefinedVariableToCauseViewException;';
     }
+
 }
