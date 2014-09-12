@@ -1,27 +1,29 @@
-<?php
+<?php namespace Anomaly\Lexicon\Test\Node;
+
 use Anomaly\Lexicon\Node\Comment;
+use Anomaly\Lexicon\Test\LexiconTestCase;
 
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/11/14
- * Time: 5:43 AM
+ * Class SingleNullTest
+ *
+ * @package Anomaly\Lexicon\Test\Node
  */
-
 class SingleNullTest extends LexiconTestCase
 {
 
-    public function testCommentSingleNullTypeCompilesToNull()
+    /**
+     * Comments should always compile to null regardless of any other factors
+     */
+    public function testCommentCompilesToNull()
     {
-        $node = new Comment($this->lexicon);
-
-        $default = 'NOT_NULL';
-
-        $content = '{{-- This comment will not be rendered --}}';
-
-        $result = $this->compileNode($node, $parent = null, $content, $default);
+        $result = (new Comment($this->lexicon))->make([])->compile();
 
         $this->assertNull($result);
+    }
+
+    public function testRegexMatches()
+    {
+        $content = '{{-- This comment will not be rendered --}}';
     }
 }
  

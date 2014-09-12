@@ -1,36 +1,21 @@
-<?php
+<?php namespace Anomaly\Lexicon\Test\Plugin;
+
+use Anomaly\Lexicon\Test\LexiconTestCase;
 
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/9/14
- * Time: 4:32 PM
+ * Class PluginHandlerTest
+ *
+ * @package Anomaly\Lexicon\Test\Plugin
  */
-class PluginHandlerTest extends LexiconTest
+class PluginHandlerTest extends LexiconTestCase
 {
-
-    /**
-     * @var \Anomaly\Lexicon\Contract\PluginHandlerInterface
-     */
-    protected $pluginHandler;
-
-    /**
-     * Set up
-     */
-    public function setUp()
-    {
-        parent::setUp();
-
-        // Register the test plugin
-        $this->pluginHandler->register('test', 'TestPlugin');
-    }
 
     /**
      * The plugin will only be called if there is a (.) scope
      */
     public function testGetInstanceOfPluginByName()
     {
-        $this->assertInstanceOf('TestPlugin', $this->pluginHandler->get('test.hello'));
+        $this->assertInstanceOf('Anomaly\Lexicon\Test\Plugin\TestPlugin', $this->pluginHandler->get('test.hello'));
     }
 
     /**

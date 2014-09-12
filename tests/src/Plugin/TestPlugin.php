@@ -1,6 +1,13 @@
-<?php
+<?php namespace Anomaly\Lexicon\Test\Plugin;
 
-class TestPlugin extends Anomaly\Lexicon\Plugin\Plugin
+use Anomaly\Lexicon\Plugin\Plugin;
+
+/**
+ * Class TestPlugin
+ *
+ * @package Anomaly\Lexicon\Test\Plugin
+ */
+class TestPlugin extends Plugin
 {
     /**
      * Hello method

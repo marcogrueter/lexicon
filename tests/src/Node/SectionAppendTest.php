@@ -1,14 +1,13 @@
-<?php
-use Anomaly\Lexicon\Node\SectionAppend;
+<?php namespace Anomaly\Lexicon\Test\Node;
+
 use Anomaly\Lexicon\Node\SectionOverwrite;
+use Anomaly\Lexicon\Test\LexiconTestCase;
 
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/11/14
- * Time: 6:00 AM
+ * Class SectionOverwriteTest
+ *
+ * @package Anomaly\Lexicon\Test\Node
  */
-
 class SectionOverwriteTest extends LexiconTestCase
 {
 

@@ -1,22 +1,30 @@
-<?php
+<?php namespace Anomaly\Lexicon\Test\View;
+
+use Anomaly\Lexicon\Test\LexiconTestCase;
+
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/11/14
- * Time: 4:30 AM
+ * Class ViewTest
+ *
+ * @package Anomaly\Lexicon\Test\View
  */
+class ViewTest extends LexiconTestCase
+{
 
-class ViewTest extends LexiconTest {
-
-
+    /**
+     * Test view `using` magic method
+     */
     public function testViewUsingMagicCall()
     {
         $this->view->make('test::magic', [])->usingMagic()->render();
     }
 
+    /**
+     * Test view `with` magic method
+     */
     public function testViewWithMagicCall()
     {
         $this->view->make('test::magic', [])->withFoo('bar')->render();
     }
+
 }
  

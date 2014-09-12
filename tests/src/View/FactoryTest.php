@@ -1,10 +1,11 @@
-<?php
+<?php namespace Anomaly\Lexicon\Test\View;
+
+use Anomaly\Lexicon\Test\LexiconTestCase;
 
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/9/14
- * Time: 6:39 PM
+ * Class FactoryTest
+ *
+ * @package Anomaly\Lexicon\Test\View
  */
 class FactoryTest extends LexiconTestCase
 {
@@ -70,8 +71,6 @@ class FactoryTest extends LexiconTestCase
 
         $this->assertEquals($expected, $this->view->make('test::extends', [])->render());
     }
-
-
 
 
 }

@@ -1,12 +1,13 @@
-<?php
+<?php namespace Anomaly\Lexicon\Test\Node;
+
 use Anomaly\Lexicon\Node\Block;
 use Anomaly\Lexicon\Node\Recursive;
+use Anomaly\Lexicon\Test\LexiconTestCase;
 
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/11/14
- * Time: 6:00 AM
+ * Class RecursiveTest
+ *
+ * @package Anomaly\Lexicon\Test\Node
  */
 class RecursiveTest extends LexiconTestCase
 {
@@ -31,7 +32,7 @@ class RecursiveTest extends LexiconTestCase
             {{ /nav }}
         </ul>';
 
-        $parent = $this->makeNode($block, $parent = null, $content);
+        $parent = $this->parseAndMakeNode($block, $parent = null, $content);
 
         $expected = "echo \$__data['__env']->parse('{{ nav }}
             <li>

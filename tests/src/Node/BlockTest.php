@@ -1,16 +1,18 @@
-<?php
-use Anomaly\Lexicon\Lexicon;
-use Anomaly\Lexicon\Node\Block;
+<?php namespace Anomaly\Lexicon\Test\Node;
+
+use Anomaly\Lexicon\Test\LexiconTestCase;
 
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/6/14
- * Time: 11:24 PM
+ * Class BlockTest
+ *
+ * @package Anomaly\Lexicon\Test\Node
  */
-class BlockTest extends LexiconTest
+class BlockTest extends LexiconTestCase
 {
 
 
+    public function testRegexMatches()
+    {
+    }
 }
  

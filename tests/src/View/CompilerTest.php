@@ -1,10 +1,11 @@
-<?php
+<?php namespace Anomaly\Lexicon\Test\View;
+
+use Anomaly\Lexicon\Test\LexiconTestCase;
 
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/11/14
- * Time: 4:08 AM
+ * Class CompilerTest
+ *
+ * @package Anomaly\Lexicon\Test\View
  */
 class CompilerTest extends LexiconTestCase
 {

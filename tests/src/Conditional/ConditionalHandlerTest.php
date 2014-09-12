@@ -1,15 +1,18 @@
-<?php
+<?php namespace Anomaly\Lexicon\Test\Conditional;
+
+use Anomaly\Lexicon\Test\LexiconTestCase;
 
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/11/14
- * Time: 5:09 AM
+ * Class ConditionalHandlerTest
+ *
+ * @package Anomaly\Lexicon\Test\Conditional
  */
 class ConditionalHandlerTest extends LexiconTestCase
 {
 
-
+    /**
+     * Test all boolean operators from the conditional handler
+     */
     public function testCompare()
     {
         $this->assertTrue($this->conditionalHandler->compare(11, 11, '==='));
@@ -22,23 +25,20 @@ class ConditionalHandlerTest extends LexiconTestCase
         $this->assertTrue($this->conditionalHandler->compare(33, 44, '<'));
     }
 
+    /**
+     * Test custom boolean test in test type class
+     */
     public function testCustomBooleanTest()
     {
         $this->conditionalHandler->registerBooleanTestTypes(
             [
-                'custom' => 'CustomBooleanTestType'
+                'custom' => 'Anomaly\Lexicon\Test\Conditional\CustomBooleanTestType'
             ]
         );
 
+        // The custom `isCoolerThan` test always returns true regardless of the compared values
+        // We just want to test that the mechanism works
         $this->assertTrue($this->conditionalHandler->compare('Lexicon', 'Lex', 'isCoolerThan'));
-    }
-}
-
-class CustomBooleanTestType
-{
-    public function isCoolerThan($left, $right)
-    {
-        return true;
     }
 }
  

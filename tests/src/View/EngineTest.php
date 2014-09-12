@@ -1,14 +1,12 @@
-<?php
-use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\View\Compiler\Compiler;
-use Anomaly\Lexicon\View\Compiler\CompilerEngine;
+<?php namespace Anomaly\Lexicon\Test\View;
+
+use Anomaly\Lexicon\Test\LexiconTestCase;
 use Illuminate\Filesystem\Filesystem;
 
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/7/14
- * Time: 10:55 AM
+ * Class EngineTest
+ *
+ * @package Anomaly\Lexicon\Test\View
  */
 class EngineTest extends LexiconTestCase
 {

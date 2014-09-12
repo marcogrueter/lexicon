@@ -1,44 +1,54 @@
-<?php
+<?php namespace Anomaly\Lexicon\Test;
 
-
+use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
+use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
+use Anomaly\Lexicon\Contract\View\CompilerInterface;
+use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Lexicon;
-use Anomaly\Lexicon\Node\Single;
+use Anomaly\Lexicon\Node\Block;
 use Illuminate\Foundation\Testing\TestCase;
+use Illuminate\View\Factory;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/6/14
- * Time: 7:45 PM
+ * Class LexiconTestCase
+ *
+ * @package Anomaly\Lexicon\Test
  */
 class LexiconTestCase extends TestCase
 {
 
     /**
-     * @var \Anomaly\Lexicon\Contract\LexiconInterface
+     * @var LexiconInterface
      */
     protected $lexicon;
 
     /**
-     * @var \Illuminate\View\Factory
+     * @var Factory
      */
     protected $view;
 
     /**
-     * @var \Anomaly\Lexicon\Contract\View\EngineInterface
+     * @var EngineInterface
      */
     protected $engine;
 
     /**
-     * @var \Anomaly\Lexicon\Contract\View\CompilerInterface
+     * @var CompilerInterface
      */
     protected $compiler;
 
     /**
-     * @var \Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface
+     * @var ConditionalHandlerInterface
      */
     protected $conditionalHandler;
+
+    /**
+     * @var PluginHandlerInterface
+     */
+    protected $pluginHandler;
 
     /**
      * @var \Illuminate\Filesystem\Filesystem
@@ -46,9 +56,19 @@ class LexiconTestCase extends TestCase
     protected $files;
 
     /**
+     * @var Block
+     */
+    protected $blockNode;
+
+    /**
+     * @var \Anomaly\Lexicon\Node\Comment
+     */
+    protected $commentNode;
+
+    /**
      * Creates the application.
      *
-     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
+     * @return HttpKernelInterface
      */
     public function createApplication()
     {
@@ -56,7 +76,7 @@ class LexiconTestCase extends TestCase
 
         $testEnvironment = 'testing';
 
-        $app = require __DIR__ . '/../resources/bootstrap/start.php';
+        $app = require $this->getTestsPath('resources/bootstrap/start.php');
 
         $this->lexicon            = $app['anomaly.lexicon'];
         $this->engine             = $app['anomaly.lexicon.engine'];
@@ -68,18 +88,26 @@ class LexiconTestCase extends TestCase
 
         $testingNodeSet = $this->lexicon->getNodeSet(Lexicon::DEFAULT_NODE_SET);
 
-        array_unshift($testingNodeSet, 'AnomalyLexiconUndefinedNode');
+        array_unshift($testingNodeSet, 'Anomaly\Lexicon\Test\Node\Undefined');
 
         $this->lexicon->registerNodeSet($testingNodeSet, 'testing');
 
-        $this->view->addNamespace('test', __DIR__ . '/../resources/views');
+        $this->view->addNamespace('test', $this->getTestsPath('resources/views'));
+
+        // Register the test plugin
+        $this->pluginHandler->register('test', 'Anomaly\Lexicon\Test\Plugin\TestPlugin');
 
         return $app;
     }
 
-    public function makeNode(NodeInterface $node, NodeInterface $parent = null, $content = '')
+    public function setUpNodeTypes()
     {
-        $matches = $node->getMatches($content);
+
+    }
+
+    public function parseAndMakeNode(NodeInterface $node, NodeInterface $parent = null, $template = '')
+    {
+        $matches = $node->getMatches($template);
 
         if (!empty($matches)) {
             $node = $node->make($matches[0], $parent);
@@ -88,9 +116,21 @@ class LexiconTestCase extends TestCase
         return $node;
     }
 
-    public function compileNode(NodeInterface $node, NodeInterface $parent = null, $content = '', $result = null)
+    public function compileNode(NodeInterface $node, NodeInterface $parent = null, $template = '', $default = null)
     {
-        return $this->makeNode($node, $parent, $content)->compile();
+        $node = $this->parseAndMakeNode($node, $parent, $template);
+        return $node->isValid() ? $node->compile() : $default;
+    }
+
+    public function makeBlockNode($template = '', NodeInterface $parent = null)
+    {
+        return (new Block($this->lexicon))->make(
+            [
+                'name'    => 'root',
+                'content' => $template,
+            ],
+            $parent
+        );
     }
 
     public function getTestsPath($path)
@@ -98,14 +138,4 @@ class LexiconTestCase extends TestCase
         return __DIR__ . '/../' . $path;
     }
 
-}
-
-class AnomalyLexiconUndefinedNode extends Single
-{
-    protected $name = 'undefined';
-
-    public function compile()
-    {
-        return 'echo $testingUndefinedVariableToCauseViewException;';
-    }
 }

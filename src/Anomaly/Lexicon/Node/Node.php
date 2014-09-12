@@ -965,6 +965,36 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Node has a parent block
+     *
+     * @return bool
+     */
+    public function hasParentBlock()
+    {
+        return $this->getParent() instanceof BlockInterface;
+    }
+
+    /**
+     * Node has parent root
+     *
+     * @return bool
+     */
+    public function hasParentRoot()
+    {
+        return $parent = $this->getParent() and $parent->isRoot();
+    }
+
+    /**
+     * Node has parent block which is not the root
+     *
+     * @return bool
+     */
+    public function hasParentBlockNotRoot()
+    {
+        return $this->hasParentBlock() and !$this->hasParentRoot();
+    }
+
+    /**
      * Compress
      *
      * @param $string

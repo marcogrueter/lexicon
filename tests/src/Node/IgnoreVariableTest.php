@@ -1,13 +1,13 @@
-<?php
+<?php namespace Anomaly\Lexicon\Test\Node;
+
 use Anomaly\Lexicon\Node\IgnoreVariable;
+use Anomaly\Lexicon\Test\LexiconTestCase;
 
 /**
- * Created by PhpStorm.
- * User: ob
- * Date: 9/11/14
- * Time: 5:51 AM
+ * Class IgnoreVariableTest
+ *
+ * @package Anomaly\Lexicon\Test\Node
  */
-
 class IgnoreVariableTest extends LexiconTestCase
 {
 
