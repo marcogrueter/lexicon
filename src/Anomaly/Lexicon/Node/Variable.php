@@ -47,7 +47,7 @@ class Variable extends Single
             $end  = ';';
         }
 
-        return "{$echo}{$this->compileVariable()}{$end}";
+        return "{$echo}{$this->escape($this->compileVariable())}{$end}";
     }
 
     public function compileKey()
@@ -66,7 +66,7 @@ class Variable extends Single
 
             $node = $this->make(['name' => $this->getName()], $this->getParent());
 
-            $finder = $node->getContextFinder();
+            $finder = $node->getNodeFinder();
 
             return $finder->getName();
         }
@@ -78,7 +78,7 @@ class Variable extends Single
     {
         $attributes = $this->newAttributeParser()->compile();
 
-        $finder = $this->getContextFinder();
+        $finder = $this->getNodeFinder();
 
         $expected = Lexicon::ECHOABLE;
 

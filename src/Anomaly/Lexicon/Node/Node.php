@@ -1,7 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
 use Anomaly\Lexicon\Attribute\AttributeParser;
-use Anomaly\Lexicon\ContextFinder;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
@@ -95,9 +94,9 @@ abstract class Node implements NodeInterface
     /**
      * Context finder
      *
-     * @var ContextFinder
+     * @var NodeFinder
      */
-    protected $contextFinder;
+    protected $NodeFinder;
 
     /**
      * @var string|null
@@ -695,88 +694,36 @@ abstract class Node implements NodeInterface
     /**
      * Extract node content
      *
-     * @param NodeInterface|Node $node
+     * @param NodeInterface $node
      * @return Node
      */
-    protected function extract(NodeInterface $node)
+    protected function extract(NodeInterface $childNode)
     {
-        if (method_exists($node, 'getExtractionContentOpen')) {
-            $this->setParsedContent(
-                str_replace(
-                    $node->getExtractionContentOpen(),
-                    $node->getExtractionId('open'),
-                    $this->getParsedContent()
-                )
-            );
-        }
-
-        if (method_exists($node, 'getExtractionContentClose')) {
-            $this->setParsedContent(
-                str_replace(
-                    $node->getExtractionContentClose(),
-                    $node->getExtractionId('close'),
-                    $this->getParsedContent()
-                )
-            );
-        }
-
-        $this->setParsedContent(
-            str_replace(
-                $node->getExtractionContent(),
-                $node->getExtractionId(),
-                $this->getParsedContent()
-            )
-        );
-
-        $this->addChild($node);
-
-        return $this;
+        return $this->newExtractor($this, $childNode)->extract();
     }
 
     /**
      * Inject node content
      *
-     * @param NodeInterface|Node $node
+     * @param NodeInterface $node
      * @return NodeInterface
      */
-    protected function inject(NodeInterface $node)
+    protected function inject(NodeInterface $childNode)
     {
-
-        if (method_exists($node, 'compileOpen')) {
-            $this->setParsedContent(
-                str_replace(
-                    $node->getExtractionId('open'),
-                    $node->validate() ? $this->php($node->compileOpen()) : null,
-                    $this->getParsedContent()
-                )
-            );
-        }
-
-        if (method_exists($node, 'compileClose')) {
-            $this->setParsedContent(
-                str_replace(
-                    $node->getExtractionId('close'),
-                    $node->validate() ? $this->php($node->compileClose()) : null,
-                    $this->getParsedContent()
-                )
-            );
-        }
-
-        if ($node instanceof BlockInterface or !$node->isPhp()) {
-            $compile = $node->compile();
-        } else {
-            $compile = $this->php($node->compile());
-        }
-
-        $this->setParsedContent(
-            str_replace(
-                $node->getExtractionId(),
-                $node->validate() ? $compile : null,
-                $this->getParsedContent()
-            )
-        );
-
+        $this->newExtractor($this, $childNode)->inject();
         return $this;
+    }
+
+    /**
+     * New node extractor
+     *
+     * @param NodeInterface $node
+     * @param NodeInterface $childNode
+     * @return NodeExtractor
+     */
+    public function newExtractor(NodeInterface $node, NodeInterface $childNode)
+    {
+        return new NodeExtractor($node, $childNode);
     }
 
     /**
@@ -793,12 +740,17 @@ abstract class Node implements NodeInterface
         return '<?php ' . $segment . ' ?>';
     }
 
-    /**
-     * @return ContextFinder
-     */
-    public function getContextFinder()
+    public function escape($source)
     {
-        return new ContextFinder($this);
+        return 'e(' . $source . ')';
+    }
+
+    /**
+     * @return NodeFinder
+     */
+    public function getNodeFinder()
+    {
+        return new NodeFinder($this);
     }
 
     /**

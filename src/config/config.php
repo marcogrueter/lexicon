@@ -74,7 +74,6 @@ return array(
             'Anomaly\Lexicon\Node\SectionStop',
             'Anomaly\Lexicon\Node\SectionYield',
             'Anomaly\Lexicon\Node\Includes',
-            'Anomaly\Lexicon\Node\VariableEscaped',
             'Anomaly\Lexicon\Node\Variable',
         ],
         /**
@@ -89,7 +88,6 @@ return array(
             'Anomaly\Lexicon\Node\IgnoreVariable',
             'Anomaly\Lexicon\Node\Block',
             'Anomaly\Lexicon\Node\Recursive',
-            'Anomaly\Lexicon\Node\VariableEscaped',
             'Anomaly\Lexicon\Node\Variable',
         ],
         /**
@@ -101,7 +99,6 @@ return array(
             'Anomaly\Lexicon\Node\Conditional',
             'Anomaly\Lexicon\Node\ConditionalElse',
             'Anomaly\Lexicon\Node\ConditionalEndif',
-            'Anomaly\Lexicon\Node\VariableEscaped',
             'Anomaly\Lexicon\Node\Variable',
         ]
     ],

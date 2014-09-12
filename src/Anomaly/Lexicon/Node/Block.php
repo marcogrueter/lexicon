@@ -225,7 +225,7 @@ class Block extends Node implements RootInterface
     {
         $attributes = $this->newAttributeParser()->compile();
 
-        $finder = $this->getContextFinder();
+        $finder = $this->getNodeFinder();
 
         $expected = Lexicon::ECHOABLE;
 
@@ -242,7 +242,7 @@ class Block extends Node implements RootInterface
     {
         $attributes = $this->newAttributeParser()->compile();
 
-        $finder = $this->getContextFinder();
+        $finder = $this->getNodeFinder();
 
         $expected = Lexicon::ECHOABLE;
 
@@ -263,7 +263,7 @@ class Block extends Node implements RootInterface
 
         $expected = Lexicon::TRAVERSABLE;
 
-        $finder = $this->getContextFinder();
+        $finder = $this->getNodeFinder();
 
         $itemName = $finder->getItemName();
 

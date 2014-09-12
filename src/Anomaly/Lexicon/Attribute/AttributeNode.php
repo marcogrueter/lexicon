@@ -208,7 +208,7 @@ class AttributeNode extends Node
 
             $node = $this->newVariableNode()->make(['name' => $this->getEmbeddedAttribute()->getName()], $this->getParent());
 
-            $finder = $node->getContextFinder();
+            $finder = $node->getNodeFinder();
 
             return $finder->getName();
         }
@@ -225,7 +225,7 @@ class AttributeNode extends Node
     {
         $node = $this->newVariableNode()->make(['name' => $this->getEmbeddedAttribute()->getName()], $this->getParent());
 
-        $finder = $node->getContextFinder();
+        $finder = $node->getNodeFinder();
 
         return "\$__data['__env']->variable({$finder->getItemName()},'{$finder->getName()}', [])";
     }

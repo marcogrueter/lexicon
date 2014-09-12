@@ -1,12 +1,16 @@
-<?php namespace Anomaly\Lexicon;
+<?php namespace Anomaly\Lexicon\Node;
+
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
-use Anomaly\Lexicon\Contract\Node\RootInterface;
 
-class ContextFinder
+/**
+ * Class NodeFinder
+ *
+ * @package Anomaly\Lexicon\Node
+ */
+class NodeFinder
 {
-
     /**
      * @var NodeInterface
      */
@@ -146,5 +150,4 @@ class ContextFinder
     {
         return $this->lexicon->getRootContextName() . $this->lexicon->getScopeGlue();
     }
-
-}
+} 

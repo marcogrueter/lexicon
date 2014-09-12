@@ -232,7 +232,7 @@ class ConditionalParser
             return $matches[1];
         }
 
-        $finder = $this->variableNode->make(['name' => $key], $this->node->getParent())->getContextFinder();
+        $finder = $this->variableNode->make(['name' => $key], $this->node->getParent())->getNodeFinder();
 
         return "\$__data['__env']->variable({$finder->getItemName()}, '{$finder->getName()}')";
     }

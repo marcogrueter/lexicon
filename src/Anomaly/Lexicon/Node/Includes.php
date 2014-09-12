@@ -24,11 +24,13 @@ class Includes extends Single
         $attribute = $attributeParser->compileAttribute('partial', 0);
         $share = $attributeParser->compileNamedFromOrdered([0 => 'partial']);
 
+        $source = null;
+
         if (!empty($attribute)) {
-            return "echo \$__data['__env']->make({$attribute},array_merge(\$__data,{$share}))->render();";
+            $source = "echo \$__data['__env']->make({$attribute},array_merge(\$__data,{$share}))->render();";
         }
 
-        return null;
+        return $source;
     }
 
 }
