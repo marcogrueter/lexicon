@@ -149,11 +149,11 @@ class LexiconTestCase extends TestCase
         return $node->isValid() ? $node->compile() : $default;
     }
 
-    public function makeBlockNode($template = '', NodeInterface $parent = null)
+    public function makeBlockNode($name = 'root', $template = '', NodeInterface $parent = null)
     {
         return (new Block($this->lexicon))->make(
             [
-                'name'    => str_random(40),
+                'name'    => $name,
                 'content' => $template,
             ],
             $parent

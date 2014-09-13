@@ -51,9 +51,9 @@ class ContinuesTest extends LexiconTestCase
     {
         $template = '{{ posts }}{{ continue }}{{ /posts }}';
 
-        $root = $this->makeBlockNode($template);
+        $root = $this->makeBlockNode('posts', $template);
 
-        $parent = $this->makeBlockNode($root->getContent(), $root);
+        $parent = $this->makeBlockNode('parent', $root->getContent(), $root);
 
         $result = $this->compileNode($this->node, $parent, $parent->getContent());
 

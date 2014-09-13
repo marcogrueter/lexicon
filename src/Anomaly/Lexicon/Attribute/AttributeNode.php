@@ -227,7 +227,7 @@ class AttributeNode extends Node
 
         $finder = $node->getNodeFinder();
 
-        return "\$__data['__env']->variable({$finder->getItemName()},'{$finder->getName()}', [])";
+        return "\$__data['__env']->variable({$finder->getItemSource()},'{$finder->getName()}', [])";
     }
 
     public function compileLiteral()

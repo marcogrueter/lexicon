@@ -17,25 +17,11 @@ class NodeFinder
     protected $node;
 
     /**
-     * Lexicon environment
-     *
-     * @var LexiconInterface
-     */
-    protected $lexicon;
-
-    /**
-     * @var NodeInterface
-     */
-    protected $parent;
-
-    /**
      * @param NodeInterface $node
      */
     public function __construct(NodeInterface $node)
     {
-        $this->node    = $node;
-        $this->lexicon = $this->node->getLexicon();
-        $this->parent  = $this->node->getParent();
+        $this->node = $node;
     }
 
     /**
@@ -48,16 +34,24 @@ class NodeFinder
         $string = $this->node->getName();
         $prefix = $this->getRootStart();
 
-        if (substr($string, 0, strlen($prefix)) == $prefix) {
-            $string = substr($string, strlen($prefix));
-        }
-
-        $prefix = $this->getPrefix() . $this->lexicon->getScopeGlue();
-
-        if ($this->getPrefix() and $this->findLoopItemNode($this->getPrefix())) {
+        if ($this->hasRootContextName()) {
+            // Remove data. from name
             if (substr($string, 0, strlen($prefix)) == $prefix) {
+
                 $string = substr($string, strlen($prefix));
+
             }
+
+        } elseif ($prefix = $this->getPrefix() and $this->findLoopItemNode($prefix)) {
+
+            $prefix .= $this->getLexicon()->getScopeGlue();
+
+            if (substr($string, 0, strlen($prefix)) == $prefix) {
+
+                $string = substr($string, strlen($prefix));
+
+            }
+
         }
 
         return $string;
@@ -68,19 +62,33 @@ class NodeFinder
      *
      * @return string
      */
-    public function getItemName()
+    public function getItemSource()
     {
+        $source = '$__data';
 
-        if (($this->parent and $this->parent->isRoot()) or $this->isRootContextName()) {
-            return '$__data';
-        } elseif ($prefix = $this->getPrefix() and $node = $this->findLoopItemNode($prefix)) {
-            return '$' . $node->getItemName();
-        } elseif ($this->parent and !$this->parent->isRoot()) {
-            return '$' . $this->parent->getItemName();
-        } else {
-            return '$__data';
+        if ($this->hasRootContextName()) {
+
+            $source = '$__data';
+
+        } elseif (!$this->isChildOfRoot()) {
+
+            if ($prefix = $this->getPrefix() and $node = $this->findLoopItemNode($prefix)) {
+
+                $source = '$' . $node->getItemName();
+
+            } else {
+
+                $source = '$' . $this->getParent()->getItemName();
+
+            }
         }
 
+        return $source;
+    }
+
+    public function isChildOfRoot()
+    {
+        return ($parent = $this->getParent() and $parent->isRoot());
     }
 
     /**
@@ -90,14 +98,12 @@ class NodeFinder
      */
     public function getPrefix()
     {
-        $name = $this->node->getName();
-
-        $nameSegments = explode($this->lexicon->getScopeGlue(), $name);
-
         $prefix = null;
 
-        if (count($nameSegments) > 1 and !$this->isRootContextName()) {
-            $prefix = $nameSegments[0];
+        $parts = explode($this->getLexicon()->getScopeGlue(), $this->node->getName());
+
+        if ($this->hasMultipleScopes() and !$this->hasRootContextName()) {
+            $prefix = $parts[0];
         }
 
         return $prefix;
@@ -111,13 +117,18 @@ class NodeFinder
      */
     public function findLoopItemNode($prefix)
     {
-        if ($node = $this->node->getParent()) {
-            while ($node and $node->getLoopItemName() !== $prefix) {
-                $node = $node->getParent();
-            }
-            if ($node and $node->isRoot()) {
-                return null;
-            }
+        $node = $this->node->getParent();
+
+        while ($node and $node->getParent() and $node->getLoopItemName() !== $prefix) {
+
+            $node = $node->getParent();
+
+        }
+
+        if ($node and $node->isRoot()) {
+
+            $node = $this->node->getParent();
+
         }
 
         return $node;
@@ -128,26 +139,41 @@ class NodeFinder
      *
      * @return bool
      */
-    public function isRootContextName()
+    public function hasRootContextName()
     {
-        return $this->isAlternateContextName($this->lexicon->getRootContextName() . $this->lexicon->getScopeGlue());
+        return $this->hasAlternateContextName(
+            $this->getLexicon()->getRootContextName() . $this->getLexicon()->getScopeGlue()
+        );
     }
 
-
-    public function isAlternateContextName($start)
+    public function hasAlternateContextName($start)
     {
-        return $this->hasMultipleScopes() and starts_with($this->node->getContextName(), $start);
+        return ($this->hasMultipleScopes() and starts_with($this->node->getContextName(), $start));
     }
 
     public function hasMultipleScopes()
     {
-        $segments = explode('.', $this->node->getContextName());
-
-        return count($segments) > 1;
+        return str_contains($this->node->getContextName(), $this->getLexicon()->getScopeGlue());
     }
 
     public function getRootStart()
     {
-        return $this->lexicon->getRootContextName() . $this->lexicon->getScopeGlue();
+        return $this->getLexicon()->getRootContextName() . $this->getLexicon()->getScopeGlue();
+    }
+
+    /**
+     * @return LexiconInterface
+     */
+    public function getLexicon()
+    {
+        return $this->node->getLexicon();
+    }
+
+    /**
+     * @return NodeInterface
+     */
+    public function getParent()
+    {
+        return $this->node->getParent();
     }
 } 

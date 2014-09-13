@@ -22,7 +22,7 @@ class Recursive extends Single
 
         if ($parent = $this->getParent() and $parent instanceof BlockInterface) {
             $finder = $this->getNodeFinder();
-            $source = "echo \$__data['__env']->parse('{$parent->getFullContent()}',{$finder->getItemName()});";
+            $source = "echo \$__data['__env']->parse('{$parent->getFullContent()}',{$finder->getItemSource()});";
         }
 
         return $source;

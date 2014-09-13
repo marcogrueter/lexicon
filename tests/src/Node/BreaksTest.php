@@ -52,7 +52,7 @@ class BreaksTest extends LexiconTestCase
     {
         $root = $this->makeBlockNode();
 
-        $parent = $this->makeBlockNode('{{ break }}', $root);
+        $parent = $this->makeBlockNode('break', '{{ break }}', $root);
 
         $node = $this->node->make([], $parent);
 

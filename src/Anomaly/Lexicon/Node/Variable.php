@@ -82,7 +82,7 @@ class Variable extends Single
 
         $expected = Lexicon::ECHOABLE;
 
-        return "\$__data['__env']->variable({$finder->getItemName()}, '{$finder->getName(
+        return "\$__data['__env']->variable({$finder->getItemSource()}, '{$finder->getName(
         )}', {$attributes}, '', null, '{$expected}')";
     }
 }

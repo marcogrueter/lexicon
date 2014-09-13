@@ -234,7 +234,7 @@ class ConditionalParser
 
         $finder = $this->variableNode->make(['name' => $key], $this->node->getParent())->getNodeFinder();
 
-        return "\$__data['__env']->variable({$finder->getItemName()}, '{$finder->getName()}')";
+        return "\$__data['__env']->variable({$finder->getItemSource()}, '{$finder->getName()}')";
     }
 
     public function getComparisonSource($left, $right, $operator = null)
