@@ -12,7 +12,7 @@
         >
     <testsuites>
         <testsuite name="Lexicon Test Suite">
-            <directory>./tests/src</directory>
+            <directory>tests/src</directory>
         </testsuite>
     </testsuites>
 
@@ -21,6 +21,7 @@
             <directory suffix=".php">src</directory>
             <exclude>
                 <directory suffix=".php">vendor</directory>
+                <directory suffix=".php">src/config</directory>
             </exclude>
         </whitelist>
     </filter>

@@ -31,5 +31,5 @@ interface ConditionalHandlerInterface
      * @param null $operator
      * @return mixed
      */
-    public function customTest($left, $right, $operator = null)
+    public function customTest($left, $right, $operator = null);
 } 

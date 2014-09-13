@@ -56,8 +56,8 @@ return array(
      * in the view. Here is an example.
      * View::make('foo', $data)->lexicon('simple')->render()
      */
-    'nodeSets'          => [
-        'all'   => [
+    'nodeSets'           => [
+        'all'       => [
             'Anomaly\Lexicon\Node\Comment',
             'Anomaly\Lexicon\Node\IgnoreBlock',
             'Anomaly\Lexicon\Node\IgnoreVariable',
@@ -79,7 +79,7 @@ return array(
         /**
          * Compile without layout features
          */
-        'simple' => [
+        'simple'    => [
             'Anomaly\Lexicon\Node\Comment',
             'Anomaly\Lexicon\Node\Conditional',
             'Anomaly\Lexicon\Node\ConditionalElse',

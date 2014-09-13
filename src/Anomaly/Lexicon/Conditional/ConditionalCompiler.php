@@ -4,7 +4,7 @@ use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\Variable;
 
-class ConditionalParser
+class ConditionalCompiler
 {
     protected $expression;
 
@@ -25,6 +25,9 @@ class ConditionalParser
      */
     protected $logicalOperatorPlaceholder = ' __LOGICAL__OPERATOR__ ';
 
+    /**
+     * @var array
+     */
     public $startConditionals = array(
         'if',
         'unless',
@@ -32,6 +35,9 @@ class ConditionalParser
         'elseunless'
     );
 
+    /**
+     * @var array
+     */
     protected $logicalOperators = array(
         'and',
         'or',
@@ -39,6 +45,9 @@ class ConditionalParser
         '\|\|',
     );
 
+    /**
+     * @var array
+     */
     protected $comparisonOperators = array(
         '===',
         '!==',
@@ -70,12 +79,24 @@ class ConditionalParser
      */
     protected $logicalOperatorsFound = array();
 
+    /**
+     * @var
+     */
     public $expressionArray;
 
+    /**
+     * @var string
+     */
     public $parsedExpression = '';
 
+    /**
+     * @var
+     */
     public $parsedName;
 
+    /**
+     * @var array
+     */
     public $noParseKey = array(
         'null',
         'true',
@@ -113,7 +134,7 @@ class ConditionalParser
         $this->lexicon      = $node->getLexicon();
         $this->expression   = $this->node->compress($node->getExpression());
         $this->variableNode = new Variable($node->getLexicon());
-        $this->start = $node->getName();
+        $this->start        = $node->getName();
 
 
         $this->parse();
@@ -128,7 +149,7 @@ class ConditionalParser
     }
 
     /**
-     * @return ConditionalParser
+     * @return ConditionalCompiler
      */
     public function parse()
     {
@@ -161,11 +182,17 @@ class ConditionalParser
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getComparisons()
     {
         return explode($this->logicalOperatorPlaceholder, $this->expression);
     }
 
+    /**
+     * Parse comparisons
+     */
     public function parseComparisons()
     {
         foreach ($this->getComparisons() as $comparison) {
@@ -173,6 +200,12 @@ class ConditionalParser
         }
     }
 
+    /**
+     * Parse comparison
+     *
+     * @param $comparison
+     * @return $this
+     */
     public function parseComparison($comparison)
     {
         $hasNotOperator = (strpos($comparison, '! ') !== false);
@@ -185,7 +218,7 @@ class ConditionalParser
 
             $parts = explode($operator, $comparison);
 
-            $left = null;
+            $left  = null;
             $right = null;
 
             if (count($parts) == 2) {
@@ -193,16 +226,22 @@ class ConditionalParser
                 $right = $parts[1];
             }
 
-            $this->comparisons[] = $not.$this->getComparisonSource($left, $right, $operator);
+            $this->comparisons[] = $not . $this->getComparisonSource($left, $right, $operator);
 
         } else {
 
-            $this->comparisons[] = $not.$this->getPartSource($part = $comparison);
+            $this->comparisons[] = $not . $this->getPartSource($part = $comparison);
         }
 
         return $this;
     }
 
+    /**
+     * Get part source
+     *
+     * @param $key
+     * @return string
+     */
     public function getPartSource($key)
     {
         $key = trim($key);
@@ -237,9 +276,19 @@ class ConditionalParser
         return "\$__data['__env']->variable({$finder->getItemSource()}, '{$finder->getName()}')";
     }
 
+    /**
+     * Get comparison source
+     *
+     * @param      $left
+     * @param      $right
+     * @param null $operator
+     * @return string
+     */
     public function getComparisonSource($left, $right, $operator = null)
     {
-        return "\$__data['__env']->compare({$this->getPartSource($left)}, {$this->getPartSource($right)}, '{$operator}') ";
+        return "\$__data['__env']->compare({$this->getPartSource($left)}, {$this->getPartSource(
+            $right
+        )}, '{$operator}') ";
     }
 
     public function getOperatorMatch($comparison)

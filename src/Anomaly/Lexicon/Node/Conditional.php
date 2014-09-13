@@ -1,5 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Conditional\ConditionalCompiler;
 use Anomaly\Lexicon\Conditional\ConditionalParser;
 use Anomaly\Lexicon\Conditional\Validator\ElseifValidator;
 use Anomaly\Lexicon\Conditional\Validator\IfValidator;
@@ -27,13 +28,6 @@ class Conditional extends Single implements ConditionalInterface
     protected $expression = '';
 
     /**
-     * Conditional parser
-     *
-     * @var ConditionalParser
-     */
-    protected $parser;
-
-    /**
      * @return string
      */
     public function getNameMatcher()
@@ -52,8 +46,7 @@ class Conditional extends Single implements ConditionalInterface
         $this
             ->setName($match[1])
             ->setExtractionContent($match[0])
-            ->setExpression($match[2])
-            ->setParser(new ConditionalParser($this));
+            ->setExpression($match[2]);
 
         if ($this->getName() == 'if') {
             $this->setValidator(new IfValidator($this));
@@ -63,15 +56,13 @@ class Conditional extends Single implements ConditionalInterface
     }
 
     /**
-     * Set conditional parser
+     * Get conditional parser
      *
-     * @param $parser ConditionalParser
-     * @return ConditionalParser
+     * @return ConditionalCompiler
      */
-    public function setParser($parser)
+    public function getCompiler()
     {
-        $this->parser = $parser;
-        return $this;
+        return new ConditionalCompiler($this);
     }
 
     /**
@@ -101,7 +92,7 @@ class Conditional extends Single implements ConditionalInterface
      */
     public function compile()
     {
-        return "{$this->parser->getStart()} ({$this->parser->getExpression()}):";
+        return "{$this->getCompiler()->getStart()} ({$this->getCompiler()->getExpression()}):";
     }
 
 }
