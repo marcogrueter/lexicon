@@ -217,14 +217,6 @@ interface NodeInterface extends ExtractionInterface
     public function setContent($content);
 
     /**
-     * Set parsed attributes
-     *
-     * @param $parsedAttributes
-     * @return NodeInterface
-     */
-    public function setParsedAttributes($parsedAttributes);
-
-    /**
      * Get item name
      *
      * @return string
@@ -266,4 +258,38 @@ interface NodeInterface extends ExtractionInterface
      * @return string
      */
     public function getRawAttributes();
+
+    /**
+     * Set parsed attributes
+     *
+     * @param $rawAttributes
+     * @return NodeInterface
+     */
+    public function setRawAttributes($rawAttributes);
+
+    /**
+     * Set loop item name
+     *
+     * @param $loopItemName
+     * @return mixed
+     */
+    public function setLoopItemName($loopItemName);
+
+    /**
+     * Get loop item in raw attributes
+     *
+     * @return string
+     */
+    public function getLoopItemInRawAttributes();
+
+    /**
+     * @return bool
+     */
+    public function isFilter();
+
+    /**
+     * @return bool
+     */
+    public function isParse();
+
 }

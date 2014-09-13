@@ -47,5 +47,66 @@ class BlockTest extends LexiconTestCase
         $this->assertEquals('<h1>{{ title }}</h1>', $matches[0][3]);
     }
 
+    /**
+     * Test get loop item from raw attributes
+     */
+    public function testGetLoopItemFromRawAttributes()
+    {
+        $this->node->setRawAttributes(' as post');
+
+        $loopItem = $this->node->getLoopItemInRawAttributes();
+
+        $this->assertSame('post', $loopItem);
+    }
+
+    /**
+     * Test that the node has a plugin and the md5 method is a filter
+     */
+    public function testNodeHasPluginAndTheMethodIsAFilter()
+    {
+        $this->node->setName('test.md5');
+
+        $this->assertTrue($this->node->isFilter());
+    }
+
+    /**
+     * Test that the node has a plugin and the lowercase method is a filter
+     */
+    public function testNodeHasPluginAndTheMethodIsAParseAbleFilter()
+    {
+        $this->node->setName('test.lowercase');
+
+        $this->assertTrue($this->node->isParse());
+    }
+
+    /**
+     * Test get closing tag
+     */
+    public function testGetClosingTagRegex()
+    {
+        $this->assertEquals('/\{\{\s*(\/test)\s*\}\}/m', $this->node->getClosingTagRegex('test'));
+    }
+
+    public function testGetMatch()
+    {
+        $regex = '/\{\{\s*(\/test)\s*\}\}/m';
+        $string = '{{ /test }}';
+        $match = $this->node->getMatch($string, $regex);
+
+        $expected = [
+            '{{ /test }}',
+            '/test'
+        ];
+
+        $this->assertSame($expected, $match);
+    }
+
+    public function testValidator()
+    {
+        $this->node->setValidator(new TestValidator());
+        $this->assertTrue($this->node->validate());
+    }
+
+
 }
  

@@ -23,7 +23,7 @@ abstract class Single extends Node
 
         $this
             ->setName($name)
-            ->setParsedAttributes($parsedAttributes)
+            ->setRawAttributes($parsedAttributes)
             ->setExtractionContent($extractionContent);
     }
     

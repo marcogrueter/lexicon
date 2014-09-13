@@ -67,14 +67,14 @@ class Block extends Node implements RootInterface
 
         $name = isset($match['name']) ? $match['name'] : $name;
 
-        $parsedAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
+        $rawAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
 
         $this
             ->setName($name)
             ->setFullContent($fullContent)
             ->setContent($content)
             ->setExtractionContent($content)
-            ->setParsedAttributes($parsedAttributes);
+            ->setRawAttributes($rawAttributes);
 
         if (isset($match['id'])) {
             $this->setId($match['id']);

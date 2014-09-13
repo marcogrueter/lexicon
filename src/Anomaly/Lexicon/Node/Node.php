@@ -222,23 +222,33 @@ abstract class Node implements NodeInterface
                 camel_case(str_replace($this->getLexicon()->getScopeGlue(), '_', $node->getName())) . 'Item'
             )
             ->setContextName($node->getName())
-            ->setParsedContent($node->getContent());
-
-        $rawAttributes = $node->getRawAttributes();
-
-        $asSegments = explode('as', $rawAttributes);
-
-        if (count($asSegments) == 2) {
-            $node->setLoopItemName($asSegments[1]);
-        }
+            ->setParsedContent($node->getContent())
+            ->setLoopItemName($node->getLoopItemInRawAttributes());
 
         return $this->getLexicon()->addNode($node);
     }
 
     /**
+     * @return int
+     */
+    public function getLoopItemInRawAttributes()
+    {
+        $result = null;
+
+        // [0] original string
+        // [1] as
+        // [2] loop item
+        if (preg_match('/\s*(as)\s*(\w+)$/', $this->getRawAttributes(), $match)) {
+            $result = $match[2];
+        }
+
+        return $result;
+    }
+
+    /**
      * Return a new AttributeParser
      *
-     * @return Compiler
+     * @return AttributeCompiler
      */
     public function newAttributeCompiler()
     {
@@ -554,7 +564,7 @@ abstract class Node implements NodeInterface
      * @param $rawAttributes
      * @return NodeInterface
      */
-    public function setParsedAttributes($rawAttributes)
+    public function setRawAttributes($rawAttributes)
     {
         $this->rawAttributes = $rawAttributes;
         return $this;
@@ -765,7 +775,7 @@ abstract class Node implements NodeInterface
      */
     public function setLoopItemName($loopItemName)
     {
-        $this->loopItemName = trim($loopItemName);
+        $this->loopItemName = $loopItemName;
         return $this;
     }
 
@@ -839,7 +849,7 @@ abstract class Node implements NodeInterface
 
         if ($plugin = $lexicon->getPluginHandler()->get($this->getName())) {
             $parts    = explode($lexicon->getScopeGlue(), $this->getName());
-            $isFilter = $plugin->isFilter($parts[0]);
+            $isFilter = $plugin->isFilter($parts[1]);
         }
 
         return $isFilter;
@@ -852,16 +862,16 @@ abstract class Node implements NodeInterface
      */
     public function isParse()
     {
-        $isFilter = false;
+        $isParse = false;
 
         $lexicon = $this->getLexicon();
 
         if ($plugin = $lexicon->getPluginHandler()->get($this->getName())) {
             $parts    = explode($lexicon->getScopeGlue(), $this->getName());
-            $isFilter = $plugin->isParse($parts[0]);
+            $isParse = $plugin->isParse($parts[1]);
         }
 
-        return $isFilter;
+        return $isParse;
     }
 
     /**
