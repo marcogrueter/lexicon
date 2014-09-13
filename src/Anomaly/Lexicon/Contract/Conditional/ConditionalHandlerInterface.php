@@ -22,4 +22,14 @@ interface ConditionalHandlerInterface
      * @return bool
      */
     public function compare($left, $right, $operator = null);
+
+    /**
+     * Custom test
+     *
+     * @param      $left
+     * @param      $right
+     * @param null $operator
+     * @return mixed
+     */
+    public function customTest($left, $right, $operator = null)
 } 

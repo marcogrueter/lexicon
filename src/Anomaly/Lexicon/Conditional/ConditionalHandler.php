@@ -107,7 +107,7 @@ class ConditionalHandler implements ConditionalHandlerInterface
                 return ($left < $right);
 
             default:
-                return $this->runTest($left, $right, $operator);
+                return $this->customTest($left, $right, $operator);
         }
     }
 
@@ -119,7 +119,7 @@ class ConditionalHandler implements ConditionalHandlerInterface
      * @param null $operator
      * @return bool|mixed
      */
-    public function runTest($left, $right, $operator = null)
+    public function customTest($left, $right, $operator = null)
     {
         $result = false;
 
