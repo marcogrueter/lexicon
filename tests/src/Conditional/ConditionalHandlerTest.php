@@ -40,5 +40,22 @@ class ConditionalHandlerTest extends LexiconTestCase
         // We just want to test that the mechanism works
         $this->assertTrue($this->conditionalHandler->compare('Lexicon', 'Lex', 'isCoolerThan'));
     }
+
+    public function testGetOperators()
+    {
+        $expected = [
+            'contains',
+            'startsWith',
+            'endsWith',
+            'is',
+            'in',
+        ];
+
+        $operators = $this->conditionalHandler->getTestOperators();
+
+        $this->assertSame($expected, $operators);
+    }
+
+
 }
  

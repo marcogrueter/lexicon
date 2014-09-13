@@ -43,5 +43,10 @@ class IncludesTest extends LexiconTestCase
         $this->assertEquals(' "test::hello"', $matches[0][2]);
     }
 
+    public function testCompilesExpectedSource()
+    {
+
+    }
+
 }
  

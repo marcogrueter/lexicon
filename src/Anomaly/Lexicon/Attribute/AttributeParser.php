@@ -41,7 +41,7 @@ class AttributeParser
     public function __construct(NodeInterface $node)
     {
         $this->node         = $node;
-        $this->attributes   = $node->getParsedAttributes();
+        $this->attributes   = $node->getRawAttributes();
         $this->variableNode = new Variable($node->getLexicon());
         $this->lexicon      = $node->getLexicon();
     }

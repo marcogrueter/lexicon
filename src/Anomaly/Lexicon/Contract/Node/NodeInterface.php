@@ -259,4 +259,11 @@ interface NodeInterface extends ExtractionInterface
      * @return string
      */
     public function getNodeSet();
+
+    /**
+     * The raw attributes string
+     *
+     * @return string
+     */
+    public function getRawAttributes();
 }

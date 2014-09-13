@@ -4,7 +4,7 @@ use Anomaly\Lexicon\Contract\Node\ExtractionInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\Variable;
 
-class Compiler
+class AttributeCompiler
 {
 
     /**
@@ -41,10 +41,9 @@ class Compiler
 
     public function __construct(NodeInterface $node, Variable $variableNode)
     {
-        $this->node         = $node;
-        $this->rawAttributes   = $node->getParsedAttributes();
-        $this->variableNode = $variableNode;
-        $this->lexicon      = $node->getLexicon();
+        $this->node          = $node;
+        $this->rawAttributes = $node->getRawAttributes();
+        $this->variableNode  = $variableNode;
     }
 
 
@@ -141,7 +140,7 @@ class Compiler
 
     public function getLexicon()
     {
-        return $this->lexicon;
+        return $this->node->getLexicon();
     }
 
     public function getAttributeNodes()

@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Attribute\Compiler;
+use Anomaly\Lexicon\Attribute\AttributeCompiler;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
@@ -62,7 +62,7 @@ abstract class Node implements NodeInterface
     /**
      * @var string
      */
-    protected $parsedAttributes = '';
+    protected $rawAttributes = '';
 
     /**
      * @var int|null
@@ -224,9 +224,9 @@ abstract class Node implements NodeInterface
             ->setContextName($node->getName())
             ->setParsedContent($node->getContent());
 
-        $parsedAttributes = $node->getParsedAttributes();
+        $rawAttributes = $node->getRawAttributes();
 
-        $asSegments = explode('as', $parsedAttributes);
+        $asSegments = explode('as', $rawAttributes);
 
         if (count($asSegments) == 2) {
             $node->setLoopItemName($asSegments[1]);
@@ -242,7 +242,7 @@ abstract class Node implements NodeInterface
      */
     public function newAttributeCompiler()
     {
-        return (new Compiler($this, new Variable($this->getLexicon())))->parse();
+        return (new AttributeCompiler($this, new Variable($this->getLexicon())))->parse();
     }
 
     /**
@@ -551,23 +551,23 @@ abstract class Node implements NodeInterface
     /**
      * Set parsed attributes
      *
-     * @param $parsedAttributes
+     * @param $rawAttributes
      * @return NodeInterface
      */
-    public function setParsedAttributes($parsedAttributes)
+    public function setParsedAttributes($rawAttributes)
     {
-        $this->parsedAttributes = $parsedAttributes;
+        $this->rawAttributes = $rawAttributes;
         return $this;
     }
 
     /**
-     * Get parsed attributes
+     * Get raw attributes
      *
      * @return string
      */
-    public function getParsedAttributes()
+    public function getRawAttributes()
     {
-        return $this->parsedAttributes;
+        return $this->rawAttributes;
     }
 
     /**
@@ -838,7 +838,7 @@ abstract class Node implements NodeInterface
         $lexicon = $this->getLexicon();
 
         if ($plugin = $lexicon->getPluginHandler()->get($this->getName())) {
-            $parts = explode($lexicon->getScopeGlue(), $this->getName());
+            $parts    = explode($lexicon->getScopeGlue(), $this->getName());
             $isFilter = $plugin->isFilter($parts[0]);
         }
 
@@ -857,7 +857,7 @@ abstract class Node implements NodeInterface
         $lexicon = $this->getLexicon();
 
         if ($plugin = $lexicon->getPluginHandler()->get($this->getName())) {
-            $parts = explode($lexicon->getScopeGlue(), $this->getName());
+            $parts    = explode($lexicon->getScopeGlue(), $this->getName());
             $isFilter = $plugin->isParse($parts[0]);
         }
 
