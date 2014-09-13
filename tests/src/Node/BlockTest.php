@@ -101,10 +101,30 @@ class BlockTest extends LexiconTestCase
         $this->assertSame($expected, $match);
     }
 
+    /**
+     * Test validator object
+     */
     public function testValidator()
     {
         $this->node->setValidator(new TestValidator());
         $this->assertTrue($this->node->validate());
+    }
+
+    /**
+     * Test escape
+     */
+    public function testEscape()
+    {
+        $this->assertEquals('e($var)', $this->node->escape('$var'));
+    }
+
+    /**
+     * Test embedded
+     */
+    public function testEmbedded()
+    {
+        $this->node->setIsEmbedded(true);
+        $this->assertTrue($this->node->isEmbedded());
     }
 
 
