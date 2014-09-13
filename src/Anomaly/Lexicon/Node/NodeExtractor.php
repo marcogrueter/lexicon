@@ -1,5 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Attribute\Compiler;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 
@@ -45,8 +46,6 @@ class NodeExtractor
         $this->extractContent();
 
         $this->node->addChild($this->childNode);
-
-        return $this->node;
     }
 
     public function inject()

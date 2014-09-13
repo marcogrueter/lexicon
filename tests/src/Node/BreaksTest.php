@@ -15,7 +15,7 @@ class BreaksTest extends LexiconTestCase
     /**
      * Set up node
      */
-    public function setUpNode()
+    public function setUpTest()
     {
         $this->node = new Breaks($this->lexicon);
     }

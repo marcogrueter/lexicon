@@ -54,4 +54,25 @@ interface PluginInterface
      */
     public function setLexicon(LexiconInterface $lexicon);
 
+    /**
+     * @param $key
+     * @return mixed
+     */
+    public function isFilter($key);
+
+    /**
+     * @param $key
+     * @return mixed
+     */
+    public function isParse($key);
+
+    /**
+     * Magic method call
+     *
+     * @param $key
+     * @param $params
+     * @return mixed
+     */
+    public function __call($key, array $params = []);
+
 }

@@ -2,6 +2,7 @@
 
 use Anomaly\Lexicon\Plugin\Plugin;
 
+
 /**
  * Class TestPlugin
  *
@@ -36,6 +37,7 @@ class TestPlugin extends Plugin
      */
     public function parseLowercase()
     {
-        return strtolower('Hello World!');
+        return strtolower('HELLO WORLD!');
     }
+
 }

@@ -14,7 +14,7 @@ class BlockTest extends LexiconTestCase
     /**
      * Set up node
      */
-    public function setUpNode()
+    public function setUpTest()
     {
         $this->node = new Block($this->lexicon);
     }

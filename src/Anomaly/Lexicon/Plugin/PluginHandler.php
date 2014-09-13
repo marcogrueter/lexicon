@@ -4,6 +4,11 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginInterface;
 
+/**
+ * Class PluginHandler
+ *
+ * @package Anomaly\Lexicon\Plugin
+ */
 class PluginHandler implements PluginHandlerInterface
 {
 
@@ -57,110 +62,38 @@ class PluginHandler implements PluginHandlerInterface
      * Get plugin
      *
      * @param $name
-     * @return PluginInterface|null
+     * @return PluginInterface
      */
     public function get($name)
     {
         $parts = explode($this->getLexicon()->getScopeGlue(), $name);
 
+        $plugin = null;
+
         if (count($parts) > 1) {
-            $name = $parts[0];
-            return isset($this->plugins[$name]) ? new $this->plugins[$name] : null;
+            $plugin = !empty($this->plugins[$parts[0]]) ? new $this->plugins[$parts[0]] : null;
         }
 
-        return null;
+        return $plugin;
     }
+
 
     /**
      * Call plugin method
      *
-     * @param        $key
-     * @param array  $attributes
-     * @param string $content
-     * @internal param $name
+     * @param PluginInterface $plugin
+     * @param string          $method
+     * @param array           $attributes
+     * @param string          $content
      * @return mixed
      */
-    public function call($key, $attributes = [], $content = '')
+    public function call(PluginInterface $plugin, $method, $attributes = [], $content = '')
     {
-        $segments = explode($this->getLexicon()->getScopeGlue(), $key);
-        if (count($segments) > 1) {
-            /** @var $plugin PluginInterface */
-            if ($plugin = $this->get($key)) {
-
-                $method = $segments[1];
-
-                $plugin
-                    ->setLexicon($this->getLexicon())
-                    ->setAttributes($attributes)
-                    ->setContent($content);
-                return $plugin->{$method}();
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Does this call have to be filtered?
-     *
-     * @param $key
-     * @return bool
-     */
-    public function isFilter($key)
-    {
-        $isPlugin = false;
-
-        if ($plugin = $this->get($key)) {
-            $segments = explode($this->getLexicon()->getScopeGlue(), $key);
-            if (count($segments) > 1) {
-                $isPlugin = method_exists($plugin, 'filter' . camel_case($segments[1]));
-            }
-        }
-
-        return $isPlugin;
-    }
-
-    /**
-     * Does this call have to be parsed and filtered?
-     *
-     * @param $key
-     * @return bool
-     */
-    public function isParse($key)
-    {
-        $isParse = false;
-
-        if ($plugin = $this->get($key) and $plugin instanceof PluginInterface) {
-            $segments = explode($this->getLexicon()->getScopeGlue(), $key);
-            if (count($segments) > 1) {
-                $isParse = method_exists($plugin, 'parse' . studly_case($segments[1]));
-            }
-        }
-
-        return $isParse;
-    }
-
-    /**
-     * Run the filter from the plugin
-     *
-     * @param        $name
-     * @param string $prefix
-     * @internal param PluginInterface $plugin
-     * @internal param $key
-     * @return mixed
-     */
-    public function filter($name, $prefix = 'filter')
-    {
-        $result = null;
-
-        if ($plugin = $this->get($name) and $plugin instanceof PluginInterface) {
-            $segments = explode($this->getLexicon()->getScopeGlue(), $name);
-            if (count($segments) > 1) {
-                $result = call_user_func([$plugin, $prefix . camel_case($segments[1])]);
-            }
-        }
-
-        return $result;
+        return $plugin
+            ->setLexicon($this->getLexicon())
+            ->setAttributes($attributes)
+            ->setContent($content)
+            ->{$method}();
     }
 
 }

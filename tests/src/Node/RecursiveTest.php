@@ -15,7 +15,7 @@ class RecursiveTest extends LexiconTestCase
     /**
      * Set up node
      */
-    public function setUpNode()
+    public function setUpTest()
     {
         $this->node = new Recursive($this->lexicon);
     }

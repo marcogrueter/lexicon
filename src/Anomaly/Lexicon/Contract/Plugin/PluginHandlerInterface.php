@@ -30,40 +30,14 @@ interface PluginHandlerInterface
     public function get($name);
 
     /**
-     * Call the plugin method
+     * Call plugin method
      *
-     * @param        $name
-     * @param array  $attributes
-     * @param string $content
+     * @param PluginInterface $plugin
+     * @param string          $method
+     * @param array           $attributes
+     * @param string          $content
      * @return mixed
      */
-    public function call($name, $attributes = [], $content = '');
-
-    /**
-     * Plugin method is a filter
-     *
-     * @param $name
-     * @return bool
-     */
-    public function isFilter($name);
-
-    /**
-     * Plugin method is a parse-able filter
-     *
-     * @param $name
-     * @return bool
-     */
-    public function isParse($name);
-
-    /**
-     * Call filter method
-     *
-     * @param        $key
-     * @param string $prefix
-     * @internal param PluginInterface $plugin
-     * @internal param $name
-     * @return mixed
-     */
-    public function filter($key, $prefix = 'filter');
+    public function call(PluginInterface $plugin, $method, $attributes = [], $content = '');
 
 }

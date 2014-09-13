@@ -25,12 +25,4 @@
         </whitelist>
     </filter>
 
-    <logging>
-        <log type="tap" target="tests/resources/build/report.tap"/>
-        <log type="junit" target="tests/resources/build/report.junit.xml"/>
-        <log type="coverage-html" target="tests/resources/build/coverage" charset="UTF-8" yui="true" highlight="true"/>
-        <log type="coverage-text" target="tests/resources/build/coverage.txt"/>
-        <log type="coverage-clover" target="tests/resources/build/logs/clover.xml"/>
-    </logging>
-
 </phpunit>

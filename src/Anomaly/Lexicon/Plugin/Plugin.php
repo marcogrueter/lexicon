@@ -146,18 +146,35 @@ class Plugin implements PluginInterface
      * @internal param $name
      * @return null
      */
-    public function __call($key, $arguments)
+    public function __call($key, array $params = [])
     {
-        $handler = $this->getLexicon()->getPluginHandler();
-        $name    = $this->getPluginName() . '.' . $key;
+        $result = null;
 
-        if ($handler->isFilter($name)) {
-            return $handler->filter($this, $name);
-        } elseif ($handler->isParse($name)) {
-            return $handler->filter($this, $name, 'parse');
+        if ($this->isFilter($key)) {
+            $result = $this->{camel_case('filter_' . $key)}();
+        } elseif ($this->isParse($key)) {
+            $result = $this->{camel_case('parse_' . $key)}();
         }
 
-        return null;
+        return $result;
+    }
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function isFilter($key)
+    {
+        return method_exists($this, camel_case('filter_' . $key));
+    }
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function isParse($key)
+    {
+        return method_exists($this, camel_case('parse_' . $key));
     }
 
 }

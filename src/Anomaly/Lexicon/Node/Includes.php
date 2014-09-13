@@ -19,7 +19,7 @@ class Includes extends Single
      */
     public function compile()
     {
-        $attributeParser = $this->newAttributeParser();
+        $attributeParser = $this->newAttributeCompiler();
 
         $attribute = $attributeParser->compileAttribute('partial', 0);
         $share = $attributeParser->compileNamedFromOrdered([0 => 'partial']);

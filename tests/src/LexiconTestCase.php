@@ -82,22 +82,22 @@ class LexiconTestCase extends TestCase
         $this->view               = $app['anomaly.lexicon.factory'];
         $this->files              = $app['files'];
 
-        $this->setUpNodeTypes();
+        $this->setUpTestTypes();
         $this->setUpViews();
         $this->setUpPlugins();
-        $this->setUpNode();
+        $this->setUpTest();
 
         return $app;
     }
 
     /**
-     * Node type setup
+     * Set up test
      */
-    public function setUpNode()
+    public function setUpTest()
     {
     }
 
-    public function setUpNodeTypes()
+    public function setUpTestTypes()
     {
         $testingNodeSet = $this->lexicon->getNodeSet(Lexicon::DEFAULT_NODE_SET);
 

@@ -19,7 +19,7 @@ class Section extends Single
      */
     public function compile()
     {
-        $name = $this->newAttributeParser()->compileAttribute('name');
+        $name = $this->newAttributeCompiler()->compileAttribute('name');
 
         $source = null;
 

@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Attribute\AttributeParser;
+use Anomaly\Lexicon\Attribute\Compiler;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
@@ -238,11 +238,11 @@ abstract class Node implements NodeInterface
     /**
      * Return a new AttributeParser
      *
-     * @return AttributeParser
+     * @return Compiler
      */
-    public function newAttributeParser()
+    public function newAttributeCompiler()
     {
-        return (new AttributeParser($this))->parse();
+        return (new Compiler($this, new Variable($this->getLexicon())))->parse();
     }
 
     /**
@@ -740,6 +740,12 @@ abstract class Node implements NodeInterface
         return '<?php ' . $segment . ' ?>';
     }
 
+    /**
+     * Wrap source in escape method
+     *
+     * @param $source
+     * @return string
+     */
     public function escape($source)
     {
         return 'e(' . $source . ')';
@@ -821,23 +827,41 @@ abstract class Node implements NodeInterface
     }
 
     /**
-     * Is filter
+     * Is filter node
      *
      * @return mixed
      */
     public function isFilter()
     {
-        return $this->getLexicon()->getPluginHandler()->isFilter($this->getName());
+        $isFilter = false;
+
+        $lexicon = $this->getLexicon();
+
+        if ($plugin = $lexicon->getPluginHandler()->get($this->getName())) {
+            $parts = explode($lexicon->getScopeGlue(), $this->getName());
+            $isFilter = $plugin->isFilter($parts[0]);
+        }
+
+        return $isFilter;
     }
 
     /**
-     * Is parse
+     * Is a parse able node
      *
      * @return mixed
      */
     public function isParse()
     {
-        return $this->getLexicon()->getPluginHandler()->isParse($this->getName());
+        $isFilter = false;
+
+        $lexicon = $this->getLexicon();
+
+        if ($plugin = $lexicon->getPluginHandler()->get($this->getName())) {
+            $parts = explode($lexicon->getScopeGlue(), $this->getName());
+            $isFilter = $plugin->isParse($parts[0]);
+        }
+
+        return $isFilter;
     }
 
     /**

@@ -14,7 +14,7 @@ class SectionAppendTest extends LexiconTestCase
     /**
      * Set up node
      */
-    public function setUpNode()
+    public function setUpTest()
     {
         $this->node = new SectionAppend($this->lexicon);
     }

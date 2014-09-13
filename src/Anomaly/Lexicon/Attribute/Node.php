@@ -1,16 +1,20 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
-use Anomaly\Lexicon\Contract\Node\ExtractionInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\Variable;
 
-class Compiler
+/**
+ * Class Node
+ *
+ * @package Anomaly\Lexicon\Attribute
+ */
+class Node extends Variable
 {
 
     /**
      * The node
      *
-     * @var \Anomaly\Lexicon\Contract\Node\NodeInterface
+     * @var NodeInterface
      */
     protected $node;
 
@@ -39,14 +43,10 @@ class Compiler
 
     protected $compiledAttributes = [];
 
-    public function __construct(NodeInterface $node, Variable $variableNode)
+    public function regex()
     {
-        $this->node         = $node;
-        $this->rawAttributes   = $node->getParsedAttributes();
-        $this->variableNode = $variableNode;
-        $this->lexicon      = $node->getLexicon();
-    }
 
+    }
 
     /**
      * @return $this
@@ -254,4 +254,4 @@ class Compiler
         return $source . "]";
     }
 
-}
+} 

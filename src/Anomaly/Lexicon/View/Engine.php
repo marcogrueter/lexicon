@@ -81,19 +81,15 @@ class Engine extends CompilerEngine implements EngineInterface
             $hash                 = $segments[count($segments) - 1];
             $viewClass            = $this->getLexicon()->getFullViewClass($hash);
 
-            if (!isset($this->cache[$__path]) and !class_exists($viewClass)) {
+            include_once $__path;
+
+            if (!isset($this->cache[$__path])) {
+
                 /** @var string $__path */
-                include $__path;
                 $this->cache[$__path] = new $viewClass;
             }
 
-            if (isset($this->cache[$__path]) and $view = $this->cache[$__path]) {
-                if ($view instanceof ViewTemplateInterface) {
-                    $view->render($__data);
-                } else {
-                    // @todo throw exception - must implement interface
-                }
-            }
+            $this->cache[$__path]->render($__data);
 
         } catch (\Exception $e) {
             $this->handleViewException($e, $obLevel);

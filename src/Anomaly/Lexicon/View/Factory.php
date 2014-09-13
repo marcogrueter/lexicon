@@ -1,10 +1,16 @@
 <?php namespace Anomaly\Lexicon\View;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Contract\View\FactoryInterface;
 use Anomaly\Lexicon\Lexicon;
 use Illuminate\View\Factory as BaseFactory;
 
+/**
+ * Class Factory
+ *
+ * @package Anomaly\Lexicon\View
+ */
 class Factory extends BaseFactory implements FactoryInterface
 {
     /**
@@ -19,32 +25,42 @@ class Factory extends BaseFactory implements FactoryInterface
     {
         $this->getLexicon()->addParsePath($view);
 
-        $engine = $this->getLexiconEngine();
-
-        $data = array_merge($mergeData, $this->parseData($data));
-
-        $this->callCreator($view = new View($this, $engine, md5($view), $view, $data));
-
-        return $view;
+        return $this->newView($this->getLexiconEngine(), md5($view), $view, $data, $mergeData);
     }
 
     /**
      * Get the evaluated view contents for the given view.
      *
-     * @param  string  $view
-     * @param  array   $data
-     * @param  array   $mergeData
+     * @param  string $view
+     * @param  array  $data
+     * @param  array  $mergeData
      * @return \Illuminate\View\View
      */
-    public function make($view, $data = array(), $mergeData = array())
+    public function make($view, $data = [], $mergeData = [])
     {
-        if (isset($this->aliases[$view])) $view = $this->aliases[$view];
+        if (isset($this->aliases[$view])) {
+            $view = $this->aliases[$view];
+        }
 
         $path = $this->finder->find($view);
 
+        return $this->newView($this->getEngineFromPath($path), $view, $path, $data, $mergeData);
+    }
+
+    /**
+     * New engine
+     *
+     * @param $engine
+     * @param $view
+     * @param $path
+     * @param $data
+     * @return View
+     */
+    public function newView($engine, $view, $path, $data = [], $mergeData = [])
+    {
         $data = array_merge($mergeData, $this->parseData($data));
 
-        $this->callCreator($view = new View($this, $this->getEngineFromPath($path), $view, $path, $data));
+        $this->callCreator($view = new View($this, $engine, $view, $path, $data));
 
         return $view;
     }
@@ -85,13 +101,13 @@ class Factory extends BaseFactory implements FactoryInterface
      * Takes a dot-notated key and finds the value for it in the given
      * array or object.
      *
-     * @param  array|object $data Array or object to search
-     * @param  string       $key Dot-notated key to find
-     * @param array         $attributes
-     * @param string        $content
-     * @param  mixed        $default Default value to use if not found
-     * @param string        $expected
-     * @return mixed
+     * @param        $data
+     * @param        $key
+     * @param array  $attributes
+     * @param string $content
+     * @param null   $default
+     * @param string $expected
+     * @return mixed|null
      */
     public function variable(
         $data,
@@ -101,81 +117,146 @@ class Factory extends BaseFactory implements FactoryInterface
         $default = null,
         $expected = Lexicon::ANY
     ) {
-        $scopes = $pluginScopes = explode($this->getLexicon()->getScopeGlue(), $key);
+        $parts = explode($this->getLexicon()->getScopeGlue(), $key);
 
-        $pluginKey = $key;
+        /** @var PluginHandlerInterface $handler */
+        $handler = $this->getLexicon()->getPluginHandler();
 
-        $original = $data;
+        // Get a plugin
+        if ($plugin = $handler->get($key)) {
 
-        if ($this->getLexicon()->getPluginHandler()->get($pluginKey)) {
+            array_shift($parts); // Shit the name
+            $method = array_shift($parts); // Shift the method
 
-            $plugin = array_shift($scopes);
-            $method = array_shift($scopes);
+            // Get the plugin data if found
+            $data = $handler->call($plugin, $method, $attributes, $content);
+        }
 
-            if (count($scopes) > 2) {
-                $pluginKey = $plugin . $this->getLexicon()->getScopeGlue() . $method;
+        // not is null
+        if (!is_null($data)) {
+
+            while (count($parts) > 0) {
+
+                $nextPart = array_shift($parts);
+
+                // If the last part is .size, return the count
+                if (empty($parts) and $nextPart == 'size' and
+                    (is_array($data) or $data instanceof \Countable or is_string($data))
+                ) {
+
+                    // Return string length or array count
+                    if (is_string($data)) {
+
+                        return $this->expected(strlen($data), $expected, $default);
+
+                    } elseif (!array_key_exists('size', $data)) {
+
+                        return $this->expected(count($data), $expected, $default);
+
+                    }
+
+                } elseif (is_array($data)) {
+
+                    if (!array_key_exists($nextPart, $data)) {
+
+                        return $this->expected(null, $expected, $default);
+
+                    }
+
+                    $data = $this->expected($data[$nextPart], $expected, $default);
+
+                } elseif (is_object($data)) {
+
+                    if (method_exists($data, $nextPart)) {
+
+                        try {
+
+                            $data = call_user_func_array([$data, $nextPart], $attributes);
+
+                        } catch (\Exception $e) {
+
+                            // log exception
+
+                            return $this->expected(null, $expected, $default);
+
+                        }
+
+                    } elseif ($data instanceof \ArrayAccess) {
+
+                        if (!isset($data[$nextPart])) {
+
+                            return $this->expected(null, $expected, $default);
+
+                        }
+
+                        $data = $data[$nextPart];
+
+                    } else {
+
+                        if (!property_exists($data, $nextPart)) {
+
+                            return $this->expected(null, $expected, $default);
+
+                        }
+
+                        $data = $data->{$nextPart};
+                    }
+                }
+
             }
 
-            $data = $this->getLexicon()->getPluginHandler()->call($pluginKey, $attributes, $content);
+            return $this->expected($data, $expected, $default);
+
+        } else {
+
+            return $this->expected(null, $expected, $default);
+
         }
-
-        $previousScope = null;
-        $invalidScope  = null;
-
-        while (count($scopes) > 0) {
-
-            $scope = array_shift($scopes);
-
-            if (is_object($data) and method_exists($data, $scope)) {
-                try {
-                    $data = call_user_func_array([$data, $scope], $attributes);
-                } catch (\InvalidArgumentException $e) {
-                    echo "There is a problem with the <b>{$key}</b> variable. One of the attributes maybe incorrect.";
-                    // @todo - log exception
-                    // @todo - fire exception event
-                } catch (\ErrorException $e) {
-                    echo "There is a problem with the <b>{$key}</b> variable. One of the attributes maybe incorrect.";
-                    // @todo - log exception
-                    // @todo - fire exception event
-                } catch (\Exception $e) {
-                    echo "There is a problem with the <b>{$key}</b> variable.";
-                    // @todo - log exception
-                    // @todo - fire exception event
-                }
-            } elseif ((is_array($data) or $data instanceof \ArrayAccess) and isset($data[$scope])) {
-                $data = $data[$scope];
-            } elseif (is_object($data) and isset($data->{$scope})) {
-                $data = $data->{$scope};
-            } elseif (empty($scopes) and
-                $scope == 'count' and
-                (!$invalidScope or $previousScope != $invalidScope) and
-                (is_array($data) or $data instanceof \Countable or is_string($data))
-            ) {
-                if (is_string($data)) {
-                    $data = strlen($data);
-                } else {
-                    $data = count($data);
-                }
-            } elseif (empty($scopes) or $data == $original) {
-                $data = $default;
-            } else {
-                $invalidScope = $scope;
-            }
-
-            $previousScope = $scope;
-        }
-
-        if ($expected == Lexicon::ANY) {
-            return $data;
-        } elseif ($expected == Lexicon::ECHOABLE and
-            (is_string($data) or is_numeric($data) or is_bool($data) or is_null($data) or is_float($data) or
-                (is_object($data) and method_exists($data, '__toString')))
-        ) {
-            return $data;
-        } elseif ($expected == Lexicon::TRAVERSABLE and is_array($data) or $data instanceof \Traversable) {
-            return $data;
-        }
-
-        return $default;
     }
+
+    /**
+     * Return expected data type as a fallback to wrong data type
+     *
+     * @param        $data
+     * @param string $expected
+     * @param null   $finalResult
+     * @return array|bool|float|int|null|string|\Traversable
+     */
+    public function expected($data, $expected = Lexicon::ANY, $finalResult = null)
+    {
+        if ($expected == Lexicon::ANY) {
+
+            $finalResult = $data;
+
+        } elseif ($expected == Lexicon::ECHOABLE) {
+
+            if (
+                is_string($data) or
+                is_float($data) or
+                is_numeric($data) or
+                is_bool($data) or
+                is_null($data) or
+                (
+                    is_object($data) and
+                    method_exists($data, '__toString')
+                )
+            ) {
+
+                $finalResult = $data;
+
+            }
+
+        } elseif ($expected == Lexicon::TRAVERSABLE) {
+
+            if (is_array($data) or $data instanceof \Traversable) {
+
+                $finalResult = $data;
+
+            };
+
+        }
+
+        return $finalResult;
+    }
+
 }

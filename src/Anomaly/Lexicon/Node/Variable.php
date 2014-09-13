@@ -38,7 +38,7 @@ class Variable extends Single
         return "/\{\{\s*({$this->getVariableRegex()})(\s+.*?)?\s*(\/)?\}\}/ms";
     }
 
-    public function compile()
+    public function compile(array $attributes = [])
     {
         $echo = $end = null;
 
@@ -47,7 +47,7 @@ class Variable extends Single
             $end  = ';';
         }
 
-        return "{$echo}{$this->escape($this->compileVariable())}{$end}";
+        return "{$echo}{$this->compileVariable()}{$end}";
     }
 
     public function compileKey()
@@ -76,7 +76,7 @@ class Variable extends Single
 
     public function compileVariable()
     {
-        $attributes = $this->newAttributeParser()->compile();
+        $attributes = $this->newAttributeCompiler()->compile();
 
         $finder = $this->getNodeFinder();
 

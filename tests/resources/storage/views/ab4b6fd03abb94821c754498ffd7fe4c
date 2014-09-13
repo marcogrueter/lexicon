@@ -1,2 +1,0 @@
-<?php namespace Anomaly\Lexicon\View; use Anomaly\Lexicon\Contract\View\ViewTemplateInterface; class LexiconView_ab4b6fd03abb94821c754498ffd7fe4c implements ViewTemplateInterface { public function render($__data) {
-?><?php echo $testingUndefinedVariableToCauseViewException; ?><?php }} ?>
