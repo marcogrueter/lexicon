@@ -3,6 +3,7 @@
 use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\Variable;
+use Anomaly\Lexicon\Support\ValueResolver;
 
 class ConditionalCompiler
 {
@@ -244,32 +245,7 @@ class ConditionalCompiler
      */
     public function getPartSource($key)
     {
-        $key = trim($key);
-
-        // this shouldn't happen
-        if (is_null($key) or is_array($key)) {
-            return 'null';
-        }
-
-        if (in_array($key, $this->noParseKey)) {
-            return $key;
-        }
-
-        if (preg_match('/^\'(.*)\'$/', $key, $matches)) {
-            return "'{$matches[1]}'";
-        }
-
-        if (preg_match('/^"(.*)"$/', $key, $matches)) {
-            return $matches[1];
-        }
-
-        if (preg_match('/^(\d+)$/', $key, $matches)) {
-            return $matches[1];
-        }
-
-        if (preg_match('/^(\d[\d\.]+)$/', $key, $matches)) {
-            return $matches[1];
-        }
+        $key = $this->newValueResolver($key);
 
         $finder = $this->variableNode->make(['name' => $key], $this->node->getParent())->getNodeFinder();
 
@@ -291,6 +267,10 @@ class ConditionalCompiler
         )}, '{$operator}') ";
     }
 
+    /**
+     * @param $comparison
+     * @return bool
+     */
     public function getOperatorMatch($comparison)
     {
         $match = $this->node->getMatch($comparison, $this->getComparisonOperatorsRegexMatcher());
@@ -302,6 +282,9 @@ class ConditionalCompiler
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function getLogicalOperatorsMatches()
     {
         return $this->node->getMatches(
@@ -310,16 +293,25 @@ class ConditionalCompiler
         );
     }
 
+    /**
+     * @return string
+     */
     public function regex()
     {
         return '/\{\{\s*(' . implode('|', $this->startConditionals) . ')\s*((?:\()?(.*?)(?:\))?)\s*\}\}/ms';
     }
 
+    /**
+     * @return string
+     */
     public function getLogicalOperatorsRegexMatcher()
     {
         return '/\s*(' . implode('|', $this->logicalOperators) . ')\s/ms';
     }
 
+    /**
+     * @return string
+     */
     public function getComparisonOperatorsRegexMatcher()
     {
         return '/\s*(' . implode(
@@ -328,6 +320,12 @@ class ConditionalCompiler
         ) . ')\s/ms';
     }
 
+    /**
+     * Replacement operators
+     *
+     * @param $comparison
+     * @return mixed
+     */
     protected function replaceOperators($comparison)
     {
         foreach ($this->operatorReplacements as $string => $replacementOperator) {
@@ -337,18 +335,33 @@ class ConditionalCompiler
         return $comparison;
     }
 
+    /**
+     * Get start
+     *
+     * @return string
+     */
     public function getStart()
     {
-        switch ($this->start) {
-            case 'unless':
-                return 'if';
-            case 'elseunless':
-                return 'elseif';
-            default:
-                return $this->start;
+        $start = $this->start;
+
+        if ($this->start == 'unless') {
+
+            $start = 'if';
+
+        } elseif ($this->start == 'unless') {
+
+            $start = 'elseif';
+
         }
+
+        return $start;
     }
 
+    /**
+     * Get expression
+     *
+     * @return string
+     */
     public function getExpression()
     {
         foreach ($this->comparisons as $key => $comparisonSource) {
@@ -359,6 +372,16 @@ class ConditionalCompiler
         }
 
         return $this->source;
+    }
+
+    /**
+     * New Value resolver
+     *
+     * @return ValueResolver
+     */
+    public function newValueResolver()
+    {
+        return new ValueResolver();
     }
 
 }
