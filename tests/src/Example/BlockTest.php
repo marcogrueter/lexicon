@@ -60,5 +60,6 @@ class BlockTest extends LexiconTestCase
             $this->view->make('test::example/different-blocks-with-same-variable', $data)->render()
         );
     }
+
 }
  

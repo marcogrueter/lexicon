@@ -1,10 +1,11 @@
 <?php namespace Anomaly\Lexicon\View;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\View\ViewInterface;
 use Anomaly\Lexicon\Lexicon;
 use Illuminate\View\View as BaseView;
 
-class View extends BaseView
+class View extends BaseView implements ViewInterface
 {
     /**
      * Using node set
@@ -26,16 +27,14 @@ class View extends BaseView
     /**
      * Dynamically bind parameters to the view.
      *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return \Illuminate\View\View
-     *
+     * @param  string $method
+     * @param  array  $parameters
+     * @return View
      * @throws \BadMethodCallException
      */
     public function __call($method, $parameters)
     {
-        if (starts_with($method, 'using'))
-        {
+        if (starts_with($method, 'using')) {
             return $this->using(snake_case(substr($method, 5)));
         }
 

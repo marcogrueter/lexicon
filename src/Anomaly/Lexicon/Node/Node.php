@@ -745,10 +745,10 @@ abstract class Node implements NodeInterface
      */
     public function php($segment = null)
     {
-        if (empty($segment)) {
-            return null;
+        if ($segment) {
+            $segment = '<?php ' . $segment . ' ?>';
         }
-        return '<?php ' . $segment . ' ?>';
+        return $segment;
     }
 
     /**

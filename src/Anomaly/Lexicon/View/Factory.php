@@ -34,7 +34,7 @@ class Factory extends BaseFactory implements FactoryInterface
      * @param  string $view
      * @param  array  $data
      * @param  array  $mergeData
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function make($view, $data = [], $mergeData = [])
     {
