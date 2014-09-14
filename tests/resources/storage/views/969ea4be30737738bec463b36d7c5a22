@@ -1,0 +1,13 @@
+<?php namespace Anomaly\Lexicon\View; use Anomaly\Lexicon\Contract\View\ViewTemplateInterface; class LexiconView_969ea4be30737738bec463b36d7c5a22 implements ViewTemplateInterface { public function render($__data) {
+?><?php foreach ($__data['__env']->variable($__data,'page',[],'',[],'traversable') as $i => $pageItem): ?>
+<ul>
+    <?php foreach ($__data['__env']->variable($pageItem,'messages.success',[],'',[],'traversable') as $i => $messagesSuccessItem): ?>
+    <li><?php echo $__data['__env']->variable($messagesSuccessItem, 'message', [], '', null, 'echoable'); ?></li>
+    <?php endforeach; ?>
+</ul>
+<ul>
+    <?php foreach ($__data['__env']->variable($pageItem,'messages.error',[],'',[],'traversable') as $i => $messagesErrorItem): ?>
+    <li><?php echo $__data['__env']->variable($messagesErrorItem, 'message', [], '', null, 'echoable'); ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php endforeach; ?><?php }} ?>

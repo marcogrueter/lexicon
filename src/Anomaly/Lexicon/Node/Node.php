@@ -217,7 +217,7 @@ abstract class Node implements NodeInterface
             ->setup($match);
 
         $node
-            ->setId($node->getContent() . $node->getName() . $node->getDepth() . $node->getCount())
+            ->setId(str_random(32))
             ->setItemName(
                 camel_case(str_replace($this->getLexicon()->getScopeGlue(), '_', $node->getName())) . 'Item'
             )
@@ -696,6 +696,7 @@ abstract class Node implements NodeInterface
 
         $node->createChildNodes();
 
+        $this->addChild($node);
         $this->extract($node);
 
         return $node;
@@ -867,7 +868,7 @@ abstract class Node implements NodeInterface
         $lexicon = $this->getLexicon();
 
         if ($plugin = $lexicon->getPluginHandler()->get($this->getName())) {
-            $parts    = explode($lexicon->getScopeGlue(), $this->getName());
+            $parts   = explode($lexicon->getScopeGlue(), $this->getName());
             $isParse = $plugin->isParse($parts[1]);
         }
 

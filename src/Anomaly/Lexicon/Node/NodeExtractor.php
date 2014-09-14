@@ -22,6 +22,11 @@ class NodeExtractor
     private $childNode;
 
     /**
+     * preg_replace limit
+     */
+    const LIMIT = 1;
+
+    /**
      * @param NodeInterface $node
      * @param NodeInterface $childNode
      */
@@ -40,20 +45,17 @@ class NodeExtractor
     public function extract()
     {
         $this->extractOpen();
-
         $this->extractClose();
-
         $this->extractContent();
-
-        $this->node->addChild($this->childNode);
     }
 
+    /**
+     * Inject compiled source
+     */
     public function inject()
     {
         $this->injectOpen();
-
         $this->injectClose();
-
         $this->injectContent();
     }
 
@@ -64,10 +66,11 @@ class NodeExtractor
     {
         if (method_exists($this->childNode, 'getExtractionContentOpen')) {
             $this->node->setParsedContent(
-                str_replace(
-                    $this->childNode->getExtractionContentOpen(),
+                preg_replace(
+                    $this->search($this->childNode->getExtractionContentOpen()),
                     $this->childNode->getExtractionId('open'),
-                    $this->node->getParsedContent()
+                    $this->node->getParsedContent(),
+                    self::LIMIT
                 )
             );
         }
@@ -80,10 +83,11 @@ class NodeExtractor
     {
         if (method_exists($this->childNode, 'getExtractionContentClose')) {
             $this->node->setParsedContent(
-                str_replace(
-                    $this->childNode->getExtractionContentClose(),
+                preg_replace(
+                    $this->search($this->childNode->getExtractionContentClose()),
                     $this->childNode->getExtractionId('close'),
-                    $this->node->getParsedContent()
+                    $this->node->getParsedContent(),
+                    self::LIMIT
                 )
             );
         }
@@ -95,10 +99,11 @@ class NodeExtractor
     public function extractContent()
     {
         $this->node->setParsedContent(
-            str_replace(
-                $this->childNode->getExtractionContent(),
+            preg_replace(
+                $this->search($this->childNode->getExtractionContent()),
                 $this->childNode->getExtractionId(),
-                $this->node->getParsedContent()
+                $this->node->getParsedContent(),
+                self::LIMIT
             )
         );
     }
@@ -110,10 +115,11 @@ class NodeExtractor
     {
         if (method_exists($this->childNode, 'compileOpen')) {
             $this->node->setParsedContent(
-                str_replace(
-                    $this->childNode->getExtractionId('open'),
+                preg_replace(
+                    $this->search($this->childNode->getExtractionId('open')),
                     $this->childNode->validate() ? $this->node->php($this->childNode->compileOpen()) : null,
-                    $this->node->getParsedContent()
+                    $this->node->getParsedContent(),
+                    self::LIMIT
                 )
             );
         }
@@ -126,10 +132,11 @@ class NodeExtractor
     {
         if (method_exists($this->childNode, 'compileClose')) {
             $this->node->setParsedContent(
-                str_replace(
-                    $this->childNode->getExtractionId('close'),
+                preg_replace(
+                    $this->search($this->childNode->getExtractionId('close')),
                     $this->childNode->validate() ? $this->node->php($this->childNode->compileClose()) : null,
-                    $this->node->getParsedContent()
+                    $this->node->getParsedContent(),
+                    self::LIMIT
                 )
             );
         }
@@ -147,12 +154,24 @@ class NodeExtractor
         }
 
         $this->node->setParsedContent(
-            str_replace(
-                $this->childNode->getExtractionId(),
+            preg_replace(
+                $this->search($this->childNode->getExtractionId()),
                 $this->childNode->validate() ? $compile : null,
-                $this->node->getParsedContent()
+                $this->node->getParsedContent(),
+                self::LIMIT
             )
         );
+    }
+
+    /**
+     * Prepare regex search
+     *
+     * @param $string
+     * @return string
+     */
+    public function search($string)
+    {
+        return '/' . preg_quote($string, '/') . '/';
     }
 
 }

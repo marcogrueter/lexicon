@@ -269,7 +269,7 @@ class Block extends Node implements RootInterface
 
         $name = $finder->getName();
 
-        return "\$__data['__env']->variable({$itemName},'{$name}',{$attributes},'',[],'{$expected}')";
+        return "\$__data['__env']->variable({$itemName},'{$this->getName()}',{$attributes},'',[],'{$expected}')";
     }
 
     /**

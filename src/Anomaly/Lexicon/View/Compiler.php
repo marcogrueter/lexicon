@@ -142,7 +142,6 @@ class Compiler extends BaseCompiler implements CompilerInterface
     {
         $rootNode = $this->getLexicon()->getRootNodeType()->make(
             array(
-                'id'      => 'root',
                 'name'    => 'root',
                 'content' => $content,
             )
