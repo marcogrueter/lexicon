@@ -15,7 +15,7 @@ class ViewTest extends LexiconTestCase
      */
     public function testViewUsingMagicCall()
     {
-        $this->view->make('test::magic', [])->usingMagic()->render();
+        $this->view->make('test::view/magic', [])->usingMagic()->render();
     }
 
     /**
@@ -23,7 +23,7 @@ class ViewTest extends LexiconTestCase
      */
     public function testViewWithMagicCall()
     {
-        $this->view->make('test::magic', [])->withFoo('bar')->render();
+        $this->view->make('test::view/magic', [])->withFoo('bar')->render();
     }
 
 }

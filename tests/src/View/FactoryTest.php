@@ -35,7 +35,7 @@ class FactoryTest extends LexiconTestCase
 
         $this->assertEquals(
             '<h1>Hello World!</h1>',
-            $this->view->make('test::hello', $data)->render()
+            $this->view->make('test::view/hello', $data)->render()
         );
     }
 
@@ -71,7 +71,7 @@ class FactoryTest extends LexiconTestCase
      */
     public function testHandleViewException()
     {
-        $this->view->make('test::exception', [])->using('testing')->render();
+        $this->view->make('test::view/exception', [])->using('testing')->render();
     }
 
     /**
@@ -83,7 +83,7 @@ class FactoryTest extends LexiconTestCase
 <div class="content">Injecting this content into the yield section.</div>
 ';
 
-        $this->assertEquals($expected, $this->view->make('test::extends', [])->render());
+        $this->assertEquals($expected, $this->view->make('test::view/extends', [])->render());
     }
 
     /**
@@ -207,7 +207,7 @@ class FactoryTest extends LexiconTestCase
 
     public function testViewAlias()
     {
-        $this->view->alias('test::hello', 'boom');
+        $this->view->alias('test::view/hello', 'boom');
 
         $data = [
             'variable' => 'This works!'

@@ -23,7 +23,7 @@ class IncludesTest extends LexiconTestCase
      */
     public function testRegexMatches()
     {
-        $template = '{{ include "test::hello" }}';
+        $template = '{{ include "test::view/hello" }}';
 
         $matches = $this->node->getMatches($template);
 
@@ -40,7 +40,7 @@ class IncludesTest extends LexiconTestCase
         $this->assertEquals('include', $matches[0][1]);
 
         // Offset [0][2] is a space string
-        $this->assertEquals(' "test::hello"', $matches[0][2]);
+        $this->assertEquals(' "test::view/hello"', $matches[0][2]);
     }
 
     public function testCompilesExpectedSource()

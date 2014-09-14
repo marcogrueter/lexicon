@@ -1,0 +1,5 @@
+<?php namespace Anomaly\Lexicon\View; use Anomaly\Lexicon\Contract\View\ViewTemplateInterface; class LexiconView_f3281700ed604fc41be1ea7ab68a71ce implements ViewTemplateInterface { public function render($__data) {
+?><?php $__data['__env']->startSection('sidebar'); ?>
+<div class="sidebar">This is some sidebar content.</div>
+<?php echo $__data['__env']->yieldSection(); ?>
+<?php echo $__data['__env']->yieldContent('content'); ?><?php }} ?>
