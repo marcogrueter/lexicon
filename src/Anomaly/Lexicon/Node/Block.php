@@ -69,22 +69,18 @@ class Block extends Node implements RootInterface
 
         $rawAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
 
-        $this
-            ->setName($name)
+        return $this
             ->setFullContent($fullContent)
+            ->setOpenAndClose($content, $fullContent)
+            ->setName($name)
+            ->setRawAttributes($rawAttributes)
             ->setContent($content)
-            ->setExtractionContent($content)
-            ->setRawAttributes($rawAttributes);
+            ->setExtractionContent($content);
+    }
 
-        if (isset($match['id'])) {
-            $this->setId($match['id']);
-        }
-
-        $parts = [];
-
-        if (is_string($content) and is_string($fullContent) and !empty($content) and !empty($fullContent)) {
-            $parts = explode($content, $fullContent);
-        }
+    public function setOpenAndClose($content = '', $fullContent = '')
+    {
+        $parts = explode($content, $fullContent);
 
         if (count($parts) == 2) {
             $this
