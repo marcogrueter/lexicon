@@ -2,12 +2,12 @@
 ?><?php foreach ($__data['__env']->variable($__data,'page',[],'',[],'traversable') as $i => $pageItem): ?>
 <ul>
     <?php foreach ($__data['__env']->variable($pageItem,'messages.success',[],'',[],'traversable') as $i => $messagesSuccessItem): ?>
-    <li><?php echo $__data['__env']->variable($messagesSuccessItem, 'message', [], '', null, 'echoable'); ?></li>
+    <li><?php echo $__data['__env']->variable($messagesSuccessItem, 'message', [], '', null, 'echo'); ?></li>
     <?php endforeach; ?>
 </ul>
 <ul>
     <?php foreach ($__data['__env']->variable($pageItem,'messages.error',[],'',[],'traversable') as $i => $messagesErrorItem): ?>
-    <li><?php echo $__data['__env']->variable($messagesErrorItem, 'message', [], '', null, 'echoable'); ?></li>
+    <li><?php echo $__data['__env']->variable($messagesErrorItem, 'message', [], '', null, 'echo'); ?></li>
     <?php endforeach; ?>
 </ul>
 <?php endforeach; ?><?php }} ?>
