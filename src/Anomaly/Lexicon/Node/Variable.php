@@ -80,7 +80,7 @@ class Variable extends Single
 
         $finder = $this->getNodeFinder();
 
-        $expected = Lexicon::ECHOABLE;
+        $expected = Lexicon::EXPECTED_ECHO;
 
         return "\$__data['__env']->variable({$finder->getItemSource()}, '{$finder->getName(
         )}', {$attributes}, '', null, '{$expected}')";

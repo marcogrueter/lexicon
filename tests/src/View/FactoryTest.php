@@ -113,7 +113,7 @@ class FactoryTest extends LexiconTestCase
 
     public function testGetCallMethodFromVariable()
     {
-        $this->assertEquals('FOO', $this->view->variable(new ObjectStub(), 'foo', [], null, Lexicon::ECHOABLE));
+        $this->assertEquals('FOO', $this->view->variable(new ObjectStub(), 'foo', [], null, Lexicon::EXPECTED_ECHO));
     }
 
     public function testGetStringObjectFromVariable()
@@ -124,7 +124,7 @@ class FactoryTest extends LexiconTestCase
 
         $this->assertEquals(
             '__toString result',
-            $this->view->variable($data, 'stringObject', [], null, Lexicon::ECHOABLE)
+            $this->view->variable($data, 'stringObject', [], null, Lexicon::EXPECTED_ECHO)
         );
     }
 
@@ -132,7 +132,7 @@ class FactoryTest extends LexiconTestCase
     {
         $this->assertEquals(
             'BAR',
-            $this->view->variable(new ObjectStub(), 'bar', [], '', Lexicon::ECHOABLE)
+            $this->view->variable(new ObjectStub(), 'bar', [], '', Lexicon::EXPECTED_ECHO)
         );
     }
 
@@ -168,7 +168,7 @@ class FactoryTest extends LexiconTestCase
                     $attributes = [],
                     $content = '',
                     $default = null,
-                    Lexicon::ECHOABLE
+                    Lexicon::EXPECTED_ECHO
                 )
             );
         }
@@ -189,7 +189,7 @@ class FactoryTest extends LexiconTestCase
                 $attributes = [],
                 $content = '',
                 $default = null,
-                Lexicon::TRAVERSABLE
+                Lexicon::EXPECTED_TRAVERSABLE
             )
         );
     }

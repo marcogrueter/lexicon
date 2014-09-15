@@ -115,7 +115,7 @@ class Factory extends BaseFactory implements FactoryInterface
         array $attributes = [],
         $content = '',
         $default = null,
-        $expected = Lexicon::ANY
+        $expected = Lexicon::EXPECTED_ANY
     ) {
         $parts = explode($this->getLexicon()->getScopeGlue(), $key);
 
@@ -222,13 +222,13 @@ class Factory extends BaseFactory implements FactoryInterface
      * @param null   $finalResult
      * @return array|bool|float|int|null|string|\Traversable
      */
-    public function expected($data, $expected = Lexicon::ANY, $finalResult = null)
+    public function expected($data, $expected = Lexicon::EXPECTED_ANY, $finalResult = null)
     {
-        if ($expected == Lexicon::ANY) {
+        if ($expected == Lexicon::EXPECTED_ANY) {
 
             $finalResult = $data;
 
-        } elseif ($expected == Lexicon::ECHOABLE) {
+        } elseif ($expected == Lexicon::EXPECTED_ECHO) {
 
             if (
                 is_string($data) or
@@ -246,7 +246,7 @@ class Factory extends BaseFactory implements FactoryInterface
 
             }
 
-        } elseif ($expected == Lexicon::TRAVERSABLE) {
+        } elseif ($expected == Lexicon::EXPECTED_TRAVERSABLE) {
 
             if (is_array($data) or $data instanceof \Traversable) {
 

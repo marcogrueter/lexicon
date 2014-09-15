@@ -227,7 +227,7 @@ class Block extends Node implements RootInterface
 
         $finder = $this->getNodeFinder();
 
-        $expected = Lexicon::ECHOABLE;
+        $expected = Lexicon::EXPECTED_ECHO;
 
         return "echo \$__data['__env']->variable({$finder->getItemSource()}, '{$finder->getName(
         )}',{$attributes},'{$this->getContent()}','','{$expected}');";
@@ -244,7 +244,7 @@ class Block extends Node implements RootInterface
 
         $finder = $this->getNodeFinder();
 
-        $expected = Lexicon::ECHOABLE;
+        $expected = Lexicon::EXPECTED_ECHO;
 
         $content = addslashes($this->getContent());
 
@@ -261,7 +261,7 @@ class Block extends Node implements RootInterface
     {
         $attributes = $this->newAttributeCompiler()->compile();
 
-        $expected = Lexicon::TRAVERSABLE;
+        $expected = Lexicon::EXPECTED_TRAVERSABLE;
 
         $finder = $this->getNodeFinder();
 

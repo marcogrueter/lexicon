@@ -133,19 +133,19 @@ class Lexicon implements LexiconInterface
     const DEFAULT_NODE_SET = 'all';
 
     /**
-     * Any expected constant
+     * Expected any constant
      */
-    const ANY = 'any';
+    const EXPECTED_ANY = 'any';
 
     /**
-     * Traversable
+     * Expected traversable
      */
-    const TRAVERSABLE = 'traversable';
+    const EXPECTED_TRAVERSABLE = 'traversable';
 
     /**
-     * Echo able
+     * Expected echo
      */
-    const ECHOABLE = 'echoable';
+    const EXPECTED_ECHO = 'echo';
 
     /**
      * @param ConditionalHandler     $conditionalHandler
