@@ -43,8 +43,7 @@ class Block extends Node implements RootInterface
      */
     public function regex()
     {
-        return '/\{\{\s*(' . $this->getVariableRegex(
-        ) . ')(\s.*?)\}\}(.*?)\{\{\s*\/\1\s*\}\}/ms';
+        return '/(\{\{\s*(' . $this->getVariableRegex() . ')(\s.*?)\}\})(.*?)(\{\{\s*\/\2\s*\}\})/ms';
     }
 
     /**
@@ -59,36 +58,24 @@ class Block extends Node implements RootInterface
 
         $fullContent = isset($match[0]) ? $match[0] : $fullContent;
 
-        $content = isset($match[3]) ? $match[3] : null;
+        $content = isset($match[4]) ? $match[4] : null;
 
         $content = isset($match['content']) ? $match['content'] : $content;
 
-        $name = isset($match[1]) ? $match[1] : null;
+        $name = isset($match[2]) ? $match[2] : null;
 
         $name = isset($match['name']) ? $match['name'] : $name;
 
-        $rawAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[2]) ? $match[2] : null;
+        $rawAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[3]) ? $match[3] : null;
 
         return $this
             ->setFullContent($fullContent)
-            ->setOpenAndClose($content, $fullContent)
             ->setName($name)
             ->setRawAttributes($rawAttributes)
             ->setContent($content)
-            ->setExtractionContent($content);
-    }
-
-    public function setOpenAndClose($content = '', $fullContent = '')
-    {
-        $parts = explode($content, $fullContent);
-
-        if (count($parts) == 2) {
-            $this
-                ->setContentOpen($parts[0])
-                ->setContentClose($parts[1]);
-        }
-
-        return $this;
+            ->setExtractionContent($content)
+            ->setContentOpen(isset($match[1]) ? $match[1] : '')
+            ->setContentClose(isset($match[5]) ? $match[5] : '');
     }
 
     /**

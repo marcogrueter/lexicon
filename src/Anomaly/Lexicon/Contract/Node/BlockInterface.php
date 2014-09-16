@@ -26,15 +26,6 @@ interface BlockInterface extends NodeInterface
     public function setFullContent($fullContent);
 
     /**
-     * Set open and closing content
-     *
-     * @param $content
-     * @param $fullContent
-     * @return BlockInterface
-     */
-    public function setOpenAndClose($content, $fullContent);
-
-    /**
      * Get full content
      *
      * @return string

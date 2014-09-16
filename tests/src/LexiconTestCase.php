@@ -62,6 +62,13 @@ class LexiconTestCase extends TestCase
     protected $node;
 
     /**
+     * @var bool
+     */
+    protected $info = true;
+
+    protected static $once = false;
+
+    /**
      * Creates the application.
      *
      * @return HttpKernelInterface
@@ -86,6 +93,13 @@ class LexiconTestCase extends TestCase
         $this->setUpViews();
         $this->setUpPlugins();
         $this->setUpTest();
+
+        if (!static::$once) {
+            if ($this->info) {
+                $this->info();
+            }
+            static::$once = true;
+        }
 
         return $app;
     }
@@ -163,6 +177,12 @@ class LexiconTestCase extends TestCase
     public function getTestsPath($path)
     {
         return __DIR__ . '/../' . $path;
+    }
+
+    private function info()
+    {
+        $debug = new Debug($this->lexicon);
+        $debug->printNodeTypesRegexList();
     }
 
 }

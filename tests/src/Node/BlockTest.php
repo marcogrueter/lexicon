@@ -32,19 +32,25 @@ class BlockTest extends LexiconTestCase
         $this->assertCount(1, $matches);
 
         // The match has 4 offsets
-        $this->assertCount(4, $matches[0]);
+        $this->assertCount(6, $matches[0]);
 
         // Offset [0][0] is the raw tag
         $this->assertEquals($template, $matches[0][0]);
 
-        // Offset [0][1] is the tag name
-        $this->assertEquals('books', $matches[0][1]);
+        // Offset [0][1] is the opening tag
+        $this->assertEquals('{{ books }}', $matches[0][1]);
+
+        // Offset [0][2] is the tag name
+        $this->assertEquals('books', $matches[0][2]);
 
         // Offset [0][2] is a space string
-        $this->assertEquals(' ', $matches[0][2]);
+        $this->assertEquals(' ', $matches[0][3]);
 
         // Offset [0][2] is the content between the ignore tags
-        $this->assertEquals('<h1>{{ title }}</h1>', $matches[0][3]);
+        $this->assertEquals('<h1>{{ title }}</h1>', $matches[0][4]);
+
+        // Offset [0][5] is the opening tag
+        $this->assertEquals('{{ /books }}', $matches[0][5]);
     }
 
     /**
