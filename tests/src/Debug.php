@@ -35,6 +35,7 @@ class Debug
         foreach ($this->lexicon->getNodeTypes() as $i => $nodeType) {
             print ($i + 1) . ". " . get_class($nodeType) . "\n" .
                 "    regex: " . $nodeType->regex() . "\n";
+            print "\n";
         }
     }
 
