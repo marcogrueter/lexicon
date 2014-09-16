@@ -84,9 +84,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
 
         $compiledPath = $this->getCompiledPath($path);
 
-        $segments = explode('/', $compiledPath);
-
-        $this->setHash($segments[count($segments) - 1]);
+        $this->setHash(substr(strrchr($compiledPath, '/'), 1));
 
         $contents = $this->compileString($this->files->get($path));
 
@@ -161,7 +159,9 @@ class Compiler extends BaseCompiler implements CompilerInterface
      */
     public function compileParse($content)
     {
-        $this->setHash(str_replace('/', '', strrchr($this->getCompiledPath($content), '/')));
+        $compiledPath = $this->getCompiledPath($content);
+
+        $this->setHash(substr(strrchr($compiledPath, '/'), 1));
 
         $contents = $this->compileString($content);
 

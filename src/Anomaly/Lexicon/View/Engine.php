@@ -1,9 +1,8 @@
 <?php namespace Anomaly\Lexicon\View;
 
-use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\View\EngineInterface;
-use Anomaly\Lexicon\Contract\View\ViewTemplateInterface;
 use Illuminate\View\Engines\CompilerEngine;
 
 class Engine extends CompilerEngine implements EngineInterface
@@ -76,10 +75,8 @@ class Engine extends CompilerEngine implements EngineInterface
         // an exception is thrown. This prevents any partial views from leaking.
         try {
 
-            // @todo - simplify
-            $segments             = explode('/', $__path);
-            $hash                 = $segments[count($segments) - 1];
-            $viewClass            = $this->getLexicon()->getFullViewClass($hash);
+            $viewHash  = substr(strrchr($__path, '/'), 1);
+            $viewClass = $this->getLexicon()->getFullViewClass($viewHash);
 
             include_once $__path;
 
