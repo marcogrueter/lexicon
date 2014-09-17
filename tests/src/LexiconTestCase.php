@@ -165,13 +165,7 @@ class LexiconTestCase extends TestCase
 
     public function makeBlockNode($name = 'root', $template = '', NodeInterface $parent = null)
     {
-        return (new Block($this->lexicon))->make(
-            [
-                'name'    => $name,
-                'content' => $template,
-            ],
-            $parent
-        );
+        return (new Block($this->lexicon))->make([], $parent)->setName($name)->setContent($template);
     }
 
     public function getTestsPath($path)

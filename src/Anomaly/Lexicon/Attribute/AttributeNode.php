@@ -46,7 +46,7 @@ class AttributeNode extends Node
 
     public function __construct(LexiconInterface $lexicon)
     {
-        $this->lexicon = $lexicon;
+        $this->lexicon      = $lexicon;
         $this->variableNode = new Variable($lexicon);
     }
 
@@ -73,7 +73,7 @@ class AttributeNode extends Node
 
         $embeddedMatches = $this->getMatches($this->value);
 
-        foreach($embeddedMatches as $count => $match) {
+        foreach ($embeddedMatches as $count => $match) {
 
             $node = $this->variableNode->make(
                 $match,
@@ -206,7 +206,8 @@ class AttributeNode extends Node
     {
         if (!$this->isNamed and $this->getEmbeddedAttribute()) {
 
-            $node = $this->newVariableNode()->make(['name' => $this->getEmbeddedAttribute()->getName()], $this->getParent());
+            $node = $this->newVariableNode()->make([], $this->getParent())
+                ->setName($this->getEmbeddedAttribute()->getName());
 
             $finder = $node->getNodeFinder();
 
@@ -223,7 +224,7 @@ class AttributeNode extends Node
 
     public function compileEmbedded()
     {
-        $node = $this->newVariableNode()->make(['name' => $this->getEmbeddedAttribute()->getName()], $this->getParent());
+        $node = $this->newVariableNode()->make([], $this->getParent())->setName($this->getEmbeddedAttribute()->getName());
 
         $finder = $node->getNodeFinder();
 
@@ -237,7 +238,7 @@ class AttributeNode extends Node
 
     public function compile()
     {
-        foreach($this->attributeSegments as &$segment) {
+        foreach ($this->attributeSegments as &$segment) {
             if (isset($this->extractions[$segment])) {
                 $node = $this->extractions[$segment];
                 /** @var $node NodeInterface */

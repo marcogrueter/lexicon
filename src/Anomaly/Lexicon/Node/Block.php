@@ -54,28 +54,14 @@ class Block extends Node implements RootInterface
      */
     public function setup(array $match)
     {
-        $fullContent = isset($match['fullcontent']) ? $match['fullcontent'] : null;
-
-        $fullContent = isset($match[0]) ? $match[0] : $fullContent;
-
-        $content = isset($match[4]) ? $match[4] : null;
-
-        $content = isset($match['content']) ? $match['content'] : $content;
-
-        $name = isset($match[2]) ? $match[2] : null;
-
-        $name = isset($match['name']) ? $match['name'] : $name;
-
-        $rawAttributes = isset($match['attributes']) ? $match['attributes'] : isset($match[3]) ? $match[3] : null;
-
         return $this
-            ->setFullContent($fullContent)
-            ->setName($name)
-            ->setRawAttributes($rawAttributes)
-            ->setContent($content)
-            ->setExtractionContent($content)
+            ->setFullContent(isset($match[0]) ? $match[0] : null)
             ->setContentOpen(isset($match[1]) ? $match[1] : '')
-            ->setContentClose(isset($match[5]) ? $match[5] : '');
+            ->setContentClose(isset($match[5]) ? $match[5] : '')
+            ->setName(isset($match[2]) ? $match[2] : null)
+            ->setRawAttributes(isset($match[3]) ? $match[3] : null)
+            ->setContent($content = isset($match[4]) ? $match[4] : null)
+            ->setExtractionContent($content);
     }
 
     /**

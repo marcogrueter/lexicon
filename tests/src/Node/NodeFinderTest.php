@@ -40,22 +40,22 @@ class NodeFinderTest extends LexiconTestCase
     {
         $this->root = $this->makeBlockNode('root');
 
-        $this->root->setLoopItemName('root');
+        $this->root->setLoopItemName('root')->setContextName('root');
 
         $this->parentParent = $this->makeBlockNode('parentParent', 'template', $this->root);
 
-        $this->parentParent->setLoopItemName('parentParent');
+        $this->parentParent->setLoopItemName('parentParent')->setContextName('parentParent');
 
         $this->parent = $this->makeBlockNode('parent', 'template', $this->parentParent);
 
-        $this->parent->setLoopItemName('parent');
+        $this->parent->setLoopItemName('parent')->setContextName('parent');
 
         $this->variable = new Variable($this->lexicon);
     }
 
     public function testGetNameRemovesDataPrefix()
     {
-        $variable = $this->variable->make(['name' => 'data.title'], $this->root);
+        $variable = $this->variable->make([], $this->root)->setName('data.title')->setContextName('data.title');
 
         $finder = new NodeFinder($variable);
 
@@ -64,7 +64,7 @@ class NodeFinderTest extends LexiconTestCase
 
     public function testGetLoopItemSourceIfVariableIsChildOfRootContext()
     {
-        $variable = $this->variable->make(['name' => 'book.title'], $this->root);
+        $variable = $this->variable->make([], $this->root)->setName('book.title');
 
         $finder = new NodeFinder($variable);
 
@@ -73,7 +73,7 @@ class NodeFinderTest extends LexiconTestCase
 
     public function testGetLoopItemSourceForRootItemName()
     {
-        $variable = $this->variable->make(['name' => 'data.title'], $this->root);
+        $variable = $this->variable->make([], $this->root)->setName('data.title')->setContextName('data.title');
 
         $finder = new NodeFinder($variable);
 
@@ -82,7 +82,7 @@ class NodeFinderTest extends LexiconTestCase
 
     public function testGetLoopItemSourceForCustomItemName()
     {
-        $variable = $this->variable->make(['name' => 'parent.title'], $this->parent);
+        $variable = $this->variable->make([], $this->parent)->setName('parent.title')->setContextName('parent.title');
 
         $finder = new NodeFinder($variable);
 
@@ -91,7 +91,7 @@ class NodeFinderTest extends LexiconTestCase
 
     public function testGetLoopItemSourceForNonExistentPrefix()
     {
-        $variable = $this->variable->make(['name' => 'nonExistent.title'], $this->parent);
+        $variable = $this->variable->make([], $this->parent)->setName('nonExistent.title');
 
         $finder = new NodeFinder($variable);
 
@@ -100,7 +100,7 @@ class NodeFinderTest extends LexiconTestCase
 
     public function testGetLoopItemSourceForParentOfParent()
     {
-        $variable = $this->variable->make(['name' => 'parentParent.title'], $this->parent);
+        $variable = $this->variable->make([], $this->parent)->setName('parentParent.title')->setContextName('parentParent.title');
 
         $finder = new NodeFinder($variable);
 
@@ -109,7 +109,7 @@ class NodeFinderTest extends LexiconTestCase
 
     public function testGetName()
     {
-        $variable = $this->variable->make(['name' => 'parent.title'], $this->parent);
+        $variable = $this->variable->make([], $this->parent)->setName('parent.title')->setContextName('parent.title');
 
         $finder = new NodeFinder($variable);
 

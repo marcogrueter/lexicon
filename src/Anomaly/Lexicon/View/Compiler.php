@@ -138,12 +138,11 @@ class Compiler extends BaseCompiler implements CompilerInterface
      */
     public function getRootNode($content = '')
     {
-        $rootNode = $this->getLexicon()->getRootNodeType()->make(
-            array(
-                'name'    => 'root',
-                'content' => $content,
-            )
-        );
+        $rootNode = $this->getLexicon()->getRootNodeType()->make([])
+            ->setName('root')
+            ->setContent($content)
+            ->setExtractionContent($content)
+            ->setParsedContent($content);
 
         $rootNode->setNodeSet($this->getLexicon()->getNodeSetFromPath($this->getPath()));
 

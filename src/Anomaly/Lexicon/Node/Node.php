@@ -218,9 +218,6 @@ abstract class Node implements NodeInterface
 
         $node
             ->setId(str_random(32))
-            ->setItemName(
-                camel_case(str_replace($this->getLexicon()->getScopeGlue(), '_', $node->getName())) . 'Item'
-            )
             ->setContextName($node->getName())
             ->setParsedContent($node->getContent())
             ->setLoopItemName($node->getLoopItemInRawAttributes());
@@ -533,7 +530,7 @@ abstract class Node implements NodeInterface
      */
     public function getItemName()
     {
-        return $this->itemName;
+        return camel_case(str_replace($this->getLexicon()->getScopeGlue(), '_', $this->getName())) . 'Item';
     }
 
     /**

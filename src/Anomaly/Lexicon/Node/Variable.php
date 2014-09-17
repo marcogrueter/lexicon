@@ -64,11 +64,11 @@ class Variable extends Single
     {
         if (!$this->isEmbedded()) {
 
-            $node = $this->make(['name' => $this->getName()], $this->getParent());
+            $node = $this->make([], $this->getParent())->setName($this->getName());
 
             $finder = $node->getNodeFinder();
 
-            return $finder->getName();
+            return $this->getNodeFinder()->getName();
         }
 
         return $this->getName();

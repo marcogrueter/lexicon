@@ -247,7 +247,7 @@ class ConditionalCompiler
     {
         $key = $this->newValueResolver($key);
 
-        $finder = $this->variableNode->make(['name' => $key], $this->node->getParent())->getNodeFinder();
+        $finder = $this->variableNode->make([], $this->node->getParent())->setName($key)->getNodeFinder();
 
         return "\$__data['__env']->variable({$finder->getItemSource()}, '{$finder->getName()}')";
     }

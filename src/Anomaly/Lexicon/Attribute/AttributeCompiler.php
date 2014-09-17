@@ -56,7 +56,13 @@ class AttributeCompiler
      */
     public function parse()
     {
-
+        // foreach attribute node type
+        // validate when
+        /**
+         * $attributeNodeType->when(function($this->rawattributes))
+         *
+         *
+         */
 
         // Do we have named attributes?
         if (str_contains($this->rawAttributes, '="') or
