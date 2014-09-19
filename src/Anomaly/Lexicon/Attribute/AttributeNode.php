@@ -64,8 +64,6 @@ class AttributeNode extends Node
             ->setExtractionContent(isset($match[0]) ? $match[0] : null)
             ->setKey(isset($match[1]) ? $match[1] : null)
             ->setValue(isset($match[3]) ? $match[3] : '');
-
-        $this->parse();
     }
 
     public function parse()

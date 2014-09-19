@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Attribute\AttributeCompiler;
+use Anomaly\Lexicon\Attribute\Factory;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
@@ -245,11 +245,11 @@ abstract class Node implements NodeInterface
     /**
      * Return a new AttributeParser
      *
-     * @return AttributeCompiler
+     * @return Factory
      */
-    public function newAttributeCompiler()
+    public function newFactory()
     {
-        return (new AttributeCompiler($this, new Variable($this->getLexicon())))->parse();
+        return (new Factory($this, new Variable($this->getLexicon())));
     }
 
     /**
@@ -528,9 +528,9 @@ abstract class Node implements NodeInterface
      *
      * @return string
      */
-    public function getItemName()
+    public function getItemSource()
     {
-        return camel_case(str_replace($this->getLexicon()->getScopeGlue(), '_', $this->getName())) . 'Item';
+        return '$' . camel_case(str_replace($this->getLexicon()->getScopeGlue(), '_', $this->getName())) . 'Item';
     }
 
     /**
@@ -663,7 +663,7 @@ abstract class Node implements NodeInterface
     {
         foreach ($this->lexicon->getNodeTypes($this->getNodeSet()) as $nodeType) {
             if ($nodeType instanceof NodeInterface) {
-                foreach ($nodeType->getMatches($this->parsedContent) as $count => $match) {
+                foreach ($nodeType->getMatches($this->getParsedContent()) as $count => $match) {
                     $this->createChildNode($nodeType, $match, $count);
                 }
             }
@@ -689,9 +689,7 @@ abstract class Node implements NodeInterface
             $count
         );
 
-        $node->setNodeSet($this->getNodeSet());
-
-        $node->createChildNodes();
+        $node->setNodeSet($this->getNodeSet())->createChildNodes();
 
         $this->addChild($node);
         $this->extract($node);

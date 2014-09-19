@@ -182,7 +182,7 @@ class Block extends Node implements RootInterface
             return null;
         }
 
-        return "foreach ({$this->getIterateableSource()} as \$i => \${$this->getItemName()}):";
+        return "foreach ({$this->getIterateableSource()} as \$i => \${$this->getItemSource()}):";
     }
 
     /**

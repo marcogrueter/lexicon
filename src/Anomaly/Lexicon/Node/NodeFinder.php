@@ -74,11 +74,11 @@ class NodeFinder
 
             if ($prefix = $this->getPrefix() and $node = $this->findLoopItemNode($prefix)) {
 
-                $source = '$' . $node->getItemName();
+                $source = $node->getItemSource();
 
             } else {
 
-                $source = '$' . $this->getParent()->getItemName();
+                $source = $this->getParent()->getItemSource();
 
             }
         }

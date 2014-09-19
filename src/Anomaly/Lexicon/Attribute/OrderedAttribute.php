@@ -1,7 +1,9 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
-class OrderedAttributeNode extends AttributeNode
+class OrderedAttribute extends AttributeNode
 {
+    const REGEX = '/(\'|"|&#?\w+;)\s*(.*?)\s*\1/ms';
+
     protected $isNamed = false;
 
     public function setup(array $match)
@@ -13,9 +15,14 @@ class OrderedAttributeNode extends AttributeNode
         $this->parse();
     }
 
+    public function detect($rawAttributes)
+    {
+        return !empty($this->getMatches($rawAttributes, $this->regex()));
+    }
+
     public function regex()
     {
-        return '/(\'|"|&#?\w+;)\s*(.*?)\s*\1/s';
+        return self::REGEX;
     }
 
     public function getKey()

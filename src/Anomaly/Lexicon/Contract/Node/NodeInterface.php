@@ -217,11 +217,11 @@ interface NodeInterface extends ExtractionInterface
     public function setContent($content);
 
     /**
-     * Get item name
+     * Get item source
      *
      * @return string
      */
-    public function getItemName();
+    public function getItemSource();
 
     /**
      * Get loop item name

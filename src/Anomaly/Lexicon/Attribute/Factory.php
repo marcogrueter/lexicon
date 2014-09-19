@@ -4,7 +4,7 @@ use Anomaly\Lexicon\Contract\Node\ExtractionInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\Variable;
 
-class AttributeCompiler
+class Factory
 {
 
     /**
@@ -13,6 +13,15 @@ class AttributeCompiler
      * @var \Anomaly\Lexicon\Contract\Node\NodeInterface
      */
     protected $node;
+
+    /**
+     * @var array
+     */
+    protected $attributeNodeTypes = [
+        'Anomaly\Lexicon\Attribute\NamedAttribute',
+        'Anomaly\Lexicon\Attribute\OrderedAttribute',
+        'Anomaly\Lexicon\Attribute\VariableAttribute',
+    ];
 
     /**
      * The raw attributes
@@ -33,19 +42,43 @@ class AttributeCompiler
      */
     protected $embeddedAttributes = [];
 
+    /**
+     * @var array
+     */
     protected $attributesExtractions = [];
 
+    /**
+     * @var array
+     */
     protected $attributesOrder = [];
 
+    /**
+     * @var array
+     */
     protected $compiledAttributes = [];
 
+    /**
+     * @var array
+     */
+    protected $childrenIds = [];
+
+    /**
+     * @param NodeInterface $node
+     * @param Variable      $variableNode
+     */
     public function __construct(NodeInterface $node, Variable $variableNode)
     {
         $this->node          = $node;
-        $this->rawAttributes = $node->getRawAttributes();
         $this->variableNode  = $variableNode;
     }
 
+    /**
+     * @return string
+     */
+    public function getRawAttributes()
+    {
+        return $this->node->getRawAttributes();
+    }
 
     /**
      * @return $this
@@ -60,9 +93,16 @@ class AttributeCompiler
         // validate when
         /**
          * $attributeNodeType->when(function($this->rawattributes))
-         *
-         *
+
+
          */
+
+        /*        foreach($this->getAttributeNodeTypes() as $nodeType) {
+                    if ($nodeType->detected($this->rawAttributes)) {
+
+                        break;
+                    }
+                }*/
 
         // Do we have named attributes?
         if (str_contains($this->rawAttributes, '="') or
@@ -78,6 +118,78 @@ class AttributeCompiler
         $this->attributesOrder = explode(' ', trim($this->node->compress($this->rawAttributes)));
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getNodeTypes()
+    {
+        $nodeTypes = [];
+        foreach ($this->attributeNodeTypes as $nodeType) {
+            $nodeTypes[$nodeType] = new $nodeType($this->node->getLexicon());
+        }
+        return $nodeTypes;
+    }
+
+    public function createChildNodes()
+    {
+        $attributeNodeType = $this->getAttributeNodeType();
+
+        $matches = $attributeNodeType->getMatches($this->getRawAttributes());
+
+        foreach($matches as $offset => $match) {
+            $node = $attributeNodeType->make($match, $this->node, $depth = 0, $offset);
+            $this->addChild($node);
+        }
+
+        return $this;
+    }
+
+    public function addChild(NodeInterface $node)
+    {
+        $this->childrenIds[$node->getId()] = $node->getId();
+    }
+
+    public function getNodeById($id)
+    {
+        return $this->getLexicon()->getNodeById($id);
+    }
+
+    public function getAttributeNodeType()
+    {
+        $attributeNodeType = null;
+
+        foreach($this->getNodeTypes() as $nodeType) {
+            if ($nodeType->detect($this->getRawAttributes())) {
+                $attributeNodeType = $nodeType;
+                break;
+            }
+        }
+
+        return $attributeNodeType;
+    }
+
+    public function getNodes()
+    {
+        $nodes = [];
+
+        foreach($this->childrenIds as $id) {
+            $nodes[] = $this->getLexicon()->getNodeById($id);
+        }
+
+        return $nodes;
+    }
+
+    public function getAttributes()
+    {
+        $attributes = [];
+
+        foreach($this->getNodes() as $node) {
+            $attributes[$node->getKey()] = $node->getValue();
+        }
+
+        return $attributes;
     }
 
     public function getEmbeddedById($id)
