@@ -30,7 +30,9 @@ class VariableAttribute extends AttributeNode
 
         $this
             ->setKey($this->getOffset())
-            ->setValue($this->get($match, 1));
+            ->setValue($this->get($match, 1))
+            ->setParsedContent($attributes = $this->get($match, 2))
+            ->setRawAttributes($attributes);
     }
 
     /**
@@ -38,7 +40,9 @@ class VariableAttribute extends AttributeNode
      */
     public function compileValue()
     {
-        return "\$__data['__env']->variable(\$__data, '{$this->getValue()}', [], '', null, 'echo')";
+        $attributes = $this->compileAttributes();
+
+        return "\$__data['__env']->variable(\$__data, '{$this->getValue()}', {$attributes}, '', null, 'echo')";
     }
 
 } 

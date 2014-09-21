@@ -280,6 +280,16 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Compile attributes
+     *
+     * @return string
+     */
+    public function compileAttributes()
+    {
+        return $this->newAttributeNode()->compile();
+    }
+
+    /**
      * Increment depth
      *
      * @return bool
