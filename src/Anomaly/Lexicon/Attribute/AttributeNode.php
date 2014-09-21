@@ -50,10 +50,10 @@ class AttributeNode extends Node
         }
 
         $this
-            ->setContent($rawAttributes)
-            ->setParsedContent($rawAttributes)
             ->setKey($this->match(1))
-            ->setValue($this->match(3));
+            ->setValue($this->match(3))
+            ->setContent($rawAttributes)
+            ->setParsedContent($rawAttributes);
     }
 
     /**
