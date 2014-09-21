@@ -8,8 +8,6 @@ use Anomaly\Lexicon\Support\ValueResolver;
 class AttributeNode extends Node
 {
 
-    use NodeManageable;
-
     /**
      * The attribute key
      *
@@ -215,13 +213,18 @@ class AttributeNode extends Node
         return $attributes;
     }
 
+    public function compileValue()
+    {
+        return $this->compileLiteral();
+    }
+
     public function compile()
     {
         $attributes = [];
 
         /** @var $node AttributeNode */
         foreach ($this->getChildren() as $node) {
-            $attributes[] = "{$node->compileKey()} => {$node->compileLiteral()}";
+            $attributes[] = "{$node->compileKey()} => {$node->compileValue()}";
         }
 
         $attributes = implode(', ', $attributes);

@@ -18,4 +18,9 @@ class VariableAttribute extends AttributeNode
         return '/\{([a-zA-Z0-9_\.]+)\}/ms';
     }
 
+    public function compileValue()
+    {
+        return "\$__data['__env']->variable(\$__data, '{$this->getName()}', [], '', null, 'echo')";
+    }
+
 } 

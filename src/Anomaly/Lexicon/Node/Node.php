@@ -1,7 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
 use Anomaly\Lexicon\Attribute\AttributeNode;
-use Anomaly\Lexicon\Attribute\Factory;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
@@ -242,12 +241,10 @@ abstract class Node implements NodeInterface
             ->setup($match);
 
         $node
-
             ->setOffset($offset)
             ->setDepth($depth)
             ->setId(str_random(32))
             ->setContextName($node->getName())
-
             ->setLoopItemName($node->getLoopItemInRawAttributes());
 
         return $this->getLexicon()->addNode($node);

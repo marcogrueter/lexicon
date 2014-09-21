@@ -89,7 +89,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
 
         $nodeSet = $this->getLexicon()->getNodeSetFromPath($this->getPath());
 
-        $contents = $this->compileString($this->files->get($path), $nodeSet);
+        $contents = $this->compileView($this->compileString($this->files->get($path), $nodeSet));
 
         if (!is_null($this->cachePath)) {
             $this->files->put($this->getCompiledPath($path), $contents);
@@ -110,7 +110,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
 
         $rootNode = $this->getRootNode($content, $nodeSet);
 
-        return $this->compileView($this->compileRootNode($rootNode));
+        return $this->compileRootNode($rootNode);
     }
 
     /**
@@ -163,7 +163,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
 
         $this->setHash(substr(strrchr($compiledPath, '/'), 1));
 
-        $contents = $this->compileString($content);
+        $contents = $this->compileView($this->compileString($content));
 
         if (!is_null($this->cachePath)) {
             $this->files->put($this->getCompiledPath($content), $contents);
