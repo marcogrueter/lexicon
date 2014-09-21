@@ -60,6 +60,13 @@ abstract class Node implements NodeInterface
     protected $name = 'root';
 
     /**
+     * Regex match result
+     *
+     * @var array
+     */
+    protected $match = [];
+
+    /**
      * @var string
      */
     protected $rawAttributes = '';
@@ -162,6 +169,40 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Set regex match
+     *
+     * @param $match
+     * @return NodeInterface
+     */
+    public function setMatch($match)
+    {
+        $this->match = $match;
+        return $this;
+    }
+
+    /**
+     * Get regex match
+     *
+     * @param $match
+     * @return NodeInterface
+     */
+    public function getMatch()
+    {
+        return $this->match;
+    }
+
+    /**
+     * Get value from match array with an offset
+     *
+     * @param $offset
+     * @return string|null
+     */
+    public function match($offset)
+    {
+        return $this->get($this->getMatch(), $offset);
+    }
+
+    /**
      * @param bool $isEmbedded
      * @return $this
      */
@@ -236,12 +277,13 @@ abstract class Node implements NodeInterface
         }
 
         $node
+            ->setMatch($match)
             ->setParentId($parentId)
             ->setParsedContent($node->getContent())
             ->setOffset($offset)
             ->setDepth($depth)
             ->setId(str_random(32))
-            ->setup($match);
+            ->setup();
 
         $node
             ->setContextName($node->getName())
@@ -971,7 +1013,7 @@ abstract class Node implements NodeInterface
      * @param $regex
      * @return array
      */
-    public function getMatch($text, $regex)
+    public function getSingleMatch($text, $regex)
     {
         $match = [];
         preg_match($regex, $text, $match);

@@ -18,15 +18,13 @@ class IgnoreBlock extends Node
     protected $deferCompile = true;
 
     /**
-     * No is setup needed as we are going to output the original template content
+     * Setup properties using the regex matches
      *
-     * @codeCoverageIgnore
-     * @param array $match
      * @return void
      */
-    public function setup(array $match)
+    public function setup()
     {
-        $this->setContent(isset($match[3]) ? $match[3] : null);
+        $this->setContent($this->match(3));
     }
 
     /**
@@ -48,4 +46,5 @@ class IgnoreBlock extends Node
     {
         return $this->getContent();
     }
+
 }

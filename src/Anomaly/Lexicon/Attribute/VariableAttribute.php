@@ -19,19 +19,18 @@ class VariableAttribute extends AttributeNode
     }
 
     /**
-     * Get the regex match setup
+     * Setup properties using the regex matches
      *
-     * @param array $match
-     * @return mixed|void
+     * @return void
      */
-    public function setup(array $match)
+    public function setup()
     {
-        parent::setup($match);
+        parent::setup();
 
         $this
             ->setKey($this->getOffset())
-            ->setValue($this->get($match, 1))
-            ->setParsedContent($attributes = $this->get($match, 2))
+            ->setValue($this->match(1))
+            ->setParsedContent($attributes = $this->match(2))
             ->setRawAttributes($attributes);
     }
 

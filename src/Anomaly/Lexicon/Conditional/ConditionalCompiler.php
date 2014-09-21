@@ -273,7 +273,7 @@ class ConditionalCompiler
      */
     public function getOperatorMatch($comparison)
     {
-        $match = $this->node->getMatch($comparison, $this->getComparisonOperatorsRegexMatcher());
+        $match = $this->node->getSingleMatch($comparison, $this->getComparisonOperatorsRegexMatcher());
 
         if (is_array($match) and !empty($match)) {
             return $match[1];

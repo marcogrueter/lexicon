@@ -2,8 +2,6 @@
 
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\Node;
-use Anomaly\Lexicon\Node\NodeManageable;
-use Anomaly\Lexicon\Support\ValueResolver;
 
 class AttributeNode extends Node
 {
@@ -28,12 +26,21 @@ class AttributeNode extends Node
     protected $extractable = false;
 
     /**
-     * Get the regex match setup
+     * Default dummy regex
      *
-     * @param array $match
-     * @return mixed|void
+     * @return string
      */
-    public function setup(array $match)
+    public function regex()
+    {
+        return '//';
+    }
+
+    /**
+     * Setup properties using the regex matches
+     *
+     * @return void
+     */
+    public function setup()
     {
         $rawAttributes = '';
 
@@ -45,18 +52,8 @@ class AttributeNode extends Node
         $this
             ->setContent($rawAttributes)
             ->setParsedContent($rawAttributes)
-            ->setKey($this->get($match, 1))
-            ->setValue($this->get($match, 3));
-    }
-
-    /**
-     * Regex
-     *
-     * @return string
-     */
-    public function regex()
-    {
-        return '//ms';
+            ->setKey($this->match(1))
+            ->setValue($this->match(3));
     }
 
     /**
@@ -89,6 +86,11 @@ class AttributeNode extends Node
     }
 
 
+    /**
+     * Alias for get attribute node types
+     *
+     * @return array
+     */
     public function getNodeTypes()
     {
         return $this->getLexicon()->getAttributeNodeTypes();
@@ -198,12 +200,23 @@ class AttributeNode extends Node
         return "\$__data['__env']->variable({$finder->getItemSource()},'{$finder->getName()}', [])";
     }
 
+    /**
+     * Compile literal value
+     *
+     * @return string
+     */
     public function compileLiteral()
     {
         return "'{$this->getValue()}'";
     }
 
-    public function compileArray($except = [], $qu)
+    /**
+     * Compile array
+     *
+     * @param array $except
+     * @return array
+     */
+    public function compileArray($except = [])
     {
         $attributes = array();
 
@@ -219,11 +232,21 @@ class AttributeNode extends Node
         return $attributes;
     }
 
+    /**
+     * Compile value
+     *
+     * @return string
+     */
     public function compileValue()
     {
         return $this->compileLiteral();
     }
 
+    /**
+     * Compile attributes
+     *
+     * @return string
+     */
     public function compile()
     {
         $attributes = [];
@@ -237,4 +260,5 @@ class AttributeNode extends Node
 
         return "[{$attributes}]";
     }
+
 }

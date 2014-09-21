@@ -15,15 +15,14 @@ class ConditionalElse extends Conditional
     }
 
     /**
-     * Get setup from regex match
+     * Setup properties using the regex matches
      *
-     * @param array $match
-     * @return mixed|void
+     * @return void
      */
-    public function setup(array $match)
+    public function setup()
     {
         $this
-            ->setExtractionContent($match[0])
+            ->setExtractionContent($this->match(0))
             ->setValidator(new ElseValidator($this));
     }
 

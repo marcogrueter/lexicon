@@ -4,15 +4,16 @@ class OrderedAttribute extends AttributeNode
 {
 
     /**
-     * @param array $match
-     * @return mixed|void
+     * Setup properties using the regex matches
+     *
+     * @return void
      */
-    public function setup(array $match)
+    public function setup()
     {
         $this
+            ->setValue($this->match(2))
             ->setContent($this->getParent()->getRawAttributes())
-            ->setExtractionContent(isset($match[0]) ? $match[0] : null)
-            ->setValue(isset($match[2]) ? $match[2] : '');
+            ->setExtractionContent($this->match(0));
     }
 
     /**

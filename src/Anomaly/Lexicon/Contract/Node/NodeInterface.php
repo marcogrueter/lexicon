@@ -16,10 +16,9 @@ interface NodeInterface extends ExtractionInterface
     /**
      * Get setup from regex match
      *
-     * @param array $match
      * @return mixed
      */
-    public function setup(array $match);
+    public function setup();
 
     /**
      * Get regex string
@@ -184,7 +183,7 @@ interface NodeInterface extends ExtractionInterface
      * @param $regex
      * @return array
      */
-    public function getMatch($string, $regex);
+    public function getSingleMatch($string, $regex);
 
     /**
      * Defer compile

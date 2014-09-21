@@ -36,17 +36,16 @@ class Conditional extends Single implements ConditionalInterface
     }
 
     /**
-     * Get setup from regex match
+     * Setup properties using the regex matches
      *
-     * @param array $match
      * @return void
      */
-    public function setup(array $match)
+    public function setup()
     {
         $this
-            ->setName($match[1])
-            ->setExtractionContent($match[0])
-            ->setExpression($match[2]);
+            ->setExtractionContent($this->match(0))
+            ->setName($this->match(1))
+            ->setExpression($this->match(2));
 
         if ($this->getName() == 'if') {
             $this->setValidator(new IfValidator($this));

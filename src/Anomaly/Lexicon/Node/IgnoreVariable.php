@@ -11,16 +11,16 @@ class IgnoreVariable extends SingleRemain
     protected $isPhp = false;
 
     /**
-     * Setup
+     * Setup properties using the regex matches
      *
-     * @param array $match
+     * @return void
      */
-    public function setup(array $match)
+    public function setup()
     {
         $this
-            ->setName(isset($match[2]) ? $match[2] : null)
-            ->setContent(isset($match[1]) ? $match[1] : null)
-            ->setExtractionContent(isset($match[0]) ? $match[0] : null);
+            ->setExtractionContent($this->match(0))
+            ->setContent($this->match(1))
+            ->setName($this->match(2));
     }
 
     /**

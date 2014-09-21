@@ -13,15 +13,14 @@ class ConditionalEndif extends Single implements ConditionalEndInterface
     public $name = 'endif';
 
     /**
-     * Get setup from regex match
+     * Setup properties using the regex matches
      *
-     * @param array $match
-     * @return mixed|void
+     * @return void
      */
-    public function setup(array $match)
+    public function setup()
     {
         $this
-            ->setExtractionContent($match[0])
+            ->setExtractionContent($this->match(0))
             ->setValidator(new EndifValidator($this));
     }
 

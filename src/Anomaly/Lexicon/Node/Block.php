@@ -47,20 +47,19 @@ class Block extends Node implements RootInterface
     }
 
     /**
-     * Get setup
+     * Setup properties using the regex matches
      *
-     * @param array $match
-     * @return BlockInterface
+     * @return void
      */
-    public function setup(array $match)
+    public function setup()
     {
-        return $this
-            ->setFullContent(isset($match[0]) ? $match[0] : null)
-            ->setContentOpen(isset($match[1]) ? $match[1] : '')
-            ->setContentClose(isset($match[5]) ? $match[5] : '')
-            ->setName(isset($match[2]) ? $match[2] : null)
-            ->setRawAttributes(isset($match[3]) ? $match[3] : null)
-            ->setContent($content = isset($match[4]) ? $match[4] : null)
+        $this
+            ->setFullContent($this->match(0))
+            ->setContentOpen($this->match(1))
+            ->setContentClose($this->match(5))
+            ->setName($this->match(2))
+            ->setRawAttributes($this->match(3))
+            ->setContent($content = $this->match(4))
             ->setExtractionContent($content);
     }
 
