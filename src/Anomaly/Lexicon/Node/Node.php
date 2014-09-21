@@ -238,14 +238,15 @@ abstract class Node implements NodeInterface
         $node
             ->setParentId($parentId)
             ->setParsedContent($node->getContent())
-            ->setup($match);
-
-        $node
             ->setOffset($offset)
             ->setDepth($depth)
             ->setId(str_random(32))
+            ->setup($match);
+
+        $node
             ->setContextName($node->getName())
             ->setLoopItemName($node->getLoopItemInRawAttributes());
+
 
         return $this->getLexicon()->addNode($node);
     }

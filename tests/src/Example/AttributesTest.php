@@ -41,12 +41,17 @@ class AttributesTest extends LexiconTestCase
      */
     public function test_it_can_compile_variable_attributes()
     {
-        $expected = '<?php echo $__data[\'__env\']->variable($__data, \'test\', [0 => \'FOO\', 1 => \'BAR\'], \'\', null, \'echo\'); ?>';
+        $expected = '<?php echo $__data[\'__env\']->variable($__data, \'test\', [0 => $__data[\'__env\']->variable($__data, \'foo\', [], \'\', null, \'echo\'), 1 => $__data[\'__env\']->variable($__data, \'bar\', [], \'\', null, \'echo\')], \'\', null, \'echo\'); ?>';
 
         $result = $this->compiler->compileString('{{ test {foo} {bar} }}');
 
         $this->assertEquals($expected, $result);
     }
+
+
+
+
+
 
 }
  

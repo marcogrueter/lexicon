@@ -45,7 +45,7 @@ class AttributeNode extends Node
             ->setContent($rawAttributes)
             ->setParsedContent($rawAttributes)
             ->setKey($this->get($match, 1))
-            ->setValue($this->get($match, 3, ''));
+            ->setValue($this->get($match, 3));
     }
 
     /**
@@ -86,7 +86,6 @@ class AttributeNode extends Node
 
         return $attributeNodeType;
     }
-
 
 
     public function getNodeTypes()
@@ -157,13 +156,19 @@ class AttributeNode extends Node
     }
 
     /**
-     * Compile key
+     * Compile key as an a string or offset
      *
      * @return string
      */
     public function compileKey()
     {
-        return "'{$this->getKey()}'";
+        $key = $this->getKey();
+
+        if (!is_numeric($key)) {
+            $key = "'{$key}'";
+        }
+
+        return $key;
     }
 
     /**
@@ -204,9 +209,10 @@ class AttributeNode extends Node
 
         /** @var $node AttributeNode */
         foreach ($this->getChildren() as $node) {
-            $key = $node->compileKey();
+            $key   = $node->compileKey();
+            $value = $node->compileValue();
             if (!in_array($key, array_keys($except)) or !in_array($key, $except)) {
-                $attributes[$key] = $node->getValue();
+                $attributes[$key] = $value;
             }
         }
 

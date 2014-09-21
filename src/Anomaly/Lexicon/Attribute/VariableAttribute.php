@@ -9,6 +9,21 @@ class VariableAttribute extends AttributeNode
 {
 
     /**
+     * Get the regex match setup
+     *
+     * @param array $match
+     * @return mixed|void
+     */
+    public function setup(array $match)
+    {
+        parent::setup($match);
+
+        $this
+            ->setKey($this->getOffset())
+            ->setValue($this->get($match, 1));
+    }
+
+    /**
      * Regex
      *
      * @return string
@@ -18,9 +33,12 @@ class VariableAttribute extends AttributeNode
         return '/\{([a-zA-Z0-9_\.]+)\}/ms';
     }
 
+    /**
+     * @return string
+     */
     public function compileValue()
     {
-        return "\$__data['__env']->variable(\$__data, '{$this->getName()}', [], '', null, 'echo')";
+        return "\$__data['__env']->variable(\$__data, '{$this->getValue()}', [], '', null, 'echo')";
     }
 
 } 
