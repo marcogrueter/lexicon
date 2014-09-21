@@ -182,7 +182,7 @@ class Block extends Node implements RootInterface
             return null;
         }
 
-        return "foreach ({$this->getIterateableSource()} as \$i => \${$this->getItemSource()}):";
+        return "foreach ({$this->getIterateableSource()} as \$i => {$this->getItemSource()}):";
     }
 
     /**
@@ -228,7 +228,7 @@ class Block extends Node implements RootInterface
      */
     public function getIterateableSource()
     {
-        $attributes = $this->newAttributeCompiler()->compile();
+        $attributes = $this->newAttributeNode()->compile();
 
         $expected = Lexicon::EXPECTED_TRAVERSABLE;
 

@@ -19,7 +19,7 @@ class SectionYield extends Single
      */
     public function compile()
     {
-        $name = $this->newAttributeCompiler()->compileAttribute('name');
+        $name = null; //$this->newAttributeNode()->compileAttribute('name');
 
         $source = null;
 

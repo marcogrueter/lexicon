@@ -1,17 +1,14 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
-use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\Node;
-use Anomaly\Lexicon\Node\Variable;
+use Anomaly\Lexicon\Node\NodeManageable;
+use Anomaly\Lexicon\Support\ValueResolver;
 
 class AttributeNode extends Node
 {
 
-    /**
-     * @var EmbeddedAttribute
-     */
-    protected $embeddedAttribute;
+    use NodeManageable;
 
     /**
      * The attribute key
@@ -28,27 +25,9 @@ class AttributeNode extends Node
     protected $value = '';
 
     /**
-     * Is this a named attribute?
-     *
      * @var bool
      */
-    protected $isNamed = true;
-
-    protected $variableNodes = [];
-
-    protected $extractions = [];
-
-    protected $variableNode;
-
-    protected $attributeSegments = [];
-
-    protected $lexicon;
-
-    public function __construct(LexiconInterface $lexicon)
-    {
-        $this->lexicon      = $lexicon;
-        $this->variableNode = new Variable($lexicon);
-    }
+    protected $extractable = false;
 
     /**
      * Get the regex match setup
@@ -58,65 +37,79 @@ class AttributeNode extends Node
      */
     public function setup(array $match)
     {
-        //dd($match[0]);
+        $rawAttributes = '';
 
-        $this
-            ->setExtractionContent(isset($match[0]) ? $match[0] : null)
-            ->setKey(isset($match[1]) ? $match[1] : null)
-            ->setValue(isset($match[3]) ? $match[3] : '');
-    }
-
-    public function parse()
-    {
-
-        $embeddedMatches = $this->getMatches($this->value);
-
-        foreach ($embeddedMatches as $count => $match) {
-
-            $node = $this->variableNode->make(
-                $match,
-                $this->getParent(),
-                $this->getDepth(),
-                $count
-            );
-
-            $this->value = str_replace(
-                trim($node->getExtractionContent()),
-                $node->getId(),
-                $this->value
-            );
-
-            $this->extractions[$node->getId()] = $node;
+        if ($parent = $this->getParent()) {
+            $rawAttributes = $parent->getRawAttributes();
         }
 
-        $this->attributeSegments = explode(PHP_EOL, $this->value);
-    }
-
-    public function getExtractionIds()
-    {
-        return array_keys($this->extractions);
+        $this
+            ->setContent($rawAttributes)
+            ->setParsedContent($rawAttributes)
+            ->setKey($this->get($match, 1))
+            ->setValue($this->get($match, 3, ''));
     }
 
     /**
-     * Regex matcher
+     * Regex
      *
-     * @param bool $embedded
      * @return string
      */
-    public function regex($embedded = false)
+    public function regex()
     {
-        return '/(.*?)\s*=(\'|"|&#?\w+;)(.*?)(?<!\\\\)\2/ms';
+        return '//ms';
     }
 
     /**
-     * Set the embedded attribute if it exists
+     * Detect if this node type should be used to compile
      *
-     * @param EmbeddedAttribute $embeddedAttribute
-     * @return AttributeNode
+     * @param $rawAttributes
+     * @return bool
      */
-    public function setEmbeddedAttribute(EmbeddedAttribute $embeddedAttribute = null)
+    public function detect($rawAttributes)
     {
-        $this->embeddedAttribute = $embeddedAttribute;
+        return !empty($this->getMatches($rawAttributes));
+    }
+
+    /**
+     * @todo - update this interface for an attribute specific one
+     * @return NodeInterface|null
+     */
+    public function getAttributeNodeType()
+    {
+        $attributeNodeType = null;
+
+        foreach ($this->getLexicon()->getAttributeNodeTypes() as $nodeType) {
+            if ($nodeType->detect($this->getParsedContent())) {
+                $attributeNodeType = $nodeType;
+                break;
+            }
+        }
+
+        return $attributeNodeType;
+    }
+
+
+
+    public function getNodeTypes()
+    {
+        return $this->getLexicon()->getAttributeNodeTypes();
+    }
+
+    /**
+     * Create child nodes
+     *
+     * @return NodeInterface
+     */
+    public function createChildNodes()
+    {
+        /** @var NodeInterface $nodeType */
+        if ($nodeType = $this->getAttributeNodeType()) {
+            foreach ($nodeType->getMatches($this->getParsedContent()) as $offset => $match) {
+                $this->createChildNode($nodeType, $match, $offset);
+            }
+        }
+
         return $this;
     }
 
@@ -150,7 +143,8 @@ class AttributeNode extends Node
      */
     public function setValue($value = '')
     {
-        $this->value = $value;
+        $resolver    = new ValueResolver();
+        $this->value = $resolver->resolve($value);
         return $this;
     }
 
@@ -161,28 +155,7 @@ class AttributeNode extends Node
      */
     public function getValue()
     {
-        // @todo - Use ValueResolver here
-        return trim($this->value);
-    }
-
-    /**
-     * Get the embedded id which is the same as the extracted value
-     *
-     * @return string
-     */
-    public function getEmbeddedId()
-    {
-        return $this->getValue();
-    }
-
-    /**
-     * Get the embedded attribute
-     *
-     * @return EmbeddedAttribute
-     */
-    public function getEmbeddedAttribute()
-    {
-        return $this->embeddedAttribute;
+        return $this->value;
     }
 
     /**
@@ -192,7 +165,7 @@ class AttributeNode extends Node
      */
     public function compileKey()
     {
-        return $this->getKey();
+        return "'{$this->getKey()}'";
     }
 
     /**
@@ -200,31 +173,24 @@ class AttributeNode extends Node
      *
      * @return string
      */
-    public function compileNamedFromOrderedKey()
-    {
-        if (!$this->isNamed and $this->getEmbeddedAttribute()) {
+    /*    public function compileNamedFromOrderedKey()
+        {
+            if (!$this->isNamed and $this->getEmbeddedAttribute()) {
 
-            $node = $this->newVariableNode()->make([], $this->getParent())
-                ->setName($this->getEmbeddedAttribute()->getName());
+                $node = $this->newVariableNode()->make([], $this->getParent())
+                    ->setName($this->getEmbeddedAttribute()->getName());
 
-            $finder = $node->getNodeFinder();
+                $finder = $node->getNodeFinder();
 
-            return $finder->getName();
-        }
+                return $finder->getName();
+            }
 
-        return $this->getKey();
-    }
-
-    public function newVariableNode()
-    {
-        return new Variable($this->getLexicon());
-    }
+            return $this->getKey();
+        }*/
 
     public function compileEmbedded()
     {
-        $node = $this->newVariableNode()->make([], $this->getParent())->setName($this->getEmbeddedAttribute()->getName());
-
-        $finder = $node->getNodeFinder();
+        $finder = $this->getNodeFinder();
 
         return "\$__data['__env']->variable({$finder->getItemSource()},'{$finder->getName()}', [])";
     }
@@ -234,18 +200,32 @@ class AttributeNode extends Node
         return "'{$this->getValue()}'";
     }
 
-    public function compile()
+    public function compileArray($except = [], $qu)
     {
-        foreach ($this->attributeSegments as &$segment) {
-            if (isset($this->extractions[$segment])) {
-                $node = $this->extractions[$segment];
-                /** @var $node NodeInterface */
-                $segment = $node->setIsEmbedded(true)->compile();
-            } else {
-                $segment = "'{$segment}'";
+        $attributes = array();
+
+        /** @var $node AttributeNode */
+        foreach ($this->getChildren() as $node) {
+            $key = $node->compileKey();
+            if (!in_array($key, array_keys($except)) or !in_array($key, $except)) {
+                $attributes[$key] = $node->getValue();
             }
         }
 
-        return implode('.', $this->attributeSegments);
+        return $attributes;
+    }
+
+    public function compile()
+    {
+        $attributes = [];
+
+        /** @var $node AttributeNode */
+        foreach ($this->getChildren() as $node) {
+            $attributes[] = "{$node->compileKey()} => {$node->compileLiteral()}";
+        }
+
+        $attributes = implode(', ', $attributes);
+
+        return "[{$attributes}]";
     }
 }

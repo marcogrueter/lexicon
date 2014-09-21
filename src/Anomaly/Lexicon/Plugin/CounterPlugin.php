@@ -36,10 +36,10 @@ class CounterPlugin extends Plugin
         // Use a default of 1 if they haven't specified one and it's the first iteration
         if (!isset($this->ids[$id])) {
             $this->ids[$id] = (int)$this->getAttribute('start', 1, 1);
-        } // lets check to see if they're only wanting to show the count
+        } // lets check to see if they're only wanting to show the offset
         elseif ($this->increment) {
             $skip = (int)$this->getAttribute('skip', 2, 1);
-            // count up unless they specify to "subtract"
+            // offset up unless they specify to "subtract"
             $this->ids[$id] = ($this->getAttribute('mode', 3) == 'subtract') ?
                 $this->ids[$id] - $skip : $this->ids[$id] + $skip;
         }
@@ -51,7 +51,7 @@ class CounterPlugin extends Plugin
     }
 
     /**
-     * Show the count
+     * Show the offset
      *
      * @return null
      */

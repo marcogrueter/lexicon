@@ -2,15 +2,15 @@
 
 class NamedAttribute extends AttributeNode
 {
+
     /**
      * Regex
+     *
+     * @return string
      */
-    const REGEX = '/([a-zA-Z0-9_-]+)\s*=(\'|"|&#?\w+;)(.*?)(?<!\\\\)\2/ms';
-
-    protected $isNamed = true;
-
-    public function detect($rawAttributes)
+    public function regex()
     {
-        return !empty($this->getMatches($rawAttributes, $this->regex()));
+        return '/(.*?)\s*=\s*(\'|"|&#?\w+;)(.*?)(?<!\\\\)\2/ms';
     }
+
 }

@@ -52,7 +52,7 @@ class Variable extends Single
 
     public function compileKey()
     {
-        return $this->getCount();
+        return $this->getOffset();
     }
 
     /**
@@ -76,7 +76,7 @@ class Variable extends Single
 
     public function compileVariable()
     {
-        $attributes = $this->newAttributeCompiler()->compile();
+        $attributes = $this->newAttributeNode()->compile();
 
         $finder = $this->getNodeFinder();
 

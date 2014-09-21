@@ -3,6 +3,7 @@
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Contract\View\CompilerInterface;
+use Anomaly\Lexicon\Lexicon;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
 
 class Compiler extends BaseCompiler implements CompilerInterface
@@ -86,7 +87,9 @@ class Compiler extends BaseCompiler implements CompilerInterface
 
         $this->setHash(substr(strrchr($compiledPath, '/'), 1));
 
-        $contents = $this->compileString($this->files->get($path));
+        $nodeSet = $this->getLexicon()->getNodeSetFromPath($this->getPath());
+
+        $contents = $this->compileString($this->files->get($path), $nodeSet);
 
         if (!is_null($this->cachePath)) {
             $this->files->put($this->getCompiledPath($path), $contents);
@@ -99,13 +102,13 @@ class Compiler extends BaseCompiler implements CompilerInterface
      * @param string $content
      * @return string
      */
-    public function compileString($content = '')
+    public function compileString($content = '', $nodeSet = Lexicon::DEFAULT_NODE_SET)
     {
         if (!$this->getLexicon()->allowPhp()) {
             $content = $this->escapePhp($content);
         }
 
-        $rootNode = $this->getRootNode($content);
+        $rootNode = $this->getRootNode($content, $nodeSet);
 
         return $this->compileView($this->compileRootNode($rootNode));
     }
@@ -136,17 +139,15 @@ class Compiler extends BaseCompiler implements CompilerInterface
      * @param string $content
      * @return \Anomaly\Lexicon\Contract\Node\RootInterface
      */
-    public function getRootNode($content = '')
+    public function getRootNode($content = '', $nodeSet = Lexicon::DEFAULT_NODE_SET)
     {
-        $rootNode = $this->getLexicon()->getRootNodeType()->make([])
+        return $this->getLexicon()->getRootNodeType()->make([])
             ->setName('root')
             ->setContent($content)
             ->setExtractionContent($content)
-            ->setParsedContent($content);
-
-        $rootNode->setNodeSet($this->getLexicon()->getNodeSetFromPath($this->getPath()));
-
-        return $rootNode->createChildNodes();
+            ->setParsedContent($content)
+            ->setNodeSet($nodeSet)
+            ->createChildNodes();
     }
 
     /**

@@ -26,7 +26,7 @@ return array(
     'allowPhp'           => false,
     /**
      * Plugins used for interpreting and outputting custom data. You can add you custom plugins here. Each one must have
-     * a key that will represent the tag. i.e {{ counter.count }}
+     * a key that will represent the tag. i.e {{ counter.offset }}
      */
     'plugins'            => [
         'counter' => 'Anomaly\Lexicon\Plugin\CounterPlugin',

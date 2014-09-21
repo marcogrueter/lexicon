@@ -1,5 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Attribute\AttributeNode;
 use Anomaly\Lexicon\Attribute\Factory;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
@@ -27,7 +28,7 @@ abstract class Node implements NodeInterface
     /**
      * @var int
      */
-    protected $count = 0;
+    protected $offset = 0;
 
     /**
      * @var int
@@ -128,6 +129,13 @@ abstract class Node implements NodeInterface
     protected $isPhp = true;
 
     /**
+     * Is extractable
+     *
+     * @var bool
+     */
+    protected $extractable = true;
+
+    /**
      * Defer compile
      *
      * @var bool
@@ -195,31 +203,51 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Is extractable
+     *
+     * @return bool
+     */
+    public function isExtractable()
+    {
+        return $this->extractable;
+    }
+
+    /**
      * Make a new node instance
      *
      * @param array         $match
      * @param NodeInterface $parent
+     * @param int           $offset
      * @param int           $depth
-     * @param int           $count
      * @return mixed
      */
-    public function make(array $match, NodeInterface $parent = null, $depth = 0, $count = 0)
+    public function make(array $match, NodeInterface $parent = null, $offset = 0, $depth = 0)
     {
-        $depth = $this->incrementDepth() ? $depth + 1 : $depth;
+        if ($this->incrementDepth()) {
+            $depth++;
+        }
 
         /** @var $node Node */
         $node = new static($this->getLexicon());
 
+        $parentId = null;
+
+        if ($parent) {
+            $parentId = $parent->getId();
+        }
+
         $node
-            ->setParentId($parent ? $parent->getId() : null)
-            ->setCount($count)
-            ->setDepth($depth)
+            ->setParentId($parentId)
+            ->setParsedContent($node->getContent())
             ->setup($match);
 
         $node
+
+            ->setOffset($offset)
+            ->setDepth($depth)
             ->setId(str_random(32))
             ->setContextName($node->getName())
-            ->setParsedContent($node->getContent())
+
             ->setLoopItemName($node->getLoopItemInRawAttributes());
 
         return $this->getLexicon()->addNode($node);
@@ -243,13 +271,14 @@ abstract class Node implements NodeInterface
     }
 
     /**
-     * Return a new AttributeParser
+     * Return a new AttributeNode
      *
-     * @return Factory
+     * @return AttributeNode
      */
-    public function newFactory()
+    public function newAttributeNode()
     {
-        return (new Factory($this, new Variable($this->getLexicon())));
+        $attributeNode = new AttributeNode($this->getLexicon());
+        return $attributeNode->make([], $this)->createChildNodes();
     }
 
     /**
@@ -386,7 +415,7 @@ abstract class Node implements NodeInterface
      */
     public function setId($id)
     {
-        $this->id = md5($id);
+        $this->id = $id;
         return $this;
     }
 
@@ -401,25 +430,25 @@ abstract class Node implements NodeInterface
     }
 
     /**
-     * Set count
+     * Set offset
      *
-     * @param int $count
+     * @param int $offset
      * @return NodeInterface
      */
-    public function setCount($count = 0)
+    public function setOffset($offset = 0)
     {
-        $this->count = $count;
+        $this->offset = $offset;
         return $this;
     }
 
     /**
-     * Get count
+     * Get offset
      *
      * @return int
      */
-    public function getCount()
+    public function getOffset()
     {
-        return $this->count;
+        return $this->offset;
     }
 
     /**
@@ -655,17 +684,26 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Get node types
+     *
+     * @return array
+     */
+    public function getNodeTypes()
+    {
+        return $this->lexicon->getNodeTypes($this->getNodeSet());
+    }
+
+    /**
      * Create child nodes
      *
      * @return NodeInterface
      */
     public function createChildNodes()
     {
-        foreach ($this->lexicon->getNodeTypes($this->getNodeSet()) as $nodeType) {
-            if ($nodeType instanceof NodeInterface) {
-                foreach ($nodeType->getMatches($this->getParsedContent()) as $count => $match) {
-                    $this->createChildNode($nodeType, $match, $count);
-                }
+        /** @var NodeInterface $nodeType */
+        foreach ($this->getNodeTypes() as $nodeType) {
+            foreach ($nodeType->getMatches($this->getParsedContent()) as $offset => $match) {
+                $this->createChildNode($nodeType, $match, $offset);
             }
         }
 
@@ -677,16 +715,16 @@ abstract class Node implements NodeInterface
      *
      * @param NodeInterface|Node $nodeType
      * @param                    $match
-     * @param int                $count
+     * @param int                $offset
      * @return mixed
      */
-    protected function createChildNode(NodeInterface $nodeType, $match, $count = 0)
+    protected function createChildNode(NodeInterface $nodeType, $match, $offset = 0)
     {
         $node = $nodeType->make(
             $match,
             $parent = $this,
-            $this->getDepth(),
-            $count
+            $offset,
+            $this->getDepth()
         );
 
         $node->setNodeSet($this->getNodeSet())->createChildNodes();
@@ -701,11 +739,15 @@ abstract class Node implements NodeInterface
      * Extract node content
      *
      * @param NodeInterface $node
-     * @return Node
+     * @return NodeInterface
      */
     protected function extract(NodeInterface $childNode)
     {
-        return $this->newExtractor($this, $childNode)->extract();
+        if ($this->isExtractable()) {
+            $this->newExtractor($this, $childNode)->extract();
+        }
+
+        return $this;
     }
 
     /**
@@ -940,7 +982,6 @@ abstract class Node implements NodeInterface
         if (!$regex) {
             $regex = $this->regex();
         }
-
         $matches = [];
         preg_match_all($regex, $string, $matches, PREG_SET_ORDER);
         return $matches;
@@ -985,5 +1026,55 @@ abstract class Node implements NodeInterface
     public function compress($string)
     {
         return preg_replace(['/\s\s+/', '/\n+/'], ' ', trim($string));
+    }
+
+    /**
+     * Get value from array or default
+     *
+     * @param array $array
+     * @param       $key
+     * @param null  $value
+     */
+    public function get(array $array, $key, $value = null)
+    {
+        if (array_key_exists($key, $array)) {
+            $value = $array[$key];
+        }
+
+        return $value;
+    }
+
+    /**
+     * Convert node to array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        if ($children = $this->getChildren()) {
+            foreach ($children as &$node) {
+                $node = $node->toArray();
+            }
+        }
+
+        return [
+            'name'         => $this->getName(),
+            'id'           => $this->getId(),
+            'extractionId' => $this->getExtractionId(),
+            'offset'       => $this->getOffset(),
+            'depth'        => $this->getDepth(),
+            'regex'        => $this->regex(),
+            'children'     => $children
+        ];
+    }
+
+    /**
+     * Convert node to json
+     *
+     * @return string
+     */
+    public function toJson()
+    {
+        return json_encode($this->toArray());
     }
 }

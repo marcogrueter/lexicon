@@ -11,9 +11,10 @@ abstract class Single extends Node
     {
         $this
             ->setName($name = isset($match[1]) ? $match[1] : null)
-            ->setRawAttributes(isset($match[2]) ? $match[2] : null)
-            ->setExtractionContent($content = isset($match[0]) ? $match[0] : null)
-            ->setParsedContent($content);
+            ->setRawAttributes($rawAttributes = isset($match[2]) ? $match[2] : null)
+            ->setContent($rawAttributes)
+            ->setExtractionContent($content = isset($match[0]) ? $match[0] : null);
+            //->setParsedContent($content);
     }
     
 }

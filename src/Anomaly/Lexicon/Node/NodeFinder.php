@@ -148,12 +148,12 @@ class NodeFinder
 
     public function hasAlternateContextName($start)
     {
-        return ($this->hasMultipleScopes() and starts_with($this->node->getContextName(), $start));
+        return ($this->hasMultipleScopes() and starts_with($this->node->getName(), $start));
     }
 
     public function hasMultipleScopes()
     {
-        return str_contains($this->node->getContextName(), $this->getLexicon()->getScopeGlue());
+        return str_contains($this->node->getName(), $this->getLexicon()->getScopeGlue());
     }
 
     public function getRootStart()

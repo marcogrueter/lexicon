@@ -139,12 +139,12 @@ class Factory extends BaseFactory implements FactoryInterface
 
                 $nextPart = array_shift($parts);
 
-                // If the last part is .size, return the count
+                // If the last part is .size, return the offset
                 if (empty($parts) and $nextPart == 'size' and
                     (is_array($data) or $data instanceof \Countable or is_string($data))
                 ) {
 
-                    // Return string length or array count
+                    // Return string length or array offset
                     if (is_string($data)) {
 
                         return $this->expected(strlen($data), $expected, $default);

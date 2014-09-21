@@ -107,12 +107,12 @@ interface NodeInterface extends ExtractionInterface
     public function getDepth();
 
     /**
-     * Set count
+     * Set offset
      *
      * @param int $count
      * @return NodeInterface
      */
-    public function setCount($count = 0);
+    public function setOffset($count = 0);
 
     /**
      * Set parent id

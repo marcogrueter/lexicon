@@ -4,25 +4,30 @@ use Anomaly\Lexicon\Node\Variable;
 use Anomaly\Lexicon\Test\LexiconTestCase;
 use PhpParser\Node\Name;
 
-class FactoryTest extends LexiconTestCase
+class AttributeNodeTest extends LexiconTestCase
 {
 
     protected $variable;
     protected $block;
-    protected $factory;
+    protected $attributes;
 
     public function setUpTest()
     {
-        $this->block = $this->makeBlockNode();
+        $attributes = new AttributeNode($this->lexicon);
 
-        $this->block->setRawAttributes('foo="FOO" bar="BAR"');
-        $this->variable = new Variable($this->lexicon);
-        $this->factory  = new Factory($this->block, $this->variable);
+        $this->attributes  = $attributes->make([])
+            ->setParsedContent('foo="FOO" bar="BAR"')
+            ->createChildNodes();
+    }
+
+    public function testGetDetectedAttributeNodeType()
+    {
+        $this->assertInstanceOf('Anomaly\Lexicon\Attribute\NamedAttribute', $this->attributes->getAttributeNodeType());
     }
 
     public function testGetNodeTypes()
     {
-        foreach ($this->factory->getNodeTypes() as $nodeType) {
+        foreach ($this->attributes->getNodeTypes() as $nodeType) {
             $this->assertInstanceOf('Anomaly\Lexicon\Contract\Node\NodeInterface', $nodeType);
         }
     }
@@ -48,16 +53,11 @@ class FactoryTest extends LexiconTestCase
         $this->assertTrue($variableAttributes->detect('{foo} {bar}'));
     }
 
-    public function testGetDetectedAttributeNodeType()
-    {
-        $this->assertInstanceOf('Anomaly\Lexicon\Attribute\NamedAttribute', $this->factory->getAttributeNodeType());
-    }
-
     public function testGetRegexMatches()
     {
-        $attributeNodeType = $this->factory->getAttributeNodeType();
+        $attributeNodeType = $this->attributes->getAttributeNodeType();
 
-        $matches = $attributeNodeType->getMatches($this->block->getRawAttributes());
+        $matches = $attributeNodeType->getMatches('foo="FOO" bar="BAR"');
 
         $expected = [
             [
@@ -79,12 +79,15 @@ class FactoryTest extends LexiconTestCase
 
     public function testCreateNodes()
     {
-        $this->factory->createChildNodes();
-
-        $this->assertSame([
+/*        $this->assertSame([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
-            ], $this->factory->getAttributes());
+            ], $this->attributes->compileArray());*/
+    }
+
+    public function testCompileAttributes()
+    {
+        $this->assertSame("['foo' => 'FOO', 'bar' => 'BAR']", $this->attributes->compile());
     }
 
 }

@@ -52,6 +52,15 @@ class Lexicon implements LexiconInterface
     public $nodeTypes = [];
 
     /**
+     * @var array
+     */
+    protected $attributeNodeTypes = [
+        'Anomaly\Lexicon\Attribute\NamedAttribute',
+        'Anomaly\Lexicon\Attribute\OrderedAttribute',
+        'Anomaly\Lexicon\Attribute\VariableAttribute',
+    ];
+
+    /**
      * Plugins
      *
      * @var array
@@ -219,6 +228,25 @@ class Lexicon implements LexiconInterface
 
         if (isset($this->nodeTypes[$nodeSet])) {
             foreach ($this->nodeTypes[$nodeSet] as $nodeType) {
+                $nodeTypes[] = new $nodeType($this);
+            }
+        }
+
+        return $nodeTypes;
+    }
+
+    /**
+     * Get node types
+     *
+     * @param string $nodeSet
+     * @return array
+     */
+    public function getAttributeNodeTypes()
+    {
+        $nodeTypes = [];
+
+        if (isset($this->attributeNodeTypes)) {
+            foreach ($this->attributeNodeTypes as $nodeType) {
                 $nodeTypes[] = new $nodeType($this);
             }
         }

@@ -4,11 +4,11 @@ use Anomaly\Lexicon\Node\Block;
 use Anomaly\Lexicon\Test\LexiconTestCase;
 
 /**
- * Class BlockTest
+ * Class BlocksTest
  *
  * @package Anomaly\Lexicon\Test\Example
  */
-class BlockTest extends LexiconTestCase
+class BlocksTest extends LexiconTestCase
 {
     /**
      * Set up node

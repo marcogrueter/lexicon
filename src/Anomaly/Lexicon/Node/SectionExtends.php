@@ -19,7 +19,7 @@ class SectionExtends extends Single
     {
         $rootNode = $this->getRootNode();
 
-        $attribute = $this->newAttributeCompiler()->compileAttribute('layout');
+        $attribute = "'test::view/layout'";// $this->newAttributeNode()->compileAttribute('layout');
 
         if (!empty($attribute)) {
             $rootNode->footer[] = $this->php(

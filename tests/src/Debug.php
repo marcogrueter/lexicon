@@ -32,7 +32,17 @@ class Debug
         $this->header('Node Types Info');
         $this->header('Total: '. count($this->lexicon->getNodeTypes()));
 
-        foreach ($this->lexicon->getNodeTypes() as $i => $nodeType) {
+        $this->printNodeTypes($this->lexicon->getNodeTypes());
+
+        $this->header('Attribute Node Types Info');
+        $this->header('Total: '. count($this->lexicon->getAttributeNodeTypes()));
+
+        $this->printNodeTypes($this->lexicon->getAttributeNodeTypes());
+    }
+
+    public function printNodeTypes(array $nodeTypes)
+    {
+        foreach ($nodeTypes as $i => $nodeType) {
             print ($i + 1) . ". " . get_class($nodeType) . "\n" .
                 "    regex: " . $nodeType->regex() . "\n";
             print "\n";

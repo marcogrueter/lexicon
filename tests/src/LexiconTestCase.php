@@ -64,7 +64,7 @@ class LexiconTestCase extends TestCase
     /**
      * @var bool
      */
-    protected $info = true;
+    protected $info = false;
 
     protected static $once = false;
 

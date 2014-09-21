@@ -95,7 +95,7 @@ class FactoryTest extends LexiconTestCase
     }
 
     /**
-     * Test count array from variable
+     * Test offset array from variable
      */
     public function testSizeOfArrayFromVariable()
     {
@@ -103,7 +103,7 @@ class FactoryTest extends LexiconTestCase
     }
 
     /**
-     * Test count characters from variable
+     * Test offset characters from variable
      */
     public function testGetCountStringCharactersFromVariable()
     {
