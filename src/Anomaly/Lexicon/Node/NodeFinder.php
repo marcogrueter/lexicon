@@ -1,6 +1,5 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 
@@ -31,30 +30,13 @@ class NodeFinder
      */
     public function getName()
     {
-        $string = $this->node->getName();
-        $prefix = $this->getRootStart();
+        $name = $this->node->getName();
 
-        if ($this->hasRootContextName()) {
-            // Remove data. from name
-            if (substr($string, 0, strlen($prefix)) == $prefix) {
-
-                $string = substr($string, strlen($prefix));
-
-            }
-
-        } elseif ($prefix = $this->getPrefix() and $this->findLoopItemNode($prefix)) {
-
-            $prefix .= $this->getLexicon()->getScopeGlue();
-
-            if (substr($string, 0, strlen($prefix)) == $prefix) {
-
-                $string = substr($string, strlen($prefix));
-
-            }
-
+        if ($this->hasAliasPrefix()) {
+            $name = $this->getCleanName();
         }
 
-        return $string;
+        return $name;
     }
 
     /**
@@ -66,13 +48,13 @@ class NodeFinder
     {
         $source = '$__data';
 
-        if ($this->hasRootContextName()) {
+        if ($this->hasRootAliasPrefix()) {
 
             $source = '$__data';
 
         } elseif (!$this->isChildOfRoot()) {
 
-            if ($prefix = $this->getPrefix() and $node = $this->findLoopItemNode($prefix)) {
+            if ($node = $this->getNodeByAlias()) {
 
                 $source = $node->getItemSource();
 
@@ -86,40 +68,59 @@ class NodeFinder
         return $source;
     }
 
+    /**
+     * The node is child of the root node
+     *
+     * @return bool
+     */
     public function isChildOfRoot()
     {
         return ($parent = $this->getParent() and $parent->isRoot());
     }
 
     /**
-     * Get prefix
+     * Get alias
      *
      * @return null
      */
-    public function getPrefix()
+    public function getAlias()
     {
-        $prefix = null;
-
-        $parts = explode($this->getLexicon()->getScopeGlue(), $this->node->getName());
-
-        if ($this->hasMultipleScopes() and !$this->hasRootContextName()) {
-            $prefix = $parts[0];
+        $alias = null;
+        if ($this->hasAliasPrefix()) {
+            $parts = explode($this->glue(), $this->node->getName());
+            $alias = $parts[1];
         }
 
-        return $prefix;
+        return $alias;
+    }
+
+    /**
+     * Get alias prefix
+     *
+     * @return null
+     */
+    public function getAliasPrefix()
+    {
+        $aliasPrefix = null;
+
+        if ($this->hasAliasPrefix()) {
+            $aliasPrefix = $this->glue() . $this->getAlias() . $this->glue();
+        }
+
+        return $aliasPrefix;
     }
 
     /**
      * Find loop item node
      *
-     * @param $prefix
+     * @param $alias
      * @return NodeInterface|null
      */
-    public function findLoopItemNode($prefix)
+    public function getNodeByAlias()
     {
         $node = $this->node->getParent();
 
-        while ($node and $node->getParent() and $node->getLoopItemName() !== $prefix) {
+        while ($node and $node->getParent() and $node->getLoopItemName() !== $this->getAlias()) {
 
             $node = $node->getParent();
 
@@ -139,26 +140,27 @@ class NodeFinder
      *
      * @return bool
      */
-    public function hasRootContextName()
+    public function hasRootAliasPrefix()
     {
-        return $this->hasAlternateContextName(
-            $this->getLexicon()->getRootContextName() . $this->getLexicon()->getScopeGlue()
-        );
+        return starts_with($this->node->getName(), $this->getRootStart());
     }
 
-    public function hasAlternateContextName($start)
+    /**
+     * Has alias prefix
+     *
+     * @return bool
+     */
+    public function hasAliasPrefix()
     {
-        return ($this->hasMultipleScopes() and starts_with($this->node->getName(), $start));
+        return starts_with($this->node->getName(), $this->glue());
     }
 
-    public function hasMultipleScopes()
-    {
-        return str_contains($this->node->getName(), $this->getLexicon()->getScopeGlue());
-    }
-
+    /**
+     * @return string
+     */
     public function getRootStart()
     {
-        return $this->getLexicon()->getRootContextName() . $this->getLexicon()->getScopeGlue();
+        return $this->glue() . $this->getLexicon()->getRootContextName() . $this->glue();
     }
 
     /**
@@ -175,5 +177,32 @@ class NodeFinder
     public function getParent()
     {
         return $this->node->getParent();
+    }
+
+    /**
+     * Alias for scope glue
+     *
+     * @return string
+     */
+    public function glue()
+    {
+        return $this->getLexicon()->getScopeGlue();
+    }
+
+    /**
+     * Returns the node name without the alias prefix
+     */
+    public function getCleanName()
+    {
+        $name = $this->node->getName();
+
+        if ($this->hasAliasPrefix()) {
+            $aliasPrefix = $this->getAliasPrefix();
+            if (substr($name, 0, strlen($aliasPrefix)) == $aliasPrefix) {
+                $name = substr($name, strlen($aliasPrefix));
+            }
+        }
+
+        return $name;
     }
 } 

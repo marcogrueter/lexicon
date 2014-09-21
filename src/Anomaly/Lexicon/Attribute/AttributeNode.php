@@ -140,8 +140,7 @@ class AttributeNode extends Node
      */
     public function setValue($value = '')
     {
-        $resolver    = new ValueResolver();
-        $this->value = $resolver->resolve($value);
+        $this->value = $value;
         return $this;
     }
 

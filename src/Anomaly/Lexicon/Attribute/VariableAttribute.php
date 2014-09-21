@@ -9,6 +9,16 @@ class VariableAttribute extends AttributeNode
 {
 
     /**
+     * Regex
+     *
+     * @return string
+     */
+    public function regex()
+    {
+        return "/\{\s*({$this->getVariableRegex()})(\s+.*?)?\s*(\/)?\}/ms";
+    }
+
+    /**
      * Get the regex match setup
      *
      * @param array $match
@@ -21,16 +31,6 @@ class VariableAttribute extends AttributeNode
         $this
             ->setKey($this->getOffset())
             ->setValue($this->get($match, 1));
-    }
-
-    /**
-     * Regex
-     *
-     * @return string
-     */
-    public function regex()
-    {
-        return '/\{([a-zA-Z0-9_\.]+)\}/ms';
     }
 
     /**
