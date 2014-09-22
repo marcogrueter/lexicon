@@ -35,5 +35,17 @@ class AttributesTest extends LexiconTestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function test_it_can_compile_named_attribute_from_variable_attribute()
+    {
+        // {{ include "partial" share="one,two,three" }}
+
+        $expected = '';
+
+        $result = $this->compiler->compileString('{{ include "partial" share="one,two,three" }}');
+
+        $this->assertEquals($expected, $result);
+    }
+
+
 }
  
