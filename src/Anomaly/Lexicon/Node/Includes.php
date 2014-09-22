@@ -1,7 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
 
-
 class Includes extends Single
 {
 
@@ -19,18 +18,34 @@ class Includes extends Single
      */
     public function compile()
     {
-        $attributeParser = $this->newAttributeCompiler();
-
-        $attribute = $attributeParser->compileAttribute('partial', 0);
-        $share = $attributeParser->compileNamedFromOrdered([0 => 'partial']);
+        $partial = $this->compileAttributeValue('partial');
 
         $source = null;
 
-        if (!empty($attribute)) {
-            $source = "echo \$__data['__env']->make({$attribute},array_merge(\$__data,{$share}))->render();";
+        if (!empty($partial)) {
+            $share   = $this->getSharedAttributes();
+            $source = "echo \$__data['__env']->make({$partial},array_merge(\$__data,{$share}))->render();";
         }
 
         return $source;
+    }
+
+    /**
+     * Get shared attributes
+     *
+     * @return array
+     */
+    public function getSharedAttributes()
+    {
+        $sharedAttributes = [];
+
+        if ($share   = $this->compileAttributeValue('share')) {
+            foreach($this->getMatches($share, "/({$this->getVariableRegex()})/s") as $match) {
+                dd($match);
+            }
+        }
+
+        return $sharedAttributes;
     }
 
 }

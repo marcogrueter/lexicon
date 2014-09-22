@@ -60,6 +60,8 @@ class LexiconServiceProvider extends ServiceProvider
                     $app['anomaly.lexicon.plugin.handler']
                 );
 
+                $lexicon->getPluginHandler()->setLexicon($lexicon);
+
                 $lexicon
                     ->setScopeGlue(config('lexicon::scopeGlue', '.'))
                     ->setViewNamespace(config('lexicon::viewNamespace', 'Anomaly\Lexicon\View'))

@@ -74,15 +74,23 @@ class Variable extends Single
         return $this->getName();
     }
 
+    /**
+     * Compile variable
+     *
+     * @return string
+     */
     public function compileVariable()
     {
-        $attributes = $this->newAttributeNode()->compile();
+        $attributes = $this->compileAttributes();
 
         $finder = $this->getNodeFinder();
 
+        $name = $finder->getName();
+
+        $item = $finder->getItemSource();
+
         $expected = Lexicon::EXPECTED_ECHO;
 
-        return "\$__data['__env']->variable({$finder->getItemSource()}, '{$finder->getName(
-        )}', {$attributes}, '', null, '{$expected}')";
+        return "\$__data['__env']->variable({$item}, '{$name}', {$attributes}, '', null, '{$expected}')";
     }
 }

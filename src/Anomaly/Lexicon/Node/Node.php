@@ -315,10 +315,10 @@ abstract class Node implements NodeInterface
      *
      * @return AttributeNode
      */
-    public function newAttributeNode()
+    public function newAttributeNode($nodeType = null)
     {
         $attributeNode = new AttributeNode($this->getLexicon());
-        return $attributeNode->make([], $this)->createChildNodes();
+        return $attributeNode->make([], $this)->createChildNodes($nodeType);
     }
 
     /**
@@ -329,6 +329,16 @@ abstract class Node implements NodeInterface
     public function compileAttributes()
     {
         return $this->newAttributeNode()->compile();
+    }
+
+    /**
+     * Compile a single attribute value
+     *
+     * @return string
+     */
+    public function compileAttributeValue($name, $offset = 0, $default = null)
+    {
+        return $this->newAttributeNode()->compileAttributeValue($name, $offset, $default);
     }
 
     /**

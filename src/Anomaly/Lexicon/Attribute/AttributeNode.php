@@ -101,10 +101,14 @@ class AttributeNode extends Node
      *
      * @return NodeInterface
      */
-    public function createChildNodes()
+    public function createChildNodes($nodeType = null)
     {
+        if (!$nodeType) {
+            $nodeType = $this->getAttributeNodeType();
+        }
+
         /** @var NodeInterface $nodeType */
-        if ($nodeType = $this->getAttributeNodeType()) {
+        if ($nodeType) {
             foreach ($nodeType->getMatches($this->getParsedContent()) as $offset => $match) {
                 $this->createChildNode($nodeType, $match, $offset);
             }
@@ -174,33 +178,6 @@ class AttributeNode extends Node
     }
 
     /**
-     * Compile a named key from an ordered embedded attribute
-     *
-     * @return string
-     */
-    /*    public function compileNamedFromOrderedKey()
-        {
-            if (!$this->isNamed and $this->getEmbeddedAttribute()) {
-
-                $node = $this->newVariableNode()->make([], $this->getParent())
-                    ->setName($this->getEmbeddedAttribute()->getName());
-
-                $finder = $node->getNodeFinder();
-
-                return $finder->getName();
-            }
-
-            return $this->getKey();
-        }*/
-
-    public function compileEmbedded()
-    {
-        $finder = $this->getNodeFinder();
-
-        return "\$__data['__env']->variable({$finder->getItemSource()},'{$finder->getName()}', [])";
-    }
-
-    /**
      * Compile literal value
      *
      * @return string
@@ -208,6 +185,16 @@ class AttributeNode extends Node
     public function compileLiteral()
     {
         return "'{$this->getValue()}'";
+    }
+
+    /**
+     * Compile value
+     *
+     * @return string
+     */
+    public function compileValue()
+    {
+        return $this->compileLiteral();
     }
 
     /**
@@ -224,7 +211,7 @@ class AttributeNode extends Node
         foreach ($this->getChildren() as $node) {
             $key   = $node->compileKey();
             $value = $node->compileValue();
-            if (!in_array($key, array_keys($except)) or !in_array($key, $except)) {
+            if (!in_array($key, $except) or !in_array($key, array_keys($except))) {
                 $attributes[$key] = $value;
             }
         }
@@ -233,32 +220,51 @@ class AttributeNode extends Node
     }
 
     /**
-     * Compile value
+     * Compile a single attribute
      *
+     * @param        $name
+     * @param int    $offset
+     * @param string $default
      * @return string
      */
-    public function compileValue()
+    public function compileAttributeValue($name, $offset = 0, $default = null)
     {
-        return $this->compileLiteral();
+        $attributes = $this->compileArray();
+
+        if (isset($attributes[$name])) {
+            return $attributes[$name];
+        } elseif (isset($attributes[$offset])) {
+            return $attributes[$offset];
+        }
+
+        return $default;
     }
+
 
     /**
      * Compile attributes
      *
      * @return string
      */
-    public function compile()
+    public function compileSourceFromArray($except = [])
     {
         $attributes = [];
 
-        /** @var $node AttributeNode */
-        foreach ($this->getChildren() as $node) {
-            $attributes[] = "{$node->compileKey()} => {$node->compileValue()}";
+        foreach ($this->compileArray($except) as $key => $value) {
+            $attributes[] = "{$key} => {$value}";
         }
 
-        $attributes = implode(', ', $attributes);
+        return '[' . implode(', ', $attributes) . ']';
+    }
 
-        return "[{$attributes}]";
+    /**
+     * Compile source
+     *
+     * @return string
+     */
+    public function compile()
+    {
+        return $this->compileSourceFromArray();
     }
 
 }

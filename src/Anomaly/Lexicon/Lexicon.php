@@ -17,13 +17,6 @@ class Lexicon implements LexiconInterface
     protected $scopeGlue = '.';
 
     /**
-     * Max depth
-     *
-     * @var int
-     */
-    protected $maxDepth = 100;
-
-    /**
      * Ignored matchers
      *
      * @var array
@@ -165,13 +158,12 @@ class Lexicon implements LexiconInterface
         PluginHandlerInterface $pluginHandler = null
     ) {
         $this->conditionalHandler = $conditionalHandler;
-        $this->pluginHandler      = $pluginHandler->setLexicon($this);
+        $this->pluginHandler      = $pluginHandler;
     }
 
     /**
      * Set debug
      *
-     * @codeCoverageIgnore
      * @param $debug
      * @return $this
      */
@@ -184,7 +176,6 @@ class Lexicon implements LexiconInterface
     /**
      * Is debug
      *
-     * @codeCoverageIgnore
      * @return bool
      */
     public function isDebug()
@@ -195,7 +186,6 @@ class Lexicon implements LexiconInterface
     /**
      * Set scope glue
      *
-     * @codeCoverageIgnore
      * @param $scopeGlue
      * @return $this
      */
@@ -208,7 +198,6 @@ class Lexicon implements LexiconInterface
     /**
      * Get scope glue
      *
-     * @codeCoverageIgnore
      * @return string
      */
     public function getScopeGlue()
@@ -228,7 +217,7 @@ class Lexicon implements LexiconInterface
 
         if (isset($this->nodeTypes[$nodeSet])) {
             foreach ($this->nodeTypes[$nodeSet] as $nodeType) {
-                $nodeTypes[] = new $nodeType($this);
+                $nodeTypes[] = $this->newNodeType($nodeType);
             }
         }
 
@@ -247,7 +236,7 @@ class Lexicon implements LexiconInterface
 
         if (isset($this->attributeNodeTypes)) {
             foreach ($this->attributeNodeTypes as $nodeType) {
-                $nodeTypes[] = new $nodeType($this);
+                $nodeTypes[] = $this->newNodeType($nodeType);
             }
         }
 
@@ -255,20 +244,8 @@ class Lexicon implements LexiconInterface
     }
 
     /**
-     * Get max depth
-     *
-     * @codeCoverageIgnore
-     * @return int
-     */
-    public function getMaxDepth()
-    {
-        return $this->maxDepth;
-    }
-
-    /**
      * Get plugin handler
      *
-     * @codeCoverageIgnore
      * @return PluginHandlerInterface
      */
     public function getPluginHandler()
@@ -277,7 +254,6 @@ class Lexicon implements LexiconInterface
     }
 
     /**
-     * @codeCoverageIgnore
      * @return ConditionalHandler|mixed
      */
     public function getConditionalHandler()
@@ -288,7 +264,6 @@ class Lexicon implements LexiconInterface
     /**
      * Register node type
      *
-     * @codeCoverageIgnore
      * @param        $nodeType
      * @param string $nodeSet
      * @return LexiconInterface
@@ -296,6 +271,20 @@ class Lexicon implements LexiconInterface
     public function registerNodeType($nodeType, $nodeSet = self::DEFAULT_NODE_SET)
     {
         $this->nodeTypes[$nodeSet][$nodeType] = $nodeType;
+        return $this;
+    }
+
+    /**
+     * Register node types
+     *
+     * @param array $nodeSets
+     * @return LexiconInterface
+     */
+    public function registerNodeSets(array $nodeSets = [])
+    {
+        foreach($nodeSets as $nodeSet => $nodeTypes) {
+            $this->registerNodeSet($nodeTypes, $nodeSet);
+        }
         return $this;
     }
 
@@ -321,7 +310,7 @@ class Lexicon implements LexiconInterface
      * @param $nodeSet
      * @return LexiconInterface
      */
-    public function removeNodeTypeFromNodeSet($nodeType, $nodeSet)
+    public function removeNodeTypeFromNodeSet($nodeType, $nodeSet = self::DEFAULT_NODE_SET)
     {
         if (isset($this->nodeTypes[$nodeSet]) and isset($this->nodeTypes[$nodeSet][$nodeType])) {
             unset($this->nodeTypes[$nodeSet][$nodeType]);
@@ -338,20 +327,6 @@ class Lexicon implements LexiconInterface
     public function getNodeSet($nodeSet = self::DEFAULT_NODE_SET)
     {
         return isset($this->nodeTypes[$nodeSet]) ? $this->nodeTypes[$nodeSet] : [];
-    }
-
-    /**
-     * Register node types
-     *
-     * @param array $nodeSets
-     * @return LexiconInterface
-     */
-    public function registerNodeSets(array $nodeSets = [])
-    {
-        foreach($nodeSets as $nodeSet => $nodeTypes) {
-            $this->registerNodeSet($nodeTypes, $nodeSet);
-        }
-        return $this;
     }
 
     /**
@@ -382,30 +357,16 @@ class Lexicon implements LexiconInterface
     }
 
     /**
-     * Set ignored matchers
-     *
-     * @codeCoverageIgnore
-     * @param array $ignoredMatchers
-     * @return LexiconInterface
-     */
-    public function setIgnoredMatchers(array $ignoredMatchers = [])
-    {
-        $this->ignoredMatchers = $ignoredMatchers;
-        return $this;
-    }
-
-
-    /**
      * Get root node type
      *
      * @throws RootNodeTypeNotFoundException
      * @return NodeInterface
      */
-    public function getRootNodeType()
+    public function getRootNodeType($nodeSet = self::DEFAULT_NODE_SET)
     {
         $block = null;
 
-        foreach ($this->getNodeTypes() as $nodeType) {
+        foreach ($this->getNodeTypes($nodeSet) as $nodeType) {
             if ($nodeType instanceof RootInterface) {
                 $block = $nodeType;
                 break;
@@ -422,7 +383,6 @@ class Lexicon implements LexiconInterface
     /**
      * Get root context name
      *
-     * @codeCoverageIgnore
      * @return string
      */
     public function getRootContextName()
@@ -433,10 +393,9 @@ class Lexicon implements LexiconInterface
     /**
      * Get allow PHP
      *
-     * @codeCoverageIgnore
      * @return bool
      */
-    public function allowPhp()
+    public function isPhpAllowed()
     {
         return $this->allowPhp;
     }
@@ -444,7 +403,6 @@ class Lexicon implements LexiconInterface
     /**
      * Set allow PHP
      *
-     * @codeCoverageIgnore
      * @param $allowPhp
      * @return $this
      */
@@ -469,7 +427,6 @@ class Lexicon implements LexiconInterface
     /**
      * Get parse paths
      *
-     * @codeCoverageIgnore
      * @return array
      */
     public function getParsePaths()
@@ -513,7 +470,6 @@ class Lexicon implements LexiconInterface
     /**
      * Get instantiated nodes
      *
-     * @codeCoverageIgnore
      * @return array
      */
     public function getNodes()
@@ -546,7 +502,6 @@ class Lexicon implements LexiconInterface
     /**
      * Get view namespace
      *
-     * @codeCoverageIgnore
      * @return string
      */
     public function getViewNamespace()
@@ -632,5 +587,16 @@ class Lexicon implements LexiconInterface
     public  function getNodeSetFromPath($path)
     {
         return isset($this->nodeSetPaths[$path]) ? $this->nodeSetPaths[$path] : self::DEFAULT_NODE_SET;
+    }
+
+    /**
+     * New node type
+     *
+     * @param $class
+     * @return mixed
+     */
+    public function newNodeType($class)
+    {
+        return new $class($this);
     }
 }

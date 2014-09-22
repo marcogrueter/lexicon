@@ -35,13 +35,17 @@ class VariableAttribute extends AttributeNode
     }
 
     /**
+     * Compile value
+     *
      * @return string
      */
     public function compileValue()
     {
         $attributes = $this->compileAttributes();
 
-        return "\$__data['__env']->variable(\$__data, '{$this->getValue()}', {$attributes}, '', null, 'echo')";
+        $name = $this->getValue();
+
+        return "\$__data['__env']->variable(\$__data, '{$name}', {$attributes}, '', null, 'echo')";
     }
 
 } 

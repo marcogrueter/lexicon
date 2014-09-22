@@ -17,6 +17,8 @@ class OrderedAttribute extends AttributeNode
     }
 
     /**
+     * Get the key
+     *
      * @return int|string
      */
     public function getKey()
@@ -25,6 +27,8 @@ class OrderedAttribute extends AttributeNode
     }
 
     /**
+     * Compile the attribute key
+     *
      * @return int|string
      */
     public function compileKey()

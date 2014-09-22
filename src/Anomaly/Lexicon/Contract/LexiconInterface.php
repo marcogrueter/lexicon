@@ -9,9 +9,11 @@ use Anomaly\Lexicon\Lexicon;
 interface LexiconInterface
 {
     /**
+     * Is PHP allowed?
+     *
      * @return bool
      */
-    public function allowPhp();
+    public function isPhpAllowed();
 
     /**
      * @param $allowPhp bool
@@ -33,11 +35,6 @@ interface LexiconInterface
      * @return string
      */
     public function getScopeGlue();
-
-    /**
-     * @return int
-     */
-    public function getMaxDepth();
 
     /**
      * @return array
