@@ -1,0 +1,17 @@
+
+whitelist: spec
+
+extensions:
+  - PhpSpec\Extension\CodeCoverageExtension
+
+code_coverage:
+  format:
+    - html
+    - clover
+  output:
+    html: resources/coverage
+    clover: resources/coverage/coverage.xml
+  blacklist:
+    - src/config
+
+formatter.name: pretty
