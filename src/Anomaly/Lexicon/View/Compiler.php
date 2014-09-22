@@ -104,7 +104,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
      */
     public function compileString($content = '', $nodeSet = Lexicon::DEFAULT_NODE_SET)
     {
-        if (!$this->getLexicon()->allowPhp()) {
+        if (!$this->getLexicon()->isPhpAllowed()) {
             $content = $this->escapePhp($content);
         }
 
