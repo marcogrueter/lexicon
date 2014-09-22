@@ -1,6 +1,8 @@
+
 /vendor
 /.idea
-/tests/resources/build/*
+/bin
+/resources/coverage/*
 composer.phar
 composer.lock
 .DS_Store
