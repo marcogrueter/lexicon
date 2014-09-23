@@ -2,11 +2,14 @@
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\Support\Container;
 use Anomaly\Lexicon\Plugin\PluginHandler;
 use Anomaly\Lexicon\Stub\Node\Node;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Session\SessionInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-
 
 /**
  * Class LexiconSpec
@@ -16,11 +19,6 @@ use Prophecy\Argument;
  */
 class LexiconSpec extends ObjectBehavior
 {
-
-    function let(ConditionalHandler $conditionalHandler, PluginHandler $pluginHandler)
-    {
-        $this->beConstructedWith($conditionalHandler, $pluginHandler);
-    }
 
     function it_is_initializable()
     {
@@ -49,14 +47,14 @@ class LexiconSpec extends ObjectBehavior
 
     function it_has_the_conditional_handler()
     {
-        $this->getConditionalHandler()->shouldHaveType(
+        $this->getConditionalHandler()->shouldImplement(
             'Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface'
         );
     }
 
     function it_has_the_plugin_handler()
     {
-        $this->getPluginhandler()->shouldImplement('Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface');
+        $this->getPluginHandler()->shouldImplement('Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface');
     }
 
     function it_can_get_array_of_node_types()
@@ -114,10 +112,11 @@ class LexiconSpec extends ObjectBehavior
         $this->getNodeTypes('custom_node_set')->shouldHaveCount(3);
     }
 
-    function it_can_register_a_single_plugin(PluginHandler $pluginHandler)
+    function it_can_register_a_single_plugin()
     {
-        $this->registerPlugin('foo', 'FooPlugin');
-        $pluginHandler->register('foo', 'FooPlugin')->shouldBeCalled();
+        $plugin = 'Anomaly\Lexicon\Stub\Plugin\StubPlugin';
+        $this->registerPlugin('stub', $plugin);
+        $this->getPluginHandler()->get('stub.foo')->shouldHaveType($plugin);
     }
     
     function it_can_register_multiple_plugins(PluginHandler $pluginHandler)
@@ -126,9 +125,6 @@ class LexiconSpec extends ObjectBehavior
                 'foo' => 'FooPlugin',
                 'bar' => 'BarPlugin'
             ]);
-
-        $pluginHandler->register('foo', 'FooPlugin')->shouldBeCalled();
-        $pluginHandler->register('bar', 'BarPlugin')->shouldBeCalled();
     }
 
     function it_can_get_root_node_type()
@@ -175,9 +171,9 @@ class LexiconSpec extends ObjectBehavior
         $this->getNodeById('stub-id')->shouldImplement('Anomaly\Lexicon\Contract\Node\NodeInterface');
     }
 
-    function it_can_set_and_get_view_template_path()
+    function it_can_get_view_template_path()
     {
-        $this->setViewTemplatePath('test')->getViewTemplatePath()->shouldReturn('test');
+        $this->getViewTemplatePath()->shouldBeString();
     }
 
     function it_can_allow_php()

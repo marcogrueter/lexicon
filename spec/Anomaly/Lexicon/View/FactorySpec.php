@@ -5,6 +5,10 @@ use Anomaly\Lexicon\Stub\ArrayAccessObject;
 use Anomaly\Lexicon\Stub\SimpleObject;
 use Anomaly\Lexicon\Stub\StringObject;
 use Anomaly\Lexicon\Stub\TraversableObject;
+use Anomaly\Lexicon\View\Engine;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\View\Engines\EngineResolver;
+use Illuminate\View\ViewFinderInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -29,7 +33,7 @@ class FactorySpec extends ObjectBehavior
 
     function it_can_make_view()
     {
-        $this->make('test::view/hello')->shouldHaveType('Anomaly\Lexicon\Contract\View\ViewInterface');
+        $this->make('view.hello')->shouldHaveType('Anomaly\Lexicon\Contract\View\ViewInterface');
     }
 
     function it_can_parse_and_make_view()
@@ -39,7 +43,7 @@ class FactorySpec extends ObjectBehavior
 
     function it_can_make_view_with_alias()
     {
-        $this->alias('test::view/hello', 'foo');
+        $this->alias('view.hello', 'foo');
         $this->make('foo')->shouldHaveType('Anomaly\Lexicon\Contract\View\ViewInterface');
     }
 

@@ -2,13 +2,14 @@
 
 use Anomaly\Lexicon\Lexicon;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\View\Factory;
 
 /**
  * Interface FactoryInterface
  *
  * @package Anomaly\Lexicon\Contract\View
  */
-interface FactoryInterface
+interface FactoryInterface extends Factory
 {
 
     /**

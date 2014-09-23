@@ -4,10 +4,26 @@ use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
+use Anomaly\Lexicon\Contract\Support\Container;
+use Anomaly\Lexicon\Foundation;
 use Anomaly\Lexicon\Lexicon;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Session\SessionInterface;
 
 interface LexiconInterface
 {
+
+    /**
+     * @return Foundation
+     */
+    public function register(
+        Container $container,
+        Filesystem $filesystem,
+        Dispatcher $events,
+        SessionInterface $session = null
+    );
+
     /**
      * Is PHP allowed?
      *
@@ -57,14 +73,6 @@ interface LexiconInterface
      * @return string
      */
     public function getViewTemplatePath();
-
-    /**
-     * Set view template path
-     *
-     * @param $viewTemplatePath
-     * @return LexiconInterface
-     */
-    public function setViewTemplatePath($viewTemplatePath);
 
     /**
      * Get view namespace
@@ -213,4 +221,47 @@ interface LexiconInterface
      * @return string
      */
     public function getNodeSetFromPath($path);
+
+    /**
+     * Set extension
+     *
+     * @param $extension
+     * @return mixed
+     */
+    public function setExtension($extension);
+
+    /**
+     * Get the extension, defaults to html
+     *
+     * @return string
+     */
+    public function getExtension();
+
+    /**
+     * @return LexiconInterface
+     */
+    public function setViewPaths(array $paths);
+
+    /**
+     * Get view paths
+     *
+     * @return array
+     */
+    public function getViewPaths();
+
+    /**
+     * Set storage path
+     *
+     * @param $path
+     * @return LexiconInterface
+     */
+    public function setStoragePath($path);
+
+    /**
+     * Get storage path
+     *
+     * @return string
+     */
+    public function getStoragePath();
+
 }

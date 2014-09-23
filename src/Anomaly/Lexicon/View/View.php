@@ -3,7 +3,6 @@
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\ViewInterface;
 use Anomaly\Lexicon\Lexicon;
-use Anomaly\Lexicon\Stub\Laravel;
 use Illuminate\Container\Container;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
@@ -55,8 +54,7 @@ class View extends BaseView implements ViewInterface
 
     public static function stub()
     {
-        $laravel = new Laravel();
-        return $laravel->factory()->parse('{{ hello }}');
+        return \Anomaly\Lexicon\Stub\Lexicon::stub()->getFactory()->parse('');
     }
 
 }

@@ -1,11 +1,17 @@
 <?php namespace Anomaly\Lexicon;
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
+use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
+use Anomaly\Lexicon\Contract\Support\Container;
 use Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException;
+use Anomaly\Lexicon\Plugin\PluginHandler;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Session\SessionInterface;
 
 class Lexicon implements LexiconInterface
 {
@@ -89,7 +95,7 @@ class Lexicon implements LexiconInterface
      *
      * @var bool
      */
-    protected $debug = true;
+    protected $debug = false;
 
     /**
      * All node instances
@@ -123,6 +129,30 @@ class Lexicon implements LexiconInterface
     protected $viewClassPrefix = 'LexiconView_';
 
     /**
+     * Storage path for compiled views
+     *
+     * @var string
+     */
+    protected $storagePath;
+
+    /**
+     * View paths
+     *
+     * @var array
+     */
+    protected $viewPaths;
+
+    /**
+     * @var array
+     */
+    protected $viewFinderNamespaces = [];
+
+    /**
+     * @var string
+     */
+    protected $extension = 'html';
+
+    /**
      * Data constant
      */
     const DATA = '$__data';
@@ -132,6 +162,9 @@ class Lexicon implements LexiconInterface
      */
     const ENV = '$__data[\'__env\']';
 
+    /**
+     * Default node set
+     */
     const DEFAULT_NODE_SET = 'all';
 
     /**
@@ -150,15 +183,69 @@ class Lexicon implements LexiconInterface
     const EXPECTED_ECHO = 'echo';
 
     /**
-     * @param ConditionalHandler     $conditionalHandler
-     * @param PluginHandlerInterface $pluginHandler
+     * Lexicon construct
      */
-    public function __construct(
-        ConditionalHandler $conditionalHandler = null,
-        PluginHandlerInterface $pluginHandler = null
+    public function __construct()
+    {
+        $this->setConditionalHandler($this->newConditionalHandler());
+        $this->setPluginHandler($this->newPluginHandler());
+    }
+
+    /**
+     * Register dependencies
+     *
+     * @return Foundation
+     */
+    public function register(
+        Container $container,
+        Filesystem $filesystem,
+        Dispatcher $events,
+        SessionInterface $session = null
     ) {
-        $this->conditionalHandler = $conditionalHandler;
-        $this->pluginHandler      = $pluginHandler;
+        $foundation = new Foundation($container, $this, $filesystem, $events, $session);
+
+
+
+        return $foundation->register();
+    }
+
+    /**
+     * @param $namespace
+     * @param $hint
+     * @return $this
+     */
+    public function addViewFinderNamespace($namespace, $hint)
+    {
+        $this->viewFinderNamespaces[$namespace] = $hint;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getViewFinderNamespaces()
+    {
+        return $this->viewFinderNamespaces;
+    }
+
+    /**
+     * New conditional handler
+     *
+     * @return ConditionalHandler
+     */
+    public function newConditionalHandler()
+    {
+        return (new ConditionalHandler());
+    }
+
+    /**
+     * New plugin handler
+     *
+     * @return PluginHandler
+     */
+    public function newPluginHandler()
+    {
+        return (new PluginHandler())->setLexicon($this);
     }
 
     /**
@@ -282,7 +369,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerNodeSets(array $nodeSets = [])
     {
-        foreach($nodeSets as $nodeSet => $nodeTypes) {
+        foreach ($nodeSets as $nodeSet => $nodeTypes) {
             $this->registerNodeSet($nodeTypes, $nodeSet);
         }
         return $this;
@@ -296,7 +383,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerNodeSet(array $nodeTypes, $nodeSet = self::DEFAULT_NODE_SET)
     {
-        foreach($nodeTypes as $nodeType) {
+        foreach ($nodeTypes as $nodeType) {
             $this->registerNodeType($nodeType, $nodeSet);
         }
 
@@ -484,19 +571,7 @@ class Lexicon implements LexiconInterface
      */
     public function getViewTemplatePath()
     {
-        return $this->viewTemplatePath;
-    }
-
-    /**
-     * Set view template path
-     *
-     * @param $viewTemplatePath
-     * @return LexiconInterface
-     */
-    public function setViewTemplatePath($viewTemplatePath)
-    {
-        $this->viewTemplatePath = $viewTemplatePath;
-        return $this;
+        return __DIR__ . '/../../../../resources/ViewTemplate.txt';
     }
 
     /**
@@ -584,7 +659,7 @@ class Lexicon implements LexiconInterface
      * @param $path
      * @return string
      */
-    public  function getNodeSetFromPath($path)
+    public function getNodeSetFromPath($path)
     {
         return isset($this->nodeSetPaths[$path]) ? $this->nodeSetPaths[$path] : self::DEFAULT_NODE_SET;
     }
@@ -599,4 +674,95 @@ class Lexicon implements LexiconInterface
     {
         return new $class($this);
     }
+
+    /**
+     * Set extension
+     *
+     * @param $extension
+     * @return mixed
+     */
+    public function setExtension($extension)
+    {
+        // TODO: Implement setExtension() method.
+    }
+
+    /**
+     * Get the extension, defaults to html
+     *
+     * @return string
+     */
+    public function getExtension()
+    {
+        return $this->extension;
+    }
+
+    /**
+     * @return LexiconInterface
+     */
+    public function setViewPaths(array $paths)
+    {
+        $this->viewPaths = $paths;
+        return $this;
+    }
+
+    /**
+     * Get view paths
+     *
+     * @return array
+     */
+    public function getViewPaths()
+    {
+        if (!$this->viewPaths) {
+            $this->viewPaths = [__DIR__ . '/../../../resources/views'];
+        }
+        return $this->viewPaths;
+    }
+
+    /**
+     * Set storage path
+     *
+     * @param $path
+     * @return LexiconInterface
+     */
+    public function setStoragePath($storagePath)
+    {
+        $this->storagePath = $storagePath;
+        return $this;
+    }
+
+    /**
+     * Get storage path
+     *
+     * @return string
+     */
+    public function getStoragePath()
+    {
+        return $this->storagePath;
+    }
+
+    /**
+     * Set the conditional handler
+     *
+     * @param ConditionalHandlerInterface $conditionalHandler
+     * @return $this
+     */
+    public function setConditionalHandler(ConditionalHandlerInterface $conditionalHandler)
+    {
+        $this->conditionalHandler = $conditionalHandler;
+        return $this;
+    }
+
+    /**
+     * Set the plugin handler
+     *
+     * @param PluginHandlerInterface $pluginHandler
+     * @return $this
+     */
+    public function setPluginHandler(PluginHandlerInterface $pluginHandler)
+    {
+        $this->pluginHandler = $pluginHandler;
+        return $this;
+    }
+
+
 }

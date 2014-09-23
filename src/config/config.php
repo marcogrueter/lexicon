@@ -38,14 +38,7 @@ return array(
         'stringTest'      => 'Anomaly\Lexicon\Conditional\Test\StringTest',
         'traversableTest' => 'Anomaly\Lexicon\Conditional\Test\TraversableTest',
     ],
-    /**
-     * Conditional handler class
-     */
-    'conditionalHandler' => 'Anomaly\Lexicon\Conditional\ConditionalHandler',
-    /**
-     * Plugin handler class
-     */
-    'pluginHandler'      => 'Anomaly\Lexicon\Plugin\PluginHandler',
+
     /**
      * Node types used for parsing and compiling.
      * The order is very important as it will affect parsing.

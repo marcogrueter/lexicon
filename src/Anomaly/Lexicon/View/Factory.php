@@ -4,7 +4,6 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Contract\View\FactoryInterface;
 use Anomaly\Lexicon\Lexicon;
-use Anomaly\Lexicon\Stub\Laravel;
 use Illuminate\View\Factory as BaseFactory;
 
 /**
@@ -14,6 +13,14 @@ use Illuminate\View\Factory as BaseFactory;
  */
 class Factory extends BaseFactory implements FactoryInterface
 {
+
+    /**
+     * The extension to engine bindings.
+     *
+     * @var array
+     */
+    protected $extensions = array('blade.php' => 'blade', 'php' => 'php', 'html' => 'lexicon');
+
     /**
      * Get the evaluated view contents for the given view.
      *
@@ -42,6 +49,8 @@ class Factory extends BaseFactory implements FactoryInterface
         if (isset($this->aliases[$view])) {
             $view = $this->aliases[$view];
         }
+
+        $view = $this->normalizeName($view);
 
         $path = $this->finder->find($view);
 
@@ -81,7 +90,7 @@ class Factory extends BaseFactory implements FactoryInterface
      */
     public function getLexiconEngine()
     {
-        return $this->engines->resolve('anomaly.lexicon');
+        return $this->engines->resolve('lexicon');
     }
 
     /**
@@ -262,8 +271,7 @@ class Factory extends BaseFactory implements FactoryInterface
 
     public static function stub()
     {
-        $stub = new Laravel();
-        return $stub->factory();
+        return \Anomaly\Lexicon\Stub\Lexicon::stub()->register()->getFactory();
     }
 
 }
