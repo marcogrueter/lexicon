@@ -3,6 +3,13 @@
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\ViewInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Stub\Laravel;
+use Illuminate\Container\Container;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\View\Engines\EngineInterface;
+use Illuminate\View\Engines\EngineResolver;
+use Illuminate\View\FileViewFinder;
 use Illuminate\View\View as BaseView;
 
 class View extends BaseView implements ViewInterface
@@ -15,13 +22,18 @@ class View extends BaseView implements ViewInterface
      */
     public function using($nodeSet = Lexicon::DEFAULT_NODE_SET)
     {
-        $container = $this->getFactory()->getContainer();
-
-        /** @var LexiconInterface $lexicon */
-        $lexicon = $container['anomaly.lexicon'];
-        $lexicon->addNodeSetPath($this->getPath(), $nodeSet);
-
+        $this->getLexicon()->addNodeSetPath($this->getPath(), $nodeSet);
         return $this;
+    }
+
+    /**
+     * Get Lexicon
+     *
+     * @return LexiconInterface
+     */
+    public function getLexicon()
+    {
+        return $this->getFactory()->getContainer()->make('anomaly.lexicon');
     }
 
     /**
@@ -39,6 +51,12 @@ class View extends BaseView implements ViewInterface
         }
 
         return parent::__call($method, $parameters);
+    }
+
+    public static function stub()
+    {
+        $laravel = new Laravel();
+        return $laravel->factory()->parse('{{ hello }}');
     }
 
 }

@@ -1,6 +1,7 @@
 <?php namespace Anomaly\Lexicon\Contract\View;
 
 use Anomaly\Lexicon\Lexicon;
+use Illuminate\Container\Container;
 
 /**
  * Interface FactoryInterface
@@ -9,6 +10,15 @@ use Anomaly\Lexicon\Lexicon;
  */
 interface FactoryInterface
 {
+
+    /**
+     * Set container
+     *
+     * @param Container $container
+     * @return mixed
+     */
+    public function setContainer(Container $container);
+
     /**
      * @param        $data
      * @param        $key

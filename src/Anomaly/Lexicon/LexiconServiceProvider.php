@@ -10,7 +10,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class LexiconServiceProvider
  *
- * @codeCoverageIgnore
+ * @codeCoverageIgnoreStart
  * @package Anomaly\Lexicon
  */
 class LexiconServiceProvider extends ServiceProvider
@@ -18,6 +18,7 @@ class LexiconServiceProvider extends ServiceProvider
     /**
      * Register the service provider.
      *
+     * @codeCoverageIgnore
      * @return void
      */
     public function register()
@@ -66,7 +67,9 @@ class LexiconServiceProvider extends ServiceProvider
                     ->setScopeGlue(config('lexicon::scopeGlue', '.'))
                     ->setViewNamespace(config('lexicon::viewNamespace', 'Anomaly\Lexicon\View'))
                     ->setViewClassPrefix(config('lexicon::viewClassPrefix', 'LexiconView_'))
-                    ->setViewTemplatePath(config('lexicon::viewTemplatePath', __DIR__ . '/../../../resources/ViewTemplate.txt'))
+                    ->setViewTemplatePath(
+                        config('lexicon::viewTemplatePath', __DIR__ . '/../../../resources/ViewTemplate.txt')
+                    )
                     ->setAllowPhp(config('lexicon::allowPhp', false))
                     ->setDebug(config('lexicon::debug', false))
                     ->registerPlugins(config('lexicon::plugins', []))
@@ -140,3 +143,6 @@ class LexiconServiceProvider extends ServiceProvider
     }
 
 }
+/**
+ * @codeCoverageIgnoreEnd
+ */

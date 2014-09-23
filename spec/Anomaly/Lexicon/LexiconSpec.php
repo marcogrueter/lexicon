@@ -17,7 +17,7 @@ use Prophecy\Argument;
 class LexiconSpec extends ObjectBehavior
 {
 
-    public function let(ConditionalHandler $conditionalHandler, PluginHandler $pluginHandler, Node $node)
+    function let(ConditionalHandler $conditionalHandler, PluginHandler $pluginHandler)
     {
         $this->beConstructedWith($conditionalHandler, $pluginHandler);
     }
@@ -222,4 +222,18 @@ class LexiconSpec extends ObjectBehavior
             ->getFullViewClass('bar')
             ->shouldReturn('Foo\View_bar');
     }
+    
+    function it_can_add_add_node_set_path()
+    {
+        $this->addNodeSetPath('path_foo', 'nodeset_bar');
+    }
+
+    function it_can_get_node_set_from_path()
+    {
+        $this
+            ->addNodeSetPath('path_foo', 'nodeset_bar')
+            ->getNodeSetFromPath('path_foo')
+            ->shouldReturn('nodeset_bar');
+    }
+
 }

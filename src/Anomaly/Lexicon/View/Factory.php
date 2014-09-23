@@ -4,6 +4,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Contract\View\FactoryInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Stub\Laravel;
 use Illuminate\View\Factory as BaseFactory;
 
 /**
@@ -167,7 +168,17 @@ class Factory extends BaseFactory implements FactoryInterface
 
                 } elseif (is_object($data)) {
 
-                    if (method_exists($data, $nextPart)) {
+                    if ($data instanceof \ArrayAccess) {
+
+                        if (!isset($data[$nextPart])) {
+
+                            return $this->expected(null, $expected, $default);
+
+                        }
+
+                        $data = $data[$nextPart];
+
+                    } elseif (method_exists($data, $nextPart)) {
 
                         try {
 
@@ -180,16 +191,6 @@ class Factory extends BaseFactory implements FactoryInterface
                             return $this->expected(null, $expected, $default);
 
                         }
-
-                    } elseif ($data instanceof \ArrayAccess) {
-
-                        if (!isset($data[$nextPart])) {
-
-                            return $this->expected(null, $expected, $default);
-
-                        }
-
-                        $data = $data[$nextPart];
 
                     } else {
 
@@ -257,6 +258,12 @@ class Factory extends BaseFactory implements FactoryInterface
         }
 
         return $finalResult;
+    }
+
+    public static function stub()
+    {
+        $stub = new Laravel();
+        return $stub->factory();
     }
 
 }
