@@ -38,5 +38,10 @@ class ViewSpec extends ObjectBehavior
     {
         $this->withFoo('bar');
     }
+    
+    function it_can_render_the_contents_of_the_view()
+    {
+        $this->render()->shouldReturn('<h1>Hello Mr. Anderson!</h1>');
+    }
 
 }

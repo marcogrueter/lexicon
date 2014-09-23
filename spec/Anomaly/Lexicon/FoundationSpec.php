@@ -18,17 +18,9 @@ use Prophecy\Argument;
 class FoundationSpec extends ObjectBehavior
 {
 
-    function let(
-        Container $container,
-        Lexicon $lexicon,
-        Filesystem $filesystem,
-        Dispatcher $dispatcher,
-        SessionInterface $sessionInterface
-    ) {
-        $container->beADoubleOf('Illuminate\Contracts\Container\Container');
-        $filesystem->beADoubleOf('Illuminate\Filesystem\Filesystem');
-
-        $this->beConstructedWith($container, $lexicon, $filesystem, $dispatcher, $sessionInterface);
+    function let(Lexicon $lexicon, Container $container)
+    {
+        $this->beConstructedWith($lexicon, $container);
     }
 
     function it_is_initializable()
@@ -43,7 +35,7 @@ class FoundationSpec extends ObjectBehavior
 
     function it_can_register_lexicon(Container $container)
     {
-        $this->register($container)->shouldImplement('Anomaly\Lexicon\Foundation');
+        $this->register($container)->shouldHaveType('Anomaly\Lexicon\Foundation');
     }
 
     function it_can_register_the_engine_resolver(Container $container)

@@ -16,36 +16,76 @@ use Illuminate\Session\SessionManager;
 class Lexicon
 {
 
+    public static $nodeSets = [
+        'all'       => [
+            'Anomaly\Lexicon\Stub\Node\Undefined',
+            'Anomaly\Lexicon\Node\Comment',
+            'Anomaly\Lexicon\Node\IgnoreBlock',
+            'Anomaly\Lexicon\Node\IgnoreVariable',
+            'Anomaly\Lexicon\Node\Conditional',
+            'Anomaly\Lexicon\Node\ConditionalElse',
+            'Anomaly\Lexicon\Node\ConditionalEndif',
+            'Anomaly\Lexicon\Node\Block',
+            'Anomaly\Lexicon\Node\Recursive',
+            'Anomaly\Lexicon\Node\Section',
+            'Anomaly\Lexicon\Node\SectionAppend',
+            'Anomaly\Lexicon\Node\SectionExtends',
+            'Anomaly\Lexicon\Node\SectionOverwrite',
+            'Anomaly\Lexicon\Node\SectionShow',
+            'Anomaly\Lexicon\Node\SectionStop',
+            'Anomaly\Lexicon\Node\SectionYield',
+            'Anomaly\Lexicon\Node\Includes',
+            'Anomaly\Lexicon\Node\Variable',
+        ],
+        /**
+         * Compile without layout features
+         */
+        'simple'    => [
+            'Anomaly\Lexicon\Node\Comment',
+            'Anomaly\Lexicon\Node\Conditional',
+            'Anomaly\Lexicon\Node\ConditionalElse',
+            'Anomaly\Lexicon\Node\ConditionalEndif',
+            'Anomaly\Lexicon\Node\IgnoreBlock',
+            'Anomaly\Lexicon\Node\IgnoreVariable',
+            'Anomaly\Lexicon\Node\Block',
+            'Anomaly\Lexicon\Node\Recursive',
+            'Anomaly\Lexicon\Node\Variable',
+        ],
+        /**
+         * Compile without Blocks
+         */
+        'variables' => [
+            'Anomaly\Lexicon\Node\Comment',
+            'Anomaly\Lexicon\Node\IgnoreVariable',
+            'Anomaly\Lexicon\Node\Conditional',
+            'Anomaly\Lexicon\Node\ConditionalElse',
+            'Anomaly\Lexicon\Node\ConditionalEndif',
+            'Anomaly\Lexicon\Node\Variable',
+        ]
+    ];
+
+    public static $plugins = [
+        'stub' => 'Anomaly\Lexicon\Stub\Plugin\StubPlugin'
+    ];
+
     /**
      * @return Foundation
      */
     public static function stub()
     {
-        $lexicon = new \Anomaly\Lexicon\Lexicon();
+        $lexicon = new \Anomaly\Lexicon\Lexicon(new Container());
 
-        $container = new Container();
+        $storage = __DIR__ . '/../resources/storage/views';;
 
-        $filesystem = new Filesystem();
+        $lexicon
+            ->setDebug(true)
+            ->setStoragePath($storage)
+            ->registerPlugins(static::$plugins)
+            ->registerNodeSets(static::$nodeSets)
+            ->addParsePath('<h1>Hello {{ name }}</h1>')
+            ->addViewFinderNamespace('test', __DIR__ . '/../resources/views');
 
-        $container->instance(
-            'config',
-            new Repository(
-                new FileLoader($filesystem, __DIR__ . '/../src/config'),
-                'development'
-            )
-        );
-
-        $container['config']['session.driver'] = 'array';
-
-        $sessionManager = new SessionManager($container);
-
-        $lexicon->registerPlugins([
-               'stub' => 'Anomaly\Lexicon\Stub\Plugin\StubPlugin'
-            ]);
-
-        $lexicon->addViewFinderNamespace('test', __DIR__ . '/../resources/views');
-
-        return $lexicon->register($container, $filesystem, new Dispatcher(), $sessionManager->driver());
+        return $lexicon->register();
     }
 
 } 

@@ -6,9 +6,10 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
-use Anomaly\Lexicon\Contract\Support\Container;
+use Anomaly\Lexicon\Contract\Support\Container as ContainerInterface;
 use Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException;
 use Anomaly\Lexicon\Plugin\PluginHandler;
+use Anomaly\Lexicon\Support\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
@@ -71,7 +72,7 @@ class Lexicon implements LexiconInterface
      *
      * @var
      */
-    protected $rootContextName = 'data';
+    protected $rootAlias = 'data';
 
     /**
      * Allow PHP
@@ -153,6 +154,11 @@ class Lexicon implements LexiconInterface
     protected $extension = 'html';
 
     /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
      * Data constant
      */
     const DATA = '$__data';
@@ -185,8 +191,9 @@ class Lexicon implements LexiconInterface
     /**
      * Lexicon construct
      */
-    public function __construct()
+    public function __construct(ContainerInterface $container = null)
     {
+        $this->container = $container;
         $this->setConditionalHandler($this->newConditionalHandler());
         $this->setPluginHandler($this->newPluginHandler());
     }
@@ -196,17 +203,16 @@ class Lexicon implements LexiconInterface
      *
      * @return Foundation
      */
-    public function register(
-        Container $container,
-        Filesystem $filesystem,
-        Dispatcher $events,
-        SessionInterface $session = null
-    ) {
-        $foundation = new Foundation($container, $this, $filesystem, $events, $session);
+    public function register() {
+        return (new Foundation($this, $this->getContainer()))->register();
+    }
 
-
-
-        return $foundation->register();
+    /**
+     * @return ContainerInterface
+     */
+    public function getContainer()
+    {
+        return $this->container ?: $this->container = new Container();
     }
 
     /**
@@ -468,13 +474,13 @@ class Lexicon implements LexiconInterface
     }
 
     /**
-     * Get root context name
+     * Get root alias
      *
      * @return string
      */
-    public function getRootContextName()
+    public function getRootAlias()
     {
-        return $this->rootContextName;
+        return $this->rootAlias;
     }
 
     /**
@@ -571,7 +577,7 @@ class Lexicon implements LexiconInterface
      */
     public function getViewTemplatePath()
     {
-        return __DIR__ . '/../../../../resources/ViewTemplate.txt';
+        return __DIR__ . '/../../../resources/ViewTemplate.txt';
     }
 
     /**
@@ -683,7 +689,8 @@ class Lexicon implements LexiconInterface
      */
     public function setExtension($extension)
     {
-        // TODO: Implement setExtension() method.
+        $this->extension = $extension;
+        return $this;
     }
 
     /**

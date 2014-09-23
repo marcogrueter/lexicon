@@ -232,4 +232,37 @@ class LexiconSpec extends ObjectBehavior
             ->shouldReturn('nodeset_bar');
     }
 
+    function it_can_get_root_alias()
+    {
+        $this->getRootAlias()->shouldBeString();
+    }
+    
+    function it_can_get_nodes()
+    {
+        $this->getNodes()->shouldBeArray();
+    }
+    
+    function it_can_set_extension()
+    {
+        $this
+            ->setExtension('html')
+            ->getExtension()
+            ->shouldReturn('html');
+    }
+    
+    function it_can_set_storage_path()
+    {
+        $this
+            ->setStoragePath('storage/views')
+            ->getStoragePath()
+            ->shouldReturn('storage/views');
+    }
+    
+    function it_can_set_view_paths()
+    {
+        $this
+            ->setViewPaths(['views'])
+            ->getViewPaths()
+            ->shouldReturn(['views']);
+    }
 }

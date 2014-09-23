@@ -3,6 +3,7 @@
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\View\EngineInterface;
+use Anomaly\Lexicon\Stub\Lexicon;
 use Illuminate\View\Engines\CompilerEngine;
 
 class Engine extends CompilerEngine implements EngineInterface
@@ -111,5 +112,15 @@ class Engine extends CompilerEngine implements EngineInterface
     public function getCompiler()
     {
         return $this->compiler;
+    }
+
+    /**
+     * Engine stub for PHPSpec unit test at spec\Anomaly\Lexicon\View\EngineSpec
+     *
+     * @return Engine
+     */
+    public static function stub()
+    {
+        return Lexicon::stub()->getFactory()->getEngineResolver()->resolve('lexicon');
     }
 }

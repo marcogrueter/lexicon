@@ -160,7 +160,7 @@ class NodeFinder
      */
     public function getRootStart()
     {
-        return $this->glue() . $this->getLexicon()->getRootContextName() . $this->glue();
+        return $this->glue() . $this->getLexicon()->getRootAlias() . $this->glue();
     }
 
     /**

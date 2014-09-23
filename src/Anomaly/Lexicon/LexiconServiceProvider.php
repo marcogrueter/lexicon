@@ -28,16 +28,7 @@ class LexiconServiceProvider extends ServiceProvider
 
         $lexicon->setViewPaths($app['config']['view.paths']);
 
-        $session = null;
-
-        $config = $app['config']['session'];
-
-        if (isset($app['session.store']) && ! is_null($config['driver']))
-        {
-            $session = $app['session.store'];
-        }
-
-        $lexicon->register($app, $app['files'], $this->app['events'], $session);
+        $lexicon->register();
     }
 
 }

@@ -2,15 +2,15 @@
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Support\Container;
-use Anomaly\Lexicon\Contract\View\FactoryInterface;
 use Anomaly\Lexicon\View\Compiler;
 use Anomaly\Lexicon\View\Engine;
 use Anomaly\Lexicon\View\Factory;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
-use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
+use Illuminate\Session\SessionManager;
 use Illuminate\Support\ViewErrorBag;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Engines\CompilerEngine;
@@ -37,47 +37,20 @@ class Foundation
     /**
      * @var Container
      */
-    private $container;
+    protected $lexicon;
 
     /**
-     * @var LexiconInterface
+     * @var Container
      */
-    private $lexicon;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var Dispatcher
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var null
-     */
-    private $sessionStore;
+    protected $container;
 
     /**
      * @param Container        $container
      * @param LexiconInterface $lexicon
      */
-    public function __construct(
-        Container $container,
-        LexiconInterface $lexicon,
-        Filesystem $filesystem,
-        Dispatcher $eventDispatcher,
-        SessionInterface $sessionStore = null
-    ) {
-        $this->container       = $container;
-        $this->lexicon         = $lexicon;
-        $this->filesystem      = $filesystem;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->sessionStore    = $sessionStore;
-
-        $container->instance('files', $filesystem);
-        $container->instance('anomaly.lexicon', $this->lexicon);
+    public function __construct(LexiconInterface $lexicon, Container $container) {
+        $this->lexicon   = $lexicon;
+        $this->container = $container;
     }
 
     /**
@@ -103,7 +76,51 @@ class Foundation
      */
     public function getFilesystem()
     {
-        return $this->filesystem;
+        return $this->getContainer()->make('files');
+    }
+
+
+    /**
+     * @return Repository
+     */
+    public function getConfigRepository()
+    {
+        if (isset($container['config'])) {
+            $container->instance(
+                'config',
+                new Repository(
+                    new FileLoader($this->getFilesystem(), __DIR__ . '/../config'),
+                    'development'
+                )
+            );
+        }
+
+        return $container['config'];
+    }
+
+    /**
+     * Get config
+     *
+     * @param      $key
+     * @param null $value
+     * @return mixed
+     */
+    public function getConfig($key, $value = null)
+    {
+        return $this->getConfigRepository()->get($key);
+    }
+
+    /**
+     * Set config
+     *
+     * @param      $key
+     * @param null $value
+     * @return $this
+     */
+    public function setConfig($key, $value = null)
+    {
+        $this->getConfigRepository()->set($key, $value);
+        return $this;
     }
 
     /**
@@ -111,7 +128,26 @@ class Foundation
      */
     public function getSessionStore()
     {
-        return $this->sessionStore;
+        $container = $this->getContainer();
+
+        $session = null;
+
+        if (!isset($container['session'])) {
+            $container->bindShared(
+                'session',
+                function ($app) {
+                    $session = new SessionManager($app);
+                    $session->setDefaultDriver($this->getConfig('session.driver', 'array'));
+                    return $session;
+                }
+            );
+        }
+
+        if (!isset($container['session.store'])) {
+            $container->instance('session.store', $container['session']->driver());
+        }
+
+        return $container['session.store'];
     }
 
     /**
@@ -121,7 +157,7 @@ class Foundation
      */
     public function getEventDispatcher()
     {
-        return $this->eventDispatcher;
+        return $this->getContainer()->make('events');
     }
 
     /**
@@ -132,6 +168,9 @@ class Foundation
      */
     public function register()
     {
+        $this->getContainer()->instance('anomaly.lexicon', $this->lexicon);
+        $this->registerFilesystem();
+        $this->registerEvents();
         $this->registerEngineResolver();
         $this->registerEngineResolver();
         $this->registerViewFinder();
@@ -143,6 +182,30 @@ class Foundation
         $this->registerSessionBinder();
 
         return $this;
+    }
+
+    /**
+     * Register filesystem is it is not in the container
+     */
+    protected function registerFilesystem()
+    {
+        $container = $this->getContainer();
+
+        if (!isset($container['files'])) {
+            $container->instance('files', new Filesystem());
+        }
+    }
+
+    /**
+     * Register events if it is not in the container
+     */
+    protected function registerEvents()
+    {
+        $container = $this->getContainer();
+
+        if (!isset($container['events'])) {
+            $container->instance('events', new Dispatcher());
+        }
     }
 
     /**
@@ -190,7 +253,7 @@ class Foundation
      */
     public function getLexiconCompiler()
     {
-        return $this->getContainer()->make('anomaly.lexicon.compiler');
+        return $this->container['anomaly.lexicon.compiler'];
     }
 
     /**
@@ -210,7 +273,7 @@ class Foundation
             }
         );
 
-        $this->getContainer()->singleton(
+        $this->getContainer()->bindShared(
             'anomaly.lexicon.engine',
             function () {
                 return new Engine($this->getLexiconCompiler(), $this->getFilesystem());
@@ -266,7 +329,7 @@ class Foundation
     }
 
     /**
-     * @return FactoryInterface
+     * @return Factory
      */
     public function getFactory()
     {
@@ -309,7 +372,7 @@ class Foundation
 
                 $factory->share('app', $this->getContainer());
 
-                foreach($this->getLexicon()->getViewFinderNamespaces() as $namespace => $hint) {
+                foreach ($this->getLexicon()->getViewFinderNamespaces() as $namespace => $hint) {
                     $factory->addNamespace($namespace, $hint);
                 }
 
@@ -324,6 +387,20 @@ class Foundation
                 return $factory;
             }
         );
+    }
+
+    protected function getSessionDriver()
+    {
+        $driver = 'array';
+
+        if (isset($container['config']) and
+            isset($container['config']['session']) and
+            is_string($container['config']['session'])
+        ) {
+            $driver = $container['config']['session'];
+        }
+
+        return $driver;
     }
 
     /**

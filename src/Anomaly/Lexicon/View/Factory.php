@@ -15,13 +15,6 @@ class Factory extends BaseFactory implements FactoryInterface
 {
 
     /**
-     * The extension to engine bindings.
-     *
-     * @var array
-     */
-    protected $extensions = array('blade.php' => 'blade', 'php' => 'php', 'html' => 'lexicon');
-
-    /**
      * Get the evaluated view contents for the given view.
      *
      * @param  string $view
@@ -271,7 +264,7 @@ class Factory extends BaseFactory implements FactoryInterface
 
     public static function stub()
     {
-        return \Anomaly\Lexicon\Stub\Lexicon::stub()->register()->getFactory();
+        return \Anomaly\Lexicon\Stub\Lexicon::stub()->getFactory();
     }
 
 }

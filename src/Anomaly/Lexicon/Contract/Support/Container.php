@@ -7,7 +7,7 @@ use Illuminate\Contracts\Container\Container as BaseContainer;
  *
  * @package src\Anomaly\Lexicon\Contract\Support
  */
-interface Container extends BaseContainer
+interface Container extends BaseContainer, \ArrayAccess
 {
 
     /**

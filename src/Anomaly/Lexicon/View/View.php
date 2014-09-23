@@ -52,9 +52,18 @@ class View extends BaseView implements ViewInterface
         return parent::__call($method, $parameters);
     }
 
+    /**
+     * View stub for PHPSpec unit test at spec\Anomaly\Lexicon\View\ViewSpec
+     *
+     * @return Engine
+     */
     public static function stub()
     {
-        return \Anomaly\Lexicon\Stub\Lexicon::stub()->getFactory()->parse('');
+        $data = [
+            'name' => 'Mr. Anderson'
+        ];
+
+        return \Anomaly\Lexicon\Stub\Lexicon::stub()->getFactory()->make('test::hello', $data);
     }
 
 }

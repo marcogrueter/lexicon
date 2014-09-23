@@ -17,12 +17,12 @@ interface LexiconInterface
     /**
      * @return Foundation
      */
-    public function register(
-        Container $container,
-        Filesystem $filesystem,
-        Dispatcher $events,
-        SessionInterface $session = null
-    );
+    public function register();
+
+    /**
+     * @return Container
+     */
+    public function getContainer();
 
     /**
      * Is PHP allowed?
@@ -60,7 +60,7 @@ interface LexiconInterface
     /**
      * @return string
      */
-    public function getRootContextName();
+    public function getRootAlias();
 
     /**
      * @return BlockInterface
