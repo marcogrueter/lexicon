@@ -77,7 +77,7 @@ class Engine extends CompilerEngine implements EngineInterface
         try {
 
             $viewHash  = substr(strrchr($__path, '/'), 1);
-            $viewClass = $this->getLexicon()->getFullViewClass($viewHash);
+            $viewClass = $this->getLexicon()->getCompiledViewFullClass($viewHash);
 
             include_once $__path;
 

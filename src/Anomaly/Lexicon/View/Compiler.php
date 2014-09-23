@@ -213,8 +213,8 @@ class Compiler extends BaseCompiler implements CompilerInterface
     protected function compileView($source = '')
     {
         $data = [
-            '[namespace]' => $this->getLexicon()->getViewNamespace(),
-            '[class]'     => $this->getLexicon()->getViewClass($this->getHash()),
+            '[namespace]' => $this->getLexicon()->getCompiledViewNamespace(),
+            '[class]'     => $this->getLexicon()->getCompiledViewClass($this->getHash()),
             '[source]'    => $source,
         ];
 
@@ -228,7 +228,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
      */
     public function getViewTemplate()
     {
-        return file_get_contents($this->getLexicon()->getViewTemplatePath());
+        return file_get_contents($this->getLexicon()->getCompiledViewTemplatePath());
     }
 
 }

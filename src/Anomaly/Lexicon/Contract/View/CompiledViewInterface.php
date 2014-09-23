@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Contract\View;
 
-interface ViewTemplateInterface
+interface CompiledViewInterface
 {
     /**
      * Renders the view contents

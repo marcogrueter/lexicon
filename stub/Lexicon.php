@@ -1,7 +1,6 @@
 <?php namespace Anomaly\Lexicon\Stub;
 
 use Anomaly\Lexicon\Foundation;
-use Anomaly\Lexicon\Support\Container;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
 use Illuminate\Events\Dispatcher;
@@ -73,19 +72,20 @@ class Lexicon
      */
     public static function stub()
     {
-        $lexicon = new \Anomaly\Lexicon\Lexicon(new Container());
+        $lexicon = new \Anomaly\Lexicon\Lexicon();
 
-        $storage = __DIR__ . '/../resources/storage/views';;
+        $resources = __DIR__ . '/../resources/';
+        $storage = $resources . 'storage/views';
+        $views = $resources . 'views';
 
-        $lexicon
+        return $lexicon
             ->setDebug(true)
             ->setStoragePath($storage)
             ->registerPlugins(static::$plugins)
             ->registerNodeSets(static::$nodeSets)
             ->addParsePath('<h1>Hello {{ name }}</h1>')
-            ->addViewFinderNamespace('test', __DIR__ . '/../resources/views');
-
-        return $lexicon->register();
+            ->addNamespace('test', $views)
+            ->register();
     }
 
 } 

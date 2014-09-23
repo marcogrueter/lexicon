@@ -113,21 +113,19 @@ class Lexicon implements LexiconInterface
     protected $nodeSetPaths = [];
 
     /**
-     * View template path
+     * Compiled view namespace
      *
      * @var string
      */
-    protected $viewTemplatePath;
+    protected $compiledViewNamespace = 'Anomaly\Lexicon\View';
 
-    /**
-     * @var string
-     */
-    protected $viewNamespace = 'Anomaly\Lexicon\View';
 
     /**
      * View class prefix
+     *
+     * @var string
      */
-    protected $viewClassPrefix = 'LexiconView_';
+    protected $compiledViewClassPrefix = 'LexiconView_';
 
     /**
      * Storage path for compiled views
@@ -146,7 +144,7 @@ class Lexicon implements LexiconInterface
     /**
      * @var array
      */
-    protected $viewFinderNamespaces = [];
+    protected $namespaces = [];
 
     /**
      * @var string
@@ -203,7 +201,8 @@ class Lexicon implements LexiconInterface
      *
      * @return Foundation
      */
-    public function register() {
+    public function register()
+    {
         return (new Foundation($this, $this->getContainer()))->register();
     }
 
@@ -216,22 +215,26 @@ class Lexicon implements LexiconInterface
     }
 
     /**
+     * Add namespace
+     *
      * @param $namespace
      * @param $hint
      * @return $this
      */
-    public function addViewFinderNamespace($namespace, $hint)
+    public function addNamespace($namespace, $hint)
     {
-        $this->viewFinderNamespaces[$namespace] = $hint;
+        $this->namespaces[$namespace] = $hint;
         return $this;
     }
 
     /**
+     * Get namespaces
+     *
      * @return array
      */
-    public function getViewFinderNamespaces()
+    public function getNamespaces()
     {
-        return $this->viewFinderNamespaces;
+        return $this->namespaces;
     }
 
     /**
@@ -571,34 +574,34 @@ class Lexicon implements LexiconInterface
     }
 
     /**
-     * Get view template path
+     * Get compiled view template path
      *
      * @return string
      */
-    public function getViewTemplatePath()
+    public function getCompiledViewTemplatePath()
     {
-        return __DIR__ . '/../../../resources/ViewTemplate.txt';
+        return __DIR__ . '/../../../resources/CompiledViewTemplate.txt';
     }
 
     /**
-     * Get view namespace
+     * Get compiled view namespace
      *
      * @return string
      */
-    public function getViewNamespace()
+    public function getCompiledViewNamespace()
     {
-        return $this->viewNamespace;
+        return $this->compiledViewNamespace;
     }
 
     /**
-     * Set view namespace
+     * Set compiled view namespace
      *
      * @param $viewNamespace
      * @return $this
      */
-    public function setViewNamespace($viewNamespace)
+    public function setCompiledViewNamespace($viewNamespace)
     {
-        $this->viewNamespace = $viewNamespace;
+        $this->compiledViewNamespace = $viewNamespace;
         return $this;
     }
 
@@ -607,43 +610,43 @@ class Lexicon implements LexiconInterface
      *
      * @return string
      */
-    public function getViewClassPrefix()
+    public function getCompiledViewClassPrefix()
     {
-        return $this->viewClassPrefix;
+        return $this->compiledViewClassPrefix;
     }
 
     /**
-     * Get view class prefix
+     * Get compiled view class prefix
      *
      * @param $viewClassPrefix
      * @return LexiconInterface
      */
-    public function setViewClassPrefix($viewClassPrefix)
+    public function setCompiledViewClassPrefix($viewClassPrefix)
     {
-        $this->viewClassPrefix = $viewClassPrefix;
+        $this->compiledViewClassPrefix = $viewClassPrefix;
         return $this;
     }
 
     /**
-     * Get view class
+     * Get compiled view class
      *
      * @param $hash
      * @return string
      */
-    public function getViewClass($hash)
+    public function getCompiledViewClass($hash)
     {
-        return $this->getViewClassPrefix() . $hash;
+        return $this->getCompiledViewClassPrefix() . $hash;
     }
 
     /**
-     * Get full view class
+     * Get compiled view full class
      *
      * @param $hash
      * @return string
      */
-    public function getFullViewClass($hash)
+    public function getCompiledViewFullClass($hash)
     {
-        return $this->getViewNamespace() . '\\' . $this->getViewClass($hash);
+        return $this->getCompiledViewNamespace() . '\\' . $this->getCompiledViewClass($hash);
     }
 
     /**
@@ -770,6 +773,5 @@ class Lexicon implements LexiconInterface
         $this->pluginHandler = $pluginHandler;
         return $this;
     }
-
-
+    
 }

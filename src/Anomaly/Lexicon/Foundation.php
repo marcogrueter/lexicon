@@ -372,7 +372,7 @@ class Foundation
 
                 $factory->share('app', $this->getContainer());
 
-                foreach ($this->getLexicon()->getViewFinderNamespaces() as $namespace => $hint) {
+                foreach ($this->getLexicon()->getNamespaces() as $namespace => $hint) {
                     $factory->addNamespace($namespace, $hint);
                 }
 

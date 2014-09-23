@@ -173,7 +173,7 @@ class LexiconSpec extends ObjectBehavior
 
     function it_can_get_view_template_path()
     {
-        $this->getViewTemplatePath()->shouldBeString();
+        $this->getCompiledViewTemplatePath()->shouldBeString();
     }
 
     function it_can_allow_php()
@@ -189,33 +189,33 @@ class LexiconSpec extends ObjectBehavior
     function it_can_set_and_get_the_view_namespace()
     {
         $this
-            ->setViewNamespace('Foo')
-            ->getViewNamespace()
+            ->setCompiledViewNamespace('Foo')
+            ->getCompiledViewNamespace()
             ->shouldReturn('Foo');
     }
 
     function it_can_set_and_get_the_view_class_prefix()
     {
         $this
-            ->setViewClassPrefix('View_')
-            ->getViewClassPrefix()
+            ->setCompiledViewClassPrefix('View_')
+            ->getCompiledViewClassPrefix()
             ->shouldReturn('View_');
     }
     
     function it_can_get_the_view_class()
     {
         $this
-            ->setViewClassPrefix('View_')
-            ->getViewClass('foo')
+            ->setCompiledViewClassPrefix('View_')
+            ->getCompiledViewClass('foo')
             ->shouldReturn('View_foo');
     }
     
     function it_can_get_the_full_view_class()
     {
         $this
-            ->setViewNamespace('Foo')
-            ->setViewClassPrefix('View_')
-            ->getFullViewClass('bar')
+            ->setCompiledViewNamespace('Foo')
+            ->setCompiledViewClassPrefix('View_')
+            ->getCompiledViewFullClass('bar')
             ->shouldReturn('Foo\View_bar');
     }
     

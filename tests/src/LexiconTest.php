@@ -75,7 +75,7 @@ class LexiconTest extends LexiconTestCase
 
         $this->assertEquals(
             'Anomaly\Lexicon\View\LexiconView_' . $hash,
-            $this->lexicon->getFullViewClass($hash)
+            $this->lexicon->getCompiledViewFullClass($hash)
         );
     }
 

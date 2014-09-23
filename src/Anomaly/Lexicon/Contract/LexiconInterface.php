@@ -68,25 +68,25 @@ interface LexiconInterface
     public function getRootNodeType();
 
     /**
-     * Get view template path
+     * Get compiled view template path
      *
      * @return string
      */
-    public function getViewTemplatePath();
+    public function getCompiledViewTemplatePath();
 
     /**
-     * Get view namespace
+     * Get compiled view namespace
      *
      * @return string
      */
-    public function getViewNamespace();
+    public function getCompiledViewNamespace();
 
     /**
-     * Get view class prefix
+     * Get compiled view class prefix
      *
      * @return string
      */
-    public function getViewClassPrefix();
+    public function getCompiledViewClassPrefix();
 
     /**
      * Set view class prefix
@@ -94,23 +94,23 @@ interface LexiconInterface
      * @param $viewClassPrefix
      * @return LexiconInterface
      */
-    public function setViewClassPrefix($viewClassPrefix);
+    public function setCompiledViewClassPrefix($viewClassPrefix);
 
     /**
-     * Get view class
+     * Get compiled view class
      *
      * @param $hash
      * @return string
      */
-    public function getViewClass($hash);
+    public function getCompiledViewClass($hash);
 
     /**
-     * Get full view class
+     * Get compiled view full class
      *
      * @param $hash
      * @return string
      */
-    public function getFullViewClass($hash);
+    public function getCompiledViewFullClass($hash);
 
     /**
      * @param array $nodeTypes
@@ -263,5 +263,21 @@ interface LexiconInterface
      * @return string
      */
     public function getStoragePath();
+
+    /**
+     * Add namespace
+     *
+     * @param $namespace
+     * @param $hint
+     * @return $this
+     */
+    public function addNamespace($namespace, $hint);
+
+    /**
+     * Get namespaces
+     *
+     * @return array
+     */
+    public function getNamespaces();
 
 }
