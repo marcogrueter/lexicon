@@ -44,6 +44,11 @@ class CompilerSpec extends ObjectBehavior
         $this->isNotParsed('nonexistent')->shouldReturn(true);
     }
 
+    function it_can_escape_php()
+    {
+        $this->escapePhp('<?php echo $foo; ?>')->shouldReturn('&lt;?php echo $foo; ?&gt;');
+    }
+
     function it_can_compile_view_template()
     {
         $this->compile($this->path('hello.html'));
@@ -53,7 +58,7 @@ class CompilerSpec extends ObjectBehavior
     {
         $this->compileParse('<h1>Hello {{ name }}!</h1>');
     }
-
+    
     public function path($path)
     {
         return __DIR__ . '/../../../../resources/views/' . $path;

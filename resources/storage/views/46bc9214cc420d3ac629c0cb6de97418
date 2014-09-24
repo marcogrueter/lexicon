@@ -1,2 +1,2 @@
-<?php namespace Anomaly\Lexicon\View; use Anomaly\Lexicon\Contract\View\CompiledViewInterface; class LexiconView_46bc9214cc420d3ac629c0cb6de97418 implements CompiledViewInterface { public function render($__data) {
+<?php namespace Anomaly\Lexicon\View; class LexiconView_46bc9214cc420d3ac629c0cb6de97418 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render($__data) {
 ?>compile<?php }} ?>

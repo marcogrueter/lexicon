@@ -123,11 +123,6 @@ abstract class Node implements NodeInterface
     protected $validator;
 
     /**
-     * @var bool
-     */
-    protected $isEmbedded = false;
-
-    /**
      * Should compile as PHP or not?
      *
      * @var bool
@@ -147,13 +142,6 @@ abstract class Node implements NodeInterface
      * @var bool
      */
     protected $deferCompile = false;
-
-    /**
-     * Is this the root node type
-     *
-     * @var bool
-     */
-    protected $root = false;
 
     /**
      * @var string
@@ -189,37 +177,6 @@ abstract class Node implements NodeInterface
     public function getMatch()
     {
         return $this->match;
-    }
-
-    /**
-     * Get value from match array with an offset
-     *
-     * @param $offset
-     * @return string|null
-     */
-    public function match($offset)
-    {
-        return $this->get($this->getMatch(), $offset);
-    }
-
-    /**
-     * @param bool $isEmbedded
-     * @return $this
-     */
-    public function setIsEmbedded($isEmbedded = false)
-    {
-        $this->isEmbedded = $isEmbedded;
-        return $this;
-    }
-
-    /**
-     * Is embedded
-     *
-     * @return bool
-     */
-    public function isEmbedded()
-    {
-        return $this->isEmbedded;
     }
 
     /**
@@ -996,27 +953,6 @@ abstract class Node implements NodeInterface
     }
 
     /**
-     * Get embedded attribute regex
-     *
-     * @return string
-     */
-    public function getEmbeddedAttributeRegexMatcher()
-    {
-        return "/\{\s*?({$this->getVariableRegex()})(\s+.*?)?\s*?(\/)?\}/ms";
-    }
-
-    /**
-     * Get embedded matches
-     *
-     * @param $string
-     * @return array
-     */
-    public function getEmbeddedMatches($string)
-    {
-        return $this->getMatches($string, $this->getEmbeddedAttributeRegexMatcher());
-    }
-
-    /**
      * Get match
      *
      * @param $text
@@ -1089,6 +1025,17 @@ abstract class Node implements NodeInterface
     }
 
     /**
+     * Get value from match array with an offset
+     *
+     * @param $offset
+     * @return string|null
+     */
+    public function match($offset)
+    {
+        return $this->get($this->getMatch(), $offset);
+    }
+
+    /**
      * Get value from array or default
      *
      * @param array $array
@@ -1104,37 +1051,4 @@ abstract class Node implements NodeInterface
         return $value;
     }
 
-    /**
-     * Convert node to array
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        if ($children = $this->getChildren()) {
-            foreach ($children as &$node) {
-                $node = $node->toArray();
-            }
-        }
-
-        return [
-            'name'         => $this->getName(),
-            'id'           => $this->getId(),
-            'extractionId' => $this->getExtractionId(),
-            'offset'       => $this->getOffset(),
-            'depth'        => $this->getDepth(),
-            'regex'        => $this->regex(),
-            'children'     => $children
-        ];
-    }
-
-    /**
-     * Convert node to json
-     *
-     * @return string
-     */
-    public function toJson()
-    {
-        return json_encode($this->toArray());
-    }
 }
