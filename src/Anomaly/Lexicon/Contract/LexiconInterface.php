@@ -153,7 +153,7 @@ interface LexiconInterface
      * Add parse path
      *
      * @param $path
-     * @return string
+     * @return LexiconInterface
      */
     public function addParsePath($path);
 

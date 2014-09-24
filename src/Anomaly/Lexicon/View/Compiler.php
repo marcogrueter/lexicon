@@ -1,8 +1,8 @@
 <?php namespace Anomaly\Lexicon\View;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Contract\View\CompilerInterface;
+use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Lexicon;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
 
@@ -207,6 +207,22 @@ class Compiler extends BaseCompiler implements CompilerInterface
     public function getViewTemplate()
     {
         return file_get_contents($this->getLexicon()->getCompiledViewTemplatePath());
+    }
+
+    /**
+     * Engine stub for PHPSpec unit test at spec\Anomaly\Lexicon\View\EngineSpec
+     *
+     * @return CompilerInterface
+     */
+    public static function stub()
+    {
+        /** @var EngineInterface $engine */
+        $engine = \Anomaly\Lexicon\Stub\Lexicon::stub()
+            ->getFactory()
+            ->getEngineResolver()
+            ->resolve('lexicon');
+
+        return $engine->getCompiler();
     }
 
 }
