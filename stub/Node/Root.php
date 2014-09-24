@@ -538,5 +538,29 @@ class Root implements RootInterface
      */
     public function getFooter()
     {
- // TODO: Implement getFooter() method.
-}}
+        // TODO: Implement getFooter() method.
+    }
+
+    /**
+     * Compile footer
+     *
+     * @param $source
+     * @return mixed|string
+     */
+    public function compileFooter($source)
+    {
+        // TODO: Implement compileFooter() method.
+    }
+
+    /**
+     * Add to footer
+     *
+     * @param $content
+     * @return BlockInterface
+     */
+    public function addToFooter($content)
+    {
+        // TODO: Implement addToFooter() method.
+    }
+
+}

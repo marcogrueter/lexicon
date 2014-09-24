@@ -108,29 +108,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
             $content = $this->escapePhp($content);
         }
 
-        $rootNode = $this->getRootNode($content, $nodeSet);
-
-        return $this->compileRootNode($rootNode);
-    }
-
-    /**
-     * Compile root node
-     *
-     * @param string $content
-     * @return mixed|string
-     */
-    public function compileRootNode(RootInterface $rootNode)
-    {
-        $source = $rootNode->compile();
-
-        $footer = $rootNode->getFooter();
-
-        if (count($footer) > 0) {
-            $source = str_replace('@parent', '', $source);
-            $source = ltrim($source, PHP_EOL) . PHP_EOL . implode(PHP_EOL, array_reverse($footer));
-        }
-
-        return $source;
+        return $this->getRootNode($content, $nodeSet)->compile();
     }
 
     /**

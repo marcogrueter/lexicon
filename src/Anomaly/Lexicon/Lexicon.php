@@ -773,5 +773,5 @@ class Lexicon implements LexiconInterface
         $this->pluginHandler = $pluginHandler;
         return $this;
     }
-    
+
 }

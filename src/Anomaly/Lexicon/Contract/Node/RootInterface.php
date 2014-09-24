@@ -9,4 +9,21 @@ interface RootInterface extends BlockInterface
      * @return array
      */
     public function getFooter();
+
+    /**
+     * Compile footer
+     *
+     * @param $source
+     * @return mixed|string
+     */
+    public function compileFooter($source);
+
+    /**
+     * Add to footer
+     *
+     * @param $content
+     * @return BlockInterface
+     */
+    public function addToFooter($content);
+
 }
