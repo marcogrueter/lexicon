@@ -1,2 +1,0 @@
-<?php namespace Anomaly\Lexicon\View; use Anomaly\Lexicon\Contract\View\ViewTemplateInterface; class LexiconView_11be4a5b830c1c4479f54b60a88473a3 implements ViewTemplateInterface { public function render($__data) {
-?><h1><?php echo $__data['__env']->variable($__data, 'variable', [], '', null, 'echoable'); ?></h1><?php }} ?>
