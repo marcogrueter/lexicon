@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-abstract class SingleRemain extends Single
+class SingleRemain extends Single
 {
 
     /**

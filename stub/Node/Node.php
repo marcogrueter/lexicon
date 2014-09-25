@@ -15,12 +15,6 @@ use Anomaly\Lexicon\Node\NodeFinder;
  */
 class Node implements NodeInterface
 {
-    /**
-     * Node id
-     *
-     * @var string
-     */
-    protected $id = 'stub-id-1';
 
     /**
      * Get the original content
@@ -39,7 +33,7 @@ class Node implements NodeInterface
      */
     public function getId()
     {
-        return $this->id;
+        // TODO: Implement getId() method.
     }
 
     /**
@@ -113,8 +107,7 @@ class Node implements NodeInterface
      */
     public function setId($id)
     {
-        $this->id = $id;
-        return $this;
+        // TODO: Implement setId() method.
     }
 
     /**
@@ -212,9 +205,9 @@ class Node implements NodeInterface
      * @param $parsedContent
      * @return NodeInterface
      */
-    public function setParsedContent($parsedContent)
+    public function setCurrentContent($parsedContent)
     {
-        // TODO: Implement setParsedContent() method.
+        // TODO: Implement setCurrentContent() method.
     }
 
     /**
@@ -222,9 +215,9 @@ class Node implements NodeInterface
      *
      * @return string
      */
-    public function getParsedContent()
+    public function getCurrentContent()
     {
-        // TODO: Implement getParsedContent() method.
+        // TODO: Implement getCurrentContent() method.
     }
 
     /**
@@ -257,6 +250,16 @@ class Node implements NodeInterface
     }
 
     /**
+     * Validate node for compilation
+     *
+     * @return bool
+     */
+    public function validate()
+    {
+        // TODO: Implement validate() method.
+    }
+
+    /**
      * @return string
      */
     public function getVariableRegex()
@@ -272,17 +275,6 @@ class Node implements NodeInterface
     public function getMatches($string, $regex = null)
     {
         // TODO: Implement getMatches() method.
-    }
-
-    /**
-     * Set context name
-     *
-     * @param $contextName
-     * @return NodeInterface
-     */
-    public function setContextName($contextName)
-    {
-        // TODO: Implement setContextName() method.
     }
 
     /**
@@ -316,6 +308,16 @@ class Node implements NodeInterface
     public function setExtractionContent($content)
     {
         // TODO: Implement setExtractionContent() method.
+    }
+
+    /**
+     * Get extraction content
+     *
+     * @return string
+     */
+    public function getExtractionContent()
+    {
+        // TODO: Implement getExtractionContent() method.
     }
 
     /**
@@ -357,16 +359,6 @@ class Node implements NodeInterface
     public function getLoopItemName()
     {
         // TODO: Implement getLoopItemName() method.
-    }
-
-    /**
-     * Get context name
-     *
-     * @return string
-     */
-    public function getContextName()
-    {
-        // TODO: Implement getContextName() method.
     }
 
     /**
@@ -446,6 +438,16 @@ class Node implements NodeInterface
     public function isParse()
     {
         // TODO: Implement isParse() method.
+    }
+
+    /**
+     * Should compile to PHP?
+     *
+     * @return bool
+     */
+    public function isPhp()
+    {
+        // TODO: Implement isPhp() method.
     }
 
     /**

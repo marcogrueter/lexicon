@@ -1,11 +1,13 @@
 <?php namespace Anomaly\Lexicon\Stub\Node;
 
+use Anomaly\Lexicon\Attribute\AttributeNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Node\NodeFinder;
 
 /**
  * Class Root
@@ -14,26 +16,6 @@ use Anomaly\Lexicon\Lexicon;
  */
 class Root implements RootInterface
 {
-
-    /**
-     * Get the extraction content that opens the block
-     *
-     * @return string
-     */
-    public function getExtractionContentOpen()
-    {
-        // TODO: Implement getExtractionContentOpen() method.
-    }
-
-    /**
-     * Get the extraction content that closes the block
-     *
-     * @return string
-     */
-    public function getExtractionContentClose()
-    {
-        // TODO: Implement getExtractionContentClose() method.
-    }
 
     /**
      * Set full content
@@ -62,9 +44,9 @@ class Root implements RootInterface
      * @param $contentOpen
      * @return BlockInterface
      */
-    public function setContentOpen($contentOpen)
+    public function setOpeningTag($contentOpen)
     {
-        // TODO: Implement setContentOpen() method.
+        // TODO: Implement setOpeningTag() method.
     }
 
     /**
@@ -73,9 +55,29 @@ class Root implements RootInterface
      * @param $contentClose
      * @return BlockInterface
      */
-    public function setContentClose($contentClose)
+    public function setClosingTag($contentClose)
     {
-        // TODO: Implement setContentClose() method.
+        // TODO: Implement setClosingTag() method.
+    }
+
+    /**
+     * Get opening tag
+     *
+     * @return string
+     */
+    public function getOpeningTag()
+    {
+        // TODO: Implement getOpeningTag() method.
+    }
+
+    /**
+     * Get closing tag
+     *
+     * @return string
+     */
+    public function getClosingTag()
+    {
+        // TODO: Implement getClosingTag() method.
     }
 
     /**
@@ -83,9 +85,9 @@ class Root implements RootInterface
      *
      * @return string
      */
-    public function compileOpen()
+    public function compileOpeningTag()
     {
-        // TODO: Implement compileOpen() method.
+        // TODO: Implement compileOpeningTag() method.
     }
 
     /**
@@ -93,9 +95,9 @@ class Root implements RootInterface
      *
      * @return string
      */
-    public function compileClose()
+    public function compileClosingTag()
     {
-        // TODO: Implement compileClose() method.
+        // TODO: Implement compileClosingTag() method.
     }
 
     /**
@@ -164,31 +166,6 @@ class Root implements RootInterface
     public function compile()
     {
         // TODO: Implement compile() method.
-    }
-
-    /**
-     * Make a new instance of this object
-     *
-     * @param array $match
-     * @param null  $parentId
-     * @param int   $depth
-     * @param int   $count
-     * @internal param null $parent
-     * @return NodeInterface
-     */
-    public function make(array $match, NodeInterface $parent = null, $depth = 0, $count = 0)
-    {
-        // TODO: Implement make() method.
-    }
-
-    /**
-     * Create child nodes
-     *
-     * @return NodeInterface
-     */
-    public function createChildNodes()
-    {
-        // TODO: Implement createChildNodes() method.
     }
 
     /**
@@ -295,9 +272,9 @@ class Root implements RootInterface
      * @param $parsedContent
      * @return NodeInterface
      */
-    public function setParsedContent($parsedContent)
+    public function setCurrentContent($parsedContent)
     {
-        // TODO: Implement setParsedContent() method.
+        // TODO: Implement setCurrentContent() method.
     }
 
     /**
@@ -305,9 +282,9 @@ class Root implements RootInterface
      *
      * @return string
      */
-    public function getParsedContent()
+    public function getCurrentContent()
     {
-        // TODO: Implement getParsedContent() method.
+        // TODO: Implement getCurrentContent() method.
     }
 
     /**
@@ -340,6 +317,16 @@ class Root implements RootInterface
     }
 
     /**
+     * Validate node for compilation
+     *
+     * @return bool
+     */
+    public function validate()
+    {
+        // TODO: Implement validate() method.
+    }
+
+    /**
      * @return string
      */
     public function getVariableRegex()
@@ -355,17 +342,6 @@ class Root implements RootInterface
     public function getMatches($string, $regex = null)
     {
         // TODO: Implement getMatches() method.
-    }
-
-    /**
-     * Set context name
-     *
-     * @param $contextName
-     * @return NodeInterface
-     */
-    public function setContextName($contextName)
-    {
-        // TODO: Implement setContextName() method.
     }
 
     /**
@@ -399,6 +375,16 @@ class Root implements RootInterface
     public function setExtractionContent($content)
     {
         // TODO: Implement setExtractionContent() method.
+    }
+
+    /**
+     * Get extraction content
+     *
+     * @return string
+     */
+    public function getExtractionContent()
+    {
+        // TODO: Implement getExtractionContent() method.
     }
 
     /**
@@ -440,16 +426,6 @@ class Root implements RootInterface
     public function getLoopItemName()
     {
         // TODO: Implement getLoopItemName() method.
-    }
-
-    /**
-     * Get context name
-     *
-     * @return string
-     */
-    public function getContextName()
-    {
-        // TODO: Implement getContextName() method.
     }
 
     /**
@@ -532,6 +508,71 @@ class Root implements RootInterface
     }
 
     /**
+     * Should compile to PHP?
+     *
+     * @return bool
+     */
+    public function isPhp()
+    {
+        // TODO: Implement isPhp() method.
+    }
+
+    /**
+     * @return NodeFinder
+     */
+    public function getNodeFinder()
+    {
+        // TODO: Implement getNodeFinder() method.
+    }
+
+    /**
+     * @return AttributeNode
+     */
+    public function getAttributes()
+    {
+        // TODO: Implement getAttributes() method.
+    }
+
+    /**
+     * Set attribute node
+     *
+     * @param $attributeNode
+     * @return NodeInterface
+     */
+    public function setAttributeNode(AttributeNode $attributeNode)
+    {
+        // TODO: Implement setAttributeNode() method.
+    }
+
+    /**
+     * Set node finder
+     *
+     * @param $param
+     * @return NodeInterface
+     */
+    public function setNodeFinder(NodeFinder $nodeFinder)
+    {
+        // TODO: Implement setNodeFinder() method.
+    }
+
+    /**
+     * @param $match
+     * @return NodeInterface
+     */
+    public function setMatch(array $match)
+    {
+        // TODO: Implement setMatch() method.
+    }
+
+    /**
+     * @return bool
+     */
+    public function incrementDepth()
+    {
+        // TODO: Implement incrementDepth() method.
+    }
+
+    /**
      * Get footer
      *
      * @return array
@@ -562,5 +603,4 @@ class Root implements RootInterface
     {
         // TODO: Implement addToFooter() method.
     }
-
 }

@@ -38,9 +38,8 @@ class NodeFactorySpec extends ObjectBehavior
         $this->setNodeGroup('variables')->getNodeGroup()->shouldReturn('variables');
     }
 
-    function it_can_get_node_types(LexiconInterface $lexicon)
+    function it_can_set_and_get_node_types()
     {
-        $lexicon->getNodeTypes($this->getNodeGroup())->shouldBeCalled();
         $this->getNodeTypes()->shouldBeArray();
     }
     
@@ -91,5 +90,9 @@ class NodeFactorySpec extends ObjectBehavior
     {
         $this->inject($node, $parentNode);
     }
-    
+
+    function it_can_set_and_get_attribute_node_types()
+    {
+        $this->setAttributeNodeTypes(['Foo', 'Bar', 'Baz'])->getAttributeNodeTypes()->shouldHaveCount(3);
+    }
 }

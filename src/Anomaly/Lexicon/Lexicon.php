@@ -24,13 +24,6 @@ class Lexicon implements LexiconInterface
     protected $scopeGlue = '.';
 
     /**
-     * Ignored matchers
-     *
-     * @var array
-     */
-    public $ignoredMatchers = [];
-
-    /**
      * Plugin handler
      *
      * @var PluginHandlerInterface
@@ -43,29 +36,6 @@ class Lexicon implements LexiconInterface
      * @var ConditionalHandler
      */
     protected $conditionalHandler;
-
-    /**
-     * Node types
-     *
-     * @var array
-     */
-    public $nodeTypes = [];
-
-    /**
-     * @var array
-     */
-    protected $attributeNodeTypes = [
-        'Anomaly\Lexicon\Attribute\VariableAttribute',
-        'Anomaly\Lexicon\Attribute\NamedAttribute',
-        'Anomaly\Lexicon\Attribute\OrderedAttribute',
-    ];
-
-    /**
-     * Plugins
-     *
-     * @var array
-     */
-    protected $plugins = [];
 
     /**
      * Root context name
@@ -97,20 +67,6 @@ class Lexicon implements LexiconInterface
      * @var bool
      */
     protected $debug = false;
-
-    /**
-     * All node instances
-     *
-     * @var array
-     */
-    protected $nodes = [];
-
-    /**
-     * Node set paths
-     *
-     * @var array
-     */
-    protected $nodeSetPaths = [];
 
     /**
      * Compiled view namespace
@@ -167,11 +123,6 @@ class Lexicon implements LexiconInterface
     const ENV = '$__data[\'__env\']';
 
     /**
-     * Default node set
-     */
-    const DEFAULT_NODE_SET = 'all';
-
-    /**
      * Expected any constant
      */
     const EXPECTED_ANY = 'any';
@@ -185,6 +136,11 @@ class Lexicon implements LexiconInterface
      * Expected echo
      */
     const EXPECTED_ECHO = 'echo';
+
+    /**
+     * Expected numeric
+     */
+    const EXPECTED_NUMERIC = 'numeric';
 
     /**
      * Lexicon construct
@@ -244,7 +200,7 @@ class Lexicon implements LexiconInterface
      */
     public function newConditionalHandler()
     {
-        return (new ConditionalHandler());
+        return new ConditionalHandler();
     }
 
     /**
@@ -299,44 +255,6 @@ class Lexicon implements LexiconInterface
     public function getScopeGlue()
     {
         return $this->scopeGlue;
-    }
-
-    /**
-     * Get node types
-     *
-     * @param string $nodeSet
-     * @return array
-     */
-    public function getNodeTypes($nodeSet = self::DEFAULT_NODE_SET)
-    {
-        $nodeTypes = [];
-
-        if (isset($this->nodeTypes[$nodeSet])) {
-            foreach ($this->nodeTypes[$nodeSet] as $nodeType) {
-                $nodeTypes[] = $this->newNodeType($nodeType);
-            }
-        }
-
-        return $nodeTypes;
-    }
-
-    /**
-     * Get node types
-     *
-     * @param string $nodeSet
-     * @return array
-     */
-    public function getAttributeNodeTypes()
-    {
-        $nodeTypes = [];
-
-        if (isset($this->attributeNodeTypes)) {
-            foreach ($this->attributeNodeTypes as $nodeType) {
-                $nodeTypes[] = $this->newNodeType($nodeType);
-            }
-        }
-
-        return $nodeTypes;
     }
 
     /**
@@ -453,30 +371,6 @@ class Lexicon implements LexiconInterface
     }
 
     /**
-     * Get root node type
-     *
-     * @throws RootNodeTypeNotFoundException
-     * @return NodeInterface
-     */
-    public function getRootNodeType($nodeSet = self::DEFAULT_NODE_SET)
-    {
-        $block = null;
-
-        foreach ($this->getNodeTypes($nodeSet) as $nodeType) {
-            if ($nodeType instanceof RootInterface) {
-                $block = $nodeType;
-                break;
-            }
-        }
-
-        if (!$block) {
-            throw new RootNodeTypeNotFoundException;
-        }
-
-        return $block;
-    }
-
-    /**
      * Get root alias
      *
      * @return string
@@ -539,38 +433,6 @@ class Lexicon implements LexiconInterface
     public function isParsePath($path)
     {
         return in_array($path, $this->parsePaths);
-    }
-
-    /**
-     * Add a node instance
-     *
-     * @param NodeInterface $node
-     * @return NodeInterface
-     */
-    public function addNode(NodeInterface $node)
-    {
-        return $this->nodes[$node->getId()] = $node;
-    }
-
-    /**
-     * Get node by id
-     *
-     * @param $id
-     * @return null
-     */
-    public function getNodeById($id)
-    {
-        return isset($this->nodes[$id]) ? $this->nodes[$id] : null;
-    }
-
-    /**
-     * Get instantiated nodes
-     *
-     * @return array
-     */
-    public function getNodes()
-    {
-        return $this->nodes;
     }
 
     /**
@@ -647,41 +509,6 @@ class Lexicon implements LexiconInterface
     public function getCompiledViewFullClass($hash)
     {
         return $this->getCompiledViewNamespace() . '\\' . $this->getCompiledViewClass($hash);
-    }
-
-    /**
-     * Add node set path
-     *
-     * @param        $path
-     * @param string $nodeSet
-     * @return LexiconInterface
-     */
-    public function addNodeSetPath($path, $nodeSet = self::DEFAULT_NODE_SET)
-    {
-        $this->nodeSetPaths[$path] = $nodeSet;
-        return $this;
-    }
-
-    /**
-     * Get node set from path
-     *
-     * @param $path
-     * @return string
-     */
-    public function getNodeSetFromPath($path)
-    {
-        return isset($this->nodeSetPaths[$path]) ? $this->nodeSetPaths[$path] : self::DEFAULT_NODE_SET;
-    }
-
-    /**
-     * New node type
-     *
-     * @param $class
-     * @return mixed
-     */
-    public function newNodeType($class)
-    {
-        return new $class($this);
     }
 
     /**

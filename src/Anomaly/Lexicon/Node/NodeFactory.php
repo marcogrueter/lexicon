@@ -2,6 +2,8 @@
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
+use Anomaly\Lexicon\Contract\Node\RootInterface;
+use Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException;
 
 /**
  * Class NodeFactory
@@ -25,21 +27,58 @@ class NodeFactory
     /**
      * @var NodeCollection
      */
-    private $nodeCollection;
+    protected $nodeCollection;
 
     /**
      * @var NodeExtractor
      */
-    private $nodeExtractor;
+    protected $nodeExtractor;
+
+    /**
+     * Node group
+     *
+     * @var string
+     */
+    protected $nodeGroup = self::DEFAULT_NODE_GROUP;
+
+    /**
+     * Node types
+     *
+     * @var array
+     */
+    protected $nodeTypes = [];
+
+    /**
+     * Attribute node types
+     *
+     * @var array
+     */
+    protected $attributeNodeTypes = [
+        'Anomaly\Lexicon\Attribute\VariableAttribute',
+        'Anomaly\Lexicon\Attribute\NamedAttribute',
+        'Anomaly\Lexicon\Attribute\OrderedAttribute',
+    ];
+
+    /**
+     * Node group paths
+     *
+     * @var array
+     */
+    protected $nodeGroupPaths = [];
+
+    /**
+     * Default node group
+     */
+    const DEFAULT_NODE_GROUP = 'all';
 
     /**
      * @param LexiconInterface $lexicon
      */
     public function __construct(LexiconInterface $lexicon, NodeCollection $nodeCollection, NodeExtractor $nodeExtractor)
     {
-        $this->lexicon = $lexicon;
+        $this->lexicon        = $lexicon;
         $this->nodeCollection = $nodeCollection;
-        $this->nodeExtractor = $nodeExtractor;
+        $this->nodeExtractor  = $nodeExtractor;
     }
 
     /**
@@ -77,8 +116,9 @@ class NodeFactory
         $node->setup();
 
         $node->setLoopItemName($node->getLoopItemInRawAttributes());
+
         $this->addNode($node);
-        $this->extractParsing($node, $parent);
+        $this->extract($node, $parent);
 
         return $node;
     }
@@ -149,7 +189,7 @@ class NodeFactory
      * @param int                $offset
      * @return mixed
      */
-    protected function createChildNode(NodeInterface $parent, NodeInterface $nodeType, $match, $offset = 0)
+    public function createChildNode(NodeInterface $parent, NodeInterface $nodeType, $match, $offset = 0)
     {
         $node = $this->make(
             $nodeType,
@@ -168,33 +208,153 @@ class NodeFactory
         return $node;
     }
 
-    private function getNodeTypes()
+    /**
+     * Get node types
+     *
+     * @param string $nodeGroup
+     * @return array
+     */
+    public function getNodeTypes($nodeGroup = self::DEFAULT_NODE_GROUP)
     {
-        return $this->getLexicon()->getNodeTypes();
+        $nodeTypes = [];
+
+        if (isset($this->nodeTypes[$nodeGroup])) {
+            foreach ($this->nodeTypes[$nodeGroup] as $nodeType) {
+                $nodeTypes[] = $this->newNodeType($nodeType);
+            }
+        }
+
+        return $nodeTypes;
     }
 
-    public function setNodeGroup($argument1)
+    /**
+     * Get node types
+     *
+     * @param string $nodeSet
+     * @return array
+     */
+    public function getAttributeNodeTypes()
     {
-        // TODO: write logic here
+        $nodeTypes = [];
+
+        foreach ($this->attributeNodeTypes as $nodeType) {
+            $nodeTypes[] = $this->newNodeType($nodeType);
+        }
+
+        return $nodeTypes;
     }
 
+    /**
+     * New node type
+     *
+     * @param $class
+     * @return mixed
+     */
+    public function newNodeType($class)
+    {
+        return new $class($this);
+    }
+
+    /**
+     * Set node group
+     *
+     * @param $nodeGroup
+     * @return $this
+     */
+    public function setNodeGroup($nodeGroup)
+    {
+        $this->nodeGroup = $nodeGroup;
+        return $this;
+    }
+
+    /**
+     * Get node group
+     *
+     * @return string
+     */
     public function getNodeGroup()
     {
-        // TODO: write logic here
+        return $this->nodeGroup;
     }
 
+    /**
+     * Get node extractor
+     *
+     * @return NodeExtractor
+     */
     public function getNodeExtractor()
     {
         return $this->nodeExtractor;
     }
 
+    /**
+     * Extract child node from parent
+     *
+     * @param NodeInterface $child
+     * @param NodeInterface $parent
+     */
     public function extract(NodeInterface $child, NodeInterface $parent)
     {
-        return $this->getNodeExtractor()->extract($child, $parent);
+        $this->getNodeExtractor()->extract($child, $parent);
     }
 
-    public function inject($argument1, $argument2)
+    /**
+     * Inject child node into parent
+     *
+     * @param NodeInterface $child
+     * @param NodeInterface $parent
+     */
+    public function inject(NodeInterface $child, NodeInterface $parent)
     {
-        // TODO: write logic here
+        $this->getNodeExtractor()->inject($child, $parent);
     }
+
+    /**
+     * Add node group path
+     *
+     * @param        $path
+     * @param string $nodeGroup
+     * @return LexiconInterface
+     */
+    public function addNodeGroupPath($path, $nodeGroup = self::DEFAULT_NODE_GROUP)
+    {
+        $this->nodeGroupPaths[$path] = $nodeGroup;
+        return $this;
+    }
+
+    /**
+     * Get node group from path
+     *
+     * @param $path
+     * @return string
+     */
+    public function getNodeGroupFromPath($path)
+    {
+        return isset($this->nodeGroupPaths[$path]) ? $this->nodeGroupPaths[$path] : self::DEFAULT_NODE_GROUP;
+    }
+
+    /**
+     * Get root node type
+     *
+     * @throws RootNodeTypeNotFoundException
+     * @return NodeInterface
+     */
+    public function getRootNodeType($nodeGroup = self::DEFAULT_NODE_GROUP)
+    {
+        $block = null;
+
+        foreach ($this->getNodeTypes($nodeGroup) as $nodeType) {
+            if ($nodeType instanceof RootInterface) {
+                $block = $nodeType;
+                break;
+            }
+        }
+
+        if (!$block) {
+            throw new RootNodeTypeNotFoundException;
+        }
+
+        return $block;
+    }
+
 }

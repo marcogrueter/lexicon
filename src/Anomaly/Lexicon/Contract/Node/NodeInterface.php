@@ -37,25 +37,6 @@ interface NodeInterface extends ExtractionInterface
     public function compile();
 
     /**
-     * Make a new instance of this object
-     *
-     * @param array $match
-     * @param null  $parentId
-     * @param int   $depth
-     * @param int   $count
-     * @internal param null $parent
-     * @return NodeInterface
-     */
-    public function make(array $match, NodeInterface $parent = null, $depth = 0, $count = 0);
-
-    /**
-     * Create child nodes
-     *
-     * @return NodeInterface
-     */
-    public function createChildNodes();
-
-    /**
      * @param $id
      * @return NodeInterface
      */
@@ -335,13 +316,5 @@ interface NodeInterface extends ExtractionInterface
      * @return bool
      */
     public function incrementDepth();
-
-    /**
-     * Wrap compiled source in php tags
-     *
-     * @param $source
-     * @return mixed
-     */
-    public function php($source);
 
 }

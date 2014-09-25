@@ -25,9 +25,7 @@ class SectionExtends extends Single
         $attribute = "'test::view/layout'";// $this->newAttributeNode()->compileAttribute('layout');
 
         if (!empty($attribute)) {
-            $rootNode->addToFooter($this->php(
-                "echo \$__data['__env']->make({$attribute},\$__data)->render();"
-            ));
+            $rootNode->addToFooter("<?php echo \$__data['__env']->make({$attribute},\$__data)->render(); ?>");
         }
 
         return null;

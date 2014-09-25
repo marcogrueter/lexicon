@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-abstract class SingleNull extends Single
+class SingleNull extends Single
 {
     /**
      * Compile node source
