@@ -96,7 +96,8 @@ class NodeFactory
         array $match = [],
         NodeInterface $parent = null,
         $offset = 0,
-        $depth = 0
+        $depth = 0,
+        $id = null
     ) {
         $node = clone $nodeType;
 
@@ -106,15 +107,15 @@ class NodeFactory
 
         $parentId = $parent ? $parent->getId() : null;
 
+        $node->setId($this->generateId($id));
         $node->setParentId($parentId);
         $node->setMatch($match);
         $node->setOffset($offset);
         $node->setDepth($depth);
-        $node->setId(str_random(32));
-        $node->setNodeFinder(new NodeFinder($node));
+        $node->setNodeFinder($this->newNodeFinder($node));
         $node->setup();
         $node->setCurrentContent($node->getContent());
-        $node->setLoopItemName($node->getLoopItemInRawAttributes());
+        $node->setItemAlias($node->getItemAliasFromRawAttributes());
         $this->addNode($node);
         $this->extract($node, $parent);
 
@@ -262,6 +263,11 @@ class NodeFactory
     public function newNodeType($class)
     {
         return new $class($this);
+    }
+
+    public function newNodeFinder(NodeInterface $node)
+    {
+        return new NodeFinder($node);
     }
 
     /**
@@ -424,4 +430,17 @@ class NodeFactory
         return $this;
     }
 
+    /**
+     * Generate a random id if none was passed
+     *
+     * @return string
+     */
+    public function generateId($id = null)
+    {
+        if (!$id) {
+            $id = str_random(32);
+        }
+
+        return $id;
+    }
 }

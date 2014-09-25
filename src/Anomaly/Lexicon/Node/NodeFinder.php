@@ -120,7 +120,7 @@ class NodeFinder
     {
         $node = $this->node->getParent();
 
-        while ($node and $node->getParent() and $node->getLoopItemName() !== $this->getAlias()) {
+        while ($node and $node->getParent() and $node->getItemAlias() !== $this->getAlias()) {
 
             $node = $node->getParent();
 

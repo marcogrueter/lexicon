@@ -4,7 +4,6 @@ use Anomaly\Lexicon\Attribute\AttributeNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
-use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Node\NodeFinder;
 
@@ -357,9 +356,9 @@ class Node implements NodeInterface
      *
      * @return string
      */
-    public function getLoopItemName()
+    public function getItemAlias()
     {
-        // TODO: Implement getLoopItemName() method.
+        // TODO: Implement getItemAlias() method.
     }
 
     /**
@@ -410,9 +409,9 @@ class Node implements NodeInterface
      * @param $loopItemName
      * @return mixed
      */
-    public function setLoopItemName($loopItemName)
+    public function setItemAlias($loopItemName)
     {
-        // TODO: Implement setLoopItemName() method.
+        // TODO: Implement setItemAlias() method.
     }
 
     /**
@@ -420,9 +419,9 @@ class Node implements NodeInterface
      *
      * @return string
      */
-    public function getLoopItemInRawAttributes()
+    public function getItemAliasFromRawAttributes()
     {
-        // TODO: Implement getLoopItemInRawAttributes() method.
+        // TODO: Implement getItemAliasFromRawAttributes() method.
     }
 
     /**
@@ -504,4 +503,16 @@ class Node implements NodeInterface
     public function incrementDepth()
     {
         // TODO: Implement incrementDepth() method.
-}}
+    }
+
+    /**
+     * Add child node
+     *
+     * @param $node
+     * @return NodeInterface
+     */
+    public function addChild(NodeInterface $node)
+    {
+        // TODO: Implement addChild() method.
+    }
+}

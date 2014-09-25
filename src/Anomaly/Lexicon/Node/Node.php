@@ -208,7 +208,7 @@ class Node implements NodeInterface
     /**
      * @return int
      */
-    public function getLoopItemInRawAttributes()
+    public function getItemAliasFromRawAttributes()
     {
         $result = null;
 
@@ -638,7 +638,7 @@ class Node implements NodeInterface
      * @param $loopItemName
      * @return Node
      */
-    public function setLoopItemName($loopItemName)
+    public function setItemAlias($loopItemName)
     {
         $this->loopItemName = $loopItemName;
         return $this;
@@ -649,7 +649,7 @@ class Node implements NodeInterface
      *
      * @return null|string
      */
-    public function getLoopItemName()
+    public function getItemAlias()
     {
         return $this->loopItemName;
     }

@@ -424,30 +424,9 @@ class Root implements RootInterface
      *
      * @return string
      */
-    public function getLoopItemName()
+    public function getItemAlias()
     {
-        // TODO: Implement getLoopItemName() method.
-    }
-
-    /**
-     * Set node set
-     *
-     * @param string $nodeSet
-     * @return LexiconInterface
-     */
-    public function setNodeSet($nodeSet = NodeFactory::DEFAULT_NODE_GROUP)
-    {
-        // TODO: Implement setNodeSet() method.
-    }
-
-    /**
-     * Get node set
-     *
-     * @return string
-     */
-    public function getNodeSet()
-    {
-        // TODO: Implement getNodeSet() method.
+        // TODO: Implement getItemAlias() method.
     }
 
     /**
@@ -477,9 +456,9 @@ class Root implements RootInterface
      * @param $loopItemName
      * @return mixed
      */
-    public function setLoopItemName($loopItemName)
+    public function setItemAlias($loopItemName)
     {
-        // TODO: Implement setLoopItemName() method.
+        // TODO: Implement setItemAlias() method.
     }
 
     /**
@@ -487,9 +466,9 @@ class Root implements RootInterface
      *
      * @return string
      */
-    public function getLoopItemInRawAttributes()
+    public function getItemAliasFromRawAttributes()
     {
-        // TODO: Implement getLoopItemInRawAttributes() method.
+        // TODO: Implement getItemAliasFromRawAttributes() method.
     }
 
     /**

@@ -4,6 +4,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\NodeCollection;
 use Anomaly\Lexicon\Node\NodeExtractor;
+use Anomaly\Lexicon\Node\NodeFinder;
 use Anomaly\Lexicon\Node\Variable;
 use Anomaly\Lexicon\Stub\Node\Node;
 use PhpSpec\ObjectBehavior;
@@ -57,23 +58,39 @@ class NodeFactorySpec extends ObjectBehavior
         $this->getCollection()->shouldHaveType('Anomaly\Lexicon\Node\NodeCollection');
     }
 
+    function it_can_generate_a_random_id_string()
+    {
+        $this->generateId()->shouldBeString();
+    }
+    
     function it_can_add_node(Node $node, NodeCollection $nodeCollection)
     {
         $nodeCollection->push($node)->shouldBeCalled();
         $this->addNode($node);
     }
 
-    function it_can_make_node_of_type(Variable $nodeType)
+    function it_can_make_node_of_type(Variable $nodeType, NodeFinder $nodeFinder)
     {
+        $nodeType->setId($id = 'F4pwOfe4eAaTJxFf483ZsQnFL3ALqXjl')->shouldBeCalled();
         $nodeType->incrementDepth()->willReturn(true);
         $nodeType->setParentId(null)->shouldBeCalled();
         $nodeType->setMatch([])->shouldBeCalled();
+        $nodeType->setOffset(0)->shouldBeCalled();
+        $nodeType->setDepth(1)->shouldBeCalled();
+        $nodeType->setNodeFinder($this->newNodeFinder($nodeType))->shouldBeCalled();
+        $nodeType->setup()->shouldBeCalled();
+        $nodeType->getContent()->shouldBeCalled();
+        $nodeType->setCurrentContent(null)->shouldBeCalled();
+        $nodeType->getItemAliasFromRawAttributes()->shouldBeCalled()->willReturn('book');
+        $nodeType->setItemAlias('book')->shouldBeCalled();
+
         $this->make(
             $nodeType,
             $match = [],
             $parent = null,
             $offset = 0,
-            $depth = 0
+            $depth = 0,
+            $id
         )->shouldHaveType('Anomaly\Lexicon\Node\Variable');
     }
 

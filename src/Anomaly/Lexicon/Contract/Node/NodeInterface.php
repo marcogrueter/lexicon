@@ -216,7 +216,7 @@ interface NodeInterface extends ExtractionInterface
      *
      * @return string
      */
-    public function getLoopItemName();
+    public function getItemAlias();
 
     /**
      * The raw attributes string
@@ -239,14 +239,14 @@ interface NodeInterface extends ExtractionInterface
      * @param $loopItemName
      * @return mixed
      */
-    public function setLoopItemName($loopItemName);
+    public function setItemAlias($loopItemName);
 
     /**
      * Get loop item in raw attributes
      *
      * @return string
      */
-    public function getLoopItemInRawAttributes();
+    public function getItemAliasFromRawAttributes();
 
     /**
      * @return bool
@@ -301,5 +301,13 @@ interface NodeInterface extends ExtractionInterface
      * @return bool
      */
     public function incrementDepth();
+
+    /**
+     * Add child node
+     *
+     * @param $node
+     * @return NodeInterface
+     */
+    public function addChild(NodeInterface $node);
 
 }
