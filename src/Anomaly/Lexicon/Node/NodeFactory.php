@@ -90,7 +90,7 @@ class NodeFactory
      * @param NodeInterface $parent
      * @param int           $offset
      * @param int           $depth
-     * @return LexiconInterface
+     * @return NodeInterface
      */
     public function make(
         NodeInterface $nodeType,
@@ -275,7 +275,7 @@ class NodeFactory
      */
     public function newNodeType($class)
     {
-        return new $class($this);
+        return new $class($this->getLexicon());
     }
 
     public function newNodeFinder(NodeInterface $node)
@@ -385,6 +385,26 @@ class NodeFactory
         }
 
         return $block;
+    }
+
+    /**
+     * Get root node
+     *
+     * @param $content
+     * @return NodeInterface
+     * @throws RootNodeTypeNotFoundException
+     */
+    public function getRootNode($content)
+    {
+        $rootNode = $this->make($this->getRootNodeType())
+            ->setName('root')
+            ->setContent($content)
+            ->setExtractionContent($content)
+            ->setCurrentContent($content);
+
+        $this->createChildNodes($rootNode);
+
+        return $rootNode;
     }
 
     /**

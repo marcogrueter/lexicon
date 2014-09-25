@@ -119,6 +119,6 @@ class Engine extends CompilerEngine implements EngineInterface
      */
     public static function stub()
     {
-        return Lexicon::stub()->getFactory()->getEngineResolver()->resolve('lexicon');
+        return Lexicon::engine();
     }
 }

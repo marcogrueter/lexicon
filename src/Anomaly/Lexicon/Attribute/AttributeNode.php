@@ -75,7 +75,7 @@ class AttributeNode extends Node
     {
         $attributeNodeType = null;
 
-        foreach ($this->getLexicon()->getAttributeNodeTypes() as $nodeType) {
+        foreach ($this->getLexicon()->getNodeFactory()->getAttributeNodeTypes() as $nodeType) {
             if ($nodeType->detect($this->getCurrentContent())) {
                 $attributeNodeType = $nodeType;
                 break;
@@ -93,7 +93,7 @@ class AttributeNode extends Node
      */
     public function getNodeTypes()
     {
-        return $this->getLexicon()->getAttributeNodeTypes();
+        return $this->getLexicon()->getNodeFactory()->getAttributeNodeTypes();
     }
 
     /**

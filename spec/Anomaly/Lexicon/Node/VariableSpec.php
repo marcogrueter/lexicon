@@ -3,6 +3,8 @@
 use Anomaly\Lexicon\Attribute\AttributeNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Node\NodeFactory;
+use Anomaly\Lexicon\Node\NodeFinder;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -16,9 +18,9 @@ use Prophecy\Argument;
 class VariableSpec extends ObjectBehavior
 {
 
-    function let(LexiconInterface $lexicon)
+    function let()
     {
-        $this->beConstructedWith($lexicon);
+        $this->beConstructedThrough('stub');
     }
 
     function it_is_initializable()
@@ -31,7 +33,7 @@ class VariableSpec extends ObjectBehavior
         $this->regex()->shouldReturn('/\{\{\s*([a-zA-Z0-9_\.]+)(\s+.*?)?\s*(\/)?\}\}/ms');
     }
 
-    function it_can_compile_variable(AttributeNode $attributeNode)
+    function it_can_compile_variable(AttributeNode $attributeNode, NodeFinder $nodeFinder, NodeFactory $nodeFactory)
     {
         $this->setName('foo');
         $expected = Lexicon::EXPECTED_ECHO;
@@ -42,4 +44,5 @@ class VariableSpec extends ObjectBehavior
     {
         $this->compileKey()->shouldBeNumeric();
     }
+
 }

@@ -118,6 +118,11 @@ class Lexicon implements LexiconInterface
     protected $nodeFactory;
 
     /**
+     * @var Foundation
+     */
+    protected $foundation;
+
+    /**
      * Data constant
      */
     const DATA = '$__data';
@@ -165,7 +170,30 @@ class Lexicon implements LexiconInterface
      */
     public function register()
     {
-        return (new Foundation($this, $this->getContainer()))->register();
+        $this->setFoundation((new Foundation($this, $this->getContainer()))->register());
+        return $this;
+    }
+
+    /**
+     * Set foundation
+     *
+     * @param Foundation $foundation
+     * @return $this
+     */
+    public function setFoundation(Foundation $foundation)
+    {
+        $this->foundation = $foundation;
+        return $this;
+    }
+
+    /**
+     * Get foundation
+     *
+     * @return Foundation
+     */
+    public function getFoundation()
+    {
+        return $this->foundation;
     }
 
     /**

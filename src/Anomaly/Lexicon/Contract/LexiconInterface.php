@@ -236,4 +236,15 @@ interface LexiconInterface
      */
     public function newNodeFactory();
 
+    /**
+     * @param Foundation $foundation
+     * @return mixed
+     */
+    public function setFoundation(Foundation $foundation);
+
+    /**
+     * @return Foundation
+     */
+    public function getFoundation();
+
 }

@@ -263,7 +263,7 @@ class Factory extends BaseFactory implements FactoryInterface
 
     public static function stub()
     {
-        return \Anomaly\Lexicon\Stub\Lexicon::stub()->getFactory();
+        return \Anomaly\Lexicon\Stub\Lexicon::factory();
     }
 
 }

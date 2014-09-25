@@ -1,5 +1,8 @@
 <?php namespace Anomaly\Lexicon\Stub;
 
+use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\View\CompilerInterface;
+use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Foundation;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
@@ -68,7 +71,7 @@ class Lexicon
     ];
 
     /**
-     * @return Foundation
+     * @return LexiconInterface
      */
     public static function stub()
     {
@@ -88,4 +91,43 @@ class Lexicon
             ->register();
     }
 
+    /**
+     * @return Foundation
+     */
+    public static function foundation()
+    {
+        return static::stub()->getFoundation();
+    }
+
+    /**
+     * @return \Anomaly\Lexicon\View\Factory
+     */
+    public static function factory()
+    {
+        return static::foundation()->getFactory();
+    }
+
+    /**
+     * @return \Illuminate\View\Engines\EngineResolver
+     */
+    public static function engineResolver()
+    {
+        return static::factory()->getEngineResolver();
+    }
+
+    /**
+     * @return EngineInterface
+     */
+    public static function engine()
+    {
+        return static::engineResolver()->resolve('lexicon');
+    }
+
+    /**
+     * @return CompilerInterface
+     */
+    public static function compiler()
+    {
+        return static::engine()->getCompiler();
+    }
 } 

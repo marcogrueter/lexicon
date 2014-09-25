@@ -118,16 +118,10 @@ class Compiler extends BaseCompiler implements CompilerInterface
      * @param string $content
      * @return \Anomaly\Lexicon\Contract\Node\RootInterface
      */
-    public function getRootNode($content = '', $nodeSet = NodeFactory::DEFAULT_NODE_GROUP)
+    public function getRootNode($content = '', $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        // TODO: Do this in NodeFactory
-        return $this->getLexicon()->getNodeFactory()->getRootNodeType()->make([])
-            ->setName('root')
-            ->setContent($content)
-            ->setExtractionContent($content)
-            ->setCurrentContent($content)
-            ->setNodeSet($nodeSet)
-            ->createChildNodes();
+        // TODO: Where to set and get node group
+        return $this->getLexicon()->getNodeFactory()->getRootNode($content);
     }
 
     /**
@@ -218,13 +212,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
      */
     public static function stub()
     {
-        /** @var EngineInterface $engine */
-        $engine = \Anomaly\Lexicon\Stub\Lexicon::stub()
-            ->getFactory()
-            ->getEngineResolver()
-            ->resolve('lexicon');
-
-        return $engine->getCompiler();
+        return \Anomaly\Lexicon\Stub\Lexicon::compiler();
     }
 
 }

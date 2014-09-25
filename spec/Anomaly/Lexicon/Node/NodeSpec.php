@@ -43,16 +43,6 @@ class NodeSpec extends ObjectBehavior
         $this->isExtractable()->shouldBeBoolean();
     }
 
-/*    function it_can_make_an_instance_of_itself_with_properties()
-    {
-        $this->make(
-            $match = [],
-            $parent = null,
-            $offset = 0,
-            $depth = 0
-        )->shouldImplement('Anomaly\Lexicon\Contract\Node\Interface');
-    }*/
-
     function it_can_get_regex()
     {
         $this->regex()->shouldBeString();

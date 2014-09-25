@@ -64,7 +64,7 @@ class View extends BaseView implements ViewInterface
             'name' => 'Mr. Anderson'
         ];
 
-        return \Anomaly\Lexicon\Stub\Lexicon::stub()->getFactory()->make('test::hello', $data);
+        return \Anomaly\Lexicon\Stub\Lexicon::factory()->make('test::hello', $data);
     }
 
 }

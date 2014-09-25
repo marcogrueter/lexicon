@@ -51,4 +51,15 @@ class Variable extends Single
         return $this->getOffset();
     }
 
+    /**
+     * Stub for testing with PHPSpec
+     * This stub of the LexiconInterface gets injected to the VariableSpec construct
+     *
+     * @return \Anomaly\Lexicon\Contract\LexiconInterface
+     */
+    public static function stub()
+    {
+        return new static(\Anomaly\Lexicon\Stub\Lexicon::stub());
+    }
+
 }
