@@ -4,6 +4,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Node\NodeFactory;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
 
 class Compiler extends BaseCompiler implements CompilerInterface
@@ -102,7 +103,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
      * @param string $content
      * @return string
      */
-    public function compileString($content = '', $nodeSet = Lexicon::DEFAULT_NODE_SET)
+    public function compileString($content = '', $nodeSet = NodeFactory::DEFAULT_NODE_GROUP)
     {
         if (!$this->getLexicon()->isPhpAllowed()) {
             $content = $this->escapePhp($content);
@@ -117,7 +118,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
      * @param string $content
      * @return \Anomaly\Lexicon\Contract\Node\RootInterface
      */
-    public function getRootNode($content = '', $nodeSet = Lexicon::DEFAULT_NODE_SET)
+    public function getRootNode($content = '', $nodeSet = NodeFactory::DEFAULT_NODE_GROUP)
     {
         return $this->getLexicon()->getRootNodeType()->make([])
             ->setName('root')

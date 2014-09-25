@@ -108,15 +108,13 @@ class NodeFactory
 
         $node->setParentId($parentId);
         $node->setMatch($match);
-        $node->setCurrentContent($node->getContent());
         $node->setOffset($offset);
         $node->setDepth($depth);
         $node->setId(str_random(32));
         $node->setNodeFinder(new NodeFinder($node));
         $node->setup();
-
+        $node->setCurrentContent($node->getContent());
         $node->setLoopItemName($node->getLoopItemInRawAttributes());
-
         $this->addNode($node);
         $this->extract($node, $parent);
 
@@ -228,9 +226,20 @@ class NodeFactory
     }
 
     /**
+     * Set attribute node types
+     *
+     * @param array $attributeNodeTypes
+     */
+    public function setAttributeNodeTypes(array $attributeNodeTypes)
+    {
+        $this->attributeNodeTypes = $attributeNodeTypes;
+        return $this;
+    }
+
+    /**
      * Get node types
      *
-     * @param string $nodeSet
+     * @param string $nodeGroup
      * @return array
      */
     public function getAttributeNodeTypes()
@@ -293,9 +302,11 @@ class NodeFactory
      * @param NodeInterface $child
      * @param NodeInterface $parent
      */
-    public function extract(NodeInterface $child, NodeInterface $parent)
+    public function extract(NodeInterface $child, NodeInterface $parent = null)
     {
-        $this->getNodeExtractor()->extract($child, $parent);
+        if ($parent) {
+            $this->getNodeExtractor()->extract($child, $parent);
+        }
     }
 
     /**
@@ -355,6 +366,62 @@ class NodeFactory
         }
 
         return $block;
+    }
+
+    /**
+     * Register node groups
+     *
+     * @param array $nodeGroups
+     * @return LexiconInterface
+     */
+    public function registerNodeGroups(array $nodeGroups = [])
+    {
+        foreach ($nodeGroups as $nodeGroup => $nodeTypes) {
+            $this->registerNodeGroup($nodeTypes, $nodeGroup);
+        }
+        return $this;
+    }
+
+    /**
+     * Register node group
+     *
+     * @param array $nodeTypes
+     * @return LexiconInterface
+     */
+    public function registerNodeGroup(array $nodeTypes, $nodeGroup = self::DEFAULT_NODE_GROUP)
+    {
+        foreach ($nodeTypes as $nodeType) {
+            $this->registerNodeType($nodeType, $nodeGroup);
+        }
+        return $this;
+    }
+
+    /**
+     * Register node type
+     *
+     * @param        $nodeType
+     * @param string $nodeGroup
+     * @return LexiconInterface
+     */
+    public function registerNodeType($nodeType, $nodeGroup = self::DEFAULT_NODE_GROUP)
+    {
+        $this->nodeTypes[$nodeGroup][$nodeType] = $nodeType;
+        return $this;
+    }
+
+    /**
+     * Remove node type from node set
+     *
+     * @param $nodeType
+     * @param $nodeGroup
+     * @return LexiconInterface
+     */
+    public function removeNodeTypeFromNodeGroup($nodeType, $nodeGroup = self::DEFAULT_NODE_GROUP)
+    {
+        if (isset($this->nodeTypes[$nodeGroup]) and isset($this->nodeTypes[$nodeGroup][$nodeType])) {
+            unset($this->nodeTypes[$nodeGroup][$nodeType]);
+        }
+        return $this;
     }
 
 }

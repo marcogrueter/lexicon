@@ -3,11 +3,11 @@
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\Node\NodeInterface;
-use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Contract\Support\Container as ContainerInterface;
-use Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException;
+use Anomaly\Lexicon\Node\NodeCollection;
+use Anomaly\Lexicon\Node\NodeExtractor;
+use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Plugin\PluginHandler;
 use Anomaly\Lexicon\Support\Container;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -113,6 +113,11 @@ class Lexicon implements LexiconInterface
     protected $container;
 
     /**
+     * @var NodeFactory
+     */
+    protected $nodeFactory;
+
+    /**
      * Data constant
      */
     const DATA = '$__data';
@@ -150,6 +155,7 @@ class Lexicon implements LexiconInterface
         $this->container = $container;
         $this->setConditionalHandler($this->newConditionalHandler());
         $this->setPluginHandler($this->newPluginHandler());
+        $this->setNodeFactory($this->newNodeFactory());
     }
 
     /**
@@ -160,6 +166,38 @@ class Lexicon implements LexiconInterface
     public function register()
     {
         return (new Foundation($this, $this->getContainer()))->register();
+    }
+
+    /**
+     * Set node factory
+     *
+     * @param NodeFactory $nodeFactory
+     * @return $this
+     */
+    public function setNodeFactory(NodeFactory $nodeFactory)
+    {
+        $this->nodeFactory = $nodeFactory;
+        return $this;
+    }
+
+    /**
+     * Get node factory
+     *
+     * @return NodeFactory
+     */
+    public function getNodeFactory()
+    {
+        return $this->nodeFactory;
+    }
+
+    /**
+     * New node factory
+     *
+     * @return NodeFactory
+     */
+    public function newNodeFactory()
+    {
+        return new NodeFactory($this, new NodeCollection(), new NodeExtractor());
     }
 
     /**
@@ -279,68 +317,37 @@ class Lexicon implements LexiconInterface
      * Register node type
      *
      * @param        $nodeType
-     * @param string $nodeSet
+     * @param string $nodeGroup
      * @return LexiconInterface
      */
-    public function registerNodeType($nodeType, $nodeSet = self::DEFAULT_NODE_SET)
+    public function registerNodeType($nodeType, $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        $this->nodeTypes[$nodeSet][$nodeType] = $nodeType;
+        $this->getNodeFactory()->registerNodeType($nodeType, $nodeGroup);
         return $this;
     }
 
     /**
-     * Register node types
+     * Register node groups
      *
-     * @param array $nodeSets
+     * @param array $nodeGroups
      * @return LexiconInterface
      */
-    public function registerNodeSets(array $nodeSets = [])
+    public function registerNodeGroups(array $nodeGroups = [])
     {
-        foreach ($nodeSets as $nodeSet => $nodeTypes) {
-            $this->registerNodeSet($nodeTypes, $nodeSet);
-        }
+        $this->getNodeFactory()->registerNodeGroups($nodeGroups);
         return $this;
     }
 
     /**
-     * Register node types
+     * Register node group
      *
      * @param array $nodeTypes
      * @return LexiconInterface
      */
-    public function registerNodeSet(array $nodeTypes, $nodeSet = self::DEFAULT_NODE_SET)
+    public function registerNodeGroup(array $nodeTypes, $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        foreach ($nodeTypes as $nodeType) {
-            $this->registerNodeType($nodeType, $nodeSet);
-        }
-
+        $this->getNodeFactory()->registerNodeGroup($nodeTypes, $nodeGroup);
         return $this;
-    }
-
-    /**
-     * Remove node type from node set
-     *
-     * @param $nodeType
-     * @param $nodeSet
-     * @return LexiconInterface
-     */
-    public function removeNodeTypeFromNodeSet($nodeType, $nodeSet = self::DEFAULT_NODE_SET)
-    {
-        if (isset($this->nodeTypes[$nodeSet]) and isset($this->nodeTypes[$nodeSet][$nodeType])) {
-            unset($this->nodeTypes[$nodeSet][$nodeType]);
-        }
-        return $this;
-    }
-
-    /**
-     * Get node set
-     *
-     * @param string $nodeSet
-     * @return array
-     */
-    public function getNodeSet($nodeSet = self::DEFAULT_NODE_SET)
-    {
-        return isset($this->nodeTypes[$nodeSet]) ? $this->nodeTypes[$nodeSet] : [];
     }
 
     /**

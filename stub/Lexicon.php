@@ -15,7 +15,7 @@ use Illuminate\Session\SessionManager;
 class Lexicon
 {
 
-    public static $nodeSets = [
+    public static $nodeGroups = [
         'all'       => [
             'Anomaly\Lexicon\Stub\Node\Undefined',
             'Anomaly\Lexicon\Node\Comment',
@@ -82,7 +82,7 @@ class Lexicon
             ->setDebug(true)
             ->setStoragePath($storage)
             ->registerPlugins(static::$plugins)
-            ->registerNodeSets(static::$nodeSets)
+            ->registerNodeGroups(static::$nodeGroups)
             ->addParsePath('<h1>Hello {{ name }}</h1>')
             ->addNamespace('test', $views)
             ->register();

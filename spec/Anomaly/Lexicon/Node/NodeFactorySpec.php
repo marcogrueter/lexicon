@@ -1,7 +1,7 @@
 <?php namespace spec\Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Contract\Attribute\NodeInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\NodeCollection;
 use Anomaly\Lexicon\Node\NodeExtractor;
 use Anomaly\Lexicon\Node\Variable;
@@ -42,7 +42,16 @@ class NodeFactorySpec extends ObjectBehavior
     {
         $this->getNodeTypes()->shouldBeArray();
     }
-    
+
+    function it_can_set_and_get_attribute_node_types()
+    {
+        $this->setAttributeNodeTypes([
+                'Anomaly\Lexicon\Stub\Node\Node',
+                'Anomaly\Lexicon\Stub\Node\Node2',
+                'Anomaly\Lexicon\Stub\Node\Node3',
+            ])->getAttributeNodeTypes()->shouldHaveCount(3);
+    }
+
     function it_can_get_node_collection()
     {
         $this->getCollection()->shouldHaveType('Anomaly\Lexicon\Node\NodeCollection');
@@ -54,10 +63,13 @@ class NodeFactorySpec extends ObjectBehavior
         $this->addNode($node);
     }
 
-    function it_can_make_node_of_type(Variable $node)
+    function it_can_make_node_of_type(Variable $nodeType)
     {
+        $nodeType->incrementDepth()->willReturn(true);
+        $nodeType->setParentId(null)->shouldBeCalled();
+        $nodeType->setMatch([])->shouldBeCalled();
         $this->make(
-            'Anomaly\Lexicon\Node\Variable',
+            $nodeType,
             $match = [],
             $parent = null,
             $offset = 0,
@@ -81,18 +93,14 @@ class NodeFactorySpec extends ObjectBehavior
         $this->getNodeExtractor()->shouldHaveType('Anomaly\Lexicon\Node\NodeExtractor');
     }
     
-    function it_can_extract_node_parsing_from_parent(NodeInterface $node, NodeInterface $parentNode)
+    function it_can_extract_node_from_parent(NodeInterface $child, NodeInterface $parent)
     {
-        $this->extract($node, $parentNode);
+        $this->extract($child, $parent);
     }
     
-    function it_can_inject_node_compilation_into_parent(NodeInterface $node, NodeInterface $parentNode)
+    function it_can_inject_node_into_parent(NodeInterface $child, NodeInterface $parent)
     {
-        $this->inject($node, $parentNode);
+        $this->inject($child, $parent);
     }
 
-    function it_can_set_and_get_attribute_node_types()
-    {
-        $this->setAttributeNodeTypes(['Foo', 'Bar', 'Baz'])->getAttributeNodeTypes()->shouldHaveCount(3);
-    }
 }

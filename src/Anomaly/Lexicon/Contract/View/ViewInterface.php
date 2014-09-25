@@ -1,6 +1,7 @@
 <?php namespace Anomaly\Lexicon\Contract\View;
 
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Node\NodeFactory;
 use Illuminate\Contracts\View\View;
 
 interface ViewInterface extends View
@@ -12,6 +13,6 @@ interface ViewInterface extends View
      * @param string $nodeSet
      * @return mixed
      */
-    public function using($nodeSet = Lexicon::DEFAULT_NODE_SET);
+    public function using($nodeSet = NodeFactory::DEFAULT_NODE_GROUP);
 
 }

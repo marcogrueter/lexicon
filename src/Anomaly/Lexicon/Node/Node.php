@@ -75,7 +75,7 @@ class Node implements NodeInterface
     /**
      * @var string
      */
-    protected $parsedContent;
+    protected $currentContent;
 
     /**
      * @var LexiconInterface
@@ -95,11 +95,11 @@ class Node implements NodeInterface
     protected $contextItemName;
 
     /**
-     * Context finder
+     * Node finder
      *
      * @var NodeFinder
      */
-    protected $NodeFinder;
+    protected $nodeFinder;
 
     /**
      * @var string|null
@@ -138,16 +138,6 @@ class Node implements NodeInterface
      * @var bool
      */
     protected $deferCompile = false;
-
-    /**
-     * @var string
-     */
-    protected $nodeSet = Lexicon::DEFAULT_NODE_SET;
-
-    /**
-     * @var NodeFinder
-     */
-    protected $nodeFinder;
 
     /**
      * @var AttributeNode
@@ -321,25 +311,25 @@ class Node implements NodeInterface
     }
 
     /**
-     * Set parsed content
+     * Set current  content
      *
-     * @param $parsedContent
+     * @param $currentContent
      * @return NodeInterface
      */
-    public function setCurrentContent($parsedContent)
+    public function setCurrentContent($currentContent)
     {
-        $this->parsedContent = $parsedContent;
+        $this->currentContent = $currentContent;
         return $this;
     }
 
     /**
-     * Get parsed content
+     * Get current  content
      *
      * @return string
      */
     public function getCurrentContent()
     {
-        return $this->parsedContent;
+        return $this->currentContent;
     }
 
     /**
@@ -623,39 +613,6 @@ class Node implements NodeInterface
         }
 
         return $matches;
-    }
-
-    /**
-     * Set node set
-     *
-     * @param string $nodeSet
-     * @return NodeInterface
-     */
-    public function setNodeSet($nodeSet = Lexicon::DEFAULT_NODE_SET)
-    {
-        $this->nodeSet = $nodeSet;
-        return $this;
-    }
-
-    /**
-     * Get node set
-     *
-     * @param string $nodeSet
-     * @return NodeInterface
-     */
-    public function getNodeSet()
-    {
-        return $this->nodeSet;
-    }
-
-    /**
-     * Get node types
-     *
-     * @return array
-     */
-    public function getNodeTypes()
-    {
-        return $this->lexicon->getNodeTypes($this->getNodeSet());
     }
 
     /**

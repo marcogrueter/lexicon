@@ -219,21 +219,6 @@ interface NodeInterface extends ExtractionInterface
     public function getLoopItemName();
 
     /**
-     * Set node set
-     *
-     * @param string $nodeSet
-     * @return LexiconInterface
-     */
-    public function setNodeSet($nodeSet = Lexicon::DEFAULT_NODE_SET);
-
-    /**
-     * Get node set
-     *
-     * @return string
-     */
-    public function getNodeSet();
-
-    /**
      * The raw attributes string
      *
      * @return string

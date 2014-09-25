@@ -1,12 +1,10 @@
 <?php namespace Anomaly\Lexicon\Contract;
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
-use Anomaly\Lexicon\Contract\Node\BlockInterface;
-use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Contract\Support\Container;
 use Anomaly\Lexicon\Foundation;
-use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Node\NodeFactory;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
@@ -53,19 +51,9 @@ interface LexiconInterface
     public function getScopeGlue();
 
     /**
-     * @return array
-     */
-    public function getNodeTypes();
-
-    /**
      * @return string
      */
     public function getRootAlias();
-
-    /**
-     * @return BlockInterface
-     */
-    public function getRootNodeType();
 
     /**
      * Get compiled view template path
@@ -116,30 +104,15 @@ interface LexiconInterface
      * @param array $nodeTypes
      * @return LexiconInterface
      */
-    public function registerNodeSet(array $nodeTypes, $nodeSet = Lexicon::DEFAULT_NODE_SET);
-
-    /**
-     * @param string $nodeSet
-     * @return array
-     */
-    public function getNodeSet($nodeSet = Lexicon::DEFAULT_NODE_SET);
+    public function registerNodeGroup(array $nodeTypes, $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP);
 
     /**
      * Register node sets
      *
-     * @param array $nodeSets
+     * @param array $nodeGroups
      * @return LexiconInterface
      */
-    public function registerNodeSets(array $nodeTypes = []);
-
-    /**
-     * Remove node type from node set
-     *
-     * @param $nodeType
-     * @param $nodeSet
-     * @return LexiconInterface
-     */
-    public function removeNodeTypeFromNodeSet($nodeType, $nodeSet);
+    public function registerNodeGroups(array $nodeTypes = []);
 
     /**
      * Register plugins
@@ -182,45 +155,6 @@ interface LexiconInterface
      * @return LexiconInterface
      */
     public function setDebug($debug);
-
-    /**
-     * Get node by id
-     *
-     * @param $id
-     * @return NodeInterface|null
-     */
-    public function getNodeById($id);
-
-    /**
-     * Get nodes
-     *
-     * @return array
-     */
-    public function getNodes();
-
-    /**
-     * Add a node instance
-     *
-     * @param NodeInterface $node
-     * @return LexiconInterface
-     */
-    public function addNode(NodeInterface $node);
-
-    /**
-     * Add node set path
-     *
-     * @param $path
-     * @return LexiconInterface
-     */
-    public function addNodeSetPath($path);
-
-    /**
-     * Get node set from path
-     *
-     * @param $path
-     * @return string
-     */
-    public function getNodeSetFromPath($path);
 
     /**
      * Set extension
@@ -279,5 +213,27 @@ interface LexiconInterface
      * @return array
      */
     public function getNamespaces();
+
+    /**
+     * Set node factory
+     *
+     * @param NodeFactory $nodeFactory
+     * @return LexiconInterface
+     */
+    public function setNodeFactory(NodeFactory $nodeFactory);
+
+    /**
+     * Get node factory
+     *
+     * @return NodeFactory
+     */
+    public function getNodeFactory();
+
+    /**
+     * New node factory
+     *
+     * @return NodeFactory
+     */
+    public function newNodeFactory();
 
 }

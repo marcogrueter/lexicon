@@ -3,6 +3,7 @@
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\ViewInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Node\NodeFactory;
 use Illuminate\Container\Container;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
@@ -19,9 +20,9 @@ class View extends BaseView implements ViewInterface
      * @param string $nodeSet
      * @return View
      */
-    public function using($nodeSet = Lexicon::DEFAULT_NODE_SET)
+    public function using($nodeSet = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        $this->getLexicon()->addNodeSetPath($this->getPath(), $nodeSet);
+        $this->getLexicon()->getNodeFactory()->addNodeGroupPath($this->getPath(), $nodeSet);
         return $this;
     }
 

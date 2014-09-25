@@ -5,6 +5,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Node\NodeFinder;
 
 
@@ -367,7 +368,7 @@ class Node implements NodeInterface
      * @param string $nodeSet
      * @return LexiconInterface
      */
-    public function setNodeSet($nodeSet = Lexicon::DEFAULT_NODE_SET)
+    public function setNodeSet($nodeSet = NodeFactory::DEFAULT_NODE_GROUP)
     {
         // TODO: Implement setNodeSet() method.
     }
