@@ -4,20 +4,6 @@ interface BlockInterface extends NodeInterface
 {
 
     /**
-     * Get the extraction content that opens the block
-     *
-     * @return string
-     */
-    public function getExtractionContentOpen();
-
-    /**
-     * Get the extraction content that closes the block
-     *
-     * @return string
-     */
-    public function getExtractionContentClose();
-
-    /**
      * Set full content
      *
      * @param $fullContent
@@ -38,7 +24,7 @@ interface BlockInterface extends NodeInterface
      * @param $contentOpen
      * @return BlockInterface
      */
-    public function setContentOpen($contentOpen);
+    public function setOpeningTag($contentOpen);
 
     /**
      * Set content close
@@ -46,21 +32,35 @@ interface BlockInterface extends NodeInterface
      * @param $contentClose
      * @return BlockInterface
      */
-    public function setContentClose($contentClose);
+    public function setClosingTag($contentClose);
+
+    /**
+     * Get opening tag
+     *
+     * @return string
+     */
+    public function getOpeningTag();
+
+    /**
+     * Get closing tag
+     *
+     * @return string
+     */
+    public function getClosingTag();
 
     /**
      * Compile opening source
      *
      * @return string
      */
-    public function compileOpen();
+    public function compileOpeningTag();
 
     /**
      * Compile closing source
      *
      * @return string
      */
-    public function compileClose();
+    public function compileClosingTag();
 
     /**
      * @return array|\IteratorAggregate

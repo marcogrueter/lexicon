@@ -123,7 +123,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
             ->setName('root')
             ->setContent($content)
             ->setExtractionContent($content)
-            ->setParsedContent($content)
+            ->setCurrentContent($content)
             ->setNodeSet($nodeSet)
             ->createChildNodes();
     }

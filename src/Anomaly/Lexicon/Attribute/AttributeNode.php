@@ -53,7 +53,7 @@ class AttributeNode extends Node
             ->setKey($this->match(1))
             ->setValue($this->match(3))
             ->setContent($rawAttributes)
-            ->setParsedContent($rawAttributes);
+            ->setCurrentContent($rawAttributes);
     }
 
     /**
@@ -76,7 +76,7 @@ class AttributeNode extends Node
         $attributeNodeType = null;
 
         foreach ($this->getLexicon()->getAttributeNodeTypes() as $nodeType) {
-            if ($nodeType->detect($this->getParsedContent())) {
+            if ($nodeType->detect($this->getCurrentContent())) {
                 $attributeNodeType = $nodeType;
                 break;
             }
@@ -99,17 +99,18 @@ class AttributeNode extends Node
     /**
      * Create child nodes
      *
+     * @param AttributeNode $nodeType
      * @return NodeInterface
      */
-    public function createChildNodes($nodeType = null)
+    public function createChildNodes(AttributeNode $nodeType = null)
     {
         if (!$nodeType) {
             $nodeType = $this->getAttributeNodeType();
         }
 
-        /** @var NodeInterface $nodeType */
+        /** @var AttributeNode $nodeType */
         if ($nodeType) {
-            foreach ($nodeType->getMatches($this->getParsedContent()) as $offset => $match) {
+            foreach ($nodeType->getMatches($this->getCurrentContent()) as $offset => $match) {
                 $this->createChildNode($nodeType, $match, $offset);
             }
         }
@@ -254,7 +255,11 @@ class AttributeNode extends Node
             $attributes[] = "{$key} => {$value}";
         }
 
-        return '[' . implode(', ', $attributes) . ']';
+        if (!empty($attributes)) {
+            $attributes = implode(',', $attributes);
+        }
+
+        return '[' . $attributes . ']';
     }
 
     /**

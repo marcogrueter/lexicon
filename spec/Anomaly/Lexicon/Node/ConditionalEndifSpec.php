@@ -4,17 +4,17 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 /**
- * Class SingleSpec
+ * Class ConditionalEndifSpec
  *
  * @author Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class SingleSpec extends ObjectBehavior
+class ConditionalEndifSpec extends ObjectBehavior
 {
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Anomaly\Lexicon\Node\Single');
+        $this->shouldHaveType('Anomaly\Lexicon\Node\ConditionalEndif');
     }
 
 }

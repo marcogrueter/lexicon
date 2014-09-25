@@ -40,4 +40,20 @@ interface PluginHandlerInterface
      */
     public function call(PluginInterface $plugin, $method, $attributes = [], $content = '');
 
+    /**
+     * Is parse
+     *
+     * @param $name
+     * @return bool
+     */
+    public function isParse($name);
+
+    /**
+     * Is filter
+     *
+     * @param $name
+     * @return bool
+     */
+    public function isFilter($name);
+
 }

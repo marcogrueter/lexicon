@@ -88,9 +88,9 @@ class NodeValidator implements ValidatorInterface
             foreach ($parent->getChildren() as $node) {
                 /** @var NodeInterface $node */
                 if ($this->node->getId() == $node->getId()) {
-                    $currentOrder = strpos($parent->getParsedContent(), $node->getExtractionId());
+                    $currentOrder = strpos($parent->getCurrentContent(), $node->getExtractionId());
                 } elseif ($node->getName() == $name) {
-                    $otherOrder = strpos($parent->getParsedContent(), $node->getExtractionId());
+                    $otherOrder = strpos($parent->getCurrentContent(), $node->getExtractionId());
                 }
             }
         }

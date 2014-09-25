@@ -1,9 +1,11 @@
 <?php namespace Anomaly\Lexicon\Stub\Node;
 
+use Anomaly\Lexicon\Attribute\AttributeNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Node\NodeFinder;
 
 
 /**
@@ -13,6 +15,12 @@ use Anomaly\Lexicon\Lexicon;
  */
 class Node implements NodeInterface
 {
+    /**
+     * Node id
+     *
+     * @var string
+     */
+    protected $id = 'stub-id-1';
 
     /**
      * Get the original content
@@ -31,7 +39,7 @@ class Node implements NodeInterface
      */
     public function getId()
     {
-        return 'stub-id';
+        return $this->id;
     }
 
     /**
@@ -439,4 +447,58 @@ class Node implements NodeInterface
     {
         // TODO: Implement isParse() method.
     }
-}
+
+    /**
+     * @return NodeFinder
+     */
+    public function getNodeFinder()
+    {
+        // TODO: Implement getNodeFinder() method.
+    }
+
+    /**
+     * @return AttributeNode
+     */
+    public function getAttributes()
+    {
+        // TODO: Implement getAttributes() method.
+    }
+
+    /**
+     * Set attribute node
+     *
+     * @param $attributeNode
+     * @return NodeInterface
+     */
+    public function setAttributeNode(AttributeNode $attributeNode)
+    {
+        // TODO: Implement setAttributeNode() method.
+    }
+
+    /**
+     * Set node finder
+     *
+     * @param $param
+     * @return NodeInterface
+     */
+    public function setNodeFinder(NodeFinder $nodeFinder)
+    {
+        // TODO: Implement setNodeFinder() method.
+    }
+
+    /**
+     * @param $match
+     * @return NodeInterface
+     */
+    public function setMatch(array $match)
+    {
+        // TODO: Implement setMatch() method.
+    }
+
+    /**
+     * @return bool
+     */
+    public function incrementDepth()
+    {
+        // TODO: Implement incrementDepth() method.
+}}

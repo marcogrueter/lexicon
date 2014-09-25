@@ -1,6 +1,8 @@
 <?php namespace Anomaly\Lexicon\Node;
 
 
+use Anomaly\Lexicon\Contract\Node\RootInterface;
+
 class SectionExtends extends Single
 {
     /**
@@ -17,14 +19,15 @@ class SectionExtends extends Single
      */
     public function compile()
     {
+        /** @var RootInterface $rootNode */
         $rootNode = $this->getRootNode();
 
         $attribute = "'test::view/layout'";// $this->newAttributeNode()->compileAttribute('layout');
 
         if (!empty($attribute)) {
-            $rootNode->footer[] = $this->php(
+            $rootNode->addToFooter($this->php(
                 "echo \$__data['__env']->make({$attribute},\$__data)->render();"
-            );
+            ));
         }
 
         return null;

@@ -30,7 +30,7 @@ class VariableAttribute extends AttributeNode
         $this
             ->setKey($this->getOffset())
             ->setValue($this->match(1))
-            ->setParsedContent($attributes = $this->match(2))
+            ->setCurrentContent($attributes = $this->match(2))
             ->setRawAttributes($attributes);
     }
 

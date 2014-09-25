@@ -1,6 +1,5 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Attribute\Compiler;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 
@@ -11,15 +10,6 @@ use Anomaly\Lexicon\Contract\Node\NodeInterface;
  */
 class NodeExtractor
 {
-    /**
-     * @var NodeInterface
-     */
-    private $node;
-
-    /**
-     * @var NodeInterface
-     */
-    private $childNode;
 
     /**
      * preg_replace limit
@@ -27,140 +17,143 @@ class NodeExtractor
     const LIMIT = 1;
 
     /**
-     * @param NodeInterface $node
-     * @param NodeInterface $childNode
+     * Opening tag constant
      */
-    public function __construct(NodeInterface $node, NodeInterface $childNode)
-    {
-        $this->node      = $node;
-        $this->childNode = $childNode;
-    }
+    const OPENING_TAG = 'opening';
 
     /**
-     * Extract node content
-     *
-     * @param NodeInterface
-     * @return Node
+     * Closing tag constant
      */
-    public function extract()
+    const CLOSING_TAG = 'closing';
+
+    /**
+     * Extract parent content
+     *
+     * @param NodeInterface $child
+     * @param NodeInterface $parent
+     */
+    public function extract(NodeInterface $child, NodeInterface $parent)
     {
-        $this->extractOpen();
-        $this->extractClose();
-        $this->extractContent();
+        $this->extractOpening($child, $parent);
+        $this->extractClosing($child, $parent);
+        $this->extractContent($child, $parent);
     }
 
     /**
      * Inject compiled source
+     *
+     * @param NodeInterface $child
+     * @param NodeInterface $parent
      */
-    public function inject()
+    public function inject(NodeInterface $child, NodeInterface $parent)
     {
-        $this->injectOpen();
-        $this->injectClose();
-        $this->injectContent();
+        $this->injectOpening($child, $parent);
+        $this->injectClosing($child, $parent);
+        $this->injectContent($child, $parent);
     }
 
     /**
      * Extract open
      */
-    public function extractOpen()
+    public function extractOpening(NodeInterface $child, NodeInterface $parent)
     {
-        if (method_exists($this->childNode, 'getExtractionContentOpen')) {
-            $this->node->setParsedContent(
-                preg_replace(
-                    $this->search($this->childNode->getExtractionContentOpen()),
-                    $this->childNode->getExtractionId('open'),
-                    $this->node->getParsedContent(),
-                    self::LIMIT
-                )
+        if ($child instanceof BlockInterface and $openingTag = $child->getOpeningTag()) {
+
+            $content = preg_replace(
+                $this->search($openingTag),
+                $child->getExtractionId(static::OPENING_TAG),
+                $parent->getCurrentContent(),
+                self::LIMIT
             );
+
+            $parent->setCurrentContent($content);
         }
     }
 
     /**
      * Extract close
      */
-    public function extractClose()
+    public function extractClosing(NodeInterface $child, NodeInterface $parent)
     {
-        if (method_exists($this->childNode, 'getExtractionContentClose')) {
-            $this->node->setParsedContent(
-                preg_replace(
-                    $this->search($this->childNode->getExtractionContentClose()),
-                    $this->childNode->getExtractionId('close'),
-                    $this->node->getParsedContent(),
-                    self::LIMIT
-                )
+        if ($child instanceof BlockInterface and $closingTag = $child->getClosingTag()) {
+
+            $content = preg_replace(
+                $this->search($closingTag),
+                $child->getExtractionId(static::CLOSING_TAG),
+                $parent->getCurrentContent(),
+                self::LIMIT
             );
+
+            $parent->setCurrentContent($content);
         }
     }
 
     /**
      * Extract content
      */
-    public function extractContent()
+    public function extractContent(NodeInterface $child, NodeInterface $parent)
     {
-        $this->node->setParsedContent(
-            preg_replace(
-                $this->search($this->childNode->getExtractionContent()),
-                $this->childNode->getExtractionId(),
-                $this->node->getParsedContent(),
-                self::LIMIT
-            )
+        $content = preg_replace(
+            $this->search($child->getExtractionContent()),
+            $child->getExtractionId(),
+            $parent->getCurrentContent(),
+            self::LIMIT
         );
+
+        $parent->setCurrentContent($content);
     }
 
     /**
      * Inject open
      */
-    public function injectOpen()
+    public function injectOpening(NodeInterface $child, NodeInterface $parent)
     {
-        if (method_exists($this->childNode, 'compileOpen')) {
-            $this->node->setParsedContent(
-                preg_replace(
-                    $this->search($this->childNode->getExtractionId('open')),
-                    $this->childNode->validate() ? $this->node->php($this->childNode->compileOpen()) : null,
-                    $this->node->getParsedContent(),
-                    self::LIMIT
-                )
+        if ($child instanceof BlockInterface and $source = $child->compileOpeningTag()) {
+
+            $content = preg_replace(
+                $this->search($child->getExtractionId(static::OPENING_TAG)),
+                $child->validate() ? $this->php($source) : null,
+                $parent->getCurrentContent(),
+                self::LIMIT
             );
+
+            $parent->setCurrentContent($content);
         }
     }
 
     /**
      * Inject close
      */
-    public function injectClose()
+    public function injectClosing(NodeInterface $child, NodeInterface $parent)
     {
-        if (method_exists($this->childNode, 'compileClose')) {
-            $this->node->setParsedContent(
-                preg_replace(
-                    $this->search($this->childNode->getExtractionId('close')),
-                    $this->childNode->validate() ? $this->node->php($this->childNode->compileClose()) : null,
-                    $this->node->getParsedContent(),
-                    self::LIMIT
-                )
+        if ($child instanceof BlockInterface and $source = $child->compileClosingTag()) {
+
+            $content = preg_replace(
+                $this->search($child->getExtractionId(static::CLOSING_TAG)),
+                $child->validate() ? $this->php($source) : null,
+                $parent->getCurrentContent(),
+                self::LIMIT
             );
+
+            $parent->setCurrentContent($content);
         }
     }
 
     /**
      * Inject content
      */
-    public function injectContent()
+    public function injectContent(NodeInterface $child, NodeInterface $parent)
     {
-        if ($this->childNode instanceof BlockInterface or !$this->childNode->isPhp()) {
-            $compile = $this->childNode->compile();
-        } else {
-            $compile = $this->node->php($this->childNode->compile());
-        }
+        $source = $child->isPhp() ? $this->php($child->compile()) : $child->compile();
 
-        $this->node->setParsedContent(
-            preg_replace(
-                $this->search($this->childNode->getExtractionId()),
-                $this->childNode->validate() ? $compile : null,
-                $this->node->getParsedContent(),
-                self::LIMIT
-            )
+        $content = preg_replace(
+            $this->search($child->getExtractionId()),
+            $child->validate() ? $source : null,
+            $parent->getCurrentContent(),
+            self::LIMIT
         );
+
+        $parent->setCurrentContent($content);
     }
 
     /**
@@ -172,6 +165,20 @@ class NodeExtractor
     public function search($string)
     {
         return '/' . preg_quote($string, '/') . '/';
+    }
+
+    /**
+     * Surround node source with PHP tags
+     *
+     * @param null $source
+     * @return null|string
+     */
+    public function php($source = null)
+    {
+        if ($source) {
+            $source = '<?php ' . $source . ' ?>';
+        }
+        return $source;
     }
 
 }

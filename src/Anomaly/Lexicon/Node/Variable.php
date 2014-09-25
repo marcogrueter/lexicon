@@ -2,95 +2,53 @@
 
 use Anomaly\Lexicon\Lexicon;
 
+/**
+ * Class Variable
+ *
+ * @package Anomaly\Lexicon\Node
+ */
 class Variable extends Single
 {
-    /**
-     * Is embedded
-     *
-     * @var bool
-     */
-    protected $isEmbedded = false;
 
     /**
-     * Set is embedded
+     * Regex
      *
-     * @param bool $isEmbedded
-     * @return $this
+     * @return string
      */
-    public function setIsEmbedded($isEmbedded = false)
-    {
-        $this->isEmbedded = $isEmbedded;
-        return $this;
-    }
-
-    /**
-     * Is embedded
-     *
-     * @return bool
-     */
-    public function isEmbedded()
-    {
-        return $this->isEmbedded;
-    }
-
     public function regex()
     {
         return "/\{\{\s*({$this->getVariableRegex()})(\s+.*?)?\s*(\/)?\}\}/ms";
     }
 
-    public function compile(array $attributes = [])
+    /**
+     * Compile source
+     *
+     * @param array $attributes
+     * @return string
+     */
+    public function compile()
     {
-        $echo = $end = null;
+        $finder = $this->getNodeFinder();
 
-        if (!$this->isEmbedded()) {
-            $echo = 'echo ';
-            $end  = ';';
-        }
+        $item = $finder->getItemSource();
 
-        return "{$echo}{$this->compileVariable()}{$end}";
+        $name = $finder->getName();
+
+        $attributes = $this->compileAttributes();
+
+        $expected = Lexicon::EXPECTED_ECHO;
+
+        return "echo \$__data['__env']->variable({$item},'{$name}',{$attributes},'',null,'{$expected}');";
     }
 
+    /**
+     * Compile key
+     *
+     * @return int
+     */
     public function compileKey()
     {
         return $this->getOffset();
     }
 
-    /**
-     * Compile a named key from an ordered embedded attribute
-     *
-     * @return string
-     */
-    public function compileNamedFromOrderedKey()
-    {
-        if (!$this->isEmbedded()) {
-
-            $node = $this->make([], $this->getParent())->setName($this->getName());
-
-            $finder = $node->getNodeFinder();
-
-            return $this->getNodeFinder()->getName();
-        }
-
-        return $this->getName();
-    }
-
-    /**
-     * Compile variable
-     *
-     * @return string
-     */
-    public function compileVariable()
-    {
-        $attributes = $this->compileAttributes();
-
-        $finder = $this->getNodeFinder();
-
-        $name = $finder->getName();
-
-        $item = $finder->getItemSource();
-
-        $expected = Lexicon::EXPECTED_ECHO;
-
-        return "\$__data['__env']->variable({$item}, '{$name}', {$attributes}, '', null, '{$expected}')";
-    }
 }

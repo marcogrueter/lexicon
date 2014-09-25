@@ -20,21 +20,19 @@ class Block extends Node implements RootInterface
      *
      * @var string
      */
-    protected $contentOpen = '';
+    protected $openingTag = '';
 
     /**
      * Closing tag content
      *
      * @var string
      */
-    protected $contentClose = '';
+    protected $closingTag = '';
 
     /**
-     * This is the root node
-     *
-     * @var bool
+     * @var array
      */
-    protected $root = true;
+    protected $footer = array();
 
     /**
      * Get regex matcher
@@ -55,8 +53,8 @@ class Block extends Node implements RootInterface
     {
         $this
             ->setFullContent($this->match(0))
-            ->setContentOpen($this->match(1))
-            ->setContentClose($this->match(5))
+            ->setOpeningTag($this->match(1))
+            ->setClosingTag($this->match(5))
             ->setName($this->match(2))
             ->setRawAttributes($this->match(3))
             ->setContent($content = $this->match(4))
@@ -90,9 +88,9 @@ class Block extends Node implements RootInterface
      *
      * @return string
      */
-    public function getExtractionContentOpen()
+    public function getOpeningTag()
     {
-        return $this->contentOpen;
+        return $this->openingTag;
     }
 
     /**
@@ -100,32 +98,32 @@ class Block extends Node implements RootInterface
      *
      * @return string
      */
-    public function getExtractionContentClose()
+    public function getClosingTag()
     {
-        return $this->contentClose;
+        return $this->closingTag;
     }
 
     /**
      * Set content open
      *
-     * @param $contentOpen
+     * @param $openingTag
      * @return Block
      */
-    public function setContentOpen($contentOpen)
+    public function setOpeningTag($openingTag)
     {
-        $this->contentOpen = $contentOpen;
+        $this->openingTag = $openingTag;
         return $this;
     }
 
     /**
      * Set content close
      *
-     * @param $contentClose
+     * @param $closingTag
      * @return BlockInterface
      */
-    public function setContentClose($contentClose)
+    public function setClosingTag($closingTag)
     {
-        $this->contentClose = $contentClose;
+        $this->closingTag = $closingTag;
         return $this;
     }
 
@@ -144,7 +142,7 @@ class Block extends Node implements RootInterface
 
         $this->compileChildren();
 
-        return $this->getParsedContent();
+        return $this->getCurrentContent();
     }
 
     /**
@@ -193,7 +191,7 @@ class Block extends Node implements RootInterface
      *
      * @return string
      */
-    public function compileOpen()
+    public function compileOpeningTag()
     {
         if (!$this->isPhp() or $this->isFilter() or $this->isParse()) {
             return null;
@@ -215,7 +213,7 @@ class Block extends Node implements RootInterface
 
         $expected = Lexicon::EXPECTED_ECHO;
 
-        return "echo \$__data['__env']->variable({$finder->getItemSource()}, '{$finder->getName(
+        return "echo \$__data['__env']->variable({$finder->getItemSource()},'{$finder->getName(
         )}',{$attributes},'{$this->getContent()}','','{$expected}');";
     }
 
@@ -255,7 +253,7 @@ class Block extends Node implements RootInterface
 
         $name = $finder->getName();
 
-        return "\$__data['__env']->variable({$itemName},'{$this->getName()}',{$attributes},'',[],'{$expected}')";
+        return "\$__data['__env']->variable({$itemName},'{$name}',{$attributes},'',[],'{$expected}')";
     }
 
     /**
@@ -263,7 +261,7 @@ class Block extends Node implements RootInterface
      *
      * @return string
      */
-    public function compileClose()
+    public function compileClosingTag()
     {
         if (!$this->isPhp() or $this->isFilter() or $this->isParse()) {
             return null;

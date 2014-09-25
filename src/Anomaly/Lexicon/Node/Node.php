@@ -7,8 +7,9 @@ use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
 use Anomaly\Lexicon\Lexicon;
 
-abstract class Node implements NodeInterface
+class Node implements NodeInterface
 {
+
     /**
      * @var array
      */
@@ -38,11 +39,6 @@ abstract class Node implements NodeInterface
      * @var string
      */
     protected $extractionContent;
-
-    /**
-     * @var array
-     */
-    protected $footer = array();
 
     /**
      * @var string
@@ -149,6 +145,16 @@ abstract class Node implements NodeInterface
     protected $nodeSet = Lexicon::DEFAULT_NODE_SET;
 
     /**
+     * @var NodeFinder
+     */
+    protected $nodeFinder;
+
+    /**
+     * @var AttributeNode
+     */
+    protected $attributeNode;
+
+    /**
      * @param LexiconInterface $lexicon
      */
     public function __construct(LexiconInterface $lexicon)
@@ -162,7 +168,7 @@ abstract class Node implements NodeInterface
      * @param $match
      * @return NodeInterface
      */
-    public function setMatch($match)
+    public function setMatch(array $match)
     {
         $this->match = $match;
         return $this;
@@ -236,15 +242,22 @@ abstract class Node implements NodeInterface
         $node
             ->setMatch($match)
             ->setParentId($parentId)
-            ->setParsedContent($node->getContent())
+            ->setCurrentContent($node->getContent())
             ->setOffset($offset)
             ->setDepth($depth)
-            ->setId(str_random(32))
-            ->setup();
+            ->setId(str_random(32));
+
+        $attributeNode = (new AttributeNode($this->getLexicon()))
+            ->make([], $node)
+            ->createChildNodes();
 
         $node
-            ->setContextName($node->getName())
-            ->setLoopItemName($node->getLoopItemInRawAttributes());
+            ->setAttributeNode($attributeNode)
+            ->setNodeFinder(new NodeFinder($node));
+
+        $node->setup();
+
+        $node->setLoopItemName($node->getLoopItemInRawAttributes());
 
 
         return $this->getLexicon()->addNode($node);
@@ -268,14 +281,13 @@ abstract class Node implements NodeInterface
     }
 
     /**
-     * Return a new AttributeNode
+     * Return attribute node
      *
      * @return AttributeNode
      */
-    public function newAttributeNode($nodeType = null)
+    public function getAttributes()
     {
-        $attributeNode = new AttributeNode($this->getLexicon());
-        return $attributeNode->make([], $this)->createChildNodes($nodeType);
+        return $this->attributeNode;
     }
 
     /**
@@ -285,7 +297,13 @@ abstract class Node implements NodeInterface
      */
     public function compileAttributes()
     {
-        return $this->newAttributeNode()->compile();
+        $source = '[]';
+
+        if ($attributes = $this->getAttributes() and $result = $attributes->compile()) {
+            $source = $result;
+        }
+
+        return $source;
     }
 
     /**
@@ -295,7 +313,7 @@ abstract class Node implements NodeInterface
      */
     public function compileAttributeValue($name, $offset = 0, $default = null)
     {
-        return $this->newAttributeNode()->compileAttributeValue($name, $offset, $default);
+        return $this->getAttributes()->compileAttributeValue($name, $offset, $default);
     }
 
     /**
@@ -356,7 +374,7 @@ abstract class Node implements NodeInterface
      * @param $parsedContent
      * @return NodeInterface
      */
-    public function setParsedContent($parsedContent)
+    public function setCurrentContent($parsedContent)
     {
         $this->parsedContent = $parsedContent;
         return $this;
@@ -367,7 +385,7 @@ abstract class Node implements NodeInterface
      *
      * @return string
      */
-    public function getParsedContent()
+    public function getCurrentContent()
     {
         return $this->parsedContent;
     }
@@ -503,7 +521,7 @@ abstract class Node implements NodeInterface
     /**
      * Set parent node id
      *
-     * @param Node $parentId
+     * @param int $parentId
      * @return NodeInterface
      */
     public function setParentId($parentId = null)
@@ -577,28 +595,6 @@ abstract class Node implements NodeInterface
     public function getItemSource()
     {
         return '$' . camel_case(str_replace($this->getLexicon()->getScopeGlue(), '_', $this->getName())) . 'Item';
-    }
-
-    /**
-     * Get context item name
-     *
-     * @return string
-     */
-    public function getContextName()
-    {
-        return $this->contextItemName;
-    }
-
-    /**
-     * Set context item name
-     *
-     * @param $contextItemName
-     * @return NodeInterface
-     */
-    public function setContextName($contextItemName)
-    {
-        $this->contextItemName = $contextItemName;
-        return $this;
     }
 
     /**
@@ -719,7 +715,7 @@ abstract class Node implements NodeInterface
     {
         /** @var NodeInterface $nodeType */
         foreach ($this->getNodeTypes() as $nodeType) {
-            foreach ($nodeType->getMatches($this->getParsedContent()) as $offset => $match) {
+            foreach ($nodeType->getMatches($this->getCurrentContent()) as $offset => $match) {
                 $this->createChildNode($nodeType, $match, $offset);
             }
         }
@@ -898,16 +894,7 @@ abstract class Node implements NodeInterface
      */
     public function isFilter()
     {
-        $isFilter = false;
-
-        $lexicon = $this->getLexicon();
-
-        if ($plugin = $lexicon->getPluginHandler()->get($this->getName())) {
-            $parts    = explode($lexicon->getScopeGlue(), $this->getName());
-            $isFilter = $plugin->isFilter($parts[1]);
-        }
-
-        return $isFilter;
+        return $this->getLexicon()->getPluginHandler()->isFilter($this->getName());
     }
 
     /**
@@ -917,16 +904,7 @@ abstract class Node implements NodeInterface
      */
     public function isParse()
     {
-        $isParse = false;
-
-        $lexicon = $this->getLexicon();
-
-        if ($plugin = $lexicon->getPluginHandler()->get($this->getName())) {
-            $parts   = explode($lexicon->getScopeGlue(), $this->getName());
-            $isParse = $plugin->isParse($parts[1]);
-        }
-
-        return $isParse;
+        return $this->getLexicon()->getPluginHandler()->isParse($this->getName());
     }
 
     /**
@@ -1014,17 +992,6 @@ abstract class Node implements NodeInterface
     }
 
     /**
-     * Compress
-     *
-     * @param $string
-     * @return mixed
-     */
-    public function compress($string)
-    {
-        return preg_replace(['/\s\s+/', '/\n+/'], ' ', trim($string));
-    }
-
-    /**
      * Get value from match array with an offset
      *
      * @param $offset
@@ -1051,4 +1018,56 @@ abstract class Node implements NodeInterface
         return $value;
     }
 
+    /**
+     * Set attribute node
+     *
+     * @param AttributeNode $attributeNode
+     * @return $this|NodeInterface
+     */
+    public function setAttributeNode(AttributeNode $attributeNode)
+    {
+        $this->attributeNode = $attributeNode;
+        return $this;
+    }
+
+    /**
+     * Set node finder
+     *
+     * @param NodeFinder $nodeFinder
+     * @return $this|NodeInterface
+     */
+    public function setNodeFinder(NodeFinder $nodeFinder)
+    {
+        $this->nodeFinder = $nodeFinder;
+        return $this;
+    }
+
+    /**
+     * Get setup from regex match
+     *
+     * @return mixed
+     */
+    public function setup()
+    {
+    }
+
+    /**
+     * Get regex string
+     *
+     * @return string
+     */
+    public function regex()
+    {
+        return '';
+    }
+
+    /**
+     * Compile source
+     *
+     * @return string
+     */
+    public function compile()
+    {
+        return '';
+    }
 }

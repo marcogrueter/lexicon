@@ -133,7 +133,7 @@ class ConditionalCompiler
     {
         $this->node         = $node;
         $this->lexicon      = $node->getLexicon();
-        $this->expression   = $this->node->compress($node->getExpression());
+        $this->expression   = $node->getExpression();
         $this->variableNode = new Variable($node->getLexicon());
         $this->start        = $node->getName();
 

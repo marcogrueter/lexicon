@@ -1,7 +1,9 @@
 <?php namespace Anomaly\Lexicon\Contract\Node;
 
+use Anomaly\Lexicon\Attribute\AttributeNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Node\NodeFinder;
 
 interface NodeInterface extends ExtractionInterface
 {
@@ -127,14 +129,14 @@ interface NodeInterface extends ExtractionInterface
      * @param $parsedContent
      * @return NodeInterface
      */
-    public function setParsedContent($parsedContent);
+    public function setCurrentContent($parsedContent);
 
     /**
      * Get parsed content
      *
      * @return string
      */
-    public function getParsedContent();
+    public function getCurrentContent();
 
     /**
      * Set node validator
@@ -157,6 +159,13 @@ interface NodeInterface extends ExtractionInterface
     public function isValid();
 
     /**
+     * Validate node for compilation
+     *
+     * @return bool
+     */
+    public function validate();
+
+    /**
      * @return string
      */
     public function getVariableRegex();
@@ -167,14 +176,6 @@ interface NodeInterface extends ExtractionInterface
      * @return array
      */
     public function getMatches($string, $regex = null);
-
-    /**
-     * Set context name
-     *
-     * @param $contextName
-     * @return NodeInterface
-     */
-    public function setContextName($contextName);
 
     /**
      * Get match
@@ -199,6 +200,13 @@ interface NodeInterface extends ExtractionInterface
      * @return NodeInterface
      */
     public function setExtractionContent($content);
+
+    /**
+     * Get extraction content
+     *
+     * @return string
+     */
+    public function getExtractionContent();
 
     /**
      * Get extraction id
@@ -228,13 +236,6 @@ interface NodeInterface extends ExtractionInterface
      * @return string
      */
     public function getLoopItemName();
-
-    /**
-     * Get context name
-     *
-     * @return string
-     */
-    public function getContextName();
 
     /**
      * Set node set
@@ -290,5 +291,57 @@ interface NodeInterface extends ExtractionInterface
      * @return bool
      */
     public function isParse();
+
+    /**
+     * Should compile to PHP?
+     *
+     * @return bool
+     */
+    public function isPhp();
+
+    /**
+     * @return NodeFinder
+     */
+    public function getNodeFinder();
+
+    /**
+     * @return AttributeNode
+     */
+    public function getAttributes();
+
+    /**
+     * Set attribute node
+     *
+     * @param $attributeNode
+     * @return NodeInterface
+     */
+    public function setAttributeNode(AttributeNode $attributeNode);
+
+    /**
+     * Set node finder
+     *
+     * @param $param
+     * @return NodeInterface
+     */
+    public function setNodeFinder(NodeFinder $nodeFinder);
+
+    /**
+     * @param $match
+     * @return NodeInterface
+     */
+    public function setMatch(array $match);
+
+    /**
+     * @return bool
+     */
+    public function incrementDepth();
+
+    /**
+     * Wrap compiled source in php tags
+     *
+     * @param $source
+     * @return mixed
+     */
+    public function php($source);
 
 }

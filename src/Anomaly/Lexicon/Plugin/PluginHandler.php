@@ -96,4 +96,40 @@ class PluginHandler implements PluginHandlerInterface
             ->{$method}();
     }
 
+    /**
+     * Is parse
+     *
+     * @param $name
+     * @return bool
+     */
+    public function isParse($name)
+    {
+        $isParse = false;
+
+        if ($plugin = $this->get($name)) {
+            $parts   = explode($this->getLexicon()->getScopeGlue(), $name);
+            $isParse = $plugin->isParse($parts[1]);
+        }
+
+        return $isParse;
+    }
+
+    /**
+     * Is filter
+     *
+     * @param $name
+     * @return bool
+     */
+    public function isFilter($name)
+    {
+        $isFilter = false;
+
+        if ($plugin = $this->get($name)) {
+            $parts    = explode($this->getLexicon()->getScopeGlue(), $name);
+            $isFilter = $plugin->isFilter($parts[1]);
+        }
+
+        return $isFilter;
+    }
+    
 }

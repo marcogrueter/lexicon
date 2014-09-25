@@ -58,9 +58,9 @@ class NodeFinder
 
                 $source = $node->getItemSource();
 
-            } else {
+            } elseif ($parent = $this->getParent()) {
 
-                $source = $this->getParent()->getItemSource();
+                $source = $parent->getItemSource();
 
             }
         }
@@ -205,4 +205,5 @@ class NodeFinder
 
         return $name;
     }
+
 } 
