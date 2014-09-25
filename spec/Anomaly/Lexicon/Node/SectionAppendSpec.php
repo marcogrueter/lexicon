@@ -1,5 +1,6 @@
 <?php namespace spec\Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -11,6 +12,11 @@ use Prophecy\Argument;
  */
 class SectionAppendSpec extends ObjectBehavior
 {
+
+    function let(LexiconInterface $lexicon)
+    {
+        $this->beConstructedWith($lexicon);
+    }
 
     function it_is_initializable()
     {

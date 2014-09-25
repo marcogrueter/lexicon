@@ -8,4 +8,6 @@
 class Node2 extends Node
 {
 
+    protected $id = 'stub-id-2';
+
 } 

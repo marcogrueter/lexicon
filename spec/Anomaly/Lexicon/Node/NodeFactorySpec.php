@@ -34,14 +34,56 @@ class NodeFactorySpec extends ObjectBehavior
         $this->getLexicon()->shouldImplement('Anomaly\Lexicon\Contract\LexiconInterface');
     }
 
-    function it_can_set_and_get_node_group()
+    function it_can_set_and_get_a_node_group()
     {
         $this->setNodeGroup('variables')->getNodeGroup()->shouldReturn('variables');
+    }
+
+    function it_can_remove_a_node_type_from_a_node_group()
+    {
+        $this
+            ->registerNodeGroup(['Anomaly\Lexicon\Stub\Node\Node', 'Anomaly\Lexicon\Stub\Node\Node2'])
+            ->getNodeTypes()->shouldHaveCount(2);
+
+        $this
+            ->removeNodeTypeFromNodeGroup('Anomaly\Lexicon\Stub\Node\Node')
+            ->getNodeTypes()->shouldHaveCount(1);
     }
 
     function it_can_set_and_get_node_types()
     {
         $this->getNodeTypes()->shouldBeArray();
+    }
+
+    function it_can_register_a_single_node_group()
+    {
+        $this->registerNodeGroup([
+                'Anomaly\Lexicon\Stub\Node\Node',
+                'Anomaly\Lexicon\Stub\Node\Node2',
+            ], 'custom_node_group1');
+
+        $this->getNodeTypes('custom_node_group1')->shouldHaveCount(2);
+    }
+
+    function it_can_register_multiple_node_groups()
+    {
+        $this->registerNodeGroups([
+                'custom_node_group1' => [
+                    'Anomaly\Lexicon\Stub\Node\Node',
+                    'Anomaly\Lexicon\Stub\Node\Node2',
+                    'Anomaly\Lexicon\Stub\Node\Node3',
+                ],
+                'custom_node_group2' => [
+                    'Anomaly\Lexicon\Stub\Node\Node',
+                ],
+            ]);
+
+        $this->getNodeTypes('custom_node_group1')->shouldHaveCount(3);
+    }
+
+    function it_can_set_and_get_the_node_group()
+    {
+        $this->setNodeGroup('foo')->getNodeGroup()->shouldReturn('foo');
     }
 
     function it_can_set_and_get_attribute_node_types()
@@ -50,7 +92,29 @@ class NodeFactorySpec extends ObjectBehavior
                 'Anomaly\Lexicon\Stub\Node\Node',
                 'Anomaly\Lexicon\Stub\Node\Node2',
                 'Anomaly\Lexicon\Stub\Node\Node3',
-            ])->getAttributeNodeTypes()->shouldHaveCount(3);
+            ])
+            ->getAttributeNodeTypes()->shouldHaveCount(3);
+    }
+
+    function it_can_get_root_node_type()
+    {
+        $this->registerNodeGroup([
+                'Anomaly\Lexicon\Stub\Node\Node',
+                'Anomaly\Lexicon\Stub\Node\Node2',
+                'Anomaly\Lexicon\Stub\Node\Node3',
+                'Anomaly\Lexicon\Stub\Node\Root',
+            ], 'custom_node_group');
+
+        $this
+            ->getRootNodeType('custom_node_group')
+            ->shouldImplement('Anomaly\Lexicon\Contract\Node\RootInterface');
+    }
+
+    function it_throws_root_node_type_not_found_exception()
+    {
+        $this
+            ->shouldThrow('Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException')
+            ->duringGetRootNodeType();
     }
 
     function it_can_get_node_collection()
@@ -62,7 +126,14 @@ class NodeFactorySpec extends ObjectBehavior
     {
         $this->generateId()->shouldBeString();
     }
-    
+
+    public function it_can_create_new_node_type_from_string()
+    {
+        $this->newNodeType('Anomaly\Lexicon\Stub\Node\Node')->shouldImplement(
+            'Anomaly\Lexicon\Contract\Node\NodeInterface'
+        );
+    }
+
     function it_can_add_node(Node $node, NodeCollection $nodeCollection)
     {
         $nodeCollection->push($node)->shouldBeCalled();
@@ -94,12 +165,25 @@ class NodeFactorySpec extends ObjectBehavior
         )->shouldHaveType('Anomaly\Lexicon\Node\Variable');
     }
 
-    function it_can_get_node_by_id(NodeCollection $nodeCollection)
+    function it_can_get_node_by_id_in_collection(NodeCollection $nodeCollection, Node $node)
     {
         $nodeCollection->getById('stub-id-1')->shouldBeCalled();
         $this->getById('stub-id-1');
     }
-    
+
+    function it_can_add_add_node_group_path()
+    {
+        $this->addNodeGroupPath('path_foo', 'node_group_1');
+    }
+
+    function it_can_get_node_group_from_path()
+    {
+        $this
+            ->addNodeGroupPath('path_foo', 'node_group_1')
+            ->getNodeGroupFromPath('path_foo')
+            ->shouldReturn('node_group_1');
+    }
+
     function it_can_create_child_nodes(Node $node)
     {
         $this->createChildNodes($node);
@@ -118,6 +202,11 @@ class NodeFactorySpec extends ObjectBehavior
     function it_can_inject_node_into_parent(NodeInterface $child, NodeInterface $parent)
     {
         $this->inject($child, $parent);
+    }
+    
+    function it_can_boot_default_node_groups()
+    {
+        $this->bootDefaultNodeGroups();
     }
 
 }

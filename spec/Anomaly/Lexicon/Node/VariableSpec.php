@@ -1,10 +1,11 @@
 <?php namespace spec\Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Attribute\AttributeNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Lexicon;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Symfony\Component\CssSelector\Node\AttributeNode;
+
 
 /**
  * Class VariableSpec

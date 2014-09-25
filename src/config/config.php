@@ -18,7 +18,7 @@ return array(
      * When debug is turned on it enables exceptions on certain parts where things fail silently. Generic exceptions
      * will always be logged.
      */
-    'debug'              => true,
+    'debug'              => false,
     /**
      * PHP is escaped from views by default but you can enable it if you need it for any reason. It is highly
      * recommended that you keep this disabled as it will make templates insecure.
@@ -47,9 +47,9 @@ return array(
      * Node types are listed here in `node sets`, the `all` node set
      * is the default, you can use a different node set by using the lexicon() method
      * in the view. Here is an example.
-     * View::make('foo', $data)->lexicon('simple')->render()
+     * View::make('foo', $data)->using('simple')->render()
      */
-    'nodeSets'           => [
+    'nodeGroups'           => [
         'all'       => [
             'Anomaly\Lexicon\Node\Comment',
             'Anomaly\Lexicon\Node\IgnoreBlock',

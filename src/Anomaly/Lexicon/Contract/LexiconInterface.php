@@ -2,7 +2,7 @@
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
-use Anomaly\Lexicon\Contract\Support\Container;
+use Anomaly\Lexicon\Contract\Support\ContainerInterface;
 use Anomaly\Lexicon\Foundation;
 use Anomaly\Lexicon\Node\NodeFactory;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -18,7 +18,7 @@ interface LexiconInterface
     public function register();
 
     /**
-     * @return Container
+     * @return ContainerInterface
      */
     public function getContainer();
 

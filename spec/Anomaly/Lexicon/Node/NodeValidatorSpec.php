@@ -1,5 +1,6 @@
 <?php namespace spec\Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -11,6 +12,11 @@ use Prophecy\Argument;
  */
 class NodeValidatorSpec extends ObjectBehavior
 {
+
+    function let(NodeInterface $node)
+    {
+        $this->beConstructedWith($node);
+    }
 
     function it_is_initializable()
     {

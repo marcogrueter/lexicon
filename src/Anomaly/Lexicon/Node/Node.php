@@ -356,7 +356,7 @@ class Node implements NodeInterface
         $children = [];
 
         foreach ($this->children as $id) {
-            $children[] = $this->getLexicon()->getNodeById($id);
+            $children[] = $this->getLexicon()->getNodeFactory()->getById($id);
         }
 
         return $children;
@@ -489,7 +489,7 @@ class Node implements NodeInterface
      */
     public function getParent()
     {
-        return $this->getLexicon()->getNodeById($this->getParentId());
+        return $this->getLexicon()->getNodeFactory()->getById($this->getParentId());
     }
 
     /**

@@ -4,7 +4,6 @@
 /**
  * Class StringTest
  *
- * @codeCoverageIgnore
  * @package Anomaly\Lexicon\Conditional\Test
  */
 class StringTest

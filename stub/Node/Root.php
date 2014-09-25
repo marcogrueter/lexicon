@@ -6,8 +6,6 @@ use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
-use Anomaly\Lexicon\Lexicon;
-use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Node\NodeFinder;
 
 /**
@@ -550,6 +548,17 @@ class Root implements RootInterface
     public function incrementDepth()
     {
         // TODO: Implement incrementDepth() method.
+    }
+
+    /**
+     * Add child node
+     *
+     * @param $node
+     * @return NodeInterface
+     */
+    public function addChild(NodeInterface $node)
+    {
+        // TODO: Implement addChild() method.
     }
 
     /**

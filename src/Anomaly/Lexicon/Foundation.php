@@ -1,7 +1,7 @@
 <?php namespace Anomaly\Lexicon;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\Support\Container;
+use Anomaly\Lexicon\Contract\Support\ContainerInterface;
 use Anomaly\Lexicon\View\Compiler;
 use Anomaly\Lexicon\View\Engine;
 use Anomaly\Lexicon\View\Factory;
@@ -48,7 +48,7 @@ class Foundation
      * @param Container        $container
      * @param LexiconInterface $lexicon
      */
-    public function __construct(LexiconInterface $lexicon, Container $container) {
+    public function __construct(LexiconInterface $lexicon, ContainerInterface $container) {
         $this->lexicon   = $lexicon;
         $this->container = $container;
     }

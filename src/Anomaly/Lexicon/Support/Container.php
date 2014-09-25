@@ -1,5 +1,6 @@
 <?php namespace Anomaly\Lexicon\Support;
 
+use Anomaly\Lexicon\Contract\Support\ContainerInterface;
 use Illuminate\Container\Container as BaseContainer;
 
 /**
@@ -7,8 +8,75 @@ use Illuminate\Container\Container as BaseContainer;
  *
  * @package Anomaly\Lexicon\Support
  */
-class Container extends BaseContainer implements \Anomaly\Lexicon\Contract\Support\Container
+class Container extends BaseContainer implements ContainerInterface
 {
+
+    /**
+     * Get or check the current application environment.
+     *
+     * @param  mixed
+     * @return string
+     */
+    public function environment()
+    {
+        // TODO: Implement environment() method.
+    }
+
+    /**
+     * Determine if the application is currently down for maintenance.
+     *
+     * @return bool
+     */
+    public function isDownForMaintenance()
+    {
+        // TODO: Implement isDownForMaintenance() method.
+    }
+
+    /**
+     * Register a service provider with the application.
+     *
+     * @param  \Illuminate\Support\ServiceProvider|string $provider
+     * @param  array                                      $options
+     * @param  bool                                       $force
+     * @return \Illuminate\Support\ServiceProvider
+     */
+    public function register($provider, $options = array(), $force = false)
+    {
+        // TODO: Implement register() method.
+    }
+
+    /**
+     * Register a deferred provider and service.
+     *
+     * @param  string $provider
+     * @param  string $service
+     * @return void
+     */
+    public function registerDeferredProvider($provider, $service = null)
+    {
+        // TODO: Implement registerDeferredProvider() method.
+    }
+
+    /**
+     * Boot the application's service providers.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        // TODO: Implement boot() method.
+    }
+
+    /**
+     * Register a new boot listener.
+     *
+     * @param  mixed $callback
+     * @return void
+     */
+    public function booting($callback)
+    {
+        // TODO: Implement booting() method.
+    }
 
     /**
      * Register a new "booted" listener.
@@ -16,7 +84,7 @@ class Container extends BaseContainer implements \Anomaly\Lexicon\Contract\Suppo
      * @param  mixed $callback
      * @return void
      */
-    public function booted(\Closure $callback)
+    public function booted($callback)
     {
         // TODO: Implement booted() method.
     }

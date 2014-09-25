@@ -97,7 +97,6 @@ class Engine extends CompilerEngine implements EngineInterface
     }
 
     /**
-     * @codeCoverageIgnore
      * @return LexiconInterface
      */
     public function getLexicon()
@@ -106,7 +105,6 @@ class Engine extends CompilerEngine implements EngineInterface
     }
 
     /**
-     * @codeCoverageIgnore
      * @return CompilerInterface
      */
     public function getCompiler()

@@ -88,7 +88,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
 
         $this->setHash(substr(strrchr($compiledPath, '/'), 1));
 
-        $nodeSet = $this->getLexicon()->getNodeSetFromPath($this->getPath());
+        $nodeSet = $this->getLexicon()->getNodeFactory()->getNodeGroupFromPath($this->getPath());
 
         $contents = $this->compileView($this->compileString($this->files->get($path), $nodeSet));
 
@@ -120,7 +120,8 @@ class Compiler extends BaseCompiler implements CompilerInterface
      */
     public function getRootNode($content = '', $nodeSet = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        return $this->getLexicon()->getRootNodeType()->make([])
+        // TODO: Do this in NodeFactory
+        return $this->getLexicon()->getNodeFactory()->getRootNodeType()->make([])
             ->setName('root')
             ->setContent($content)
             ->setExtractionContent($content)

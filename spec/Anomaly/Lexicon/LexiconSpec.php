@@ -57,61 +57,6 @@ class LexiconSpec extends ObjectBehavior
         $this->getPluginHandler()->shouldImplement('Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface');
     }
 
-    function it_can_get_array_of_node_types()
-    {
-        $this->registerNodeSet(['Anomaly\Lexicon\Stub\Node\Node']);
-        $this->getNodeTypes()->shouldBeArray();
-    }
-
-    function it_can_get_array_of_attribute_node_types()
-    {
-        $this->getAttributeNodeTypes()->shouldBeArray();
-    }
-
-    public function it_can_create_new_node_type_from_string()
-    {
-        $this->newNodeType('Anomaly\Lexicon\Stub\Node\Node')->shouldImplement(
-            'Anomaly\Lexicon\Contract\Node\NodeInterface'
-        );
-    }
-    
-    function it_can_remove_a_note_type_from_a_node_set()
-    {
-        $this
-            ->registerNodeSet(['Anomaly\Lexicon\Stub\Node\Node', 'Anomaly\Lexicon\Stub\Node\Node2'])
-            ->removeNodeTypeFromNodeSet('Anomaly\Lexicon\Stub\Node\Node');
-
-        $this->getNodeTypes()->shouldHaveCount(1);
-    }
-
-    function it_can_get_node_set()
-    {
-        $this->getNodeSet()->shouldBeArray();
-    }
-
-    function it_can_register_a_single_node_set()
-    {
-        $this->registerNodeSet([
-                'Anomaly\Lexicon\Stub\Node\Node',
-                'Anomaly\Lexicon\Stub\Node\Node2',
-            ], 'custom_node_set');
-
-        $this->getNodeTypes('custom_node_set')->shouldHaveCount(2);
-    }
-
-    function it_can_register_multiple_node_sets()
-    {
-        $this->registerNodeSets([
-               'custom_node_set' => [
-                   'Anomaly\Lexicon\Stub\Node\Node',
-                   'Anomaly\Lexicon\Stub\Node\Node2',
-                   'Anomaly\Lexicon\Stub\Node\Node3',
-               ],
-            ]);
-
-        $this->getNodeTypes('custom_node_set')->shouldHaveCount(3);
-    }
-
     function it_can_register_a_single_plugin()
     {
         $plugin = 'Anomaly\Lexicon\Stub\Plugin\StubPlugin';
@@ -127,27 +72,6 @@ class LexiconSpec extends ObjectBehavior
             ]);
     }
 
-    function it_can_get_root_node_type()
-    {
-        $this->registerNodeSet([
-                'Anomaly\Lexicon\Stub\Node\Node',
-                'Anomaly\Lexicon\Stub\Node\Node2',
-                'Anomaly\Lexicon\Stub\Node\Node3',
-                'Anomaly\Lexicon\Stub\Node\Root',
-            ], 'custom_node_set');
-
-        $this
-            ->getRootNodeType('custom_node_set')
-            ->shouldImplement('Anomaly\Lexicon\Contract\Node\RootInterface');
-    }
-    
-    function it_throws_root_node_type_not_found_exception()
-    {
-        $this
-            ->shouldThrow('Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException')
-            ->duringGetRootNodeType();
-    }
-
     function it_can_add_parse_path()
     {
         $this->addParsePath('{{ foo }}'); // the template is equivalent to the path
@@ -158,17 +82,6 @@ class LexiconSpec extends ObjectBehavior
     {
         $this->addParsePath('{{ bar }}');
         $this->isParsePath('{{ bar }}')->shouldBe(true);
-    }
-
-    function it_can_add_node(Node $node)
-    {
-        $this->addNode($node);
-    }
-
-    function it_can_get_node_by_id()
-    {
-        $this->addNode(new Node($this));
-        $this->getNodeById('stub-id')->shouldImplement('Anomaly\Lexicon\Contract\Node\NodeInterface');
     }
 
     function it_can_get_view_template_path()
@@ -218,28 +131,10 @@ class LexiconSpec extends ObjectBehavior
             ->getCompiledViewFullClass('bar')
             ->shouldReturn('Foo\View_bar');
     }
-    
-    function it_can_add_add_node_set_path()
-    {
-        $this->addNodeSetPath('path_foo', 'nodeset_bar');
-    }
-
-    function it_can_get_node_set_from_path()
-    {
-        $this
-            ->addNodeSetPath('path_foo', 'nodeset_bar')
-            ->getNodeSetFromPath('path_foo')
-            ->shouldReturn('nodeset_bar');
-    }
 
     function it_can_get_root_alias()
     {
         $this->getRootAlias()->shouldBeString();
-    }
-    
-    function it_can_get_nodes()
-    {
-        $this->getNodes()->shouldBeArray();
     }
     
     function it_can_set_extension()

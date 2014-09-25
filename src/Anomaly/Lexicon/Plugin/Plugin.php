@@ -37,7 +37,6 @@ class Plugin implements PluginInterface
     /**
      * Set plugin name
      *
-     * @codeCoverageIgnore
      * @param $name
      * @return string
      */
@@ -50,7 +49,6 @@ class Plugin implements PluginInterface
     /**
      * Get plugin name
      *
-     * @codeCoverageIgnore
      * @return string
      */
     public function getPluginName()
@@ -61,7 +59,6 @@ class Plugin implements PluginInterface
     /**
      * Set content
      *
-     * @codeCoverageIgnore
      * @param string $content
      * @return Plugin
      */
@@ -74,7 +71,6 @@ class Plugin implements PluginInterface
     /**
      * Get content
      *
-     * @codeCoverageIgnore
      * @return string
      */
     public function getContent()
@@ -85,7 +81,6 @@ class Plugin implements PluginInterface
     /**
      * Set attributes
      *
-     * @codeCoverageIgnore
      * @param array $attributes
      * @return Plugin
      */
@@ -117,7 +112,6 @@ class Plugin implements PluginInterface
     /**
      * Set environment
      *
-     * @codeCoverageIgnore
      * @param LexiconInterface $lexicon
      * @return $this
      */
@@ -130,7 +124,6 @@ class Plugin implements PluginInterface
     /**
      * Get environment
      *
-     * @codeCoverageIgnore
      * @return LexiconInterface
      */
     public function getLexicon()

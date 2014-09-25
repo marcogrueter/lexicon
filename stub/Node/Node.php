@@ -16,6 +16,8 @@ use Anomaly\Lexicon\Node\NodeFinder;
 class Node implements NodeInterface
 {
 
+    protected $id = 'stub-id-1';
+
     /**
      * Get the original content
      *
@@ -33,7 +35,7 @@ class Node implements NodeInterface
      */
     public function getId()
     {
-        // TODO: Implement getId() method.
+        return $this->id;
     }
 
     /**

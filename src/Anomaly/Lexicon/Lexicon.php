@@ -3,8 +3,8 @@
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
-use Anomaly\Lexicon\Contract\Support\Container as ContainerInterface;
+use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;;
+use Anomaly\Lexicon\Contract\Support\ContainerInterface;
 use Anomaly\Lexicon\Node\NodeCollection;
 use Anomaly\Lexicon\Node\NodeExtractor;
 use Anomaly\Lexicon\Node\NodeFactory;
@@ -556,7 +556,13 @@ class Lexicon implements LexiconInterface
      */
     public function getViewPaths()
     {
-        if (!$this->viewPaths) {
+        $container = $this->getContainer();
+
+        if (!$this->viewPaths and
+            isset($container['config']) and
+            $container['config']['view.paths']) {
+            $this->viewPaths = $container['config']['view.paths'];
+        } elseif (!$this->viewPaths) {
             $this->viewPaths = [__DIR__ . '/../../../resources/views'];
         }
         return $this->viewPaths;

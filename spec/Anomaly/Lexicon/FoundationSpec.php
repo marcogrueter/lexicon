@@ -1,6 +1,6 @@
 <?php namespace spec\Anomaly\Lexicon;
 
-use Anomaly\Lexicon\Contract\Support\Container;
+use Anomaly\Lexicon\Contract\Support\ContainerInterface;
 use Anomaly\Lexicon\Lexicon;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
@@ -18,7 +18,7 @@ use Prophecy\Argument;
 class FoundationSpec extends ObjectBehavior
 {
 
-    function let(Lexicon $lexicon, Container $container)
+    function let(Lexicon $lexicon, ContainerInterface $container)
     {
         $this->beConstructedWith($lexicon, $container);
     }
@@ -33,12 +33,12 @@ class FoundationSpec extends ObjectBehavior
         $this->getLexicon()->shouldImplement('Anomaly\Lexicon\Contract\LexiconInterface');
     }
 
-    function it_can_register_lexicon(Container $container)
+    function it_can_register_lexicon(ContainerInterface $container)
     {
         $this->register($container)->shouldHaveType('Anomaly\Lexicon\Foundation');
     }
 
-    function it_can_register_the_engine_resolver(Container $container)
+    function it_can_register_the_engine_resolver(ContainerInterface $container)
     {
         $this->registerEngineResolver($container);
     }

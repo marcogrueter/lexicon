@@ -1,13 +1,13 @@
 <?php namespace Anomaly\Lexicon;
 
 
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class LexiconServiceProvider
  *
- * @codeCoverageIgnoreStart
  * @package Anomaly\Lexicon
  */
 class LexiconServiceProvider extends ServiceProvider
@@ -15,8 +15,7 @@ class LexiconServiceProvider extends ServiceProvider
     /**
      * Register the service provider.
      *
-     * @codeCoverageIgnore
-     * @return void
+     * @return LexiconInterface
      */
     public function register()
     {
@@ -26,9 +25,9 @@ class LexiconServiceProvider extends ServiceProvider
 
         $lexicon->setExtension('html');
 
-        $lexicon->setViewPaths($app['config']['view.paths']);
-
         $lexicon->register();
+
+        return $lexicon;
     }
 
 }

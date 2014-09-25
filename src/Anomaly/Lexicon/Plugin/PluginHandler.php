@@ -26,7 +26,6 @@ class PluginHandler implements PluginHandlerInterface
     /**
      * Set lexicon
      *
-     * @codeCoverageIgnore
      * @param LexiconInterface $lexicon
      * @return PluginHandlerInterface
      */
@@ -37,7 +36,6 @@ class PluginHandler implements PluginHandlerInterface
     }
 
     /**
-     * @codeCoverageIgnore
      * @return LexiconInterface
      */
     public function getLexicon()

@@ -1,13 +1,13 @@
 <?php namespace Anomaly\Lexicon\Contract\Support;
 
-use Illuminate\Contracts\Container\Container as BaseContainer;
+use Illuminate\Contracts\Foundation\Application;
 
 /**
  * Class Container
  *
  * @package src\Anomaly\Lexicon\Contract\Support
  */
-interface Container extends BaseContainer, \ArrayAccess
+interface ContainerInterface extends Application, \ArrayAccess
 {
 
     /**
@@ -26,14 +26,6 @@ interface Container extends BaseContainer, \ArrayAccess
      * @return \Closure
      */
     public function share(\Closure $closure);
-
-    /**
-     * Register a new "booted" listener.
-     *
-     * @param  mixed  $callback
-     * @return void
-     */
-    public function booted(\Closure $callback);
 
 
     /**

@@ -79,6 +79,7 @@ class NodeFactory
         $this->lexicon        = $lexicon;
         $this->nodeCollection = $nodeCollection;
         $this->nodeExtractor  = $nodeExtractor;
+        $this->bootDefaultNodeGroups();
     }
 
     /**
@@ -207,6 +208,18 @@ class NodeFactory
         return $node;
     }
 
+    public function bootDefaultNodeGroups()
+    {
+        $container = $this->getLexicon()->getContainer();
+
+        if (!$this->nodeTypes and
+            isset($container['config']) and
+            $nodeGroups = $container['config']['lexicon::nodeGroups']
+        ) {
+            $this->nodeTypes = $nodeGroups;
+        }
+    }
+
     /**
      * Get node types
      *
@@ -283,7 +296,7 @@ class NodeFactory
     }
 
     /**
-     * Get node group
+     * Get node group to use
      *
      * @return string
      */
