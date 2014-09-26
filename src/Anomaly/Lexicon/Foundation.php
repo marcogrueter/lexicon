@@ -441,7 +441,11 @@ class Foundation
     {
         $container = $this->getContainer();
 
-        $storagePath = $container['path.storage'] . '/views';
+        $storagePath = __DIR__ . '/../../../resources/storage/views';
+
+        if ($container['path.storage']) {
+            $storagePath = $container['path.storage'] . '/views';
+        }
 
         if ($override = $this->getLexicon()->getStoragePath()) {
             $storagePath = $override;
@@ -471,8 +475,8 @@ class Foundation
             $viewPaths = $configViewPaths;
         }
 
-        if ($lexiconViewPaths = $this->getLexicon()->getViewPaths()) {
-            $viewPaths = $lexiconViewPaths;
+        if ($override = $this->getLexicon()->getViewPaths()) {
+            $viewPaths = $override;
         }
 
         return $viewPaths;
