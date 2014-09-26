@@ -24,18 +24,18 @@ class ValueResolver
      */
     public function resolve($value = '')
     {
+        // this shouldn't happen
+        if (is_array($value) or is_null($value) or is_object($value)) {
+            return 'null';
+        }
+
         $value = trim($value);
 
-        // this shouldn't happen
-        if (is_null($value) or is_array($value)) {
+        if (in_array($value, $this->pass)) {
+            return $value;
+        }
 
-            $value = 'null';
-
-        } elseif (in_array($value, $this->pass)) {
-
-            // pass value as is
-
-        } elseif (preg_match('/^\'(.*)\'$/', $value, $matches)) {
+        if (preg_match('/^\'(.*)\'$/', $value, $matches)) {
 
             $value = "'{$matches[1]}'";
 
