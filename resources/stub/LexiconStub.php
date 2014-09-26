@@ -16,7 +16,7 @@ use Illuminate\Session\SessionManager;
  *
  * @package Anomaly\Lexicon\Stub
  */
-class Lexicon
+class LexiconStub
 {
 
     public static $nodeGroups = [
