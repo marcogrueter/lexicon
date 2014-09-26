@@ -47,7 +47,7 @@ class CounterPlugin extends Plugin
         // set this back to continue counting again next time
         $this->increment = true;
 
-        return ($this->getAttribute('return', 4, 'true') == 'true') ? $this->ids[$id] : null;
+        return ($this->getAttribute('return', 4, true)) ? $this->ids[$id] : null;
     }
 
     /**

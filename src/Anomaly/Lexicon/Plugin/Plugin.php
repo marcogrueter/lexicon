@@ -26,14 +26,6 @@ class Plugin implements PluginInterface
      */
     protected $name;
 
-
-    /**
-     * Lexicon
-     *
-     * @var LexiconInterface
-     */
-    protected $lexicon;
-
     /**
      * Set plugin name
      *
@@ -107,28 +99,6 @@ class Plugin implements PluginInterface
         }
 
         return $default;
-    }
-
-    /**
-     * Set environment
-     *
-     * @param LexiconInterface $lexicon
-     * @return $this
-     */
-    public function setLexicon(LexiconInterface $lexicon)
-    {
-        $this->lexicon = $lexicon;
-        return $this;
-    }
-
-    /**
-     * Get environment
-     *
-     * @return LexiconInterface
-     */
-    public function getLexicon()
-    {
-        return $this->lexicon;
     }
 
     /**

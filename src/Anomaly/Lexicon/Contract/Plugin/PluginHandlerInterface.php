@@ -38,7 +38,7 @@ interface PluginHandlerInterface
      * @param string          $content
      * @return mixed
      */
-    public function call(PluginInterface $plugin, $method, $attributes = [], $content = '');
+    public function call(PluginInterface $plugin, $method, array $attributes = [], $content = '');
 
     /**
      * Is parse

@@ -77,7 +77,7 @@ class Lexicon
     public static function stub(Container $container = null)
     {
         $lexicon = new \Anomaly\Lexicon\Lexicon($container);
-        
+
         return $lexicon
             ->addNamespace('test', __DIR__ . '/../views')
             ->setStoragePath(__DIR__ . '/../storage/views')

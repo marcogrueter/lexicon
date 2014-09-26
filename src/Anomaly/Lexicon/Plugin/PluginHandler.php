@@ -85,13 +85,11 @@ class PluginHandler implements PluginHandlerInterface
      * @param string          $content
      * @return mixed
      */
-    public function call(PluginInterface $plugin, $method, $attributes = [], $content = '')
+    public function call(PluginInterface $plugin, $method, array $attributes = [], $content = '')
     {
-        return $plugin
-            ->setLexicon($this->getLexicon())
-            ->setAttributes($attributes)
-            ->setContent($content)
-            ->{$method}();
+        $plugin->setAttributes($attributes);
+        $plugin->setContent($content);
+        return $plugin->{$method}();
     }
 
     /**
@@ -129,5 +127,5 @@ class PluginHandler implements PluginHandlerInterface
 
         return $isFilter;
     }
-    
+
 }

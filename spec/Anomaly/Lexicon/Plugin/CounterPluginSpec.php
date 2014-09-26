@@ -17,4 +17,26 @@ class CounterPluginSpec extends ObjectBehavior
         $this->shouldHaveType('Anomaly\Lexicon\Plugin\CounterPlugin');
     }
 
+    function it_can_count()
+    {
+        $this->count()->shouldReturn(1);
+        $this->count()->shouldReturn(2);
+        $this->count()->shouldReturn(3);
+        $this->count()->shouldReturn(4);
+        $this->count()->shouldReturn(5);
+    }
+    
+    function it_can_show_count()
+    {
+        $this->count();
+        $this->count();
+        $this->count();
+        $this->show()->shouldReturn(3);
+    }
+    
+    function it_returns_null_if_return_is_set_to_false()
+    {
+        $this->setAttributes(['return' => false]);
+        $this->count()->shouldReturn(null);
+    }
 }
