@@ -244,22 +244,6 @@ class Foundation
     }
 
     /**
-     * @return Engine
-     */
-    public function getEngine()
-    {
-        return $this->getContainer()->make('anomaly.lexicon.engine');
-    }
-
-    /**
-     * @return Compiler
-     */
-    public function getCompiler()
-    {
-        return $this->getContainer()->make('anomaly.lexicon.compiler');
-    }
-
-    /**
      * Register the Lexicon engine implementation.
      *
      * @param  \Illuminate\View\Engines\EngineResolver $resolver
@@ -267,7 +251,9 @@ class Foundation
      */
     public function registerLexiconEngine(EngineResolver $resolver)
     {
-        $this->getContainer()->bindShared(
+        $container = $this->getContainer();
+
+        $container->bindShared(
             'anomaly.lexicon.compiler',
             function () {
                 $compiler = new Compiler($this->getFilesystem(), $this->getLexicon()->getStoragePath());
@@ -276,17 +262,10 @@ class Foundation
             }
         );
 
-        $this->getContainer()->bindShared(
-            'anomaly.lexicon.engine',
-            function () {
-                return new Engine($this->getCompiler(), $this->getFilesystem());
-            }
-        );
-
         $resolver->register(
             'lexicon',
-            function () {
-                return $this->getEngine();
+            function () use ($container) {
+                return new Engine($container['anomaly.lexicon.compiler'], $this->getFilesystem());
             }
         );
 
@@ -316,7 +295,9 @@ class Foundation
      */
     public function registerBladeEngine(EngineResolver $resolver)
     {
-        $this->getContainer()->bindShared(
+        $container = $this->getContainer();
+
+        $container->bindShared(
             'blade.compiler',
             function () {
                 return new BladeCompiler($this->getFilesystem(), $this->getLexicon()->getStoragePath());
@@ -325,8 +306,8 @@ class Foundation
 
         $resolver->register(
             'blade',
-            function () {
-                return new CompilerEngine($this->getContainer()->make('blade.compiler'), $this->getFilesystem());
+            function () use ($container) {
+                return new CompilerEngine($container['blade.compiler'], $this->getFilesystem());
             }
         );
     }
@@ -379,17 +360,12 @@ class Foundation
                     $factory->addNamespace($namespace, $hint);
                 }
 
-                $factory->addExtension(
-                    $this->getLexicon()->getExtension(),
-                    'lexicon',
-                    function () {
-                        return $this->getEngine();
-                    }
-                );
+                $factory->addExtension($this->getLexicon()->getExtension(), 'lexicon');
 
                 return $factory;
             }
         );
+
     }
 
     protected function getSessionDriver()

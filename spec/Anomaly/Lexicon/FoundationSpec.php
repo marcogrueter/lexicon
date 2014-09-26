@@ -47,12 +47,15 @@ class FoundationSpec extends ObjectBehavior
 
     function it_can_register_the_lexicon_engine(EngineResolver $resolver, Engine $lexiconEngine)
     {
+        $resolver->register('lexicon', Argument::type('closure'))->shouldBeCalled();
         $this->registerLexiconEngine($resolver);
+        $this->getEngineResolver()->resolve('lexicon')->shouldHaveType('Anomaly\Lexicon\View\Engine');
     }
 
     function it_can_register_the_php_engine(EngineResolver $resolver)
     {
         $this->registerPhpEngine($resolver);
+        $this->getEngineResolver()->resolve('php')->shouldHaveType('Illuminate\View\Engines\PhpEngine');
     }
     
     function it_can_get_config_repository()
@@ -84,16 +87,6 @@ class FoundationSpec extends ObjectBehavior
     function it_can_register_session_binder_when_session_has_errors()
     {
         $this->registerSessionBinder(true);
-    }
-    
-    function it_can_get_the_lexicon_engine()
-    {
-        $this->getEngine()->shouldHaveType('Anomaly\Lexicon\View\Engine');
-    }
-
-    function it_can_get_the_lexicon_compiler()
-    {
-        $this->getCompiler()->shouldHaveType('Anomaly\Lexicon\View\Compiler');
     }
 
 }
