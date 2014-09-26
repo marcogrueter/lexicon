@@ -57,7 +57,13 @@ class FoundationSpec extends ObjectBehavior
         $this->registerPhpEngine($resolver);
         $this->getEngineResolver()->resolve('php')->shouldHaveType('Illuminate\View\Engines\PhpEngine');
     }
-    
+
+    function it_can_register_the_blade_engine(EngineResolver $resolver)
+    {
+        $this->registerBladeEngine($resolver);
+        $this->getEngineResolver()->resolve('blade')->shouldHaveType('Illuminate\View\Engines\CompilerEngine');
+    }
+
     function it_can_get_config_repository()
     {
         $this->getConfigRepository()->shouldHaveType('Illuminate\Config\Repository');
@@ -67,6 +73,11 @@ class FoundationSpec extends ObjectBehavior
     {
         $this->setConfig('lexicon::nodeGroups', [1, 2 ,3]);
         $this->getConfig('lexicon::nodeGroups')->shouldReturn([1, 2 ,3]);
+    }
+    
+    function it_can_get_session_driver()
+    {
+        $this->getSessionDriver()->shouldReturn('array');
     }
     
     function it_can_get_session_store()

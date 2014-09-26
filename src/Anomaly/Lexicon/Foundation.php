@@ -111,9 +111,9 @@ class Foundation
      * @param null $value
      * @return mixed
      */
-    public function getConfig($key, $value = null)
+    public function getConfig($key, $default = null)
     {
-        return $this->getConfigRepository()->get($key);
+        return $this->getConfigRepository()->get($key, $default);
     }
 
     /**
@@ -368,18 +368,14 @@ class Foundation
 
     }
 
-    protected function getSessionDriver()
+    /**
+     * Get session driver
+     *
+     * @return mixed
+     */
+    public function getSessionDriver()
     {
-        $driver = 'array';
-
-        if (isset($container['config']) and
-            isset($container['config']['session']) and
-            is_string($container['config']['session'])
-        ) {
-            $driver = $container['config']['session'];
-        }
-
-        return $driver;
+        return $this->getConfig('session.driver', 'array');
     }
 
     /**
