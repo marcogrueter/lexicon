@@ -160,4 +160,5 @@ class LexiconSpec extends ObjectBehavior
             ->getViewPaths()
             ->shouldReturn(['views']);
     }
+
 }

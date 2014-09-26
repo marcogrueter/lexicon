@@ -3,7 +3,6 @@
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Support\ContainerInterface;
 use Anomaly\Lexicon\Stub\Lexicon;
-use Anomaly\Lexicon\Support\Container;
 use Anomaly\Lexicon\View\Compiler;
 use Anomaly\Lexicon\View\Engine;
 use Anomaly\Lexicon\View\Factory;
@@ -42,11 +41,11 @@ class Foundation
     protected $lexicon;
 
     /**
-     * @param LexiconInterface   $lexicon
+     * @param LexiconInterface $lexicon
      */
     public function __construct(LexiconInterface $lexicon)
     {
-        $this->lexicon   = $lexicon;
+        $this->lexicon = $lexicon;
     }
 
     /**
@@ -138,7 +137,7 @@ class Foundation
 
         $session = null;
 
-        if ($this->getConfigRepository()->get('session.driver')) {
+        if ($config = $this->getConfigRepository() and !$config->get('session.driver')) {
             $this->getConfigRepository()->set('session.driver', 'array');
         }
 
@@ -154,7 +153,12 @@ class Foundation
         }
 
         if (empty($container['session.store'])) {
-            $container->instance('session.store', $container['session']->driver());
+            $container->bindShared(
+                'session.store',
+                function () use ($container) {
+                    return $container['session']->driver();
+                }
+            );
         }
 
         return $container['session.store'];

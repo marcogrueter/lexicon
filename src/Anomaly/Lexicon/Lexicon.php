@@ -170,7 +170,7 @@ class Lexicon implements LexiconInterface
      */
     public function register()
     {
-        $this->setFoundation((new Foundation($this, $this->getContainer()))->register());
+        $this->setFoundation((new Foundation($this))->register());
         return $this;
     }
 
