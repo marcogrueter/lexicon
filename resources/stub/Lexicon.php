@@ -68,7 +68,7 @@ class Lexicon
     ];
 
     public static $plugins = [
-        'stub' => 'Anomaly\Lexicon\Stub\Plugin\StubPlugin'
+        'stub' => 'Anomaly\Lexicon\Plugin\StubPlugin'
     ];
 
     /**

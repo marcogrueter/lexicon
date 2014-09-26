@@ -1,6 +1,6 @@
 <?php namespace spec\Anomaly\Lexicon\Plugin;
 
-use Anomaly\Lexicon\Stub\Plugin\StubPlugin;
+use Anomaly\Lexicon\Plugin\StubPlugin;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 

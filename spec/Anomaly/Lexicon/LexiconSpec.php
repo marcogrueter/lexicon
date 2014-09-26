@@ -60,7 +60,7 @@ class LexiconSpec extends ObjectBehavior
 
     function it_can_register_a_single_plugin()
     {
-        $plugin = 'Anomaly\Lexicon\Stub\Plugin\StubPlugin';
+        $plugin = 'Anomaly\Lexicon\Plugin\StubPlugin';
         $this->registerPlugin('stub', $plugin);
         $this->getPluginHandler()->get('stub.foo')->shouldHaveType($plugin);
     }
