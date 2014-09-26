@@ -233,7 +233,7 @@ class Lexicon implements LexiconInterface
      */
     public function getContainer()
     {
-        return $this->container ?: $this->container = new Container();
+        return $this->container ?: $this->container = (new Container())->boot();
     }
 
     /**

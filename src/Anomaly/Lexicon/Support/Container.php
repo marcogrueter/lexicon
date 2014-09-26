@@ -10,6 +10,17 @@ use Illuminate\Container\Container as BaseContainer;
  */
 class Container extends BaseContainer implements ContainerInterface
 {
+    /**
+     * Is the application booted
+     *
+     * @var bool
+     */
+    protected $booted = true;
+
+    /**
+     * @var array
+     */
+    protected $bootedCallbacks = [];
 
     /**
      * Get or check the current application environment.
@@ -58,13 +69,24 @@ class Container extends BaseContainer implements ContainerInterface
     }
 
     /**
+     * Determine if the application has booted.
+     *
+     * @return bool
+     */
+    public function isBooted()
+    {
+        return $this->booted;
+    }
+
+    /**
      * Boot the application's service providers.
      *
-     * @return void
+     * @return ContainerInterface|void
      */
     public function boot()
     {
-        // TODO: Implement boot() method.
+        $this->booted = true;
+        return $this;
     }
 
     /**
@@ -81,11 +103,27 @@ class Container extends BaseContainer implements ContainerInterface
     /**
      * Register a new "booted" listener.
      *
-     * @param  mixed $callback
+     * @param  mixed  $callback
      * @return void
      */
     public function booted($callback)
     {
-        // TODO: Implement booted() method.
+        $this->bootedCallbacks[] = $callback;
+
+        if ($this->isBooted()) $this->fireAppCallbacks(array($callback));
+    }
+
+    /**
+     * Call the booting callbacks for the application.
+     *
+     * @param  array  $callbacks
+     * @return void
+     */
+    protected function fireAppCallbacks(array $callbacks)
+    {
+        foreach ($callbacks as $callback)
+        {
+            call_user_func($callback, $this);
+        }
     }
 }

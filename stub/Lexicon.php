@@ -4,6 +4,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Foundation;
+use Anomaly\Lexicon\Support\Container;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
 use Illuminate\Events\Dispatcher;
@@ -73,21 +74,23 @@ class Lexicon
     /**
      * @return LexiconInterface
      */
-    public static function stub()
+    public static function stub(Container $container = null)
     {
-        $lexicon = new \Anomaly\Lexicon\Lexicon();
+        $lexicon = new \Anomaly\Lexicon\Lexicon($container);
 
-        $resources = __DIR__ . '/../resources/';
-        $storage = $resources . 'storage/views';
-        $views = $resources . 'views';
+        $resourcesPath = __DIR__ . '/../resources/';
+        $storagePath = $resourcesPath . 'storage/views';
+        $viewsPath = $resourcesPath . 'views';
+        // TODO: Set config path
+        $configPath = '';
 
         return $lexicon
             ->setDebug(true)
-            ->setStoragePath($storage)
+            ->setStoragePath($storagePath)
             ->registerPlugins(static::$plugins)
             ->registerNodeGroups(static::$nodeGroups)
             ->addParsePath('<h1>Hello {{ name }}</h1>')
-            ->addNamespace('test', $views)
+            ->addNamespace('test', $viewsPath)
             ->register();
     }
 
@@ -112,7 +115,7 @@ class Lexicon
      */
     public static function engineResolver()
     {
-        return static::factory()->getEngineResolver();
+        return static::foundation()->getEngineResolver();
     }
 
     /**
