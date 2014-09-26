@@ -77,18 +77,14 @@ class Lexicon
     public static function stub(Container $container = null)
     {
         $lexicon = new \Anomaly\Lexicon\Lexicon($container);
-
-        $resourcesPath = __DIR__ . '/../resources/';
-        $storagePath = $resourcesPath . 'storage/views';
-        $viewsPath = $resourcesPath . 'views';
-
+        
         return $lexicon
-            ->setDebug(true)
-            ->setStoragePath($storagePath)
+            ->addNamespace('test', __DIR__ . '/../views')
+            ->setStoragePath(__DIR__ . '/../storage/views')
             ->registerPlugins(static::$plugins)
             ->registerNodeGroups(static::$nodeGroups)
             ->addParsePath('<h1>Hello {{ name }}</h1>')
-            ->addNamespace('test', $viewsPath)
+            ->setDebug(true)
             ->register();
     }
 

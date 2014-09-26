@@ -24,7 +24,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Anomaly\\Lexicon\\Stub\\": "stub/"
+            "Anomaly\\Lexicon\\Stub\\": "resources/stub/"
         }
     },
     "minimum-stability": "dev",
