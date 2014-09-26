@@ -30,7 +30,7 @@ class Container extends BaseContainer implements ContainerInterface
      */
     public function environment()
     {
-        // TODO: Implement environment() method.
+        return 'develop';
     }
 
     /**
@@ -40,7 +40,7 @@ class Container extends BaseContainer implements ContainerInterface
      */
     public function isDownForMaintenance()
     {
-        // TODO: Implement isDownForMaintenance() method.
+        return false;
     }
 
     /**
@@ -119,7 +119,7 @@ class Container extends BaseContainer implements ContainerInterface
      * @param  array  $callbacks
      * @return void
      */
-    protected function fireAppCallbacks(array $callbacks)
+    public function fireAppCallbacks(array $callbacks)
     {
         foreach ($callbacks as $callback)
         {

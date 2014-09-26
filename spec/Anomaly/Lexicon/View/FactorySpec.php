@@ -189,5 +189,5 @@ class FactorySpec extends ObjectBehavior
     {
         $this->booleanTest(5, 3, '>')->shouldReturn(true);
     }
-    
+
 }
