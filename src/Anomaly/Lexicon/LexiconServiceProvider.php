@@ -23,6 +23,7 @@ class LexiconServiceProvider extends ServiceProvider
 
         $lexicon = new Lexicon($app);
 
+        // TODO: Revisit this config default
         $lexicon->setExtension('html');
 
         $lexicon->register();

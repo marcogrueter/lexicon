@@ -69,14 +69,14 @@ class ConditionalHandler implements ConditionalHandlerInterface
     }
 
     /**
-     * Compare
+     * Boolean test
      *
      * @param      $left
      * @param      $right
      * @param null $operator
      * @return bool|mixed
      */
-    public function compare($left, $right, $operator = null)
+    public function booleanTest($left, $right, $operator)
     {
         $operator = trim($operator);
 
@@ -126,6 +126,7 @@ class ConditionalHandler implements ConditionalHandlerInterface
         foreach ($this->getTestTypes() as $testType) {
             if (method_exists($testType, $operator)) {
                 $result = $testType->{$operator}($left, $right);
+                break;
             }
         }
 

@@ -100,4 +100,11 @@ class FoundationSpec extends ObjectBehavior
         $this->registerSessionBinder(true);
     }
 
+    function it_can_get_view_paths()
+    {
+        $this->getLexicon()->setViewPaths(['foo']);
+        $this->setConfig('view.paths', ['foo']);
+        $this->getViewPaths()->shouldBeArray();
+    }
+    
 }

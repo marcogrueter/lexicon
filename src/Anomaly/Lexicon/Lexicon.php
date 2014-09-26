@@ -584,15 +584,6 @@ class Lexicon implements LexiconInterface
      */
     public function getViewPaths()
     {
-        $container = $this->getContainer();
-
-        if (!$this->viewPaths and
-            isset($container['config']) and
-            $container['config']['view.paths']) {
-            $this->viewPaths = $container['config']['view.paths'];
-        } elseif (!$this->viewPaths) {
-            $this->viewPaths = [__DIR__ . '/../../../resources/views'];
-        }
         return $this->viewPaths;
     }
 

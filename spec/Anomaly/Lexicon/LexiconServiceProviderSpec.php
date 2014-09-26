@@ -28,4 +28,5 @@ class LexiconServiceProviderSpec extends ObjectBehavior
     {
         $this->register()->shouldImplement('Anomaly\Lexicon\Contract\LexiconInterface');
     }
+
 }

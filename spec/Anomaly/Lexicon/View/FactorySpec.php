@@ -185,4 +185,9 @@ class FactorySpec extends ObjectBehavior
         $this->expected($traversableObject, Lexicon::EXPECTED_TRAVERSABLE)->shouldReturn($traversableObject);
     }
 
+    function it_can_run_a_boolean_test_values()
+    {
+        $this->booleanTest(5, 3, '>')->shouldReturn(true);
+    }
+    
 }

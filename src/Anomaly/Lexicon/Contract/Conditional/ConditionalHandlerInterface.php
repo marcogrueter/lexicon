@@ -21,7 +21,7 @@ interface ConditionalHandlerInterface
      * @param null $operator
      * @return bool
      */
-    public function compare($left, $right, $operator = null);
+    public function booleanTest($left, $right, $operator);
 
     /**
      * Custom test

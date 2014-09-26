@@ -325,6 +325,26 @@ class Foundation
     }
 
     /**
+     * Get view paths
+     *
+     * @return array
+     */
+    public function getViewPaths()
+    {
+        $viewPaths = [__DIR__ . '/../../../resources/views'];
+
+        if ($lexiconViewPaths = $this->getLexicon()->getViewPaths()) {
+            $viewPaths = $lexiconViewPaths;
+        }
+
+        if ($configViewPaths = $this->getConfig('view.paths')) {
+            $viewPaths = $configViewPaths;
+        }
+
+        return $viewPaths;
+    }
+
+    /**
      * Register the view finder implementation.
      *
      * @return void
@@ -334,7 +354,7 @@ class Foundation
         $this->getContainer()->bindShared(
             'view.finder',
             function () {
-                return new FileViewFinder($this->getFilesystem(), $this->getLexicon()->getViewPaths());
+                return new FileViewFinder($this->getFilesystem(), $this->getViewPaths());
             }
         );
     }

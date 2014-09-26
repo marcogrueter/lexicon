@@ -3,6 +3,7 @@
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Support\Container;
+use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Plugin\PluginHandler;
 use Anomaly\Lexicon\Stub\Node\Node;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -161,4 +162,17 @@ class LexiconSpec extends ObjectBehavior
             ->shouldReturn(['views']);
     }
 
+    function it_can_register_a_node_type(NodeFactory $nodeFactory)
+    {
+        $this->registerNodeType('Anomaly\Lexicon\Stub\Node');
+    }
+    
+    function it_can_register_node_group(NodeFactory $nodeFactory)
+    {
+        $this->registerNodeGroup([
+                'Anomaly\Lexicon\Stub\Node',
+                'Anomaly\Lexicon\Stub\Node2'.
+                'Anomaly\Lexicon\Stub\Node3'
+            ], 'custom_node_group');
+    }
 }

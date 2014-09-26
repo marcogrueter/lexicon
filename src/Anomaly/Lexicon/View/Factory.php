@@ -94,9 +94,9 @@ class Factory extends BaseFactory implements FactoryInterface
      * @param null $operator
      * @return bool
      */
-    public function compare($left, $right, $operator = null)
+    public function booleanTest($left, $right, $operator)
     {
-        return $this->getLexicon()->getConditionalHandler()->compare($left, $right, $operator);
+        return $this->getLexicon()->getConditionalHandler()->booleanTest($left, $right, $operator);
     }
 
     /**

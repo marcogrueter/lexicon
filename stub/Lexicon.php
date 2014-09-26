@@ -81,8 +81,6 @@ class Lexicon
         $resourcesPath = __DIR__ . '/../resources/';
         $storagePath = $resourcesPath . 'storage/views';
         $viewsPath = $resourcesPath . 'views';
-        // TODO: Set config path
-        $configPath = '';
 
         return $lexicon
             ->setDebug(true)
