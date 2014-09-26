@@ -1,13 +1,13 @@
 <?php namespace Anomaly\Lexicon;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\Support\ContainerInterface;
-use Anomaly\Lexicon\Stub\Lexicon;
+use Anomaly\Lexicon\Stub\LexiconStub;
 use Anomaly\Lexicon\View\Compiler;
 use Anomaly\Lexicon\View\Engine;
 use Anomaly\Lexicon\View\Factory;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
@@ -36,7 +36,7 @@ class Foundation
     protected $engines = ['lexicon', 'php', 'blade'];
 
     /**
-     * @var ContainerInterface
+     * @var Container
      */
     protected $lexicon;
 
@@ -49,180 +49,90 @@ class Foundation
     }
 
     /**
-     * @return ContainerInterface
-     */
-    public function getContainer()
-    {
-        return $this->getLexicon()->getContainer();
-    }
-
-    /**
-     * @return LexiconInterface
-     */
-    public function getLexicon()
-    {
-        return $this->lexicon;
-    }
-
-    /**
-     * Get filesystem
-     *
-     * @return mixed|object
-     */
-    public function getFilesystem()
-    {
-        $container = $this->getContainer();
-
-        if (empty($container['files'])) {
-            $container->instance('files', new Filesystem());
-        }
-
-        return $container['files'];
-    }
-
-
-    /**
-     * @return Repository
-     */
-    public function getConfigRepository()
-    {
-        $container = $this->getContainer();
-
-        if (empty($container['config'])) {
-            $container->singleton(
-                'config',
-                function () {
-                    return new Repository(
-                        new FileLoader($this->getFilesystem(), __DIR__ . '/../../../../src/config'),
-                        'production'
-                    );
-                }
-            );
-        }
-
-        return $container['config'];
-    }
-
-    /**
-     * Get config
-     *
-     * @param      $key
-     * @param null $value
-     * @return mixed
-     */
-    public function getConfig($key, $default = null)
-    {
-        return $this->getConfigRepository()->get($key, $default);
-    }
-
-    /**
-     * Set config
-     *
-     * @param      $key
-     * @param null $value
-     * @return $this
-     */
-    public function setConfig($key, $value = null)
-    {
-        $this->getConfigRepository()->set($key, $value);
-        return $this;
-    }
-
-    /**
-     * @return mixed|null|object
-     */
-    public function getSessionStore()
-    {
-        $container = $this->getContainer();
-
-        $session = null;
-
-        if ($config = $this->getConfigRepository() and !$config->get('session.driver')) {
-            $this->getConfigRepository()->set('session.driver', 'array');
-        }
-
-        if (empty($container['session'])) {
-            $container->bindShared(
-                'session',
-                function ($container) {
-                    $session = new SessionManager($container);
-                    $session->setDefaultDriver('array');
-                    return $session;
-                }
-            );
-        }
-
-        if (empty($container['session.store'])) {
-            $container->bindShared(
-                'session.store',
-                function () use ($container) {
-                    return $container['session']->driver();
-                }
-            );
-        }
-
-        return $container['session.store'];
-    }
-
-    /**
-     * Get event dispatcher
-     *
-     * @return Dispatcher
-     */
-    public function getEventDispatcher()
-    {
-        $container = $this->getContainer();
-
-        if (empty($container['events'])) {
-            $container->instance('events', new Dispatcher());
-        }
-
-        return $container['events'];
-    }
-
-    /**
      * Register
      *
-     * @param ContainerInterface $container
+     * @param Container $container
      * @return Foundation
      */
     public function register()
     {
-        $this->getContainer()->instance('anomaly.lexicon', $this->lexicon);
-        $this->registerEvents();
-        $this->registerEngineResolver();
-        $this->registerEngineResolver();
-        $this->registerViewFinder();
+        $container = $this->getContainer();
 
-        // Once the other components have been registered we're ready to include the
-        // view environment and session binder. The session binder will bind onto
-        // the "before" application event and add errors into shared view data.
-        $this->registerFactory();
-        $this->registerSessionBinder($this->sessionHasErrors());
+        $this->bindShared(
+            'anomaly.lexicon',
+            function () {
+                return $this->lexicon;
+            }
+        );
+
+        $this->registerFilesystem($container);
+        $this->registerEvents($container);
+        $this->registerConfigRepository($container);
+        $this->registerEngineResolver($container);
+        $this->registerViewFinder($container);
+        $this->registerFactory($container);
+        $this->registerSessionStore($container);
+        $this->registerSessionBinder($container, $this->sessionHasErrors());
 
         return $this;
+    }
+
+    /**
+     * Register the file system
+     */
+    public function registerFilesystem(Container $container)
+    {
+        if ($this->isStandalone()) {
+            $this->bindShared(
+                'files',
+                function () {
+                    return new Filesystem();
+                }
+            );
+        }
     }
 
     /**
      * Register events if it is not in the container
      */
-    protected function registerEvents()
+    public function registerEvents(Container $container)
     {
-        $container = $this->getContainer();
+        if ($this->isStandalone()) {
+            $this->bindShared(
+                'events',
+                function () {
+                    return new Dispatcher();
+                }
+            );
+        }
+    }
 
-        if (!isset($container['events'])) {
-            $container->instance('events', new Dispatcher());
+    /**
+     * Register config repository
+     */
+    public function registerConfigRepository(Container $container)
+    {
+        if ($this->isStandalone()) {
+            $this->bindShared(
+                'config',
+                function () {
+                    return new Repository(
+                        new FileLoader($this->getFilesystem(), __DIR__ . '/../../../../src/config'),
+                        'production' // TODO: Get this from Lexicon
+                    );
+                }
+            );
         }
     }
 
     /**
      * Register engine resolver
      *
-     * @param ContainerInterface $container
+     * @param Container $container
      */
-    public function registerEngineResolver()
+    public function registerEngineResolver(Container $container)
     {
-        $this->getContainer()->bindShared(
+        $this->bindShared(
             'view.engine.resolver',
             function () {
                 $resolver = new EngineResolver();
@@ -240,14 +150,6 @@ class Foundation
     }
 
     /**
-     * @return EngineResolver
-     */
-    public function getEngineResolver()
-    {
-        return $this->getContainer()->make('view.engine.resolver');
-    }
-
-    /**
      * Register the Lexicon engine implementation.
      *
      * @param  \Illuminate\View\Engines\EngineResolver $resolver
@@ -257,10 +159,10 @@ class Foundation
     {
         $container = $this->getContainer();
 
-        $container->bindShared(
+        $this->bindShared(
             'anomaly.lexicon.compiler',
             function () {
-                $compiler = new Compiler($this->getFilesystem(), $this->getLexicon()->getStoragePath());
+                $compiler = new Compiler($this->getFilesystem(), $this->getStoragePath());
                 $compiler->setLexicon($this->getLexicon());
                 return $compiler;
             }
@@ -301,7 +203,7 @@ class Foundation
     {
         $container = $this->getContainer();
 
-        $container->bindShared(
+        $this->bindShared(
             'blade.compiler',
             function () {
                 return new BladeCompiler($this->getFilesystem(), $this->getLexicon()->getStoragePath());
@@ -317,41 +219,13 @@ class Foundation
     }
 
     /**
-     * @return Factory
-     */
-    public function getFactory()
-    {
-        return $this->getContainer()->make('view');
-    }
-
-    /**
-     * Get view paths
-     *
-     * @return array
-     */
-    public function getViewPaths()
-    {
-        $viewPaths = [__DIR__ . '/../../../resources/views'];
-
-        if ($lexiconViewPaths = $this->getLexicon()->getViewPaths()) {
-            $viewPaths = $lexiconViewPaths;
-        }
-
-        if ($configViewPaths = $this->getConfig('view.paths')) {
-            $viewPaths = $configViewPaths;
-        }
-
-        return $viewPaths;
-    }
-
-    /**
      * Register the view finder implementation.
      *
      * @return void
      */
     public function registerViewFinder()
     {
-        $this->getContainer()->bindShared(
+        $this->bindShared(
             'view.finder',
             function () {
                 return new FileViewFinder($this->getFilesystem(), $this->getViewPaths());
@@ -359,9 +233,14 @@ class Foundation
         );
     }
 
+    /**
+     * Register factory
+     *
+     * @return void
+     */
     public function registerFactory()
     {
-        $this->getContainer()->bindShared(
+        $this->bindShared(
             'view',
             function () {
                 // Next we need to grab the engine resolver instance that will be used by the
@@ -384,13 +263,221 @@ class Foundation
                     $factory->addNamespace($namespace, $hint);
                 }
 
-                $factory->addExtension($this->getLexicon()->getExtension(), 'lexicon');
+                $factory->addExtension($this->getExtension(), 'lexicon');
 
                 return $factory;
             }
         );
 
     }
+
+    /**
+     * Register session store
+     *
+     * @param Container $container
+     */
+    public function registerSessionStore(Container $container)
+    {
+        if ($this->isStandalone()) {
+
+            $this->getConfigRepository()->set('session.driver', 'array');
+
+            $this->bindShared(
+                'session',
+                function ($container) {
+                    $session = new SessionManager($container);
+                    $session->setDefaultDriver('array');
+                    return $session;
+                }
+            );
+
+            $this->bindShared(
+                'session.store',
+                function () use ($container) {
+                    $session = $container['session'];
+                    /** @var SessionManager $session */
+                    return $session->driver();
+                }
+            );
+        }
+    }
+
+    /**
+     * Register the session binder for the view environment.
+     *
+     * @return void
+     */
+    public function registerSessionBinder(Container $container, $sessionHasErrors = false)
+    {
+        if (method_exists($container, 'booted')) {
+            $container->booted(
+                function () use ($sessionHasErrors) {
+                    // If the current session has an "errors" variable bound to it, we will share
+                    // its value with all view instances so the views can easily access errors
+                    // without having to bind. An empty bag is set when there aren't errors.
+                    if ($sessionHasErrors) {
+                        $this->getFactory()->share('errors', $this->getSessionStore()->get('errors'));
+                    }
+
+                    // Putting the errors in the view for every view allows the developer to just
+                    // assume that some errors are always available, which is convenient since
+                    // they don't have to continually run checks for the presence of errors.
+                    else {
+                        $this->getFactory()->share('errors', new ViewErrorBag());
+                    }
+                }
+            );
+        }
+    }
+
+    /**
+     * @return Container
+     */
+    public function getContainer()
+    {
+        return $this->getLexicon()->getContainer();
+    }
+
+    /**
+     * @return LexiconInterface
+     */
+    public function getLexicon()
+    {
+        return $this->lexicon;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStandalone()
+    {
+        return $this->getLexicon()->isStandalone();
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtension()
+    {
+        return $this->getLexicon()->getExtension();
+    }
+
+    /**
+     * Get filesystem
+     *
+     * @return mixed|object
+     */
+    public function getFilesystem()
+    {
+        return $this->getContainer()->make('files');
+    }
+
+    /**
+     * @return Repository
+     */
+    public function getConfigRepository()
+    {
+        return $this->getContainer()->make('config');
+    }
+
+    /**
+     * Get config
+     *
+     * @param      $key
+     * @param null $value
+     * @return mixed
+     */
+    public function getConfig($key, $default = null)
+    {
+        return $this->getConfigRepository()->get($key, $default);
+    }
+
+    /**
+     * Set config
+     *
+     * @param      $key
+     * @param null $value
+     * @return $this
+     */
+    public function setConfig($key, $value = null)
+    {
+        $this->getConfigRepository()->set($key, $value);
+        return $this;
+    }
+
+    /**
+     * @return mixed|null|object
+     */
+    public function getSessionStore()
+    {
+        return $this->getContainer()->make('session.store');
+    }
+
+    /**
+     * Get event dispatcher
+     *
+     * @return Dispatcher
+     */
+    public function getEventDispatcher()
+    {
+        return $this->getContainer()->make('events');
+    }
+
+
+    /**
+     * @return EngineResolver
+     */
+    public function getEngineResolver()
+    {
+        return $this->getContainer()->make('view.engine.resolver');
+    }
+
+    /**
+     * Get storage path
+     *
+     * @return string
+     */
+    public function getStoragePath()
+    {
+        $container = $this->getContainer();
+
+        $storagePath = $container['path.storage'] . '/views';
+
+        if ($override = $this->getLexicon()->getStoragePath()) {
+            $storagePath = $override;
+        }
+
+        return $storagePath;
+    }
+
+    /**
+     * @return Factory
+     */
+    public function getFactory()
+    {
+        return $this->getContainer()->make('view');
+    }
+
+    /**
+     * Get view paths
+     *
+     * @return array
+     */
+    public function getViewPaths()
+    {
+        $viewPaths = [__DIR__ . '/../../../resources/views'];
+
+        if ($configViewPaths = $this->getConfig('view.paths')) {
+            $viewPaths = $configViewPaths;
+        }
+
+        if ($lexiconViewPaths = $this->getLexicon()->getViewPaths()) {
+            $viewPaths = $lexiconViewPaths;
+        }
+
+        return $viewPaths;
+    }
+
 
     /**
      * Get session driver
@@ -400,32 +487,6 @@ class Foundation
     public function getSessionDriver()
     {
         return $this->getConfig('session.driver', 'array');
-    }
-
-    /**
-     * Register the session binder for the view environment.
-     *
-     * @return void
-     */
-    public function registerSessionBinder($sessionHasErrors = false)
-    {
-        $this->getContainer()->booted(
-            function () use ($sessionHasErrors) {
-                // If the current session has an "errors" variable bound to it, we will share
-                // its value with all view instances so the views can easily access errors
-                // without having to bind. An empty bag is set when there aren't errors.
-                if ($sessionHasErrors) {
-                    $this->getFactory()->share('errors', $this->getSessionStore()->get('errors'));
-                }
-
-                // Putting the errors in the view for every view allows the developer to just
-                // assume that some errors are always available, which is convenient since
-                // they don't have to continually run checks for the presence of errors.
-                else {
-                    $this->getFactory()->share('errors', new ViewErrorBag());
-                }
-            }
-        );
     }
 
     /**
@@ -448,10 +509,45 @@ class Foundation
     }
 
     /**
+     * Wrap a Closure such that it is shared.
+     *
+     * @param  \Closure $closure
+     * @return \Closure
+     */
+    public function share(\Closure $closure)
+    {
+        return function ($container) use ($closure) {
+            // We'll simply declare a static variable within the Closures and if it has
+            // not been set we will execute the given Closures to resolve this value
+            // and return it back to these consumers of the method as an instance.
+            static $object;
+
+            if (is_null($object)) {
+                $object = $closure($container);
+            }
+
+            return $object;
+        };
+    }
+
+    /**
+     * Bind a shared Closure into the container.
+     *
+     * @param  string   $abstract
+     * @param  \Closure $closure
+     * @return void
+     */
+    public function bindShared($abstract, \Closure $closure)
+    {
+        $this->getContainer()->bind($abstract, $this->share($closure), true);
+    }
+
+
+    /**
      * @return static
      */
     public static function stub()
     {
-        return new static(Lexicon::stub());
+        return new static(LexiconStub::stub());
     }
 }

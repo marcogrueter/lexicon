@@ -21,11 +21,12 @@ class LexiconServiceProvider extends ServiceProvider
     {
         $app = $this->app;
 
-        $lexicon = new Lexicon($app);
+        $this->package('anomaly/lexicon');
 
+        $lexicon = new Lexicon($app);
         // TODO: Revisit this config default
         $lexicon->setExtension('html');
-
+        $lexicon->registerNodeGroups($app['config']['lexicon::nodeGroups']);
         $lexicon->register();
 
         return $lexicon;

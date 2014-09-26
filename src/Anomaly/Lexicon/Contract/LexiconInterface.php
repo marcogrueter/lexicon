@@ -2,9 +2,9 @@
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
-use Anomaly\Lexicon\Contract\Support\ContainerInterface;
 use Anomaly\Lexicon\Foundation;
 use Anomaly\Lexicon\Node\NodeFactory;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
@@ -18,7 +18,7 @@ interface LexiconInterface
     public function register();
 
     /**
-     * @return ContainerInterface
+     * @return Container
      */
     public function getContainer();
 
@@ -246,5 +246,18 @@ interface LexiconInterface
      * @return Foundation
      */
     public function getFoundation();
+
+    /**
+     * @param bool $standalone
+     * @return mixed
+     */
+    public function setStandalone($standalone = true);
+
+    /**
+     * Is Lexicon been used outside of Laravel?
+     *
+     * @return bool
+     */
+    public function isStandalone();
 
 }

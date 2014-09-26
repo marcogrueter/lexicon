@@ -81,7 +81,7 @@ class Container extends BaseContainer implements ContainerInterface
     /**
      * Boot the application's service providers.
      *
-     * @return ContainerInterface|void
+     * @return \Illuminate\Container\Container|void
      */
     public function boot()
     {

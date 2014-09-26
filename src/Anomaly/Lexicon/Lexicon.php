@@ -3,16 +3,17 @@
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;;
-use Anomaly\Lexicon\Contract\Support\ContainerInterface;
+use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Node\NodeCollection;
 use Anomaly\Lexicon\Node\NodeExtractor;
 use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Plugin\PluginHandler;
-use Anomaly\Lexicon\Support\Container;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
+
+;
 
 class Lexicon implements LexiconInterface
 {
@@ -118,6 +119,13 @@ class Lexicon implements LexiconInterface
     protected $nodeFactory;
 
     /**
+     * Are we using the package outside of Laravel?
+     *
+     * @var bool
+     */
+    protected $standalone = false;
+
+    /**
      * @var Foundation
      */
     protected $foundation;
@@ -155,7 +163,7 @@ class Lexicon implements LexiconInterface
     /**
      * Lexicon construct
      */
-    public function __construct(ContainerInterface $container = null)
+    public function __construct(Container $container = null)
     {
         $this->container = $container;
         $this->setConditionalHandler($this->newConditionalHandler());
@@ -197,6 +205,26 @@ class Lexicon implements LexiconInterface
     }
 
     /**
+     * @param bool $standalone
+     * @return Foundation
+     */
+    public function setStandalone($standalone = true)
+    {
+        $this->standalone = $standalone;
+        return $this;
+    }
+
+    /**
+     * Is standalone
+     *
+     * @return bool
+     */
+    public function isStandalone()
+    {
+        return $this->standalone;
+    }
+
+    /**
      * Set node factory
      *
      * @param NodeFactory $nodeFactory
@@ -229,7 +257,7 @@ class Lexicon implements LexiconInterface
     }
 
     /**
-     * @return ContainerInterface
+     * @return Container
      */
     public function getContainer()
     {
