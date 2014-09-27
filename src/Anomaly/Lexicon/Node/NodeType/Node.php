@@ -876,6 +876,11 @@ class Node implements NodeInterface
         return '';
     }
 
+    /**
+     * Get siblings
+     *
+     * @return array
+     */
     public function getSiblings()
     {
         $siblings = [];
