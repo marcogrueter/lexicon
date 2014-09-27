@@ -40,15 +40,24 @@ class NodeFinderStub
         $endif->setId('endif');
         $nodeFactory->addNode($endif);
 
-        $schoolName->setId(4);
-        $schoolName->setName('schoolName');
+        $schoolName->setId('.school.name');
+        $schoolName->setName('.school.name');
         $nodeFactory->addNode($schoolName);
 
         $books = new Block($lexicon);
-        $books->setId(3);
+        $books->setId('books');
         $books->setName('books');
         $books->setItemAlias('book');
         $nodeFactory->addNode($books);
+
+        $books->setCurrentContent('
+        Anomaly\Lexicon\Node\NodeType\Conditional__if__if__
+        Anomaly\Lexicon\Node\NodeType\Conditional__if2__if2__
+        Anomaly\Lexicon\Node\NodeType\Conditional__elseif__elseif__
+        Anomaly\Lexicon\Node\NodeType\ConditionalEndif__endif__enif__
+        Anomaly\Lexicon\Stub\Node\Node__.school.name__.school.name__
+        ');
+
         $books->addChild($schoolName);
         $books->addChild($if);
         $books->addChild($if2);
@@ -56,21 +65,21 @@ class NodeFinderStub
         $books->addChild($endif);
 
         $libraries = new Block($lexicon);
-        $libraries->setId(2);
+        $libraries->setId('libraries');
         $libraries->addChild($books);
         $libraries->setName('libraries');
         $libraries->setItemAlias('library');
         $nodeFactory->addNode($libraries);
 
         $schools = new Block($lexicon);
-        $schools->setId(1);
+        $schools->setId('schools');
         $schools->addChild($libraries);
         $schools->setName('schools');
         $schools->setItemAlias('school');
         $nodeFactory->addNode($schools);
 
         $root = new Block($lexicon);
-        $root->setId(0);
+        $root->setId('root');
         $root->addChild($schools);
         $nodeFactory->addNode($root);
 

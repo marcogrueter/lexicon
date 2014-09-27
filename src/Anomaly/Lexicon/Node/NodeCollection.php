@@ -26,4 +26,16 @@ class NodeCollection extends Collection
         );
     }
 
+    /**
+     * Get by multiple ids
+     */
+    public function getByIds(array $ids)
+    {
+        return $this->filter(
+            function ($node) use ($ids) {
+                return in_array($node->getId(), $ids);
+            }
+        )->toArray();
+    }
+
 }

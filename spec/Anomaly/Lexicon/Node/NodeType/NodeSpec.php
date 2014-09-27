@@ -59,9 +59,18 @@ class NodeSpec extends ObjectBehavior
         $this->getNodeFinder()->shouldHaveType('Anomaly\Lexicon\Node\NodeFinder');
     }
 
+    function it_can_get_node_factory()
+    {
+        $this->getNodeFactory()->shouldHaveType('Anomaly\Lexicon\Node\NodeFactory');
+    }
+
     function it_can_get_siblings()
     {
         $this->getSiblings()->shouldBeArray();
     }
 
+    function it_can_get_its_position_within_the_content()
+    {
+        $this->getPosition()->shouldBeNumeric();
+    }
 }

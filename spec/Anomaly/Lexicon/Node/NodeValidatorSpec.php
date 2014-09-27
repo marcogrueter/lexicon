@@ -35,7 +35,7 @@ class NodeValidatorSpec extends ObjectBehavior
 
     function it_can_count_siblings_with_name()
     {
-        $this->countSiblingsWithName('if')->shouldReturn(2);
+        $this->countSiblings('if')->shouldReturn(2);
     }
     
     function it_can_assert_if_the_count_of_two_sibling_names_are_equal()
@@ -43,9 +43,14 @@ class NodeValidatorSpec extends ObjectBehavior
         $this->isEqualCount('if', 'endif')->shouldBeBoolean();
     }
 
-    function it_can_assert_if_sibling_with_name_exists()
+    function it_can_assert_if_is_has_siblings()
     {
-        
+        $this->hasSiblings('elseif')->shouldBeBoolean();
+    }
+    
+    function it_can_assert_if_node_is_after_another()
+    {
+        $this->isAfter('if')->shouldReturn(true);
     }
 
 }

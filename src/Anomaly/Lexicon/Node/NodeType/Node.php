@@ -5,6 +5,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
+use Anomaly\Lexicon\Node\NodeFinder;
 use Anomaly\Lexicon\Stub\LexiconStub;
 
 class Node implements NodeInterface
@@ -354,15 +355,7 @@ class Node implements NodeInterface
      */
     public function getChildren()
     {
-        $children = [];
-
-        $nodeFactory = $this->getLexicon()->getFoundation()->getNodeFactory();
-
-        foreach ($this->children as $id) {
-            $children[] = $nodeFactory->getById($id);
-        }
-
-        return $children;
+        return $this->getNodeFactory()->getByIds($this->children);
     }
 
     /**
@@ -492,7 +485,7 @@ class Node implements NodeInterface
      */
     public function getParent()
     {
-        return $this->getLexicon()->getFoundation()->getNodeFactory()->getById($this->getParentId());
+        return $this->getNodeFactory()->getById($this->getParentId());
     }
 
     /**
@@ -635,6 +628,16 @@ class Node implements NodeInterface
     public function getNodeFinder()
     {
         return $this->getLexicon()->getFoundation()->getNodeFinder($this);
+    }
+
+    /**
+     * Get node factory
+     *
+     * @return \Anomaly\Lexicon\Node\NodeFactory
+     */
+    public function getNodeFactory()
+    {
+        return $this->getLexicon()->getFoundation()->getNodeFactory();
     }
 
     /**
@@ -886,7 +889,11 @@ class Node implements NodeInterface
         $siblings = [];
 
         if ($parent = $this->getParent()) {
-            $siblings = $parent->getChildren();
+            foreach ($parent->getChildren() as $node) {
+                if ($node->getId() != $this->getId()) {
+                    $siblings[] = $node;
+                }
+            }
         }
 
         return $siblings;
@@ -901,6 +908,17 @@ class Node implements NodeInterface
     public static function stub()
     {
         return new static(LexiconStub::get());
+    }
+
+
+    /**
+     * Get position
+     *
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->getParent() ? (int)strpos($this->getParent()->getCurrentContent(), $this->getExtractionId()) : 0;
     }
 
 }

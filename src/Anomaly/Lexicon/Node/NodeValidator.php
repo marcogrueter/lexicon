@@ -36,7 +36,7 @@ class NodeValidator implements ValidatorInterface
      * @param string $name
      * @return int
      */
-    public function countSiblingsWithName($name = null)
+    public function countSiblings($name = null)
     {
         $count = 0;
 
@@ -57,7 +57,7 @@ class NodeValidator implements ValidatorInterface
      */
     public function isEqualCount($name, $otherName)
     {
-        return $this->countSiblingsWithName($name) == $this->countSiblingsWithName($otherName);
+        return $this->countSiblings($name) == $this->countSiblings($otherName);
     }
 
     /**
@@ -66,9 +66,9 @@ class NodeValidator implements ValidatorInterface
      * @param $name
      * @return bool
      */
-    public function exists($name)
+    public function hasSiblings($name)
     {
-        return $this->countSiblingsWithName($name) > 0;
+        return count($this->getNode()->getSiblings()) > 0;
     }
 
     /**
@@ -80,26 +80,37 @@ class NodeValidator implements ValidatorInterface
      */
     public function isAfter($name, $strict = false)
     {
-        if ($strict and !$this->exists($name)) {
+        if ($strict and !$this->hasSiblings($name)) {
             return false;
         }
 
-        $currentOrder = 0;
-        $otherOrder   = 0;
+        $position = $this->getPosition();
+        $otherPosition = 0;
 
-        /** @var $parent NodeInterface */
-        if ($parent = $this->node->getParent()) {
-            foreach ($parent->getChildren() as $node) {
-                /** @var NodeInterface $node */
-                if ($this->node->getId() == $node->getId()) {
-                    $currentOrder = strpos($parent->getCurrentContent(), $node->getExtractionId());
-                } elseif ($node->getName() == $name) {
-                    $otherOrder = strpos($parent->getCurrentContent(), $node->getExtractionId());
-                }
+        foreach ($this->getNode()->getSiblings() as $node) {
+            /** @var NodeInterface $node */
+            if ($node->getName() == $name) {
+                $otherPosition = $node->getPosition();
+                break;
             }
         }
 
-        return $currentOrder > $otherOrder;
+        return $position > $otherPosition;
+    }
+
+    public function getFirstSibling($name = null)
+    {
+        $sibling = null;
+
+        foreach ($this->getNode()->getSiblings() as $node) {
+            /** @var NodeInterface $node */
+            if ($node->getName() == $name) {
+                $sibling = $node;
+                break;
+            }
+        }
+
+        $sibling;
     }
 
     /**

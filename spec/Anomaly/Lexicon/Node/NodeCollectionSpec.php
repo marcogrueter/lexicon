@@ -34,5 +34,18 @@ class NodeCollectionSpec extends ObjectBehavior
             ->getById('stub-id-3')
             ->shouldHaveType('Anomaly\Lexicon\Stub\Node\Node3');
     }
+    
+    function it_can_get_nodes_by_multiple_ids(Node $node1, Node2 $node2, Node3 $node3)
+    {
+        $this->push($node1);
+        $this->push($node2);
+        $this->push($node3);
+
+        $node1->getId()->willReturn('stub-id-1');
+        $node2->getId()->willReturn('stub-id-2');
+        $node3->getId()->willReturn('stub-id-3');
+
+        $this->getByIds(['stub-id-1', 'stub-id-2'])->shouldHaveCount(2);
+    }
 
 }
