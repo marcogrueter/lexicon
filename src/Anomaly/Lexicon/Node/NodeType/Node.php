@@ -104,7 +104,7 @@ class Node implements NodeInterface
     /**
      * @var string|null
      */
-    protected $loopItemName;
+    protected $itemAlias;
 
     /**
      * Is valid for compile
@@ -341,6 +341,7 @@ class Node implements NodeInterface
      */
     public function addChild(NodeInterface $node)
     {
+        $node->setParentId($this->getId());
         $this->children[$node->getId()] = $node->getId();
         return $this;
     }
@@ -637,12 +638,12 @@ class Node implements NodeInterface
     }
 
     /**
-     * @param $loopItemName
+     * @param $itemAlias
      * @return Node
      */
-    public function setItemAlias($loopItemName)
+    public function setItemAlias($itemAlias)
     {
-        $this->loopItemName = $loopItemName;
+        $this->itemAlias = $itemAlias;
         return $this;
     }
 
@@ -653,7 +654,7 @@ class Node implements NodeInterface
      */
     public function getItemAlias()
     {
-        return $this->loopItemName;
+        return $this->itemAlias;
     }
 
     /**
@@ -883,7 +884,7 @@ class Node implements NodeInterface
      */
     public static function stub()
     {
-        return new static(LexiconStub::stub());
+        return new static(LexiconStub::get());
     }
 
 }

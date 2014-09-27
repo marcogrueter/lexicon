@@ -233,12 +233,12 @@ interface NodeInterface extends ExtractionInterface
     public function setRawAttributes($rawAttributes);
 
     /**
-     * Set loop item name
+     * Set item alias
      *
      * @param $loopItemName
      * @return mixed
      */
-    public function setItemAlias($loopItemName);
+    public function setItemAlias($itemAlias);
 
     /**
      * Get loop item in raw attributes

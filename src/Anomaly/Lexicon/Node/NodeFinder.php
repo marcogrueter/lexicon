@@ -2,6 +2,10 @@
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
+use Anomaly\Lexicon\Node\NodeType\Block;
+use Anomaly\Lexicon\Node\NodeType\Node;
+use Anomaly\Lexicon\Stub\LexiconStub;
+use Anomaly\Lexicon\Stub\Node\NodeFinderStub;
 
 /**
  * Class NodeFinder
@@ -130,16 +134,13 @@ class NodeFinder
     {
         $node = $this->getNode()->getParent();
 
-        while ($node and $node->getParent() and $node->getItemAlias() !== $this->getAlias()) {
+        while ($node and $node->getItemAlias() !== $this->getAlias() and $node->getParent()) {
 
             $node = $node->getParent();
-
         }
 
         if ($node and $node->isRoot()) {
-
-            $node = $this->getNode()->getParent();
-
+            $node = null;
         }
 
         return $node;
@@ -214,6 +215,17 @@ class NodeFinder
         }
 
         return $name;
+    }
+
+    /**
+     * Stub for testing with PHPSpec
+     *
+     * @param Node $node
+     * @return NodeFinder
+     */
+    public static function stub()
+    {
+        return NodeFinderStub::get();
     }
 
 }

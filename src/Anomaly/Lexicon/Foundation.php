@@ -721,7 +721,7 @@ class Foundation
      */
     public static function stub()
     {
-        return new static(LexiconStub::stub());
+        return new static(LexiconStub::get());
     }
 
 }

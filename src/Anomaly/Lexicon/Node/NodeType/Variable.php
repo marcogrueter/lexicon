@@ -60,7 +60,7 @@ class Variable extends Single
      */
     public static function stub()
     {
-        return new static(LexiconStub::stub());
+        return new static(LexiconStub::get());
     }
 
 }

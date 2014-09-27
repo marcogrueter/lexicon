@@ -22,7 +22,7 @@ class LexiconStub
     /**
      * @return LexiconInterface
      */
-    public static function stub()
+    public static function get()
     {
         $lexicon = new Lexicon();
 
@@ -48,7 +48,7 @@ class LexiconStub
      */
     public static function foundation()
     {
-        return static::stub()->getFoundation();
+        return static::get()->getFoundation();
     }
 
     /**
