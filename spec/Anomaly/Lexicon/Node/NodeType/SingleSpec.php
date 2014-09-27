@@ -5,12 +5,12 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 /**
- * Class CommentSpec
+ * Class SingleSpec
  *
  * @author Osvaldo Brignoni <obrignoni@anomaly.is>
- * @package spec\Anomaly\Lexicon\Node
+ * @package spec\Anomaly\Lexicon\Node\NodeType
  */
-class CommentSpec extends ObjectBehavior
+class SingleSpec extends ObjectBehavior
 {
 
     function let(LexiconInterface $lexicon)
@@ -20,12 +20,17 @@ class CommentSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\Comment');
+        $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\Single');
     }
-
+    
     function it_can_get_regex()
     {
-        $this->regex()->shouldReturn('/\{\{--.*?--\}\}/s');
+        $this->regex()->shouldReturn('/\{\{\s*(root)(\s.*?)?\s*(\/)?\}\}/ms');
+    }
+    
+    function it_can_setup_regex_matches()
+    {
+        $this->setup();
     }
 
 }

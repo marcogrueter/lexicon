@@ -59,4 +59,10 @@ class NodeSpec extends ObjectBehavior
         $this->getNodeFinder()->shouldHaveType('Anomaly\Lexicon\Node\NodeFinder');
     }
 
+    function it_can_get_siblings()
+    {
+        $this->getSiblings()->shouldBeArray();
+    }
+
+
 }

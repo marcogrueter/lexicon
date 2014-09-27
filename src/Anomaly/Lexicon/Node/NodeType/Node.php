@@ -876,6 +876,17 @@ class Node implements NodeInterface
         return '';
     }
 
+    public function getSiblings()
+    {
+        $siblings = [];
+
+        if ($parent = $this->getParent()) {
+            $siblings = $this->getChildren();
+        }
+
+        return $siblings;
+    }
+
     /**
      * Stub for testing with PHPSpec
      * This stub of the LexiconInterface gets injected to the VariableSpec construct

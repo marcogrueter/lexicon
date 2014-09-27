@@ -13,14 +13,24 @@ use Prophecy\Argument;
 class BreaksSpec extends ObjectBehavior
 {
 
-    function let(LexiconInterface $lexicon)
+    function let()
     {
-        $this->beConstructedWith($lexicon);
+        $this->beConstructedThrough('stub');
     }
 
     function it_is_initializable()
     {
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\Breaks');
+    }
+
+    function it_can_be_validated()
+    {
+        $this->isValid()->shouldBeBoolean();
+    }
+    
+    function it_can_compile_break()
+    {
+        $this->compile()->shouldReturn('break;');
     }
 
 }
