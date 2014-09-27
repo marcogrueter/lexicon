@@ -163,11 +163,20 @@ class NodeFactorySpec extends ObjectBehavior
         )->shouldHaveType('Anomaly\Lexicon\Stub\Node\Node');
     }
 
-    function it_can_get_node_by_id_in_collection(Node $node)
+    function it_can_get_node_by_id(Node $node)
     {
         $node->getId()->willReturn('stub-id-1');
         $this->addNode($node);
         $this->getById('stub-id-1')->shouldHaveType('Anomaly\Lexicon\Stub\Node\Node');
+    }
+
+    function it_can_get_multiple_nodes_by_id(Node $node, Node $node2)
+    {
+        $node->getId()->willReturn('stub-id-1');
+        $node2->getId()->willReturn('stub-id-2');
+        $this->addNode($node);
+        $this->addNode($node2);
+        $this->getByIds(['stub-id-1', 'stub-id-2'])->shouldHaveCount(2);
     }
 
     function it_can_add_add_node_group_path()

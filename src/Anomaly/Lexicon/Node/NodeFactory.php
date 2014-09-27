@@ -167,6 +167,17 @@ class NodeFactory
     }
 
     /**
+     * Get multiple nodes by id
+     *
+     * @param array $ids
+     * @return array
+     */
+    public function getByIds(array $ids)
+    {
+        return $this->getCollection()->getByIds($ids);
+    }
+
+    /**
      * Create child nodes
      *
      * @return NodeInterface
@@ -179,7 +190,6 @@ class NodeFactory
                 $this->createChildNode($node, $nodeType, $match, $offset);
             }
         }
-
         return $this;
     }
 

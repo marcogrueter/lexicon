@@ -6,7 +6,7 @@ use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
 use Anomaly\Lexicon\Node\NodeFinder;
-use Anomaly\Lexicon\Stub\LexiconStub;
+use Anomaly\Lexicon\Stub\Node\NodeFinderStub;
 
 class Node implements NodeInterface
 {
@@ -887,7 +887,6 @@ class Node implements NodeInterface
     public function getSiblings()
     {
         $siblings = [];
-
         if ($parent = $this->getParent()) {
             foreach ($parent->getChildren() as $node) {
                 if ($node->getId() != $this->getId()) {
@@ -895,8 +894,34 @@ class Node implements NodeInterface
                 }
             }
         }
-
         return $siblings;
+    }
+
+    /**
+     * @param null $name
+     * @return NodeInterface|null
+     */
+    public function getFirstSibling($name = null)
+    {
+        $sibling = null;
+        foreach ($this->getSiblings() as $node) {
+            /** @var NodeInterface $node */
+            if ($node->getName() == $name) {
+                $sibling = $node;
+                break;
+            }
+        }
+        return $sibling;
+    }
+
+    /**
+     * Get position
+     *
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->getParent() ? (int)strpos($this->getParent()->getCurrentContent(), $this->getExtractionId()) : 0;
     }
 
     /**
@@ -907,18 +932,7 @@ class Node implements NodeInterface
      */
     public static function stub()
     {
-        return new static(LexiconStub::get());
-    }
-
-
-    /**
-     * Get position
-     *
-     * @return int
-     */
-    public function getPosition()
-    {
-        return $this->getParent() ? (int)strpos($this->getParent()->getCurrentContent(), $this->getExtractionId()) : 0;
+        return NodeFinderStub::get()->getNode();
     }
 
 }

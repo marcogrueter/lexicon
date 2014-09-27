@@ -48,6 +48,11 @@ class NodeValidatorSpec extends ObjectBehavior
         $this->hasSiblings('elseif')->shouldBeBoolean();
     }
     
+    function it_can_get_first_sibling()
+    {
+        
+    }
+    
     function it_can_assert_if_node_is_after_another()
     {
         $this->isAfter('if')->shouldReturn(true);

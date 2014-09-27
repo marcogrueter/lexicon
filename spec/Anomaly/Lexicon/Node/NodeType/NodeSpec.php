@@ -69,8 +69,14 @@ class NodeSpec extends ObjectBehavior
         $this->getSiblings()->shouldBeArray();
     }
 
+    function it_can_get_first_sibling()
+    {
+        $this->getFirstSibling('if')->shouldImplement('Anomaly\Lexicon\Contract\Node\NodeInterface');
+    }
+    
     function it_can_get_its_position_within_the_content()
     {
         $this->getPosition()->shouldBeNumeric();
     }
+
 }

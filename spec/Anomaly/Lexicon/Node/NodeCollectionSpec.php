@@ -35,7 +35,7 @@ class NodeCollectionSpec extends ObjectBehavior
             ->shouldHaveType('Anomaly\Lexicon\Stub\Node\Node3');
     }
     
-    function it_can_get_nodes_by_multiple_ids(Node $node1, Node2 $node2, Node3 $node3)
+    function it_can_get_multiple_nodes_by_id(Node $node1, Node2 $node2, Node3 $node3)
     {
         $this->push($node1);
         $this->push($node2);
