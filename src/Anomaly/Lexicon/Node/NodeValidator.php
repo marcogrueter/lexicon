@@ -84,18 +84,13 @@ class NodeValidator implements ValidatorInterface
             return false;
         }
 
-        $position = $this->getPosition();
-        $otherPosition = 0;
+        $siblingPosition = 0;
 
-        foreach ($this->getNode()->getSiblings() as $node) {
-            /** @var NodeInterface $node */
-            if ($node->getName() == $name) {
-                $otherPosition = $node->getPosition();
-                break;
-            }
+        if ($sibling = $this->getNode()->getFirstSibling($name)) {
+            $siblingPosition = $sibling->getPosition();
         }
 
-        return $position > $otherPosition;
+        return $this->getNode()->getPosition() > $siblingPosition;
     }
 
     /**

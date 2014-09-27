@@ -315,4 +315,18 @@ interface NodeInterface extends ExtractionInterface
      */
     public function getSiblings();
 
+    /**
+     * Get first sibling
+     *
+     * @return NodeInterface
+     */
+    public function getFirstSibling();
+
+    /**
+     * Get position within content
+     *
+     * @return int
+     */
+    public function getPosition();
+
 }
