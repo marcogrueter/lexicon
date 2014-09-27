@@ -64,5 +64,4 @@ class NodeSpec extends ObjectBehavior
         $this->getSiblings()->shouldBeArray();
     }
 
-
 }

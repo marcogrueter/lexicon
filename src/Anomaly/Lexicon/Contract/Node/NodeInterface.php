@@ -308,4 +308,11 @@ interface NodeInterface extends ExtractionInterface
      */
     public function addChild(NodeInterface $node);
 
+    /**
+     * Get siblings
+     *
+     * @return array
+     */
+    public function getSiblings();
+
 }

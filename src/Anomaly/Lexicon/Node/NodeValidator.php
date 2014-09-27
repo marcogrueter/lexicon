@@ -2,6 +2,7 @@
 
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
+use Anomaly\Lexicon\Stub\Node\NodeFinderStub;
 
 class NodeValidator implements ValidatorInterface
 {
@@ -21,25 +22,28 @@ class NodeValidator implements ValidatorInterface
         $this->node = $node;
     }
 
+    /**
+     * Is valid
+     *
+     * @return bool
+     */
     public function isValid()
     {
         return true;
     }
 
     /**
-     * @param $name = string
+     * @param string $name
      * @return int
      */
-    protected function getCount($name = '')
+    public function countSiblingsWithName($name = null)
     {
         $count = 0;
 
-        if ($parent = $this->node->getParent()) {
-            foreach ($parent->getChildren() as $node) {
-                /** @var NodeInterface $node */
-                if ($node->getName() == $name) {
-                    $count++;
-                }
+        /** @var NodeInterface $node */
+        foreach ($this->getNode()->getSiblings() as $node) {
+            if ($node->getName() == $name) {
+                $count++;
             }
         }
 
@@ -53,7 +57,7 @@ class NodeValidator implements ValidatorInterface
      */
     public function isEqualCount($name, $otherName)
     {
-        return $this->getCount($name) == $this->getCount($otherName);
+        return $this->countSiblingsWithName($name) == $this->countSiblingsWithName($otherName);
     }
 
     /**
@@ -64,7 +68,7 @@ class NodeValidator implements ValidatorInterface
      */
     public function exists($name)
     {
-        return (bool)$this->getCount($name);
+        return $this->countSiblingsWithName($name) > 0;
     }
 
     /**
@@ -107,6 +111,26 @@ class NodeValidator implements ValidatorInterface
     public function isAfterExisting($name)
     {
         return $this->isAfter($name, true);
+    }
+
+    /**
+     * Get node
+     *
+     * @return NodeInterface
+     */
+    public function getNode()
+    {
+        return $this->node;
+    }
+
+    /**
+     * Get node
+     *
+     * @return NodeInterface
+     */
+    public static function stub()
+    {
+        return new static(NodeFinderStub::get()->getNode());
     }
 
 }

@@ -886,7 +886,7 @@ class Node implements NodeInterface
         $siblings = [];
 
         if ($parent = $this->getParent()) {
-            $siblings = $this->getChildren();
+            $siblings = $parent->getChildren();
         }
 
         return $siblings;
