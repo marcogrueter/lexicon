@@ -6,6 +6,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Support\Container;
+use Illuminate\Contracts\Container\Container as BaseContainer;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
@@ -186,7 +187,7 @@ class Lexicon implements LexiconInterface
     /**
      * Lexicon construct
      */
-    public function __construct(Container $container = null)
+    public function __construct(BaseContainer $container = null)
     {
         $this->container = $container;
     }
