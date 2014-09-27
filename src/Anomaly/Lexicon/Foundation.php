@@ -209,15 +209,12 @@ class Foundation
                     new NodeFinder()
                 );
 
-                $nodeGroups = $this->getLexicon()->getNodeGroups() ?: [];
+                $nodeGroups = array_merge(
+                    $this->getLexicon()->getNodeGroups(),
+                    $this->getConfig('lexicon::nodeGroups', [])
+                );
 
-                $configNodeGroups = $this->getConfig('lexicon::nodeGroups', []);
-
-                foreach ($nodeGroups as $nodeGroup => $nodeTypes) {
-                    $configNodeGroups[$nodeGroup] = $nodeTypes;
-                }
-
-                return $nodeFactory->registerNodeGroups($configNodeGroups);
+                return $nodeFactory->registerNodeGroups($nodeGroups);
             }
         );
 

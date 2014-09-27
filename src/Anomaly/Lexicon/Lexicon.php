@@ -376,7 +376,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerNodeType($nodeType, $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        $this->nodeGroups[$nodeGroup][] = $nodeType;
+        $this->nodeGroups[$nodeGroup][$nodeType] = $nodeType;
         return $this;
     }
 
@@ -388,7 +388,9 @@ class Lexicon implements LexiconInterface
      */
     public function registerNodeGroups(array $nodeGroups = [])
     {
-        $this->nodeGroups = $nodeGroups;
+        foreach($nodeGroups as $nodeGroup => $nodeTypes) {
+            $this->registerNodeGroup($nodeTypes, $nodeGroup);
+        }
         return $this;
     }
 
@@ -400,7 +402,9 @@ class Lexicon implements LexiconInterface
      */
     public function registerNodeGroup(array $nodeTypes, $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        $this->nodeGroups[$nodeGroup] = $nodeTypes;
+        foreach($nodeTypes as $nodeType) {
+            $this->registerNodeType($nodeType, $nodeGroup);
+        }
         return $this;
     }
 
