@@ -21,7 +21,7 @@ class ConditionalHandler implements ConditionalHandlerInterface
      */
     public function registerBooleanTestType($name, $booleanTestType)
     {
-        $this->testTypes[$name] = new $booleanTestType;
+        $this->testTypes[$name] = $booleanTestType;
         return $this;
     }
 
@@ -33,9 +33,7 @@ class ConditionalHandler implements ConditionalHandlerInterface
      */
     public function registerBooleanTestTypes(array $booleanTestTypes)
     {
-        foreach($booleanTestTypes as $name => $booleanTestType) {
-            $this->registerBooleanTestType($name, $booleanTestType);
-        }
+        $this->testTypes = $booleanTestTypes;
         return $this;
     }
 
@@ -46,7 +44,13 @@ class ConditionalHandler implements ConditionalHandlerInterface
      */
     public function getTestTypes()
     {
-        return $this->testTypes;
+        $testTypes = [];
+
+        foreach($this->testTypes as $type => $class) {
+            $testType[$type] = new $class;
+        }
+
+        return $testTypes;
     }
 
     /**
@@ -58,11 +62,8 @@ class ConditionalHandler implements ConditionalHandlerInterface
     {
         $operators = [];
 
-        foreach ($this->getTestTypes() as $testType) {
-            $reflection = new \ReflectionClass($testType);
-            foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-                $operators[] = $method->name;
-            }
+        foreach ($this->getTestTypes() as $testType) {;
+            $operators = array_merge($operators, get_class_methods($testType));
         }
 
         return $operators;

@@ -1,6 +1,11 @@
 <?php namespace Anomaly\Lexicon;
 
+use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Node\NodeCollection;
+use Anomaly\Lexicon\Node\NodeExtractor;
+use Anomaly\Lexicon\Node\NodeFactory;
+use Anomaly\Lexicon\Plugin\PluginHandler;
 use Anomaly\Lexicon\Stub\LexiconStub;
 use Anomaly\Lexicon\View\Compiler;
 use Anomaly\Lexicon\View\Engine;
@@ -68,6 +73,9 @@ class Foundation
         $this->registerFilesystem($container);
         $this->registerEvents($container);
         $this->registerConfigRepository($container);
+        $this->registerPlugins();
+        $this->registerNodeGroups();
+        $this->registerBooleanTestTypes();
         $this->registerEngineResolver($container);
         $this->registerViewFinder($container);
         $this->registerFactory($container);
@@ -123,6 +131,50 @@ class Foundation
                 }
             );
         }
+    }
+
+    /**
+     * Register Lexicon config
+     */
+    public function registerPlugins()
+    {
+        $plugins = $this->getLexicon()->getPlugins();
+
+        if (empty($plugins)) {
+            $plugins = $this->getConfig('lexicon::plugins', []);
+        }
+
+        foreach ($plugins as $name => $plugin) {
+            $this->getPluginHandler()->register($name, $plugin);
+        }
+    }
+
+    /**
+     * Register boolean test types
+     */
+    public function registerBooleanTestTypes()
+    {
+        $booleanTestsTypes = $this->getLexicon()->getBooleanTestTypes();
+
+        if (empty($booleanTestsTypes)) {
+            $booleanTestsTypes = $this->getConfig('lexicon::booleanTestTypes', []);
+        }
+
+        $this->getConditionalHandler()->registerBooleanTestTypes($booleanTestsTypes);
+    }
+
+    /**
+     * Lexicon node groups
+     */
+    public function registerNodeGroups()
+    {
+        $nodeGroups = $this->getLexicon()->getNodeGroups();
+
+        if (empty($nodeGroups)) {
+            $nodeGroups = $this->getConfig('lexicon::nodeGroups', []);
+        }
+
+        $this->getNodeFactory()->registerNodeGroups($nodeGroups);
     }
 
     /**
@@ -355,11 +407,51 @@ class Foundation
     }
 
     /**
+     * Get extension
+     *
      * @return string
      */
     public function getExtension()
     {
-        return $this->getLexicon()->getExtension();
+        $extension = $this->getConfig('lexicon::extension', 'html');
+
+        if ($override = $this->getLexicon()->getExtension()) {
+            $extension = $override;
+        }
+
+        return $extension;
+    }
+
+    /**
+     * Get conditional handler
+     *
+     * @return ConditionalHandler
+     */
+    public function getConditionalHandler()
+    {
+        return $this->getLexicon()->getConditionalHandler() ?: new ConditionalHandler();
+    }
+
+    /**
+     * Get plugin handler
+     *
+     * @return Contract\Plugin\PluginHandlerInterface|null
+     */
+    public function getPluginHandler()
+    {
+        return $this->getLexicon()->getPluginHandler() ?: (new PluginHandler())->setLexicon($this->getLexicon());
+    }
+
+    /**
+     * Get node factory
+     *
+     * @return NodeFactory
+     */
+    public function getNodeFactory()
+    {
+        return $this->getLexicon()->getNodeFactory() ?: new NodeFactory(
+            $this->getLexicon(), new NodeCollection(), new NodeExtractor()
+        );
     }
 
     /**
@@ -537,7 +629,7 @@ class Foundation
     /**
      * Bind a shared Closure into the container.
      *
-     * @param  string   $abstract
+     * @param  string $abstract
      * @param  \Closure $closure
      * @return void
      */

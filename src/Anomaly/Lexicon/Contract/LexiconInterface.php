@@ -230,13 +230,6 @@ interface LexiconInterface
     public function getNodeFactory();
 
     /**
-     * New node factory
-     *
-     * @return NodeFactory
-     */
-    public function newNodeFactory();
-
-    /**
      * @param Foundation $foundation
      * @return mixed
      */
@@ -259,5 +252,26 @@ interface LexiconInterface
      * @return bool
      */
     public function isStandalone();
+
+    /**
+     * Get node groups
+     *
+     * @return array
+     */
+    public function getNodeGroups();
+
+    /**
+     * Get plugins
+     *
+     * @return array
+     */
+    public function getPlugins();
+
+    /**
+     * Get boolean test types
+     *
+     * @return array
+     */
+    public function getBooleanTestTypes();
 
 }

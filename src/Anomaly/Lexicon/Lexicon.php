@@ -4,16 +4,11 @@ use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
-use Anomaly\Lexicon\Node\NodeCollection;
-use Anomaly\Lexicon\Node\NodeExtractor;
 use Anomaly\Lexicon\Node\NodeFactory;
-use Anomaly\Lexicon\Plugin\PluginHandler;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
-
-;
 
 class Lexicon implements LexiconInterface
 {
@@ -37,6 +32,11 @@ class Lexicon implements LexiconInterface
      * @var ConditionalHandler
      */
     protected $conditionalHandler;
+
+    /**
+     * @var NodeFactory
+     */
+    protected $nodeFactory;
 
     /**
      * Root context name
@@ -114,9 +114,25 @@ class Lexicon implements LexiconInterface
     protected $container;
 
     /**
-     * @var NodeFactory
+     * Plugins
+     *
+     * @var array
      */
-    protected $nodeFactory;
+    protected $plugins = [];
+
+    /**
+     * Node groups
+     *
+     * @var array
+     */
+    protected $nodeGroups = [];
+
+    /**
+     * Test types
+     *
+     * @var array
+     */
+    protected $booleanTestTypes = [];
 
     /**
      * Are we using the package outside of Laravel?
@@ -166,9 +182,6 @@ class Lexicon implements LexiconInterface
     public function __construct(Container $container = null)
     {
         $this->container = $container;
-        $this->setConditionalHandler($this->newConditionalHandler());
-        $this->setPluginHandler($this->newPluginHandler());
-        $this->setNodeFactory($this->newNodeFactory());
     }
 
     /**
@@ -247,21 +260,11 @@ class Lexicon implements LexiconInterface
     }
 
     /**
-     * New node factory
-     *
-     * @return NodeFactory
-     */
-    public function newNodeFactory()
-    {
-        return new NodeFactory($this, new NodeCollection(), new NodeExtractor());
-    }
-
-    /**
      * @return Container
      */
     public function getContainer()
     {
-        return $this->container ?: $this->container = (new Container())->boot();
+        return $this->container ?: $this->container = new Container();
     }
 
     /**
@@ -285,26 +288,6 @@ class Lexicon implements LexiconInterface
     public function getNamespaces()
     {
         return $this->namespaces;
-    }
-
-    /**
-     * New conditional handler
-     *
-     * @return ConditionalHandler
-     */
-    public function newConditionalHandler()
-    {
-        return new ConditionalHandler();
-    }
-
-    /**
-     * New plugin handler
-     *
-     * @return PluginHandler
-     */
-    public function newPluginHandler()
-    {
-        return (new PluginHandler())->setLexicon($this);
     }
 
     /**
@@ -378,7 +361,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerNodeType($nodeType, $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        $this->getNodeFactory()->registerNodeType($nodeType, $nodeGroup);
+        $this->nodeGroups[$nodeGroup][] = $nodeType;
         return $this;
     }
 
@@ -390,7 +373,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerNodeGroups(array $nodeGroups = [])
     {
-        $this->getNodeFactory()->registerNodeGroups($nodeGroups);
+        $this->nodeGroups = $nodeGroups;
         return $this;
     }
 
@@ -402,8 +385,18 @@ class Lexicon implements LexiconInterface
      */
     public function registerNodeGroup(array $nodeTypes, $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        $this->getNodeFactory()->registerNodeGroup($nodeTypes, $nodeGroup);
+        $this->nodeGroups[$nodeGroup] = $nodeTypes;
         return $this;
+    }
+
+    /**
+     * Get node groups
+     *
+     * @return array|null
+     */
+    public function getNodeGroups()
+    {
+        return $this->nodeGroups;
     }
 
     /**
@@ -415,8 +408,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerPlugin($name, $class)
     {
-        $this->getPluginHandler()->register($name, $class);
-        return $this;
+        return $this->plugins[$name][$class];
     }
 
     /**
@@ -427,10 +419,26 @@ class Lexicon implements LexiconInterface
      */
     public function registerPlugins(array $plugins)
     {
-        foreach ($plugins as $name => $plugin) {
-            $this->registerPlugin($name, $plugin);
-        }
+        $this->plugins = $plugins;
         return $this;
+    }
+
+    /**
+     * Get plugins
+     *
+     * @return array
+     */
+    public function getPlugins()
+    {
+        return $this->plugins;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBooleanTestTypes()
+    {
+        return $this->booleanTestTypes;
     }
 
     /**

@@ -2,8 +2,10 @@
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
+use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Contract\View\FactoryInterface;
 use Anomaly\Lexicon\Lexicon;
+use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Factory as BaseFactory;
 
 /**
@@ -13,6 +15,11 @@ use Illuminate\View\Factory as BaseFactory;
  */
 class Factory extends BaseFactory implements FactoryInterface
 {
+
+    /**
+     * @var EngineResolver
+     */
+    protected $engines;
 
     /**
      * Get the evaluated view contents for the given view.
@@ -79,7 +86,7 @@ class Factory extends BaseFactory implements FactoryInterface
     /**
      * EngineInterface
      *
-     * @return mixed
+     * @return EngineInterface
      */
     public function getLexiconEngine()
     {
@@ -96,7 +103,7 @@ class Factory extends BaseFactory implements FactoryInterface
      */
     public function booleanTest($left, $right, $operator)
     {
-        return $this->getLexicon()->getConditionalHandler()->booleanTest($left, $right, $operator);
+        return $this->getLexicon()->getFoundation()->getConditionalHandler()->booleanTest($left, $right, $operator);
     }
 
     /**
@@ -121,17 +128,17 @@ class Factory extends BaseFactory implements FactoryInterface
     ) {
         $parts = explode($this->getLexicon()->getScopeGlue(), $key);
 
-        /** @var PluginHandlerInterface $handler */
-        $handler = $this->getLexicon()->getPluginHandler();
+        /** @var PluginHandlerInterface $pluginHandler */
+        $pluginHandler = $this->getLexicon()->getFoundation()->getPluginHandler();
 
         // Get a plugin
-        if ($plugin = $handler->get($key)) {
+        if ($plugin = $pluginHandler->get($key)) {
 
             array_shift($parts); // Shit the name
             $method = array_shift($parts); // Shift the method
 
             // Get the plugin data if found
-            $data = $handler->call($plugin, $method, $attributes, $content);
+            $data = $pluginHandler->call($plugin, $method, $attributes, $content);
         }
 
         // not is null
@@ -261,9 +268,14 @@ class Factory extends BaseFactory implements FactoryInterface
         return $finalResult;
     }
 
+    /**
+     * Factory stub for PHPSpec test
+     *
+     * @return Factory
+     */
     public static function stub()
     {
-        return \Anomaly\Lexicon\Stub\Lexicon::factory();
+        return \Anomaly\Lexicon\Stub\LexiconStub::factory();
     }
 
 }
