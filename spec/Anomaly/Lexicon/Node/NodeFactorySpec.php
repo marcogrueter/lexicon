@@ -19,13 +19,9 @@ use Prophecy\Argument;
 class NodeFactorySpec extends ObjectBehavior
 {
 
-    function let(
-        LexiconInterface $lexicon,
-        NodeCollection $nodeCollection,
-        NodeExtractor $nodeExtractor
-    )
+    function let()
     {
-        $this->beConstructedWith($lexicon, $nodeCollection, $nodeExtractor);
+        $this->beConstructedThrough('stub');
     }
 
     function it_is_initializable()
@@ -45,13 +41,12 @@ class NodeFactorySpec extends ObjectBehavior
 
     function it_can_remove_a_node_type_from_a_node_group()
     {
-        $this
-            ->registerNodeGroup(['Anomaly\Lexicon\Stub\Node\Node', 'Anomaly\Lexicon\Stub\Node\Node2'])
-            ->getNodeTypes()->shouldHaveCount(2);
+        $this->getNodeTypes()->shouldHaveCount(17);
+
 
         $this
-            ->removeNodeTypeFromNodeGroup('Anomaly\Lexicon\Stub\Node\Node')
-            ->getNodeTypes()->shouldHaveCount(1);
+            ->removeNodeTypeFromNodeGroup('Anomaly\Lexicon\Node\NodeType\Variable')
+            ->getNodeTypes()->shouldHaveCount(16);
     }
 
     function it_can_set_and_get_node_types()
@@ -116,6 +111,7 @@ class NodeFactorySpec extends ObjectBehavior
 
     function it_throws_root_node_type_not_found_exception()
     {
+        $this->removeNodeTypeFromNodeGroup('Anomaly\Lexicon\Node\NodeType\Block');
         $this
             ->shouldThrow('Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException')
             ->duringGetRootNodeType();
@@ -138,9 +134,8 @@ class NodeFactorySpec extends ObjectBehavior
         );
     }
 
-    function it_can_add_node(Node $node, NodeCollection $nodeCollection)
+    function it_can_add_node(Node $node)
     {
-        $nodeCollection->push($node)->shouldBeCalled();
         $this->addNode($node);
     }
 
@@ -168,10 +163,11 @@ class NodeFactorySpec extends ObjectBehavior
         )->shouldHaveType('Anomaly\Lexicon\Stub\Node\Node');
     }
 
-    function it_can_get_node_by_id_in_collection(NodeCollection $nodeCollection, Node $node)
+    function it_can_get_node_by_id_in_collection(Node $node)
     {
-        $nodeCollection->getById('stub-id-1')->shouldBeCalled();
-        $this->getById('stub-id-1');
+        $node->getId()->willReturn('stub-id-1');
+        $this->addNode($node);
+        $this->getById('stub-id-1')->shouldHaveType('Anomaly\Lexicon\Stub\Node\Node');
     }
 
     function it_can_add_add_node_group_path()
@@ -187,8 +183,9 @@ class NodeFactorySpec extends ObjectBehavior
             ->shouldReturn('node_group_1');
     }
 
-    function it_can_create_child_nodes(Node $node)
+    function it_can_create_child_nodes()
     {
+        $node = $this->getRootNode('{{ var1 }}{{ var2 }}');
         $this->createChildNodes($node);
     }
     
@@ -205,6 +202,11 @@ class NodeFactorySpec extends ObjectBehavior
     function it_can_inject_node_into_parent(NodeInterface $child, NodeInterface $parent)
     {
         $this->inject($child, $parent);
+    }
+
+    function it_can_get_root_node()
+    {
+        $this->getRootNode('content')->shouldImplement('Anomaly\Lexicon\Contract\Node\RootInterface');
     }
 
 }

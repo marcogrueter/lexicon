@@ -4,6 +4,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException;
+use Anomaly\Lexicon\Stub\LexiconStub;
 
 /**
  * Class NodeFactory
@@ -464,6 +465,16 @@ class NodeFactory
         }
 
         return $id;
+    }
+
+    /**
+     * Stub for testing with PHPSpec
+     *
+     * @return NodeFactory
+     */
+    public static function stub()
+    {
+        return LexiconStub::foundation()->getNodeFactory();
     }
 
 }

@@ -104,5 +104,5 @@ class NodeFinderSpec extends ObjectBehavior
     {
         $this->glue()->shouldBeString();
     }
-    
+
 }
