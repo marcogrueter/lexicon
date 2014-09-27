@@ -5,7 +5,6 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
-use Anomaly\Lexicon\Lexicon;
 
 class Node implements NodeInterface
 {
@@ -355,8 +354,10 @@ class Node implements NodeInterface
     {
         $children = [];
 
+        $nodeFactory = $this->getLexicon()->getFoundation()->getNodeFactory();
+
         foreach ($this->children as $id) {
-            $children[] = $this->getLexicon()->getNodeFactory()->getById($id);
+            $children[] = $nodeFactory->getById($id);
         }
 
         return $children;
@@ -489,7 +490,7 @@ class Node implements NodeInterface
      */
     public function getParent()
     {
-        return $this->getLexicon()->getNodeFactory()->getById($this->getParentId());
+        return $this->getLexicon()->getFoundation()->getNodeFactory()->getById($this->getParentId());
     }
 
     /**
@@ -708,7 +709,7 @@ class Node implements NodeInterface
      */
     public function isFilter()
     {
-        return $this->getLexicon()->getPluginHandler()->isFilter($this->getName());
+        return $this->getLexicon()->getFoundation()->getPluginHandler()->isFilter($this->getName());
     }
 
     /**
@@ -718,7 +719,7 @@ class Node implements NodeInterface
      */
     public function isParse()
     {
-        return $this->getLexicon()->getPluginHandler()->isParse($this->getName());
+        return $this->getLexicon()->getFoundation()->getPluginHandler()->isParse($this->getName());
     }
 
     /**
@@ -884,4 +885,5 @@ class Node implements NodeInterface
     {
         return '';
     }
+
 }

@@ -15,11 +15,10 @@ interface PluginHandlerInterface
     /**
      * Register
      *
-     * @param $name
-     * @param $class
+     * @param array $plugins
      * @return PluginHandlerInterface
      */
-    public function register($name, $class);
+    public function register(array $plugins);
 
     /**
      * Get the plugin by name

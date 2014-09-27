@@ -170,16 +170,18 @@ class Block extends Node implements RootInterface
      */
     public function compileChildren()
     {
+        $nodeFactory = $this->getLexicon()->getFoundation()->getNodeFactory();
+
         /** @var $child NodeInterface */
         foreach ($this->getChildren() as $child) {
             if (!$child->deferCompile()) {
-                $this->getLexicon()->getNodeFactory()->inject($child, $this);
+                $nodeFactory->inject($child, $this);
             }
         }
 
         foreach ($this->getChildren() as $child) {
             if ($child->deferCompile()) {
-                $this->getLexicon()->getNodeFactory()->inject($child, $this);
+                $nodeFactory->inject($child, $this);
             }
         }
 

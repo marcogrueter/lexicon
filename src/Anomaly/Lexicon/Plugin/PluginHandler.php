@@ -50,9 +50,9 @@ class PluginHandler implements PluginHandlerInterface
      * @param $class
      * @return $this
      */
-    public function register($name, $class)
+    public function register(array $plugins)
     {
-        $this->plugins[$name] = $class;
+        $this->plugins = $plugins;
         return $this;
     }
 

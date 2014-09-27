@@ -12,20 +12,6 @@ class ConditionalHandler implements ConditionalHandlerInterface
     protected $testTypes = [];
 
     /**
-     * Register test type
-     *
-     * @param $name
-     * @param $booleanTestType
-     * @internal param string $test
-     * @return ConditionalHandler
-     */
-    public function registerBooleanTestType($name, $booleanTestType)
-    {
-        $this->testTypes[$name] = $booleanTestType;
-        return $this;
-    }
-
-    /**
      * Register boolean test types
      *
      * @param array $booleanTestTypes
@@ -133,4 +119,5 @@ class ConditionalHandler implements ConditionalHandlerInterface
 
         return $result;
     }
+
 }

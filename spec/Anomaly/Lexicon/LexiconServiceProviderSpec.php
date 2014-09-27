@@ -1,7 +1,7 @@
 <?php namespace spec\Anomaly\Lexicon;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\Support\ContainerInterface;
+use Illuminate\Contracts\Container\Container;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -14,7 +14,7 @@ use Prophecy\Argument;
 class LexiconServiceProviderSpec extends ObjectBehavior
 {
 
-    function let(ContainerInterface $application)
+    function let(Container $application)
     {
         $this->beConstructedWith($application);
     }

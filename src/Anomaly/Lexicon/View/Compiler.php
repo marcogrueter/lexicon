@@ -5,6 +5,7 @@ use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Node\NodeFactory;
+use Anomaly\Lexicon\Stub\LexiconStub;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
 
 class Compiler extends BaseCompiler implements CompilerInterface
@@ -88,7 +89,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
 
         $this->setHash(substr(strrchr($compiledPath, '/'), 1));
 
-        $nodeSet = $this->getLexicon()->getNodeFactory()->getNodeGroupFromPath($this->getPath());
+        $nodeSet = $this->getLexicon()->getFoundation()->getNodeFactory()->getNodeGroupFromPath($this->getPath());
 
         $contents = $this->compileView($this->compileString($this->files->get($path), $nodeSet));
 
@@ -121,7 +122,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
     public function getRootNode($content = '', $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
         // TODO: Where to set and get node group
-        return $this->getLexicon()->getNodeFactory()->getRootNode($content);
+        return $this->getLexicon()->getFoundation()->getNodeFactory()->getRootNode($content);
     }
 
     /**
@@ -212,7 +213,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
      */
     public static function stub()
     {
-        return \Anomaly\Lexicon\Stub\Lexicon::compiler();
+        return LexiconStub::compiler();
     }
 
 }

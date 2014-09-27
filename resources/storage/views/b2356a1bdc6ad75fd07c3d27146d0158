@@ -1,0 +1,2 @@
+<?php namespace Anomaly\Lexicon\View; class LexiconView_b2356a1bdc6ad75fd07c3d27146d0158 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render($__data) {
+?>Hello <?php echo $__data['__env']->variable($__data,'name',[],'',null,'echo'); ?>!<?php }} ?>

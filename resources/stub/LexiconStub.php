@@ -4,6 +4,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Foundation;
+use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Support\Container;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
@@ -19,70 +20,17 @@ use Illuminate\Session\SessionManager;
 class LexiconStub
 {
 
-    public static $nodeGroups = [
-        'all'       => [
-            'Anomaly\Lexicon\Stub\Node\Undefined',
-            'Anomaly\Lexicon\Node\Comment',
-            'Anomaly\Lexicon\Node\IgnoreBlock',
-            'Anomaly\Lexicon\Node\IgnoreVariable',
-            'Anomaly\Lexicon\Node\Conditional',
-            'Anomaly\Lexicon\Node\ConditionalElse',
-            'Anomaly\Lexicon\Node\ConditionalEndif',
-            'Anomaly\Lexicon\Node\Block',
-            'Anomaly\Lexicon\Node\Recursive',
-            'Anomaly\Lexicon\Node\Section',
-            'Anomaly\Lexicon\Node\SectionAppend',
-            'Anomaly\Lexicon\Node\SectionExtends',
-            'Anomaly\Lexicon\Node\SectionOverwrite',
-            'Anomaly\Lexicon\Node\SectionShow',
-            'Anomaly\Lexicon\Node\SectionStop',
-            'Anomaly\Lexicon\Node\SectionYield',
-            'Anomaly\Lexicon\Node\Includes',
-            'Anomaly\Lexicon\Node\Variable',
-        ],
-        /**
-         * Compile without layout features
-         */
-        'simple'    => [
-            'Anomaly\Lexicon\Node\Comment',
-            'Anomaly\Lexicon\Node\Conditional',
-            'Anomaly\Lexicon\Node\ConditionalElse',
-            'Anomaly\Lexicon\Node\ConditionalEndif',
-            'Anomaly\Lexicon\Node\IgnoreBlock',
-            'Anomaly\Lexicon\Node\IgnoreVariable',
-            'Anomaly\Lexicon\Node\Block',
-            'Anomaly\Lexicon\Node\Recursive',
-            'Anomaly\Lexicon\Node\Variable',
-        ],
-        /**
-         * Compile without Blocks
-         */
-        'variables' => [
-            'Anomaly\Lexicon\Node\Comment',
-            'Anomaly\Lexicon\Node\IgnoreVariable',
-            'Anomaly\Lexicon\Node\Conditional',
-            'Anomaly\Lexicon\Node\ConditionalElse',
-            'Anomaly\Lexicon\Node\ConditionalEndif',
-            'Anomaly\Lexicon\Node\Variable',
-        ]
-    ];
-
-    public static $plugins = [
-        'stub' => 'Anomaly\Lexicon\Plugin\StubPlugin'
-    ];
-
     /**
      * @return LexiconInterface
      */
     public static function stub(Container $container = null)
     {
-        $lexicon = new \Anomaly\Lexicon\Lexicon($container);
+        $lexicon = new Lexicon($container);
 
         return $lexicon
+            ->setStandalone(true)
             ->addNamespace('test', __DIR__ . '/../views')
             ->setStoragePath(__DIR__ . '/../storage/views')
-            ->registerPlugins(static::$plugins)
-            ->registerNodeGroups(static::$nodeGroups)
             ->addParsePath('<h1>Hello {{ name }}</h1>')
             ->setDebug(true)
             ->register();

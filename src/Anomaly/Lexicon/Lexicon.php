@@ -5,7 +5,7 @@ use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Node\NodeFactory;
-use Illuminate\Contracts\Container\Container;
+use Illuminate\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
@@ -219,7 +219,7 @@ class Lexicon implements LexiconInterface
 
     /**
      * @param bool $standalone
-     * @return Foundation
+     * @return LexiconInterface
      */
     public function setStandalone($standalone = true)
     {
@@ -264,7 +264,15 @@ class Lexicon implements LexiconInterface
      */
     public function getContainer()
     {
-        return $this->container ?: $this->container = new Container();
+        if (!$this->container) {
+            $this->container = new Container();
+
+            if (method_exists($this->container, 'boot')) {
+                $this->container->boot();
+            }
+        }
+
+        return $this->container;
     }
 
     /**

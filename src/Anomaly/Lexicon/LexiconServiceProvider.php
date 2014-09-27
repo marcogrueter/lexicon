@@ -24,8 +24,6 @@ class LexiconServiceProvider extends ServiceProvider
         $this->package('anomaly/lexicon');
 
         $lexicon = new Lexicon($app);
-        // TODO: Revisit this config default
-        $lexicon->registerNodeGroups($app['config']['lexicon::nodeGroups']);
         $lexicon->register();
 
         return $lexicon;

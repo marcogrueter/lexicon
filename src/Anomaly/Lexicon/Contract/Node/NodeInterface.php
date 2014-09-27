@@ -2,7 +2,6 @@
 
 use Anomaly\Lexicon\Attribute\AttributeNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Node\NodeFinder;
 
 interface NodeInterface extends ExtractionInterface
@@ -264,6 +263,13 @@ interface NodeInterface extends ExtractionInterface
      * @return bool
      */
     public function isPhp();
+
+    /**
+     * Is this the root node?
+     *
+     * @return bool
+     */
+    public function isRoot();
 
     /**
      * @return NodeFinder

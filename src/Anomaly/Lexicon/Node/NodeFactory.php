@@ -67,6 +67,11 @@ class NodeFactory
     protected $nodeGroupPaths = [];
 
     /**
+     * @var NodeFinder
+     */
+    private $nodeFinder;
+
+    /**
      * Default node group
      */
     const DEFAULT_NODE_GROUP = 'all';
@@ -74,12 +79,16 @@ class NodeFactory
     /**
      * @param LexiconInterface $lexicon
      */
-    public function __construct(LexiconInterface $lexicon, NodeCollection $nodeCollection, NodeExtractor $nodeExtractor)
-    {
-        $this->lexicon        = $lexicon;
+    public function __construct(
+        LexiconInterface $lexicon,
+        NodeCollection $nodeCollection,
+        NodeExtractor $nodeExtractor,
+        NodeFinder $nodeFinder
+    ) {
+        $this->lexicon = $lexicon;
         $this->nodeCollection = $nodeCollection;
-        $this->nodeExtractor  = $nodeExtractor;
-        $this->bootDefaultNodeGroups();
+        $this->nodeExtractor = $nodeExtractor;
+        $this->nodeFinder = $nodeFinder;
     }
 
     /**
@@ -113,7 +122,6 @@ class NodeFactory
         $node->setMatch($match);
         $node->setOffset($offset);
         $node->setDepth($depth);
-        $node->setNodeFinder($this->newNodeFinder($node));
         $node->setup();
         $node->setCurrentContent($node->getContent());
         $node->setItemAlias($node->getItemAliasFromRawAttributes());
@@ -208,18 +216,6 @@ class NodeFactory
         return $node;
     }
 
-    public function bootDefaultNodeGroups()
-    {
-        $container = $this->getLexicon()->getContainer();
-
-        if (!$this->nodeTypes and
-            isset($container['config']) and
-            $nodeGroups = $container['config']['lexicon::nodeGroups']
-        ) {
-            $this->nodeTypes = $nodeGroups;
-        }
-    }
-
     /**
      * Get node types
      *
@@ -278,6 +274,10 @@ class NodeFactory
         return new $class($this->getLexicon());
     }
 
+    /**
+     * @param NodeInterface $node
+     * @return NodeFinder
+     */
     public function newNodeFinder(NodeInterface $node)
     {
         return new NodeFinder($node);
@@ -287,7 +287,7 @@ class NodeFactory
      * Set node group
      *
      * @param $nodeGroup
-     * @return $this
+     * @return NodeFactory
      */
     public function setNodeGroup($nodeGroup)
     {
@@ -344,7 +344,7 @@ class NodeFactory
      *
      * @param        $path
      * @param string $nodeGroup
-     * @return LexiconInterface
+     * @return NodeFactory
      */
     public function addNodeGroupPath($path, $nodeGroup = self::DEFAULT_NODE_GROUP)
     {
@@ -367,7 +367,7 @@ class NodeFactory
      * Get root node type
      *
      * @throws RootNodeTypeNotFoundException
-     * @return NodeInterface
+     * @return RootInterface
      */
     public function getRootNodeType($nodeGroup = self::DEFAULT_NODE_GROUP)
     {
@@ -411,7 +411,7 @@ class NodeFactory
      * Register node groups
      *
      * @param array $nodeGroups
-     * @return LexiconInterface
+     * @return NodeFactory
      */
     public function registerNodeGroups(array $nodeGroups = [])
     {
@@ -425,7 +425,7 @@ class NodeFactory
      * Register node group
      *
      * @param array $nodeTypes
-     * @return LexiconInterface
+     * @return NodeFactory
      */
     public function registerNodeGroup(array $nodeTypes, $nodeGroup = self::DEFAULT_NODE_GROUP)
     {
@@ -440,7 +440,7 @@ class NodeFactory
      *
      * @param        $nodeType
      * @param string $nodeGroup
-     * @return LexiconInterface
+     * @return NodeFactory
      */
     public function registerNodeType($nodeType, $nodeGroup = self::DEFAULT_NODE_GROUP)
     {
@@ -453,7 +453,7 @@ class NodeFactory
      *
      * @param $nodeType
      * @param $nodeGroup
-     * @return LexiconInterface
+     * @return NodeFactory
      */
     public function removeNodeTypeFromNodeGroup($nodeType, $nodeGroup = self::DEFAULT_NODE_GROUP)
     {

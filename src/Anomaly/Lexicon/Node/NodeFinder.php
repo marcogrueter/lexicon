@@ -18,7 +18,7 @@ class NodeFinder
     /**
      * @param NodeInterface $node
      */
-    public function __construct(NodeInterface $node)
+    public function __construct(NodeInterface $node = null)
     {
         $this->node = $node;
     }

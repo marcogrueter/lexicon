@@ -2,9 +2,11 @@
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Node\NodeCollection;
 use Anomaly\Lexicon\Node\NodeExtractor;
 use Anomaly\Lexicon\Node\NodeFactory;
+use Anomaly\Lexicon\Node\NodeFinder;
 use Anomaly\Lexicon\Plugin\PluginHandler;
 use Anomaly\Lexicon\Stub\LexiconStub;
 use Anomaly\Lexicon\View\Compiler;
@@ -73,9 +75,9 @@ class Foundation
         $this->registerFilesystem($container);
         $this->registerEvents($container);
         $this->registerConfigRepository($container);
-        $this->registerPlugins();
-        $this->registerNodeGroups();
-        $this->registerBooleanTestTypes();
+        $this->registerNodeFactory();
+        $this->registerPluginHandler();
+        $this->registerConditionalHandler();
         $this->registerEngineResolver($container);
         $this->registerViewFinder($container);
         $this->registerFactory($container);
@@ -136,45 +138,80 @@ class Foundation
     /**
      * Register Lexicon config
      */
-    public function registerPlugins()
+    public function registerPluginHandler()
     {
-        $plugins = $this->getLexicon()->getPlugins();
+        $this->bindShared(
+            'anomaly.lexicon.plugin.handler',
+            function () {
 
-        if (empty($plugins)) {
-            $plugins = $this->getConfig('lexicon::plugins', []);
-        }
+                $pluginHandler = $this->getLexicon()->getPluginHandler();
+                $plugins       = $this->getLexicon()->getPlugins();
 
-        foreach ($plugins as $name => $plugin) {
-            $this->getPluginHandler()->register($name, $plugin);
-        }
+                if (!($pluginHandler instanceof PluginHandlerInterface)) {
+                    $pluginHandler = new PluginHandler();
+                }
+
+                if (empty($plugins)) {
+                    $plugins = $this->getConfig('lexicon::plugins', []);
+                }
+
+                $pluginHandler->setLexicon($this->getLexicon());
+
+                return $pluginHandler->register($plugins);
+            }
+        );
     }
 
     /**
      * Register boolean test types
      */
-    public function registerBooleanTestTypes()
+    public function registerConditionalHandler()
     {
-        $booleanTestsTypes = $this->getLexicon()->getBooleanTestTypes();
+        $this->bindShared(
+            'anomaly.lexicon.conditional.handler',
+            function () {
+                $conditionalHandler = $this->getLexicon()->getConditionalHandler();
+                $booleanTestsTypes = $this->getLexicon()->getBooleanTestTypes();
 
-        if (empty($booleanTestsTypes)) {
-            $booleanTestsTypes = $this->getConfig('lexicon::booleanTestTypes', []);
-        }
+                if (!$conditionalHandler) {
+                    $conditionalHandler = new ConditionalHandler();
+                }
 
-        $this->getConditionalHandler()->registerBooleanTestTypes($booleanTestsTypes);
+                if (empty($booleanTestsTypes)) {
+                    $booleanTestsTypes = $this->getConfig('lexicon::booleanTestTypes', []);
+                }
+
+                return $conditionalHandler->registerBooleanTestTypes($booleanTestsTypes);
+            }
+        );
     }
 
     /**
      * Lexicon node groups
      */
-    public function registerNodeGroups()
+    public function registerNodeFactory()
     {
-        $nodeGroups = $this->getLexicon()->getNodeGroups();
+        $this->bindShared(
+            'anomaly.lexicon.node.factory',
+            function () {
 
-        if (empty($nodeGroups)) {
-            $nodeGroups = $this->getConfig('lexicon::nodeGroups', []);
-        }
+                $nodeFactory = new NodeFactory(
+                    $this->getLexicon(),
+                    new NodeCollection(),
+                    new NodeExtractor(),
+                    new NodeFinder()
+                );
 
-        $this->getNodeFactory()->registerNodeGroups($nodeGroups);
+                $nodeGroups = $this->getLexicon()->getNodeGroups();
+
+                if (empty($nodeGroups)) {
+                    $nodeGroups = $this->getConfig('lexicon::nodeGroups', []);
+                }
+
+                return $nodeFactory->registerNodeGroups($nodeGroups);
+            }
+        );
+
     }
 
     /**
@@ -226,7 +263,6 @@ class Foundation
                 return new Engine($container['anomaly.lexicon.compiler'], $this->getFilesystem());
             }
         );
-
     }
 
     /**
@@ -320,7 +356,6 @@ class Foundation
                 return $factory;
             }
         );
-
     }
 
     /**
@@ -429,7 +464,7 @@ class Foundation
      */
     public function getConditionalHandler()
     {
-        return $this->getLexicon()->getConditionalHandler() ?: new ConditionalHandler();
+        return $this->getContainer()->make('anomaly.lexicon.conditional.handler');
     }
 
     /**
@@ -439,7 +474,7 @@ class Foundation
      */
     public function getPluginHandler()
     {
-        return $this->getLexicon()->getPluginHandler() ?: (new PluginHandler())->setLexicon($this->getLexicon());
+        return $this->getContainer()->make('anomaly.lexicon.plugin.handler');
     }
 
     /**
@@ -449,9 +484,7 @@ class Foundation
      */
     public function getNodeFactory()
     {
-        return $this->getLexicon()->getNodeFactory() ?: new NodeFactory(
-            $this->getLexicon(), new NodeCollection(), new NodeExtractor()
-        );
+        return $this->getContainer()->make('anomaly.lexicon.node.factory');
     }
 
     /**
@@ -535,7 +568,7 @@ class Foundation
 
         $storagePath = __DIR__ . '/../../../resources/storage/views';
 
-        if ($container['path.storage']) {
+        if (isset($container['path.storage'])) {
             $storagePath = $container['path.storage'] . '/views';
         }
 
@@ -629,7 +662,7 @@ class Foundation
     /**
      * Bind a shared Closure into the container.
      *
-     * @param  string $abstract
+     * @param  string   $abstract
      * @param  \Closure $closure
      * @return void
      */
@@ -646,4 +679,5 @@ class Foundation
     {
         return new static(LexiconStub::stub());
     }
+
 }
