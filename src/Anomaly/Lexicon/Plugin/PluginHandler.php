@@ -27,7 +27,7 @@ class PluginHandler implements PluginHandlerInterface
      * Set lexicon
      *
      * @param LexiconInterface $lexicon
-     * @return PluginHandlerInterface
+     * @return PluginHandler
      */
     public function setLexicon(LexiconInterface $lexicon)
     {
@@ -44,15 +44,29 @@ class PluginHandler implements PluginHandlerInterface
     }
 
     /**
+     * Register plugins
+     *
+     * @param array $plugins
+     * @return PluginHandler
+     */
+    public function registerPlugins(array $plugins)
+    {
+        foreach ($plugins as $name => $class) {
+            $this->registerPlugin($name, $class);
+        }
+        return $this;
+    }
+
+    /**
      * Register plugin
      *
-     * @param $name
-     * @param $class
-     * @return $this
+     * @param string $name
+     * @param string $class
+     * @return PluginHandler
      */
-    public function register(array $plugins)
+    public function registerPlugin($name, $class)
     {
-        $this->plugins = $plugins;
+        $this->plugins[$name] = $class;
         return $this;
     }
 

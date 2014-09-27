@@ -1,6 +1,7 @@
 <?php namespace Anomaly\Lexicon\Node;
 
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Stub\LexiconStub;
 
 /**
  * Class Variable
@@ -59,7 +60,7 @@ class Variable extends Single
      */
     public static function stub()
     {
-        return new static(\Anomaly\Lexicon\Stub\Lexicon::stub());
+        return new static(LexiconStub::stub());
     }
 
 }

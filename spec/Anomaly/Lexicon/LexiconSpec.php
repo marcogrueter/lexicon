@@ -1,7 +1,9 @@
 <?php namespace spec\Anomaly\Lexicon;
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
+use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Contract\Support\Container;
 use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Plugin\PluginHandler;
@@ -46,23 +48,25 @@ class LexiconSpec extends ObjectBehavior
         $this->getScopeGlue()->shouldBeString();
     }
 
-    function it_has_the_conditional_handler()
+    function it_can_set_and_get_the_conditional_handler(ConditionalHandlerInterface $conditionalHandler)
     {
-        $this->getConditionalHandler()->shouldImplement(
-            'Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface'
-        );
+        $this
+            ->setConditionalHandler($conditionalHandler)
+            ->getConditionalHandler()
+            ->shouldImplement('Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface');
     }
 
-    function it_has_the_plugin_handler()
+    function it_can_set_and_get_the_plugin_handler(PluginHandlerInterface $pluginHandler)
     {
-        $this->getPluginHandler()->shouldImplement('Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface');
+        $this
+            ->setPluginHandler($pluginHandler)
+            ->getPluginHandler()
+            ->shouldImplement('Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface');
     }
 
     function it_can_register_a_single_plugin()
     {
-        $plugin = 'Anomaly\Lexicon\Plugin\StubPlugin';
-        $this->registerPlugin('stub', $plugin);
-        $this->getPluginHandler()->get('stub.foo')->shouldHaveType($plugin);
+        $this->registerPlugin('stub', 'Anomaly\Lexicon\Plugin\StubPlugin');
     }
     
     function it_can_register_multiple_plugins(PluginHandler $pluginHandler)
@@ -174,5 +178,13 @@ class LexiconSpec extends ObjectBehavior
                 'Anomaly\Lexicon\Stub\Node2'.
                 'Anomaly\Lexicon\Stub\Node3'
             ], 'custom_node_group');
+    }
+
+    function it_can_set_and_get_config()
+    {
+        $this
+            ->setConfigPath(__DIR__ . '/../../../src/config')
+            ->getConfigPath()
+            ->shouldReturn(__DIR__ . '/../../../src/config');
     }
 }

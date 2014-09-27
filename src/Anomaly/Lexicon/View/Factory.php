@@ -5,6 +5,7 @@ use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Contract\View\FactoryInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Stub\LexiconStub;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Factory as BaseFactory;
 
@@ -275,7 +276,7 @@ class Factory extends BaseFactory implements FactoryInterface
      */
     public static function stub()
     {
-        return \Anomaly\Lexicon\Stub\LexiconStub::factory();
+        return LexiconStub::factory();
     }
 
 }

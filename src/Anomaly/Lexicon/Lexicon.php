@@ -147,6 +147,13 @@ class Lexicon implements LexiconInterface
     protected $foundation;
 
     /**
+     * Config path
+     *
+     * @var string
+     */
+    protected $configPath;
+
+    /**
      * Data constant
      */
     const DATA = '$__data';
@@ -416,7 +423,8 @@ class Lexicon implements LexiconInterface
      */
     public function registerPlugin($name, $class)
     {
-        return $this->plugins[$name][$class];
+        $this->plugins[$name] = $class;
+        return $this;
     }
 
     /**
@@ -427,7 +435,10 @@ class Lexicon implements LexiconInterface
      */
     public function registerPlugins(array $plugins)
     {
-        $this->plugins = $plugins;
+        foreach($plugins as $name => $plugin) {
+            $this->registerPlugin($name, $plugin);
+        }
+
         return $this;
     }
 
@@ -677,4 +688,25 @@ class Lexicon implements LexiconInterface
         return $this;
     }
 
+    /**
+     * Set config path
+     *
+     * @param $configPath
+     * @return LexiconInterface
+     */
+    public function setConfigPath($configPath)
+    {
+        $this->configPath = $configPath;
+        return $this;
+    }
+
+    /**
+     * Get config path
+     *
+     * @return string
+     */
+    public function getConfigPath()
+    {
+        return $this->configPath;
+    }
 }

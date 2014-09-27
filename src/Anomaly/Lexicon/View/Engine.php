@@ -3,7 +3,7 @@
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\View\EngineInterface;
-use Anomaly\Lexicon\Stub\Lexicon;
+use Anomaly\Lexicon\Stub\LexiconStub;
 use Illuminate\View\Engines\CompilerEngine;
 
 class Engine extends CompilerEngine implements EngineInterface
@@ -34,15 +34,17 @@ class Engine extends CompilerEngine implements EngineInterface
         /** @var LexiconInterface $lexicon */
         $lexicon = $this->getLexicon();
 
+        $foundation = $this->getLexicon()->getFoundation();
+
         $compiler = $this->getCompiler();
 
         // If this given view has expired, which means it has simply been edited since
         // it was last compiled, we will re-compile the views so we can evaluate a
         // fresh copy of the view. We'll pass the compiler the path of the view.
 
-        if ($lexicon->isParsePath($__path) and ($lexicon->isDebug() or $compiler->isNotParsed($__path))) {
+        if ($lexicon->isParsePath($__path) and ($foundation->isDebug() or $compiler->isNotParsed($__path))) {
             $compiler->compileParse($__path);
-        } elseif (!$lexicon->isParsePath($__path) and ($lexicon->isDebug() or $compiler->isExpired($__path))) {
+        } elseif (!$lexicon->isParsePath($__path) and ($foundation->isDebug() or $compiler->isExpired($__path))) {
             $compiler->compile($__path);
         }
 
@@ -119,6 +121,6 @@ class Engine extends CompilerEngine implements EngineInterface
      */
     public static function stub()
     {
-        return Lexicon::engine();
+        return LexiconStub::engine();
     }
 }

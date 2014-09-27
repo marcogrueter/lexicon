@@ -2,8 +2,6 @@
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\CompilerInterface;
-use Anomaly\Lexicon\Contract\View\EngineInterface;
-use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Stub\LexiconStub;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
@@ -46,12 +44,23 @@ class Compiler extends BaseCompiler implements CompilerInterface
         return $this->path;
     }
 
+    /**
+     * Set view hash
+     *
+     * @param $hash
+     * @return CompilerInterface
+     */
     public function setHash($hash)
     {
         $this->hash = $hash;
         return $this;
     }
 
+    /**
+     * Get view hash
+     *
+     * @return string
+     */
     public function getHash()
     {
         return $this->hash;
@@ -89,9 +98,9 @@ class Compiler extends BaseCompiler implements CompilerInterface
 
         $this->setHash(substr(strrchr($compiledPath, '/'), 1));
 
-        $nodeSet = $this->getLexicon()->getFoundation()->getNodeFactory()->getNodeGroupFromPath($this->getPath());
+        $nodeGroup = $this->getLexicon()->getFoundation()->getNodeFactory()->getNodeGroupFromPath($this->getPath());
 
-        $contents = $this->compileView($this->compileString($this->files->get($path), $nodeSet));
+        $contents = $this->compileView($this->compileString($this->files->get($path), $nodeGroup));
 
         if (!is_null($this->cachePath)) {
             $this->files->put($this->getCompiledPath($path), $contents);
@@ -104,13 +113,13 @@ class Compiler extends BaseCompiler implements CompilerInterface
      * @param string $content
      * @return string
      */
-    public function compileString($content = '', $nodeSet = NodeFactory::DEFAULT_NODE_GROUP)
+    public function compileString($content = '', $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
         if (!$this->getLexicon()->isPhpAllowed()) {
             $content = $this->escapePhp($content);
         }
 
-        return $this->getRootNode($content, $nodeSet)->compile();
+        return $this->getRootNode($content, $nodeGroup)->compile();
     }
 
     /**
@@ -122,7 +131,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
     public function getRootNode($content = '', $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
         // TODO: Where to set and get node group
-        return $this->getLexicon()->getFoundation()->getNodeFactory()->getRootNode($content);
+        return $this->getLexicon()->getFoundation()->getNodeFactory()->getRootNode($content, $nodeGroup);
     }
 
     /**

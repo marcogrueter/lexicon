@@ -126,10 +126,17 @@ class Foundation
             $this->bindShared(
                 'config',
                 function () {
-                    return new Repository(
-                        new FileLoader($this->getFilesystem(), __DIR__ . '/../../../../src/config'),
-                        'production' // TODO: Get this from Lexicon
+                    $config = new Repository(
+                        new FileLoader(
+                            $this->getFilesystem(),
+                            __DIR__ . '/../../config'
+                        ),
+                        'development' // TODO: Get this from Lexicon
                     );
+
+                    $config->package('anomaly/lexicon', __DIR__ . '/../../config');
+
+                    return $config;
                 }
             );
         }
@@ -145,19 +152,19 @@ class Foundation
             function () {
 
                 $pluginHandler = $this->getLexicon()->getPluginHandler();
-                $plugins       = $this->getLexicon()->getPlugins();
 
                 if (!($pluginHandler instanceof PluginHandlerInterface)) {
                     $pluginHandler = new PluginHandler();
                 }
 
-                if (empty($plugins)) {
-                    $plugins = $this->getConfig('lexicon::plugins', []);
-                }
-
                 $pluginHandler->setLexicon($this->getLexicon());
 
-                return $pluginHandler->register($plugins);
+                $plugins = array_merge(
+                    $this->getLexicon()->getPlugins(),
+                    $this->getConfig('lexicon::plugins', [])
+                );
+
+                return $pluginHandler->registerPlugins($plugins);
             }
         );
     }
@@ -171,7 +178,7 @@ class Foundation
             'anomaly.lexicon.conditional.handler',
             function () {
                 $conditionalHandler = $this->getLexicon()->getConditionalHandler();
-                $booleanTestsTypes = $this->getLexicon()->getBooleanTestTypes();
+                $booleanTestsTypes  = $this->getLexicon()->getBooleanTestTypes();
 
                 if (!$conditionalHandler) {
                     $conditionalHandler = new ConditionalHandler();
@@ -191,7 +198,7 @@ class Foundation
      */
     public function registerNodeFactory()
     {
-        $this->bindShared(
+        $this->getContainer()->singleton(
             'anomaly.lexicon.node.factory',
             function () {
 
@@ -202,13 +209,15 @@ class Foundation
                     new NodeFinder()
                 );
 
-                $nodeGroups = $this->getLexicon()->getNodeGroups();
+                $nodeGroups = $this->getLexicon()->getNodeGroups() ?: [];
 
-                if (empty($nodeGroups)) {
-                    $nodeGroups = $this->getConfig('lexicon::nodeGroups', []);
+                $configNodeGroups = $this->getConfig('lexicon::nodeGroups', []);
+
+                foreach ($nodeGroups as $nodeGroup => $nodeTypes) {
+                    $configNodeGroups[$nodeGroup] = $nodeTypes;
                 }
 
-                return $nodeFactory->registerNodeGroups($nodeGroups);
+                return $nodeFactory->registerNodeGroups($configNodeGroups);
             }
         );
 
@@ -442,6 +451,16 @@ class Foundation
     }
 
     /**
+     * Is debug
+     *
+     * @return bool
+     */
+    public function isDebug()
+    {
+        return $this->lexicon->isDebug() ?: $this->getConfig('lexicon::debug', false);
+    }
+
+    /**
      * Get extension
      *
      * @return string
@@ -568,7 +587,7 @@ class Foundation
 
         $storagePath = __DIR__ . '/../../../resources/storage/views';
 
-        if (isset($container['path.storage'])) {
+        if (!$this->isStandalone() and $container['path.storage']) {
             $storagePath = $container['path.storage'] . '/views';
         }
 

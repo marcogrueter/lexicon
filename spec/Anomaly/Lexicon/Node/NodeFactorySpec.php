@@ -19,9 +19,14 @@ use Prophecy\Argument;
 class NodeFactorySpec extends ObjectBehavior
 {
 
-    function let(LexiconInterface $lexicon, NodeCollection $nodeCollection, NodeExtractor $nodeExtractor)
+    function let(
+        LexiconInterface $lexicon,
+        NodeCollection $nodeCollection,
+        NodeExtractor $nodeExtractor,
+        NodeFinder $nodeFinder
+    )
     {
-        $this->beConstructedWith($lexicon, $nodeCollection, $nodeExtractor);
+        $this->beConstructedWith($lexicon, $nodeCollection, $nodeExtractor, $nodeFinder);
     }
 
     function it_is_initializable()
@@ -140,7 +145,7 @@ class NodeFactorySpec extends ObjectBehavior
         $this->addNode($node);
     }
 
-    function it_can_make_node_of_type(Variable $nodeType, NodeFinder $nodeFinder)
+    function it_can_make_node_of_type(Node $nodeType, NodeFinder $nodeFinder)
     {
         $nodeType->setId($id = 'F4pwOfe4eAaTJxFf483ZsQnFL3ALqXjl')->shouldBeCalled();
         $nodeType->incrementDepth()->willReturn(true);
@@ -148,7 +153,6 @@ class NodeFactorySpec extends ObjectBehavior
         $nodeType->setMatch([])->shouldBeCalled();
         $nodeType->setOffset(0)->shouldBeCalled();
         $nodeType->setDepth(1)->shouldBeCalled();
-        $nodeType->setNodeFinder($this->newNodeFinder($nodeType))->shouldBeCalled();
         $nodeType->setup()->shouldBeCalled();
         $nodeType->getContent()->shouldBeCalled();
         $nodeType->setCurrentContent(null)->shouldBeCalled();
@@ -162,7 +166,7 @@ class NodeFactorySpec extends ObjectBehavior
             $offset = 0,
             $depth = 0,
             $id
-        )->shouldHaveType('Anomaly\Lexicon\Node\Variable');
+        )->shouldHaveType('Anomaly\Lexicon\Stub\Node\Node');
     }
 
     function it_can_get_node_by_id_in_collection(NodeCollection $nodeCollection, Node $node)
@@ -202,11 +206,6 @@ class NodeFactorySpec extends ObjectBehavior
     function it_can_inject_node_into_parent(NodeInterface $child, NodeInterface $parent)
     {
         $this->inject($child, $parent);
-    }
-    
-    function it_can_boot_default_node_groups()
-    {
-        $this->bootDefaultNodeGroups();
     }
 
 }

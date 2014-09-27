@@ -18,7 +18,7 @@ return array(
      * When debug is turned on it enables exceptions on certain parts where things fail silently. Generic exceptions
      * will always be logged.
      */
-    'debug'              => 'inherit',
+    'debug'              => true,
     /**
      * PHP is escaped from views by default but you can enable it if you need it for any reason. It is highly
      * recommended that you keep this disabled as it will make templates insecure.

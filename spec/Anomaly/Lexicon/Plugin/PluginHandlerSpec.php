@@ -29,16 +29,20 @@ class PluginHandlerSpec extends ObjectBehavior
     {
         $this->setLexicon($lexicon);
     }
-    
-    function it_can_register_a_plugin()
+
+    function it_can_register_multiple_plugins()
     {
-        $this->register('stub', 'Anomaly\Lexicon\Plugin\StubPlugin');
+        $this->registerPlugins([
+                'stub' => 'Anomaly\Lexicon\Plugin\StubPlugin',
+                'stub2' => 'Anomaly\Lexicon\Plugin\StubPlugin',
+                'stub3' => 'Anomaly\Lexicon\Plugin\StubPlugin',
+            ]);
     }
 
     function it_can_get_plugin_by_name(LexiconInterface $lexicon)
     {
         $lexicon->getScopeGlue()->willReturn('.');
-        $this->register('stub', 'Anomaly\Lexicon\Plugin\StubPlugin');
+        $this->registerPlugin('stub', 'Anomaly\Lexicon\Plugin\StubPlugin');
         $this->get('stub.foo')->shouldHaveType('Anomaly\Lexicon\Plugin\StubPlugin');
     }
     
@@ -53,7 +57,7 @@ class PluginHandlerSpec extends ObjectBehavior
     function it_can_assert_if_a_plugin_call_should_be_filtered(LexiconInterface $lexicon)
     {
         $lexicon->getScopeGlue()->willReturn('.');
-        $this->register('stub', 'Anomaly\Lexicon\Plugin\StubPlugin');
+        $this->registerPlugin('stub', 'Anomaly\Lexicon\Plugin\StubPlugin');
         $this->isFilter('stub.foo')->shouldReturn(false);
         $this->isFilter('stub.md5')->shouldReturn(true);
         $this->isFilter('stub.uppercase')->shouldReturn(false);
@@ -62,7 +66,7 @@ class PluginHandlerSpec extends ObjectBehavior
     function it_can_assert_if_a_plugin_call_should_be_parsed(LexiconInterface $lexicon)
     {
         $lexicon->getScopeGlue()->willReturn('.');
-        $this->register('stub', 'Anomaly\Lexicon\Plugin\StubPlugin');
+        $this->registerPlugin('stub', 'Anomaly\Lexicon\Plugin\StubPlugin');
         $this->isParse('stub.foo')->shouldReturn(false);
         $this->isParse('stub.md5')->shouldReturn(false);
         $this->isParse('stub.uppercase')->shouldReturn(true);

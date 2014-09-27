@@ -101,6 +101,15 @@ interface LexiconInterface
     public function getCompiledViewFullClass($hash);
 
     /**
+     * Register node type
+     *
+     * @param        $nodeType
+     * @param string $nodeGroup
+     * @return LexiconInterface
+     */
+    public function registerNodeType($nodeType, $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP);
+
+    /**
      * @param array $nodeTypes
      * @return LexiconInterface
      */
@@ -113,6 +122,15 @@ interface LexiconInterface
      * @return LexiconInterface
      */
     public function registerNodeGroups(array $nodeTypes = []);
+
+    /**
+     * Register plugin
+     *
+     * @param $name
+     * @param $class
+     * @return LexiconInterface
+     */
+    public function registerPlugin($name, $class);
 
     /**
      * Register plugins
@@ -273,5 +291,20 @@ interface LexiconInterface
      * @return array
      */
     public function getBooleanTestTypes();
+
+    /**
+     * Set config path
+     *
+     * @param $configPath
+     * @return LexiconInterface
+     */
+    public function setConfigPath($configPath);
+
+    /**
+     * Get config path
+     *
+     * @return string
+     */
+    public function getConfigPath();
 
 }

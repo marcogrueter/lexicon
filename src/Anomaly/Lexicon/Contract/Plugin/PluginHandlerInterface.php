@@ -13,12 +13,21 @@ interface PluginHandlerInterface
     public function setLexicon(LexiconInterface $lexicon);
 
     /**
-     * Register
+     * Register plugins
      *
      * @param array $plugins
      * @return PluginHandlerInterface
      */
-    public function register(array $plugins);
+    public function registerPlugins(array $plugins);
+
+    /**
+     * Register plugin
+     *
+     * @param string $name
+     * @param string $class
+     * @return PluginHandlerInterface
+     */
+    public function registerPlugin($name, $class);
 
     /**
      * Get the plugin by name

@@ -4,6 +4,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\ViewInterface;
 use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Node\NodeFactory;
+use Anomaly\Lexicon\Stub\LexiconStub;
 use Illuminate\Container\Container;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
@@ -17,12 +18,12 @@ class View extends BaseView implements ViewInterface
     /**
      * Using node set
      *
-     * @param string $nodeSet
+     * @param string $nodeGroup
      * @return View
      */
-    public function using($nodeSet = NodeFactory::DEFAULT_NODE_GROUP)
+    public function using($nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        $this->getLexicon()->getNodeFactory()->addNodeGroupPath($this->getPath(), $nodeSet);
+        $this->getLexicon()->getFoundation()->getNodeFactory()->addNodeGroupPath($this->getPath(), $nodeGroup);
         return $this;
     }
 
@@ -64,7 +65,7 @@ class View extends BaseView implements ViewInterface
             'name' => 'Mr. Anderson'
         ];
 
-        return \Anomaly\Lexicon\Stub\Lexicon::factory()->make('test::hello', $data);
+        return LexiconStub::factory()->make('test::hello', $data);
     }
 
 }

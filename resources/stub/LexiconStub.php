@@ -5,7 +5,6 @@ use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Contract\View\EngineInterface;
 use Anomaly\Lexicon\Foundation;
 use Anomaly\Lexicon\Lexicon;
-use Anomaly\Lexicon\Support\Container;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
 use Illuminate\Events\Dispatcher;
@@ -25,13 +24,21 @@ class LexiconStub
      */
     public static function stub()
     {
-        $lexicon = new Lexicon(new Container());
+        $lexicon = new Lexicon();
 
         return $lexicon
             ->setStandalone(true)
             ->addNamespace('test', __DIR__ . '/../views')
             ->setStoragePath(__DIR__ . '/../storage/views')
             ->addParsePath('<h1>Hello {{ name }}</h1>')
+            ->registerPlugin('stub', 'Anomaly\Lexicon\Plugin\StubPlugin')
+            ->registerNodeGroup(
+                [
+                    'Anomaly\Lexicon\Node\Block',
+                    'Anomaly\Lexicon\Stub\Node\Undefined'
+                ],
+                'testing'
+            )
             ->setDebug(true)
             ->register();
     }

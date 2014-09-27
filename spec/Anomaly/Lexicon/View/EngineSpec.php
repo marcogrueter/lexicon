@@ -12,6 +12,7 @@ use Prophecy\Argument;
  */
 class EngineSpec extends ObjectBehavior
 {
+
     function let()
     {
         $this->beConstructedThrough('stub');
@@ -66,6 +67,10 @@ class EngineSpec extends ObjectBehavior
 
     function it_can_handle_a_view_exception(Factory $factory)
     {
+        $path = $this->path('exception.html');
+
+        $this->getLexicon()->getFoundation()->getNodeFactory()->addNodeGroupPath($path, 'testing');
+
         /**
          * We purposely compile an undefined variable to cause an exception
          * and test that it can be handled.
@@ -73,7 +78,7 @@ class EngineSpec extends ObjectBehavior
         $this->shouldThrow('\ErrorException')->during(
             'get',
             [
-                $this->path('exception.html'),
+                $path,
                 [
                     '__env' => $factory,
                 ]

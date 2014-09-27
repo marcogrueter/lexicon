@@ -180,7 +180,7 @@ class NodeFactory
     public function createChildNodes(NodeInterface $node)
     {
         /** @var NodeInterface $nodeType */
-        foreach ($this->getNodeTypes() as $nodeType) {
+        foreach ($this->getNodeTypes($this->getNodeGroup()) as $nodeType) {
             foreach ($nodeType->getMatches($node->getCurrentContent()) as $offset => $match) {
                 $this->createChildNode($node, $nodeType, $match, $offset);
             }
@@ -371,6 +371,8 @@ class NodeFactory
      */
     public function getRootNodeType($nodeGroup = self::DEFAULT_NODE_GROUP)
     {
+        $this->setNodeGroup($nodeGroup);
+
         $block = null;
 
         foreach ($this->getNodeTypes($nodeGroup) as $nodeType) {
@@ -381,7 +383,9 @@ class NodeFactory
         }
 
         if (!$block) {
-            throw new RootNodeTypeNotFoundException;
+            throw new RootNodeTypeNotFoundException(
+                "The root node type is not registered in the `{$nodeGroup}` node group."
+            );
         }
 
         return $block;
@@ -394,9 +398,10 @@ class NodeFactory
      * @return NodeInterface
      * @throws RootNodeTypeNotFoundException
      */
-    public function getRootNode($content)
+    public function getRootNode($content, $nodeGroup = self::DEFAULT_NODE_GROUP)
     {
-        $rootNode = $this->make($this->getRootNodeType())
+        $rootNode = $this
+            ->make($this->getRootNodeType($nodeGroup))
             ->setName('root')
             ->setContent($content)
             ->setExtractionContent($content)
