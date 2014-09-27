@@ -4,10 +4,11 @@ use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
-use Anomaly\Lexicon\Contract\Support\Container;
+use Anomaly\Lexicon\Foundation;
 use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Plugin\PluginHandler;
 use Anomaly\Lexicon\Stub\Node\Node;
+use Anomaly\Lexicon\Support\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
@@ -28,14 +29,25 @@ class LexiconSpec extends ObjectBehavior
         $this->shouldHaveType('Anomaly\Lexicon\Contract\LexiconInterface');
     }
 
-    function it_can_set_debug_mode()
+    function it_can_register_dependencies()
     {
-        $this->setDebug(true);
+        $this->setStandalone(true);
+        $this->register();
     }
-    
-    function it_can_check_if_debug_mode_is_enabled()
+
+    function it_can_set_and_get_the_foundation(Foundation $foundation)
     {
-        $this->isDebug()->shouldBeBoolean();
+        $this->setFoundation($foundation)->getFoundation()->shouldHaveType('Anomaly\Lexicon\Foundation');
+    }
+
+    function it_can_set_and_get_standalone()
+    {
+        $this->setStandalone(true)->isStandalone()->shouldReturn(true);
+    }
+
+    function it_can_set_and_get_debug_mode()
+    {
+        $this->setDebug(true)->isDebug()->shouldReturn(true);
     }
 
     function it_can_set_the_scope_glue()
@@ -69,7 +81,7 @@ class LexiconSpec extends ObjectBehavior
         $this->registerPlugin('stub', 'Anomaly\Lexicon\Plugin\StubPlugin');
     }
     
-    function it_can_register_multiple_plugins(PluginHandler $pluginHandler)
+    function it_can_register_multiple_plugins()
     {
         $this->registerPlugins([
                 'foo' => 'FooPlugin',
@@ -77,6 +89,29 @@ class LexiconSpec extends ObjectBehavior
             ]);
     }
 
+    function it_can_get_plugins()
+    {
+        $this->getPlugins()->shouldBeArray();
+    }
+
+    function it_can_register_a_single_boolean_test_type()
+    {
+        $this->registerBooleanTestType('stringTest', 'Anomaly\Lexicon\Conditional\Test\StringTest');
+    }
+
+    function it_can_register_multiple_boolean_test_types()
+    {
+        $this->registerBooleanTestTypes([
+                'sringTest' => 'Anomaly\Lexicon\Conditional\Test\StringTest',
+                'traversableTest' => 'Anomaly\Lexicon\Conditional\Test\TraversableTest'
+            ]);
+    }
+    
+    function it_can_get_boolean_test_types()
+    {
+        $this->getBooleanTestTypes()->shouldBeArray();
+    }
+    
     function it_can_add_parse_path()
     {
         $this->addParsePath('{{ foo }}'); // the template is equivalent to the path
@@ -170,8 +205,8 @@ class LexiconSpec extends ObjectBehavior
     {
         $this->registerNodeType('Anomaly\Lexicon\Stub\Node');
     }
-    
-    function it_can_register_node_group(NodeFactory $nodeFactory)
+
+    function it_can_register_single_node_group()
     {
         $this->registerNodeGroup([
                 'Anomaly\Lexicon\Stub\Node',
@@ -180,11 +215,46 @@ class LexiconSpec extends ObjectBehavior
             ], 'custom_node_group');
     }
 
+    function it_can_register_multiple_node_groups()
+    {
+        $this->registerNodeGroups([
+                'custom_node_group' => [
+                    'Anomaly\Lexicon\Stub\Node',
+                    'Anomaly\Lexicon\Stub\Node2'.
+                    'Anomaly\Lexicon\Stub\Node3'
+                ],
+                'custom_node_group2' => [
+                    'Anomaly\Lexicon\Stub\Node2'.
+                    'Anomaly\Lexicon\Stub\Node3'
+                ],
+            ]);
+    }
+
+    function it_can_get_node_groups()
+    {
+        $this->getNodeGroups()->shouldBeArray();
+    }
+    
     function it_can_set_and_get_config()
     {
         $this
             ->setConfigPath(__DIR__ . '/../../../src/config')
             ->getConfigPath()
             ->shouldReturn(__DIR__ . '/../../../src/config');
+    }
+    
+    function it_can_get_container()
+    {
+        $this->getContainer()->shouldHaveType('Anomaly\Lexicon\Support\Container');
+    }
+    
+    function it_can_set_and_get_node_factory(NodeFactory $nodeFactory)
+    {
+        $this->setNodeFactory($nodeFactory)->getNodeFactory()->shouldHaveType('Anomaly\Lexicon\Node\NodeFactory');
+    }
+
+    function it_can_add_and_get_view_namespaces()
+    {
+        $this->addNamespace('foo', __DIR__)->getNamespaces()->shouldHaveCount(1);
     }
 }

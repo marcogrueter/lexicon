@@ -5,7 +5,7 @@ use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Node\NodeFactory;
-use Illuminate\Container\Container;
+use Anomaly\Lexicon\Support\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
@@ -226,7 +226,7 @@ class Lexicon implements LexiconInterface
 
     /**
      * @param bool $standalone
-     * @return LexiconInterface
+     * @return Lexicon
      */
     public function setStandalone($standalone = true)
     {
@@ -372,7 +372,7 @@ class Lexicon implements LexiconInterface
      *
      * @param        $nodeType
      * @param string $nodeGroup
-     * @return LexiconInterface
+     * @return Lexicon
      */
     public function registerNodeType($nodeType, $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
@@ -384,7 +384,7 @@ class Lexicon implements LexiconInterface
      * Register node groups
      *
      * @param array $nodeGroups
-     * @return LexiconInterface
+     * @return Lexicon
      */
     public function registerNodeGroups(array $nodeGroups = [])
     {
@@ -398,7 +398,7 @@ class Lexicon implements LexiconInterface
      * Register node group
      *
      * @param array $nodeTypes
-     * @return LexiconInterface
+     * @return Lexicon
      */
     public function registerNodeGroup(array $nodeTypes, $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
@@ -423,7 +423,7 @@ class Lexicon implements LexiconInterface
      *
      * @param $name
      * @param $class
-     * @return LexiconInterface
+     * @return Lexicon
      */
     public function registerPlugin($name, $class)
     {
@@ -435,7 +435,7 @@ class Lexicon implements LexiconInterface
      * Register plugins
      *
      * @param array $plugins
-     * @return LexiconInterface
+     * @return Lexicon
      */
     public function registerPlugins(array $plugins)
     {
@@ -575,7 +575,7 @@ class Lexicon implements LexiconInterface
      * Get compiled view class prefix
      *
      * @param $viewClassPrefix
-     * @return LexiconInterface
+     * @return Lexicon
      */
     public function setCompiledViewClassPrefix($viewClassPrefix)
     {
@@ -628,7 +628,7 @@ class Lexicon implements LexiconInterface
     }
 
     /**
-     * @return LexiconInterface
+     * @return Lexicon
      */
     public function setViewPaths(array $paths)
     {
@@ -650,7 +650,7 @@ class Lexicon implements LexiconInterface
      * Set storage path
      *
      * @param $path
-     * @return LexiconInterface
+     * @return Lexicon
      */
     public function setStoragePath($storagePath)
     {
@@ -696,7 +696,7 @@ class Lexicon implements LexiconInterface
      * Set config path
      *
      * @param $configPath
-     * @return LexiconInterface
+     * @return Lexicon
      */
     public function setConfigPath($configPath)
     {
@@ -713,4 +713,32 @@ class Lexicon implements LexiconInterface
     {
         return $this->configPath;
     }
+
+    /**
+     * Register boolean test type
+     *
+     * @param $type
+     * @param $class
+     * @return Lexicon
+     */
+    public function registerBooleanTestType($type, $class)
+    {
+        $this->booleanTestTypes[$type] = $class;
+        return $this;
+    }
+
+    /**
+     * Register boolean test types
+     *
+     * @param array $booleanTestTypes
+     * @return Lexicon
+     */
+    public function registerBooleanTestTypes(array $booleanTestTypes)
+    {
+        foreach($booleanTestTypes as $type => $class) {
+            $this->registerBooleanTestType($type, $class);
+        }
+        return $this;
+    }
+    
 }
