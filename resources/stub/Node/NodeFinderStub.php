@@ -1,7 +1,7 @@
 <?php namespace Anomaly\Lexicon\Stub\Node;
 
 use Anomaly\Lexicon\Node\NodeType\Block;
-use Anomaly\Lexicon\Node\NodeType\Node;
+use Anomaly\Lexicon\Stub\Node\Node as NodeStub;
 use Anomaly\Lexicon\Stub\LexiconStub;
 
 /**
@@ -17,7 +17,7 @@ class NodeFinderStub
         $lexicon = LexiconStub::get();
         $nodeFactory = $lexicon->getFoundation()->getNodeFactory();
 
-        $schoolName = new Node($lexicon);
+        $schoolName = new NodeStub($lexicon);
 
         $schoolName->setId(4);
         $nodeFactory->addNode($schoolName);
