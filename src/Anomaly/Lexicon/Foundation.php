@@ -63,34 +63,36 @@ class Foundation
      */
     public function register()
     {
-        $container = $this->getContainer();
+        $this->registerLexicon();
+        $this->registerFilesystem();
+        $this->registerEvents();
+        $this->registerConfigRepository();
+        $this->registerNodeFactory();
+        $this->registerPluginHandler();
+        $this->registerConditionalHandler();
+        $this->registerEngineResolver();
+        $this->registerViewFinder();
+        $this->registerFactory();
+        $this->registerSessionStore();
+        $this->registerSessionBinder($this->sessionHasErrors());
 
+        return $this;
+    }
+
+    public function registerLexicon()
+    {
         $this->bindShared(
             'anomaly.lexicon',
             function () {
                 return $this->lexicon;
             }
         );
-
-        $this->registerFilesystem($container);
-        $this->registerEvents($container);
-        $this->registerConfigRepository($container);
-        $this->registerNodeFactory();
-        $this->registerPluginHandler();
-        $this->registerConditionalHandler();
-        $this->registerEngineResolver($container);
-        $this->registerViewFinder($container);
-        $this->registerFactory($container);
-        $this->registerSessionStore($container);
-        $this->registerSessionBinder($container, $this->sessionHasErrors());
-
-        return $this;
     }
 
     /**
      * Register the file system
      */
-    public function registerFilesystem(Container $container)
+    public function registerFilesystem()
     {
         if ($this->isStandalone()) {
             $this->bindShared(
@@ -105,7 +107,7 @@ class Foundation
     /**
      * Register events if it is not in the container
      */
-    public function registerEvents(Container $container)
+    public function registerEvents()
     {
         if ($this->isStandalone()) {
             $this->bindShared(
@@ -120,7 +122,7 @@ class Foundation
     /**
      * Register config repository
      */
-    public function registerConfigRepository(Container $container)
+    public function registerConfigRepository()
     {
         if ($this->isStandalone()) {
             $this->bindShared(
@@ -225,7 +227,7 @@ class Foundation
      *
      * @param Container $container
      */
-    public function registerEngineResolver(Container $container)
+    public function registerEngineResolver()
     {
         $this->bindShared(
             'view.engine.resolver',
@@ -369,8 +371,10 @@ class Foundation
      *
      * @param Container $container
      */
-    public function registerSessionStore(Container $container)
+    public function registerSessionStore()
     {
+        $container = $this->getContainer();
+
         if ($this->isStandalone()) {
 
             $this->getConfigRepository()->set('session.driver', 'array');
@@ -400,8 +404,10 @@ class Foundation
      *
      * @return void
      */
-    public function registerSessionBinder(Container $container, $sessionHasErrors = false)
+    public function registerSessionBinder($sessionHasErrors = false)
     {
+        $container = $this->getContainer();
+
         if (method_exists($container, 'booted')) {
             $container->booted(
                 function () use ($sessionHasErrors) {

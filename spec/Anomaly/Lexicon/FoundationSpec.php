@@ -36,33 +36,50 @@ class FoundationSpec extends ObjectBehavior
         $this->getLexicon()->shouldImplement('Anomaly\Lexicon\Contract\LexiconInterface');
     }
 
-    function it_can_register_lexicon(ContainerInterface $container)
+    function it_can_register_dependencies()
     {
+        $container = $this->getContainer();
+
+        $this->registerLexicon();
+        $this->registerFilesystem();
+        $this->registerEvents();
+        $this->registerConfigRepository();
+        $this->registerNodeFactory();
+        $this->registerPluginHandler();
+        $this->registerConditionalHandler();
+        $this->registerEngineResolver();
+        $this->registerViewFinder();
+        $this->registerFactory();
+        $this->registerSessionStore();
+        $this->registerSessionBinder($this->sessionHasErrors());
         $this->register($container)->shouldHaveType('Anomaly\Lexicon\Foundation');
+        $container
+            ->make('anomaly.lexicon')
+            ->shouldHaveType('Anomaly\Lexicon\Lexicon');
+        $resolver = $this->getEngineResolver();
+
+        $resolver->shouldHaveType('Illuminate\View\Engines\EngineResolver');
+        $resolver->resolve('lexicon');
+        $resolver->resolve('php')->shouldHaveType('Illuminate\View\Engines\PhpEngine');
+        $resolver->resolve('blade')->shouldHaveType('Illuminate\View\Engines\CompilerEngine');
+
+
     }
 
-    function it_can_register_the_engine_resolver(ContainerInterface $container)
+    function it_can_be_in_debug_mode()
     {
-        $this->registerEngineResolver($container);
+        $this->isDebug()->shouldBeBoolean();
     }
 
-    function it_can_register_the_lexicon_engine(EngineResolver $resolver, Engine $lexiconEngine)
+    function it_can_get_conditional_handler()
     {
-        $resolver->register('lexicon', Argument::type('closure'))->shouldBeCalled();
-        $this->registerLexiconEngine($resolver);
-        $this->getEngineResolver()->resolve('lexicon')->shouldHaveType('Anomaly\Lexicon\View\Engine');
+        $this->getConditionalHandler()
+            ->shouldImplement('Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface');
     }
 
-    function it_can_register_the_php_engine(EngineResolver $resolver)
+    function it_can_get_plugin_handler()
     {
-        $this->registerPhpEngine($resolver);
-        $this->getEngineResolver()->resolve('php')->shouldHaveType('Illuminate\View\Engines\PhpEngine');
-    }
-
-    function it_can_register_the_blade_engine(EngineResolver $resolver)
-    {
-        $this->registerBladeEngine($resolver);
-        $this->getEngineResolver()->resolve('blade')->shouldHaveType('Illuminate\View\Engines\CompilerEngine');
+        $this->getPluginHandler()->shouldImplement('Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface');
     }
 
     function it_can_get_config_repository()
@@ -70,6 +87,16 @@ class FoundationSpec extends ObjectBehavior
         $this->getConfigRepository()->shouldHaveType('Illuminate\Config\Repository');
     }
 
+    function it_can_get_node_factory()
+    {
+        $this->getNodeFactory()->shouldHaveType('Anomaly\Lexicon\Node\NodeFactory');
+    }
+
+    function it_can_get_view_factory()
+    {
+        $this->getFactory()->shouldHaveType('Anomaly\Lexicon\View\Factory');
+    }
+    
     function it_can_set_and_get_config(Repository $config)
     {
         $this->setConfig('lexicon::nodeGroups', [1, 2 ,3]);
@@ -81,6 +108,14 @@ class FoundationSpec extends ObjectBehavior
         $this->getSessionDriver()->shouldReturn('array');
     }
 
+    function it_can_get_storage_path()
+    {
+        $container = $this->getContainer();
+        $container['path.storage'] = '../some/folder';
+        $this->getLexicon()->setStandalone(false);
+        $this->getStoragePath()->shouldBeString();
+    }
+    
     function it_can_get_session_store()
     {
         $this->getSessionStore();
