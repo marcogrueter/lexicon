@@ -22,11 +22,10 @@ class NodeFactorySpec extends ObjectBehavior
     function let(
         LexiconInterface $lexicon,
         NodeCollection $nodeCollection,
-        NodeExtractor $nodeExtractor,
-        NodeFinder $nodeFinder
+        NodeExtractor $nodeExtractor
     )
     {
-        $this->beConstructedWith($lexicon, $nodeCollection, $nodeExtractor, $nodeFinder);
+        $this->beConstructedWith($lexicon, $nodeCollection, $nodeExtractor);
     }
 
     function it_is_initializable()

@@ -18,9 +18,19 @@ class NodeFinder
     /**
      * @param NodeInterface $node
      */
-    public function __construct(NodeInterface $node = null)
+    public function __construct(NodeInterface $node)
     {
         $this->node = $node;
+    }
+
+    /**
+     * Get node
+     *
+     * @return NodeInterface
+     */
+    public function getNode()
+    {
+        return $this->node;
     }
 
     /**
@@ -30,7 +40,7 @@ class NodeFinder
      */
     public function getName()
     {
-        $name = $this->node->getName();
+        $name = $this->getNode()->getName();
 
         if ($this->hasAliasPrefix()) {
             $name = $this->getCleanName();
@@ -87,7 +97,7 @@ class NodeFinder
     {
         $alias = null;
         if ($this->hasAliasPrefix()) {
-            $parts = explode($this->glue(), $this->node->getName());
+            $parts = explode($this->glue(), $this->getNode()->getName());
             $alias = $parts[1];
         }
 
@@ -118,7 +128,7 @@ class NodeFinder
      */
     public function getNodeByAlias()
     {
-        $node = $this->node->getParent();
+        $node = $this->getNode()->getParent();
 
         while ($node and $node->getParent() and $node->getItemAlias() !== $this->getAlias()) {
 
@@ -128,7 +138,7 @@ class NodeFinder
 
         if ($node and $node->isRoot()) {
 
-            $node = $this->node->getParent();
+            $node = $this->getNode()->getParent();
 
         }
 
@@ -142,7 +152,7 @@ class NodeFinder
      */
     public function hasRootAliasPrefix()
     {
-        return starts_with($this->node->getName(), $this->getRootStart());
+        return starts_with($this->getNode()->getName(), $this->getRootStart());
     }
 
     /**
@@ -152,7 +162,7 @@ class NodeFinder
      */
     public function hasAliasPrefix()
     {
-        return starts_with($this->node->getName(), $this->glue());
+        return starts_with($this->getNode()->getName(), $this->glue());
     }
 
     /**
@@ -168,7 +178,7 @@ class NodeFinder
      */
     public function getLexicon()
     {
-        return $this->node->getLexicon();
+        return $this->getNode()->getLexicon();
     }
 
     /**
@@ -176,7 +186,7 @@ class NodeFinder
      */
     public function getParent()
     {
-        return $this->node->getParent();
+        return $this->getNode()->getParent();
     }
 
     /**
@@ -194,7 +204,7 @@ class NodeFinder
      */
     public function getCleanName()
     {
-        $name = $this->node->getName();
+        $name = $this->getNode()->getName();
 
         if ($this->hasAliasPrefix()) {
             $aliasPrefix = $this->getAliasPrefix();
@@ -206,4 +216,4 @@ class NodeFinder
         return $name;
     }
 
-} 
+}

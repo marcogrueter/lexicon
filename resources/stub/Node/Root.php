@@ -1,7 +1,7 @@
 <?php namespace Anomaly\Lexicon\Stub\Node;
 
 use Anomaly\Lexicon\Contract\Node\RootInterface;
-use Anomaly\Lexicon\Node\Block;
+use Anomaly\Lexicon\Node\NodeType\Block;
 
 /**
  * Class Root

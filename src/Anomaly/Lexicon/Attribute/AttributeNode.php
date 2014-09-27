@@ -1,7 +1,7 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
-use Anomaly\Lexicon\Node\Node;
+use Anomaly\Lexicon\Node\NodeType\Node;
 
 class AttributeNode extends Node
 {

@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Stub\Node;
 
-use Anomaly\Lexicon\Node\Node as BaseNode;
+use Anomaly\Lexicon\Node\NodeType\Node as BaseNode;
 
 
 /**

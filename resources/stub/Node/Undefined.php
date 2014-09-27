@@ -1,6 +1,6 @@
 <?php namespace Anomaly\Lexicon\Stub\Node;
 
-use Anomaly\Lexicon\Node\Single;
+use Anomaly\Lexicon\Node\NodeType\Single;
 
 /**
  * Class AnomalyLexiconUndefinedNode

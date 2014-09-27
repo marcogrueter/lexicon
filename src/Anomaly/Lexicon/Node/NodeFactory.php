@@ -67,11 +67,6 @@ class NodeFactory
     protected $nodeGroupPaths = [];
 
     /**
-     * @var NodeFinder
-     */
-    private $nodeFinder;
-
-    /**
      * Default node group
      */
     const DEFAULT_NODE_GROUP = 'all';
@@ -82,13 +77,11 @@ class NodeFactory
     public function __construct(
         LexiconInterface $lexicon,
         NodeCollection $nodeCollection,
-        NodeExtractor $nodeExtractor,
-        NodeFinder $nodeFinder
+        NodeExtractor $nodeExtractor
     ) {
         $this->lexicon = $lexicon;
         $this->nodeCollection = $nodeCollection;
         $this->nodeExtractor = $nodeExtractor;
-        $this->nodeFinder = $nodeFinder;
     }
 
     /**
@@ -272,15 +265,6 @@ class NodeFactory
     public function newNodeType($class)
     {
         return new $class($this->getLexicon());
-    }
-
-    /**
-     * @param NodeInterface $node
-     * @return NodeFinder
-     */
-    public function newNodeFinder(NodeInterface $node)
-    {
-        return new NodeFinder($node);
     }
 
     /**
@@ -481,4 +465,5 @@ class NodeFactory
 
         return $id;
     }
+
 }

@@ -290,14 +290,6 @@ interface NodeInterface extends ExtractionInterface
     public function setAttributeNode(AttributeNode $attributeNode);
 
     /**
-     * Set node finder
-     *
-     * @param $param
-     * @return NodeInterface
-     */
-    public function setNodeFinder(NodeFinder $nodeFinder);
-
-    /**
      * @param $match
      * @return NodeInterface
      */

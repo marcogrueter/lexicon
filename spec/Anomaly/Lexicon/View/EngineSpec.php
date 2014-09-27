@@ -44,7 +44,7 @@ class EngineSpec extends ObjectBehavior
             '<h1>Hello {{ name }}</h1>',
             [
                 '__env' => $factory,
-                'name' => 'Mr. Anderson'
+                'name'  => 'Mr. Anderson'
             ]
         );
     }

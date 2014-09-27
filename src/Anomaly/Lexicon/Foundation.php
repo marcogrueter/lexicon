@@ -2,6 +2,7 @@
 
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Node\NodeCollection;
 use Anomaly\Lexicon\Node\NodeExtractor;
@@ -67,6 +68,7 @@ class Foundation
         $this->registerFilesystem();
         $this->registerEvents();
         $this->registerConfigRepository();
+        $this->registerNodeFinder();
         $this->registerNodeFactory();
         $this->registerPluginHandler();
         $this->registerConditionalHandler();
@@ -195,6 +197,16 @@ class Foundation
         );
     }
 
+    public function registerNodeFinder()
+    {
+        $this->getContainer()->bind(
+            'anomaly.lexicon.node.finder',
+            function ($container, $parameters) {
+                return new NodeFinder($parameters[0]);
+            }
+        );
+    }
+
     /**
      * Lexicon node groups
      */
@@ -207,8 +219,7 @@ class Foundation
                 $nodeFactory = new NodeFactory(
                     $this->getLexicon(),
                     new NodeCollection(),
-                    new NodeExtractor(),
-                    new NodeFinder()
+                    new NodeExtractor()
                 );
 
                 $nodeGroups = array_merge(
@@ -507,6 +518,17 @@ class Foundation
     public function getNodeFactory()
     {
         return $this->getContainer()->make('anomaly.lexicon.node.factory');
+    }
+
+    /**
+     * Get node finder
+     *
+     * @param NodeInterface $node
+     * @return NodeFinder
+     */
+    public function getNodeFinder(NodeInterface $node)
+    {
+        return $this->getContainer()->make('anomaly.lexicon.node.finder', [$node]);
     }
 
     /**

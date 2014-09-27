@@ -1,6 +1,7 @@
 <?php namespace Anomaly\Lexicon\Contract\View;
 
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\View\View;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\View\Factory;
 

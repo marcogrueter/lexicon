@@ -34,7 +34,7 @@ class LexiconStub
             ->registerPlugin('stub', 'Anomaly\Lexicon\Plugin\StubPlugin')
             ->registerNodeGroup(
                 [
-                    'Anomaly\Lexicon\Node\Block',
+                    'Anomaly\Lexicon\Node\NodeType\Block',
                     'Anomaly\Lexicon\Stub\Node\Undefined'
                 ],
                 'testing'
