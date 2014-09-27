@@ -8,7 +8,7 @@ use Illuminate\Container\Container as BaseContainer;
  *
  * @package Anomaly\Lexicon\Support
  */
-class Container extends BaseContainer implements ContainerInterface
+class Container extends BaseContainer implements \ArrayAccess, ContainerInterface
 {
     /**
      * Is the application booted

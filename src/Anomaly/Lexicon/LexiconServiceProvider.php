@@ -2,6 +2,11 @@
 
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Stub\LexiconServiceProviderStub;
+use Anomaly\Lexicon\Support\Container;
+use Illuminate\Config\FileLoader;
+use Illuminate\Config\Repository;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -27,6 +32,16 @@ class LexiconServiceProvider extends ServiceProvider
         $lexicon->register();
 
         return $lexicon;
+    }
+
+    /**
+     * Stub for testing with PHPSpec
+     *
+     * @return LexiconServiceProvider
+     */
+    public static function stub()
+    {
+        return LexiconServiceProviderStub::stub();
     }
 
 }

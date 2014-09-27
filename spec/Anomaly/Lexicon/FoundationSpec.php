@@ -4,6 +4,7 @@ use Anomaly\Lexicon\Contract\Support\ContainerInterface;
 use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\View\Engine;
 use Illuminate\Config\Repository;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
@@ -74,30 +75,30 @@ class FoundationSpec extends ObjectBehavior
         $this->setConfig('lexicon::nodeGroups', [1, 2 ,3]);
         $this->getConfig('lexicon::nodeGroups')->shouldReturn([1, 2 ,3]);
     }
-    
+
     function it_can_get_session_driver()
     {
         $this->getSessionDriver()->shouldReturn('array');
     }
-    
+
     function it_can_get_session_store()
     {
         $this->getSessionStore();
     }
-    
+
     function it_can_check_if_session_has_errors()
     {
         $this->sessionHasErrors()->shouldBeBoolean();
     }
-    
-    function it_can_register_session_binder()
+
+    function it_can_register_session_binder(Container $container)
     {
-        $this->registerSessionBinder();
+        $this->registerSessionBinder($container);
     }
 
-    function it_can_register_session_binder_when_session_has_errors()
+    function it_can_register_session_binder_when_session_has_errors(Container $container)
     {
-        $this->registerSessionBinder(true);
+        $this->registerSessionBinder($container, true);
     }
 
     function it_can_get_view_paths()

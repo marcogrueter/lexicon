@@ -1,7 +1,7 @@
 <?php namespace spec\Anomaly\Lexicon;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Illuminate\Contracts\Container\Container;
+use Anomaly\Lexicon\Support\Container;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -14,9 +14,9 @@ use Prophecy\Argument;
 class LexiconServiceProviderSpec extends ObjectBehavior
 {
 
-    function let(Container $application)
+    function let()
     {
-        $this->beConstructedWith($application);
+        $this->beConstructedThrough('stub');
     }
 
     function it_is_initializable()

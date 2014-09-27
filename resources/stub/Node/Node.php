@@ -2,10 +2,10 @@
 
 use Anomaly\Lexicon\Attribute\AttributeNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
 use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Node\NodeFinder;
+use Anomaly\Lexicon\Node\Node as BaseNode;
 
 
 /**
@@ -13,7 +13,7 @@ use Anomaly\Lexicon\Node\NodeFinder;
  *
  * @package Anomaly\Lexicon\Stub\Node
  */
-class Node implements NodeInterface
+class Node extends BaseNode
 {
 
     protected $id = 'stub-id-1';
@@ -516,5 +516,15 @@ class Node implements NodeInterface
     public function addChild(NodeInterface $node)
     {
         // TODO: Implement addChild() method.
+    }
+
+    /**
+     * Is this the root node?
+     *
+     * @return bool
+     */
+    public function isRoot()
+    {
+        // TODO: Implement isRoot() method.
     }
 }

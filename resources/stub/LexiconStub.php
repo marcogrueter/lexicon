@@ -23,9 +23,9 @@ class LexiconStub
     /**
      * @return LexiconInterface
      */
-    public static function stub(Container $container = null)
+    public static function stub()
     {
-        $lexicon = new Lexicon($container);
+        $lexicon = new Lexicon(new Container());
 
         return $lexicon
             ->setStandalone(true)
