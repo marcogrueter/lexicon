@@ -1,5 +1,6 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
+use Anomaly\Lexicon\Attribute\AttributeNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -13,9 +14,9 @@ use Prophecy\Argument;
 class SectionYieldSpec extends ObjectBehavior
 {
 
-    function let(LexiconInterface $lexicon)
+    function let()
     {
-        $this->beConstructedWith($lexicon);
+        $this->beConstructedThrough('stub');
     }
 
     function it_is_initializable()
@@ -23,4 +24,9 @@ class SectionYieldSpec extends ObjectBehavior
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\SectionYield');
     }
 
+    function it_can_compile_yield_content(AttributeNode $attributeNode)
+    {
+        $this->compile()->shouldReturn('');
+    }
+    
 }

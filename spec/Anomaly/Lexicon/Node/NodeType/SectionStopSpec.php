@@ -23,4 +23,9 @@ class SectionStopSpec extends ObjectBehavior
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\SectionStop');
     }
 
+    function it_can_compile_section_stop()
+    {
+        $this->compile()->shouldReturn("\$__data['__env']->stopSection();");
+    }
+
 }

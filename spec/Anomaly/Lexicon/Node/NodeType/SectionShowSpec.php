@@ -23,4 +23,9 @@ class SectionShowSpec extends ObjectBehavior
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\SectionShow');
     }
 
+    function it_can_compile_yield_section_as_show()
+    {
+        $this->compile()->shouldReturn("echo \$__data['__env']->yieldSection();");
+    }
+    
 }

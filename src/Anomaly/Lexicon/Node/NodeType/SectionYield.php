@@ -2,6 +2,10 @@
 
 
 
+use Anomaly\Lexicon\Attribute\AttributeNode;
+use Anomaly\Lexicon\Stub\LexiconStub;
+use Anomaly\Lexicon\Stub\Node\NodeFinderStub;
+
 class SectionYield extends Single
 {
 
@@ -19,7 +23,7 @@ class SectionYield extends Single
      */
     public function compile()
     {
-        $name = null; //$this->newAttributeNode()->compileAttribute('name');
+        $name = $this->getAttributes()->compileAttributeValue('name');
 
         $source = null;
 
@@ -28,6 +32,16 @@ class SectionYield extends Single
         }
 
         return $source;
+    }
+
+    public static function stub()
+    {
+        $lexicon = LexiconStub::get();
+        $node = new static($lexicon);
+        $attributeNode = new AttributeNode($lexicon);
+        $attributeNode->setRawAttributes('name="foo"');
+        $node->setAttributeNode($attributeNode);
+        return $node;
     }
 
 }

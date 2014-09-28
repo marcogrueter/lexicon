@@ -13,9 +13,9 @@ use Prophecy\Argument;
 class RecursiveSpec extends ObjectBehavior
 {
 
-    function let(LexiconInterface $lexicon)
+    function let()
     {
-        $this->beConstructedWith($lexicon);
+        $this->beConstructedThrough('stub');
     }
 
     function it_is_initializable()
@@ -23,4 +23,9 @@ class RecursiveSpec extends ObjectBehavior
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\Recursive');
     }
 
+    function it_can_compile_recursive()
+    {
+        $this->compile()->shouldReturn("echo \$__data['__env']->parse('{{ children }}',\$__data);");
+    }
+    
 }

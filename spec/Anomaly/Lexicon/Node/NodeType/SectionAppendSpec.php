@@ -23,4 +23,9 @@ class SectionAppendSpec extends ObjectBehavior
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\SectionAppend');
     }
 
+    function it_can_compile_section_append()
+    {
+        $this->compile()->shouldReturn("\$__data['__env']->appendSection();");
+    }
+    
 }
