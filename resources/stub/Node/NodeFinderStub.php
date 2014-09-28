@@ -40,8 +40,8 @@ class NodeFinderStub
         $endif->setId('endif');
         $nodeFactory->addNode($endif);
 
-        $schoolName->setId('.school.name');
-        $schoolName->setName('.school.name');
+        $schoolName->setId('name');
+        $schoolName->setName('name');
         $nodeFactory->addNode($schoolName);
 
         $books = new Block($lexicon);
@@ -55,7 +55,7 @@ class NodeFinderStub
         Anomaly\Lexicon\Node\NodeType\Conditional__if2__if2__
         Anomaly\Lexicon\Node\NodeType\Conditional__elseif__elseif__
         Anomaly\Lexicon\Node\NodeType\ConditionalEndif__endif__enif__
-        Anomaly\Lexicon\Stub\Node\Node__.school.name__.school.name__
+        Anomaly\Lexicon\Stub\Node\Node__name__name__
         ');
 
         $books->addChild($schoolName);

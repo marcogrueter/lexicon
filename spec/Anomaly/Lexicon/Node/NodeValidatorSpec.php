@@ -48,7 +48,7 @@ class NodeValidatorSpec extends ObjectBehavior
         $this->hasSiblings('elseif')->shouldBeBoolean();
     }
 
-    function it_can_assert_if_node_is_after_another()
+    function it_can_assert_if_its_positioned_after_another_node()
     {
         $this->isAfter('if')->shouldReturn(true);
     }

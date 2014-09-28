@@ -78,30 +78,10 @@ class NodeValidator implements ValidatorInterface
      * @param bool $strict
      * @return bool
      */
-    public function isAfter($name, $strict = false)
+    public function isAfter($name)
     {
-        if ($strict and !$this->hasSiblings($name)) {
-            return false;
-        }
-
-        $siblingPosition = 0;
-
-        if ($sibling = $this->getNode()->getFirstSibling($name)) {
-            $siblingPosition = $sibling->getPosition();
-        }
-
+        $siblingPosition = ($sibling = $this->getNode()->getFirstSibling($name)) ? $sibling->getPosition() : 0;
         return $this->getNode()->getPosition() > $siblingPosition;
-    }
-
-    /**
-     * Is after existing
-     *
-     * @param $name
-     * @return bool
-     */
-    public function isAfterExisting($name)
-    {
-        return $this->isAfter($name, true);
     }
 
     /**
