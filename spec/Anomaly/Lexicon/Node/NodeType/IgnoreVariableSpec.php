@@ -23,4 +23,14 @@ class IgnoreVariableSpec extends ObjectBehavior
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\IgnoreVariable');
     }
 
+    function it_can_get_regex()
+    {
+        $this->regex()->shouldReturn('/@(\{\{\s*(.*?)(\s.*?)?\s*(\/)?\}\})/ms');
+    }
+
+    function it_can_setup_regex_match()
+    {
+        $this->setup();
+    }
+
 }
