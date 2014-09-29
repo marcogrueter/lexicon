@@ -3,7 +3,7 @@
 use Anomaly\Lexicon\Conditional\Validator\EndifValidator;
 use Anomaly\Lexicon\Contract\Node\ConditionalEndInterface;
 
-class ConditionalEndif extends Single implements ConditionalEndInterface
+class ConditionalEndif extends Conditional implements ConditionalEndInterface
 {
     /**
      * Name
@@ -19,9 +19,7 @@ class ConditionalEndif extends Single implements ConditionalEndInterface
      */
     public function setup()
     {
-        $this
-            ->setExtractionContent($this->match(0))
-            ->setValidator(new EndifValidator($this));
+        $this->setExtractionContent($this->match(0));
     }
 
     /**

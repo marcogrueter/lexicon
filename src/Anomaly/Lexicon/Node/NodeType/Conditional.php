@@ -3,6 +3,7 @@
 use Anomaly\Lexicon\Conditional\ConditionalCompiler;
 use Anomaly\Lexicon\Conditional\ConditionalParser;
 use Anomaly\Lexicon\Conditional\ConditionalValidator;
+use Anomaly\Lexicon\Conditional\Expression\ExpressionNode;
 use Anomaly\Lexicon\Conditional\Validator\ElseifValidator;
 use Anomaly\Lexicon\Conditional\Validator\IfValidator;
 use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
@@ -44,9 +45,9 @@ class Conditional extends Single implements ConditionalInterface
     public function setup()
     {
         $this
+            ->setExpression($this->match(2))
             ->setExtractionContent($this->match(0))
-            ->setName($this->match(1))
-            ->setExpression($this->match(2));
+            ->setName($this->match(1));
     }
 
     /**
@@ -97,6 +98,16 @@ class Conditional extends Single implements ConditionalInterface
     public function getExpression()
     {
         return $this->expression;
+    }
+
+    /**
+     * Get expression node
+     *
+     * @return ExpressionNode
+     */
+    public function getExpressionNode()
+    {
+        return new ExpressionNode($this->getLexicon());
     }
 
     /**
