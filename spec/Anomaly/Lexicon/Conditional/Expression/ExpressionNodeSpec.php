@@ -1,8 +1,7 @@
 <?php namespace spec\Anomaly\Lexicon\Conditional\Expression;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class ExpressionNodeSpec
@@ -10,7 +9,7 @@ use Prophecy\Argument;
  * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Conditional\Expression
  */
-class ExpressionNodeSpec extends ObjectBehavior
+class ExpressionNodeSpec extends Spec
 {
 
     function let(LexiconInterface $lexicon)
@@ -31,6 +30,30 @@ class ExpressionNodeSpec extends ObjectBehavior
                 'or',
                 '&&',
                 '||',
+            ]
+        );
+    }
+
+    function it_can_get_regex()
+    {
+        $this->regex()->shouldReturn('/(and|or|&&|\|\|)/');
+    }
+
+    function it_can_get_matches()
+    {
+        $this->getMatches('this or that and then or there && yes || no')->shouldReturn(
+            [
+                'this ',
+                'or',
+                ' that ',
+                'and',
+                ' then ',
+                'or',
+                ' there ',
+                '&&',
+                ' yes ',
+                '||',
+                ' no'
             ]
         );
     }
