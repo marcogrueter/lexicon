@@ -1,5 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
 use Anomaly\Lexicon\Stub\Node\NodeFinderStub;
@@ -17,7 +18,7 @@ class NodeValidator implements ValidatorInterface
     /**
      * @param NodeInterface $node
      */
-    public function __construct(NodeInterface $node)
+    public function __construct(ConditionalInterface $node)
     {
         $this->node = $node;
     }
@@ -36,17 +37,17 @@ class NodeValidator implements ValidatorInterface
      * @param string $name
      * @return int
      */
-    public function countSiblings($name = null)
+    public function countSiblings($name)
     {
         $count = 0;
-
         /** @var NodeInterface $node */
-        foreach ($this->getNode()->getSiblings() as $node) {
-            if ($node->getName() == $name) {
-                $count++;
+        if ($siblings = $this->getNode()->getSiblings()) {
+            foreach ($siblings as $node) {
+                if ($node->getName() == $name) {
+                    $count++;
+                }
             }
         }
-
         return $count;
     }
 

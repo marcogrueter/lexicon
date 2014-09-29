@@ -41,7 +41,7 @@ class CompilerSpec extends ObjectBehavior
 
     function it_can_check_if_a_parsed_view_is_not_compiled()
     {
-        $this->isNotParsed('nonexistent')->shouldReturn(true);
+        $this->isNotParsed('nonexistent')->shouldBe(true);
     }
 
     function it_can_escape_php()

@@ -25,7 +25,7 @@ class ArrayAccessObject implements ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return ($offset == 'foo');
+        return ($offset === 'foo');
     }
 
     /**
@@ -74,4 +74,6 @@ class ArrayAccessObject implements ArrayAccess
     public function offsetUnset($offset)
     {
         // TODO: Implement offsetUnset() method.
-}}
+    }
+
+}

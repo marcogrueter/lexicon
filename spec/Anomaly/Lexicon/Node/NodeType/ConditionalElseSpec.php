@@ -23,4 +23,18 @@ class ConditionalElseSpec extends ObjectBehavior
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\ConditionalElse');
     }
 
+    function it_can_get_name_matcher()
+    {
+        $this->getNameMatcher()->shouldReturn('else');
+    }
+
+    function it_can_setup_regex_match()
+    {
+        $this->setup();
+    }
+    
+    function it_can_compile_conditional_else()
+    {
+        $this->compile()->shouldReturn('else:');
+    }
 }

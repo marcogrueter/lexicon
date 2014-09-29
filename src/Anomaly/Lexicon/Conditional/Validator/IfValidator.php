@@ -12,6 +12,12 @@ class IfValidator extends NodeValidator
      */
     public function isValid()
     {
+        $name = $this->getNode()->getName();
+
+        if ($name == 'if') {
+
+        } elseif($name == 'elseif')
+
         return $this->isEqualCount('if', 'endif');
     }
 

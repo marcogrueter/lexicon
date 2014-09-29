@@ -4,6 +4,13 @@ interface ConditionalInterface extends NodeInterface
 {
 
     /**
+     * Get construct name
+     *
+     * @return string
+     */
+    public function getConstructName();
+
+    /**
      * Get the raw expression
      *
      * @return string
@@ -17,4 +24,5 @@ interface ConditionalInterface extends NodeInterface
      * @return ConditionalInterface
      */
     public function setExpression($expression);
+
 }

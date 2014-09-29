@@ -31,11 +31,9 @@ class ConditionalHandler implements ConditionalHandlerInterface
     public function getTestTypes()
     {
         $testTypes = [];
-
         foreach($this->testTypes as $type => $class) {
-            $testType[$type] = new $class;
+            $testTypes[$type] = new $class;
         }
-
         return $testTypes;
     }
 
@@ -47,11 +45,9 @@ class ConditionalHandler implements ConditionalHandlerInterface
     public function getTestOperators()
     {
         $operators = [];
-
         foreach ($this->getTestTypes() as $testType) {;
             $operators = array_merge($operators, get_class_methods($testType));
         }
-
         return $operators;
     }
 
@@ -109,14 +105,12 @@ class ConditionalHandler implements ConditionalHandlerInterface
     public function customTest($left, $right, $operator = null)
     {
         $result = false;
-
         foreach ($this->getTestTypes() as $testType) {
             if (method_exists($testType, $operator)) {
                 $result = $testType->{$operator}($left, $right);
                 break;
             }
         }
-
         return $result;
     }
 

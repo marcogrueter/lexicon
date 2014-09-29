@@ -23,4 +23,14 @@ class ConditionalEndifSpec extends ObjectBehavior
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\ConditionalEndif');
     }
 
+    function it_can_setup_regex_match()
+    {
+        $this->setup();
+    }
+    
+    function it_can_compile_endif()
+    {
+        $this->compile()->shouldReturn('endif;');
+    }
+    
 }

@@ -2,6 +2,7 @@
 
 use Anomaly\Lexicon\Conditional\ConditionalCompiler;
 use Anomaly\Lexicon\Conditional\ConditionalParser;
+use Anomaly\Lexicon\Conditional\ConditionalValidator;
 use Anomaly\Lexicon\Conditional\Validator\ElseifValidator;
 use Anomaly\Lexicon\Conditional\Validator\IfValidator;
 use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
@@ -46,12 +47,26 @@ class Conditional extends Single implements ConditionalInterface
             ->setExtractionContent($this->match(0))
             ->setName($this->match(1))
             ->setExpression($this->match(2));
+    }
 
-        if ($this->getName() == 'if') {
-            $this->setValidator(new IfValidator($this));
-        } elseif ($this->getName('elseif')) {
-            $this->setValidator(new ElseifValidator($this));
-        }
+    /**
+     * Get construct name
+     *
+     * @return string
+     */
+    public function getConstructName()
+    {
+        return str_replace(['unless', 'elseunless'], ['if', 'elseif'], $this->getName());
+    }
+
+    /**
+     * Get validator
+     *
+     * @return ConditionalValidator
+     */
+    public function getValidator()
+    {
+        return new ConditionalValidator($this);
     }
 
     /**

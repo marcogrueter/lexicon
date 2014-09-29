@@ -58,18 +58,18 @@ class PluginHandlerSpec extends ObjectBehavior
     {
         $lexicon->getScopeGlue()->willReturn('.');
         $this->registerPlugin('stub', 'Anomaly\Lexicon\Plugin\StubPlugin');
-        $this->isFilter('stub.foo')->shouldReturn(false);
-        $this->isFilter('stub.md5')->shouldReturn(true);
-        $this->isFilter('stub.uppercase')->shouldReturn(false);
+        $this->isFilter('stub.foo')->shouldBe(false);
+        $this->isFilter('stub.md5')->shouldBe(true);
+        $this->isFilter('stub.uppercase')->shouldBe(false);
     }
 
     function it_can_assert_if_a_plugin_call_should_be_parsed(LexiconInterface $lexicon)
     {
         $lexicon->getScopeGlue()->willReturn('.');
         $this->registerPlugin('stub', 'Anomaly\Lexicon\Plugin\StubPlugin');
-        $this->isParse('stub.foo')->shouldReturn(false);
-        $this->isParse('stub.md5')->shouldReturn(false);
-        $this->isParse('stub.uppercase')->shouldReturn(true);
+        $this->isParse('stub.foo')->shouldBe(false);
+        $this->isParse('stub.md5')->shouldBe(false);
+        $this->isParse('stub.uppercase')->shouldBe(true);
     }
 
 }

@@ -160,7 +160,7 @@ class FactorySpec extends ObjectBehavior
 
     function it_can_get_boolean_that_is_expected_to_be_echoed()
     {
-        $this->expected(true, Lexicon::EXPECTED_ECHO)->shouldReturn(true);
+        $this->expected(true, Lexicon::EXPECTED_ECHO)->shouldBe(true);
     }
 
     function it_can_get_null_that_is_expected_to_be_echoed()
@@ -187,7 +187,7 @@ class FactorySpec extends ObjectBehavior
 
     function it_can_run_a_boolean_test_values()
     {
-        $this->booleanTest(5, 3, '>')->shouldReturn(true);
+        $this->booleanTest(5, 3, '>')->shouldBe(true);
     }
 
 }

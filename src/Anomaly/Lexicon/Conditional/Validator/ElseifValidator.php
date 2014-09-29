@@ -13,8 +13,7 @@ class ElseifValidator extends NodeValidator
     public function isValid()
     {
         return
-            $this->isEqualCount('if', 'endif') and
-            $this->isAfterExisting('if');
+            $this->isEqualCount('if', 'endif') and $this->isAfter('if');
     }
 
 }

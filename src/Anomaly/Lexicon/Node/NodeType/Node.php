@@ -690,11 +690,7 @@ class Node implements NodeInterface
      */
     public function validate()
     {
-        if ($validator = $this->getValidator()) {
-            return $validator->isValid();
-        }
-
-        return $this->isValid();
+        return ($validator = $this->getValidator()) ? $validator->isValid() : $this->isValid();
     }
 
     /**

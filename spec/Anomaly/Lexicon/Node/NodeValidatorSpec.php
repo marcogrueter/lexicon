@@ -50,7 +50,7 @@ class NodeValidatorSpec extends ObjectBehavior
 
     function it_can_assert_if_its_positioned_after_another_node()
     {
-        $this->isAfter('if')->shouldReturn(true);
+        $this->isAfter('if')->shouldBe(true);
     }
 
 }

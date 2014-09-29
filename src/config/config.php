@@ -35,8 +35,8 @@ return array(
      * Conditional boolean test types
      */
     'booleanTestTypes'   => [
+        'itemTest' => 'Anomaly\Lexicon\Conditional\Test\ItemTest',
         'stringTest'      => 'Anomaly\Lexicon\Conditional\Test\StringTest',
-        'traversableTest' => 'Anomaly\Lexicon\Conditional\Test\TraversableTest',
     ],
 
     /**

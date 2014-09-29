@@ -42,12 +42,12 @@ class LexiconSpec extends ObjectBehavior
 
     function it_can_set_and_get_standalone()
     {
-        $this->setStandalone(true)->isStandalone()->shouldReturn(true);
+        $this->setStandalone(true)->isStandalone()->shouldBe(true);
     }
 
     function it_can_set_and_get_debug_mode()
     {
-        $this->setDebug(true)->isDebug()->shouldReturn(true);
+        $this->setDebug(true)->isDebug()->shouldBe(true);
     }
 
     function it_can_set_the_scope_glue()
@@ -102,8 +102,8 @@ class LexiconSpec extends ObjectBehavior
     function it_can_register_multiple_boolean_test_types()
     {
         $this->registerBooleanTestTypes([
-                'sringTest' => 'Anomaly\Lexicon\Conditional\Test\StringTest',
-                'traversableTest' => 'Anomaly\Lexicon\Conditional\Test\TraversableTest'
+                'stringTest' => 'Anomaly\Lexicon\Conditional\Test\StringTest',
+                'itemTest' => 'Anomaly\Lexicon\Conditional\Test\ItemTest'
             ]);
     }
     
@@ -114,7 +114,7 @@ class LexiconSpec extends ObjectBehavior
     
     function it_can_add_parse_path()
     {
-        $this->addParsePath('{{ foo }}'); // the template is equivalent to the path
+        $this->addParsePath('{{ foo }}');
         $this->getParsePaths()->shouldHaveKey('{{ foo }}');
     }
 
