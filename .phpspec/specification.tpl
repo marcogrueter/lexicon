@@ -1,7 +1,6 @@
 <?php namespace %namespace%;
 
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class %name%
@@ -9,7 +8,7 @@ use Prophecy\Argument;
  * @author Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package %namespace%
  */
-class %name% extends ObjectBehavior
+class %name% extends Spec
 {
 
     function it_is_initializable()
