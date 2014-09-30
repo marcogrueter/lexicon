@@ -80,9 +80,9 @@ class NodeFactory
         NodeCollection $nodeCollection,
         NodeExtractor $nodeExtractor
     ) {
-        $this->lexicon = $lexicon;
+        $this->lexicon        = $lexicon;
         $this->nodeCollection = $nodeCollection;
-        $this->nodeExtractor = $nodeExtractor;
+        $this->nodeExtractor  = $nodeExtractor;
     }
 
     /**
@@ -117,7 +117,6 @@ class NodeFactory
         $node->setOffset($offset);
         $node->setDepth($depth);
         $node->setup();
-        $node->setCurrentContent($node->getContent());
         $node->setItemAlias($node->getItemAliasFromRawAttributes());
         $this->addNode($node);
         $this->extract($node, $parent);
