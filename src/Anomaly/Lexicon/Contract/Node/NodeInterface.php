@@ -272,6 +272,13 @@ interface NodeInterface extends ExtractionInterface
     public function isRoot();
 
     /**
+     * Is the node extractable
+     *
+     * @return bool
+     */
+    public function isExtractable();
+
+    /**
      * @return NodeFinder
      */
     public function getNodeFinder();
