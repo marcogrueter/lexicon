@@ -34,9 +34,11 @@ class NodeExtractor
      */
     public function extract(NodeInterface $child, NodeInterface $parent)
     {
-        $this->extractOpening($child, $parent);
-        $this->extractClosing($child, $parent);
-        $this->extractContent($child, $parent);
+        if ($child->isExtractable()) {
+            $this->extractOpening($child, $parent);
+            $this->extractClosing($child, $parent);
+            $this->extractContent($child, $parent);
+        }
     }
 
     /**
@@ -47,9 +49,11 @@ class NodeExtractor
      */
     public function inject(NodeInterface $child, NodeInterface $parent)
     {
-        $this->injectOpening($child, $parent);
-        $this->injectClosing($child, $parent);
-        $this->injectContent($child, $parent);
+        if ($child->isExtractable()) {
+            $this->injectOpening($child, $parent);
+            $this->injectClosing($child, $parent);
+            $this->injectContent($child, $parent);
+        }
     }
 
     /**
