@@ -12,6 +12,22 @@ class ConditionalHandler implements ConditionalHandlerInterface
     protected $testTypes = [];
 
     /**
+     * Comparison operators
+     *
+     * @var array
+     */
+    protected $comparisonOperators = [
+        '===',
+        '!==',
+        '==',
+        '!=',
+        '<=',
+        '>=',
+        '>',
+        '<',
+    ];
+
+    /**
      * Register boolean test types
      *
      * @param array $booleanTestTypes
@@ -21,6 +37,16 @@ class ConditionalHandler implements ConditionalHandlerInterface
     {
         $this->testTypes = $booleanTestTypes;
         return $this;
+    }
+
+    /**
+     * Get comparison operators
+     *
+     * @return array
+     */
+    public function getComparisonOperators()
+    {
+        return $this->comparisonOperators;
     }
 
     /**
@@ -44,7 +70,7 @@ class ConditionalHandler implements ConditionalHandlerInterface
      */
     public function getTestOperators()
     {
-        $operators = [];
+        $operators = $this->getComparisonOperators();
         foreach ($this->getTestTypes() as $testType) {;
             $operators = array_merge($operators, get_class_methods($testType));
         }
