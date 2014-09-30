@@ -12,9 +12,22 @@ use Prophecy\Argument;
 class BooleanTestNodeSpec extends ObjectBehavior
 {
 
+    function let()
+    {
+        $this->beConstructedThrough('stub');
+    }
+
     function it_is_initializable()
     {
         $this->shouldHaveType('Anomaly\Lexicon\Conditional\Expression\BooleanTestNode');
     }
 
+    function it_can_compile_source()
+    {
+        $this
+            ->setCurrentContent('foo == bar')
+            ->createChildNodes()
+            ->compile()->shouldReturn('');
+    }
+    
 }

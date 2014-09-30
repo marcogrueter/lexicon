@@ -1,5 +1,7 @@
 <?php namespace Anomaly\Lexicon\Support;
 
+use Anomaly\Lexicon\Contract\Attribute\NodeInterface;
+
 /**
  * Class ValueResolver
  *
@@ -15,6 +17,25 @@ class ValueResolver
         'true',
         'false',
     );
+    /**
+     * @var NodeInterface|null
+     */
+    private $node;
+
+    public function __construct(NodeInterface $node = null)
+    {
+        $this->node = $node;
+    }
+
+    /**
+     * Get node
+     *
+     * @return NodeInterface|null
+     */
+    public function getNode()
+    {
+        return $this->node;
+    }
 
     /**
      * Resolve value
@@ -22,7 +43,7 @@ class ValueResolver
      * @param string $value
      * @return string
      */
-    public function resolve($value = '')
+    public function compile($value = '')
     {
         // this shouldn't happen
         if (is_array($value) or is_null($value) or is_object($value)) {
@@ -50,6 +71,10 @@ class ValueResolver
         } elseif (preg_match('/^(\d[\d\.]+)$/', $value, $matches)) {
 
             $value = $matches[1];
+
+        } elseif ($node = $this->getNode()) {
+
+            $value = $node->compile();
 
         }
 

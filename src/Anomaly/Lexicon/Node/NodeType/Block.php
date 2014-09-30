@@ -58,6 +58,7 @@ class Block extends Node implements RootInterface
             ->setName($this->match(2))
             ->setRawAttributes($this->match(3))
             ->setContent($content = $this->match(4))
+            ->setCurrentContent($content)
             ->setExtractionContent($content);
     }
 

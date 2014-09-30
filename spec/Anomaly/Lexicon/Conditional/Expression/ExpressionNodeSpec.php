@@ -41,7 +41,7 @@ class ExpressionNodeSpec extends Spec
 
     function it_can_get_matches()
     {
-        $this->getMatches('foo or bar and baz && ying || yang')->shouldReturn(
+        $this->getMatches('foo or bar and baz && yin || yang')->shouldReturn(
             [
                 'foo ',
                 'or',
@@ -49,14 +49,14 @@ class ExpressionNodeSpec extends Spec
                 'and',
                 ' baz ',
                 '&&',
-                ' ying ',
+                ' yin ',
                 '||',
                 ' yang'
             ]
         );
     }
     
-    function it_can_parse_expression()
+    function it_can_get_children()
     {
         $this->getChildren()->shouldHaveNodeCount(9);
     }

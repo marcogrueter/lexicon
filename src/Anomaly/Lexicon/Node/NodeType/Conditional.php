@@ -1,12 +1,11 @@
 <?php namespace Anomaly\Lexicon\Node\NodeType;
 
 use Anomaly\Lexicon\Conditional\ConditionalCompiler;
-use Anomaly\Lexicon\Conditional\ConditionalParser;
 use Anomaly\Lexicon\Conditional\ConditionalValidator;
 use Anomaly\Lexicon\Conditional\Expression\ExpressionNode;
-use Anomaly\Lexicon\Conditional\Validator\ElseifValidator;
-use Anomaly\Lexicon\Conditional\Validator\IfValidator;
 use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
+use Anomaly\Lexicon\Stub\LexiconStub;
 
 class Conditional extends Single implements ConditionalInterface
 {
@@ -17,8 +16,8 @@ class Conditional extends Single implements ConditionalInterface
      */
     public $startConditionals = array(
         'if',
-        'unless',
         'elseif',
+        'unless',
         'elseunless'
     );
 
@@ -45,7 +44,7 @@ class Conditional extends Single implements ConditionalInterface
     public function setup()
     {
         $this
-            ->setExpression($this->match(2))
+            ->setCurrentContent($this->match(2))
             ->setExtractionContent($this->match(0))
             ->setName($this->match(1));
     }
@@ -107,7 +106,7 @@ class Conditional extends Single implements ConditionalInterface
      */
     public function getExpressionNode()
     {
-        return new ExpressionNode($this->getLexicon());
+        return $this->getNodeFactory()->make(new ExpressionNode($this->getLexicon()), [], $this);
     }
 
     /**
@@ -117,7 +116,32 @@ class Conditional extends Single implements ConditionalInterface
      */
     public function compile()
     {
-        return "{$this->getCompiler()->getStart()} ({$this->getCompiler()->getExpression()}):";
+        return "{$this->getConstructName()}({$this->compileExpression($this->getName())}):";
+    }
+
+    /**
+     * @param $name
+     * @return string
+     */
+    public function compileExpression($name)
+    {
+        /** @var NodeInterface $expressionNode */
+        $expressionNode = $this->getExpressionNode()
+            ->setCurrentContent($this->getCurrentContent())
+            ->createChildNodes();
+
+        $source = $expressionNode->compile();
+
+        if (in_array($name, ['unless', 'elseunless'])) {
+            $source = "!({$source})";
+        }
+
+        return $source;
+    }
+
+    public static function stub()
+    {
+        return new static(LexiconStub::get());
     }
 
 }

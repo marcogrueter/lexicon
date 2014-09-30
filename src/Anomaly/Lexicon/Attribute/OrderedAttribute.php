@@ -12,7 +12,8 @@ class OrderedAttribute extends AttributeNode
     {
         $this
             ->setValue($this->match(2))
-            ->setContent($this->getParent()->getRawAttributes())
+            ->setContent($rawAttributes = $this->getParent()->getRawAttributes())
+            ->setCurrentContent($rawAttributes)
             ->setExtractionContent($this->match(0));
     }
 

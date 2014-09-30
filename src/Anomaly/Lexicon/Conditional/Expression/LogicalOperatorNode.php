@@ -10,15 +10,28 @@ use Anomaly\Lexicon\Node\NodeType\Conditional;
 class LogicalOperatorNode extends Conditional
 {
 
+    /**
+     * This node is not extractable
+     *
+     * @var bool
+     */
+    protected $extractable = false;
+
+    /**
+     * Setup
+     */
     public function setup()
     {
         // This is the logical operator
-        $this->setName($this->match(0));
+        $this->setContent($this->match(0));
     }
 
+    /**
+     * @return null|string
+     */
     public function compile()
     {
-        return " {$this->getName()} ";
+        return " {$this->getContent()} ";
     }
 
 } 

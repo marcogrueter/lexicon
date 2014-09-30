@@ -31,11 +31,13 @@ class NodeCollection extends Collection
      */
     public function getByIds(array $ids)
     {
-        return $this->filter(
-            function ($node) use ($ids) {
-                return in_array($node->getId(), $ids);
-            }
-        )->toArray();
+        return array_values(
+            $this->filter(
+                function ($node) use ($ids) {
+                    return in_array($node->getId(), $ids);
+                }
+            )->toArray()
+        );
     }
 
 }

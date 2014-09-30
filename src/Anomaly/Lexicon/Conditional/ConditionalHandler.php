@@ -4,12 +4,18 @@ use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 
 class ConditionalHandler implements ConditionalHandlerInterface
 {
+
     /**
-     * Test types - array of BooleanTestTypeInterface objects
+     * Get logical operators
      *
      * @var array
      */
-    protected $testTypes = [];
+    protected $logicalOperators = [
+        'and',
+        'or',
+        '&&',
+        '||',
+    ];
 
     /**
      * Comparison operators
@@ -28,6 +34,13 @@ class ConditionalHandler implements ConditionalHandlerInterface
     ];
 
     /**
+     * Test types - array of BooleanTestTypeInterface objects
+     *
+     * @var array
+     */
+    protected $testTypes = [];
+
+    /**
      * Register boolean test types
      *
      * @param array $booleanTestTypes
@@ -37,6 +50,24 @@ class ConditionalHandler implements ConditionalHandlerInterface
     {
         $this->testTypes = $booleanTestTypes;
         return $this;
+    }
+
+    /**
+     * Get logical operators
+     *
+     * @return array
+     */
+    public function getLogicalOperators()
+    {
+        return $this->logicalOperators;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogicalOperatorRegex()
+    {
+        return $this->operatorsToRegex($this->prepare($this->getLogicalOperators()));
     }
 
     /**
@@ -57,7 +88,7 @@ class ConditionalHandler implements ConditionalHandlerInterface
     public function getTestTypes()
     {
         $testTypes = [];
-        foreach($this->testTypes as $type => $class) {
+        foreach ($this->testTypes as $type => $class) {
             $testTypes[$type] = new $class;
         }
         return $testTypes;
@@ -68,13 +99,65 @@ class ConditionalHandler implements ConditionalHandlerInterface
      *
      * @return array
      */
-    public function getTestOperators()
+    public function getCustomOperators()
     {
-        $operators = $this->getComparisonOperators();
-        foreach ($this->getTestTypes() as $testType) {;
+        $operators = [];
+        foreach ($this->getTestTypes() as $testType) {
             $operators = array_merge($operators, get_class_methods($testType));
         }
         return $operators;
+    }
+
+    /**
+     * Get test oprators
+     *
+     * @return array
+     */
+    public function getTestOperators()
+    {
+        return array_merge(
+            $this->getComparisonOperators(),
+            $this->getCustomOperators()
+        );
+    }
+
+    /**
+     * Get test operator regex
+     *
+     * @return string
+     */
+    public function getTestOperatorRegex()
+    {
+        return $this->operatorsToRegex($this->prepare($this->getTestOperators()));
+    }
+
+    /**
+     * Prepare operators
+     *
+     * @param array $operators
+     * @return array
+     */
+    public function prepare(array $operators)
+    {
+        foreach ($operators as &$operator) {
+            if (preg_match('/\w+/', $operator)) {
+                $operator = '\b' . $operator . '\b';
+            } else {
+                $operator = preg_quote($operator);
+            }
+        }
+        return $operators;
+    }
+
+    /**
+     * Operators to regex
+     *
+     * @param array $operators
+     * @return string
+     */
+    public function operatorsToRegex(array $operators)
+    {
+        return '/(' . implode('|', $operators) . ')/';
     }
 
     /**

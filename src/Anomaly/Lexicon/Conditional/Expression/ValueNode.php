@@ -10,15 +10,22 @@ use Anomaly\Lexicon\Node\NodeType\Conditional;
  */
 class ValueNode extends Conditional
 {
+    protected $extractable = false;
 
     public function setup()
     {
-        $this->setName($this->match(0));
+        $this->setContent($this->match(0));
     }
 
+    /**
+     * Compile
+     *
+     * @return string
+     */
     public function compile()
     {
-        return $this->getName();
+        // TODO: use value resolver
+        return "\$__data['__env']->variable(\$__data, '{$this->getContent()}')";
     }
 
 }

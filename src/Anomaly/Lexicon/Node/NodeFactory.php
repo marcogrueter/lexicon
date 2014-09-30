@@ -189,6 +189,7 @@ class NodeFactory
                 $this->createChildNode($node, $nodeType, $match, $offset);
             }
         }
+
         return $this;
     }
 

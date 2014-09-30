@@ -11,7 +11,7 @@ interface ConditionalHandlerInterface
     /**
      * @return array
      */
-    public function getTestOperators();
+    public function getCustomOperators();
 
     /**
      * Compare values

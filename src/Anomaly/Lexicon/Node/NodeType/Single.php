@@ -24,7 +24,8 @@ class Single extends Node
             ->setExtractionContent($content = $this->match(0))
             ->setName($name = $this->match(1))
             ->setRawAttributes($rawAttributes = $this->match(2))
-            ->setContent($rawAttributes);
+            ->setContent($rawAttributes)
+            ->setCurrentContent($rawAttributes);
     }
     
 }
