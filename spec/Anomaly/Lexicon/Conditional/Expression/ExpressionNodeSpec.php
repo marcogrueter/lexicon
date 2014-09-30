@@ -12,9 +12,9 @@ use Anomaly\Lexicon\Test\Spec;
 class ExpressionNodeSpec extends Spec
 {
 
-    function let(LexiconInterface $lexicon)
+    function let()
     {
-        $this->beConstructedWith($lexicon);
+        $this->beConstructedThrough('stub');
     }
 
     function it_is_initializable()
@@ -24,7 +24,7 @@ class ExpressionNodeSpec extends Spec
 
     function it_can_get_logical_operators()
     {
-        $this->getLogicalOperators()->shouldReturn(
+        $this->getOperators()->shouldReturn(
             [
                 'and',
                 'or',
@@ -41,21 +41,29 @@ class ExpressionNodeSpec extends Spec
 
     function it_can_get_matches()
     {
-        $this->getMatches('this or that and then or there && yes || no')->shouldReturn(
+        $this->getMatches('foo or bar and baz && ying || yang')->shouldReturn(
             [
-                'this ',
+                'foo ',
                 'or',
-                ' that ',
+                ' bar ',
                 'and',
-                ' then ',
-                'or',
-                ' there ',
+                ' baz ',
                 '&&',
-                ' yes ',
+                ' ying ',
                 '||',
-                ' no'
+                ' yang'
             ]
         );
+    }
+    
+    function it_can_parse_expression()
+    {
+        $this->getChildren()->shouldHaveNodeCount(9);
+    }
+    
+    function it_can_compile_expression()
+    {
+        $this->compile()->shouldReturn('');
     }
 
 }
