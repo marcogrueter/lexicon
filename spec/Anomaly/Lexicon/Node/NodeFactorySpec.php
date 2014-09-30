@@ -7,8 +7,7 @@ use Anomaly\Lexicon\Node\NodeExtractor;
 use Anomaly\Lexicon\Node\NodeFinder;
 use Anomaly\Lexicon\Node\Variable;
 use Anomaly\Lexicon\Stub\Node\Node;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class NodeFactorySpec
@@ -16,7 +15,7 @@ use Prophecy\Argument;
  * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class NodeFactorySpec extends ObjectBehavior
+class NodeFactorySpec extends Spec
 {
 
     function let()
@@ -41,12 +40,12 @@ class NodeFactorySpec extends ObjectBehavior
 
     function it_can_remove_a_node_type_from_a_node_group()
     {
-        $this->getNodeTypes()->shouldHaveCount(17);
+        $this->getNodeTypes()->shouldHaveNodeCount(17);
 
 
         $this
             ->removeNodeTypeFromNodeGroup('Anomaly\Lexicon\Node\NodeType\Variable')
-            ->getNodeTypes()->shouldHaveCount(16);
+            ->getNodeTypes()->shouldHaveNodeCount(16);
     }
 
     function it_can_set_and_get_node_types()
@@ -61,7 +60,7 @@ class NodeFactorySpec extends ObjectBehavior
                 'Anomaly\Lexicon\Stub\Node\Node2',
             ], 'custom_node_group1');
 
-        $this->getNodeTypes('custom_node_group1')->shouldHaveCount(2);
+        $this->getNodeTypes('custom_node_group1')->shouldHaveNodeCount(2);
     }
 
     function it_can_register_multiple_node_groups()
@@ -77,7 +76,7 @@ class NodeFactorySpec extends ObjectBehavior
                 ],
             ]);
 
-        $this->getNodeTypes('custom_node_group1')->shouldHaveCount(3);
+        $this->getNodeTypes('custom_node_group1')->shouldHaveNodeCount(3);
     }
 
     function it_can_set_and_get_the_node_group()
@@ -92,7 +91,7 @@ class NodeFactorySpec extends ObjectBehavior
                 'Anomaly\Lexicon\Stub\Node\Node2',
                 'Anomaly\Lexicon\Stub\Node\Node3',
             ])
-            ->getAttributeNodeTypes()->shouldHaveCount(3);
+            ->getAttributeNodeTypes()->shouldHaveNodeCount(3);
     }
 
     function it_can_get_root_node_type()
@@ -176,7 +175,7 @@ class NodeFactorySpec extends ObjectBehavior
         $node2->getId()->willReturn('stub-id-2');
         $this->addNode($node);
         $this->addNode($node2);
-        $this->getByIds(['stub-id-1', 'stub-id-2'])->shouldHaveCount(2);
+        $this->getByIds(['stub-id-1', 'stub-id-2'])->shouldHaveNodeCount(2);
     }
 
     function it_can_add_add_node_group_path()
