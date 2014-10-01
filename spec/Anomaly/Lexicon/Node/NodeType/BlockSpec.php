@@ -59,8 +59,20 @@ class BlockSpec extends Spec
         $this->compileOpeningTag();
     }
 
+    function it_can_compile_opening_tag_to_null_when_is_filter()
+    {
+        $this->setName('stub.md5');
+        $this->compileOpeningTag();
+    }
+
     function it_can_compile_closing_tag()
     {
+        $this->compileClosingTag();
+    }
+
+    function it_can_compile_closing_tag_to_null_when_is_filter()
+    {
+        $this->setName('stub.md5');
         $this->compileClosingTag();
     }
 
@@ -110,7 +122,7 @@ class BlockSpec extends Spec
         $child2->setParentId("stub-parent-id")->shouldBeCalled();
         $child2->deferCompile()->willReturn(false);
         $child2->isExtractable()->willReturn(false);
-        
+
         $child3->getId()->willReturn('stub-id-3');
         $child3->setParentId("stub-parent-id")->shouldBeCalled();
         $child3->deferCompile()->willReturn(true);
