@@ -1,7 +1,7 @@
 <?php namespace spec\Anomaly\Lexicon\Conditional\Expression;
 
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class ValueNodeSpec
@@ -9,8 +9,13 @@ use Prophecy\Argument;
  * @author Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Conditional\Expression
  */
-class ValueNodeSpec extends ObjectBehavior
+class ValueNodeSpec extends Spec
 {
+
+    function let(LexiconInterface $lexicon)
+    {
+        $this->beConstructedWith($lexicon);
+    }
 
     function it_is_initializable()
     {

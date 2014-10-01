@@ -94,10 +94,6 @@ class ExpressionNode extends Conditional
         $child = $nodeFactory->make($nodeType, [$match], $this, $offset, $this->getDepth());
 
         $this->addChild($child);
-
-        if ($child instanceof ExpressionNode) {
-            $child->createChildNodes();
-        }
     }
 
     /**
@@ -130,12 +126,10 @@ class ExpressionNode extends Conditional
     public function compile()
     {
         $source = '';
-
         /** @var Conditional $node */
         foreach ($this->getChildren() as $node) {
             $source .= $node->compile();
         }
-
         return $source;
     }
 

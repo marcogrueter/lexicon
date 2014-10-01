@@ -202,7 +202,7 @@ class Block extends Node implements RootInterface
      */
     public function compileFilter()
     {
-        $attributes = $this->getAttributeNode()->compile();
+        $attributes = $this->compileAttributes();
 
         $finder = $this->getNodeFinder();
 
@@ -219,7 +219,7 @@ class Block extends Node implements RootInterface
      */
     public function compileParse()
     {
-        $attributes = $this->getAttributeNode()->compile();
+        $attributes = $this->compileAttributes();
 
         $finder = $this->getNodeFinder();
 
@@ -238,7 +238,7 @@ class Block extends Node implements RootInterface
      */
     public function getTraversableSource()
     {
-        $attributes = $this->getAttributeNode()->compile();
+        $attributes = $this->compileAttributes();
 
         $expected = Lexicon::EXPECTED_TRAVERSABLE;
 

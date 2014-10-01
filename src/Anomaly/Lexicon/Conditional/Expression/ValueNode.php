@@ -1,21 +1,13 @@
 <?php namespace Anomaly\Lexicon\Conditional\Expression;
 
-use Anomaly\Lexicon\Node\NodeType\Conditional;
-
 /**
  * Class ValueNode
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package Anomaly\Lexicon\Conditional\Expression
  */
-class ValueNode extends Conditional
+class ValueNode extends ExpressionNode
 {
-    protected $extractable = false;
-
-    public function setup()
-    {
-        $this->setContent($this->match(0));
-    }
 
     /**
      * Compile
@@ -24,8 +16,13 @@ class ValueNode extends Conditional
      */
     public function compile()
     {
-        // TODO: use value resolver
-        return "\$__data['__env']->variable(\$__data, '{$this->getContent()}')";
+        $name = $this->getContent();
+        $source = null;
+        if (!empty($name)) {
+            // TODO: use value resolver
+            $source = "\$__data['__env']->variable(\$__data, '{$name}')";
+        }
+        return $source;
     }
 
 }

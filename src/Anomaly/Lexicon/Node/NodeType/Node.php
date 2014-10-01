@@ -240,13 +240,7 @@ class Node implements NodeInterface
      */
     public function compileAttributes()
     {
-        $source = '[]';
-
-        if ($attributes = $this->getAttributes() and $result = $attributes->compile()) {
-            $source = $result;
-        }
-
-        return $source;
+        return $this->getAttributeNode()->compile();
     }
 
     /**
@@ -256,7 +250,7 @@ class Node implements NodeInterface
      */
     public function compileAttributeValue($name, $offset = 0, $default = null)
     {
-        return $this->getAttributes()->compileAttributeValue($name, $offset, $default);
+        return $this->getAttributeNode()->compileAttributeValue($name, $offset, $default);
     }
 
     /**

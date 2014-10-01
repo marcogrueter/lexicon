@@ -96,5 +96,4 @@ class BooleanTestNode extends ExpressionNode
         return $nodeFactory->make(new static($lexicon), [], $expressionNode);
     }
 
-
 }

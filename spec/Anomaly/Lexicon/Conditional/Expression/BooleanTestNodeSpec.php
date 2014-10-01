@@ -22,12 +22,20 @@ class BooleanTestNodeSpec extends ObjectBehavior
         $this->shouldHaveType('Anomaly\Lexicon\Conditional\Expression\BooleanTestNode');
     }
 
-    function it_can_compile_source()
+    function it_can_compile_boolean_test_source()
     {
         $this
-            ->setCurrentContent('foo == bar')
+            ->setContent('foo == bar')
             ->createChildNodes()
-            ->compile()->shouldReturn('');
+            ->compile()->shouldReturn("\$__data['__env']->booleanTest(\$__data['__env']->variable(\$__data, 'foo'),\$__data['__env']->variable(\$__data, 'bar'),'==')");
     }
-    
+
+    function it_can_compile_variable_source()
+    {
+        $this
+            ->setContent('foo')
+            ->createChildNodes()
+            ->compile()->shouldReturn("\$__data['__env']->variable(\$__data, 'foo')");
+    }
+
 }

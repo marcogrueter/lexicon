@@ -36,7 +36,7 @@ class ExpressionNodeSpec extends Spec
 
     function it_can_get_regex()
     {
-        $this->regex()->shouldReturn('/(and|or|&&|\|\|)/');
+        $this->regex()->shouldReturn('/(\band\b|\bor\b|&&|\|\|)/');
     }
 
     function it_can_get_matches()
@@ -63,7 +63,7 @@ class ExpressionNodeSpec extends Spec
     
     function it_can_compile_expression()
     {
-        $this->compile()->shouldReturn('');
+        $this->compile()->shouldReturn("\$__data['__env']->variable(\$__data, 'foo') or \$__data['__env']->variable(\$__data, 'bar') and \$__data['__env']->variable(\$__data, 'baz') && \$__data['__env']->variable(\$__data, 'yin') || \$__data['__env']->variable(\$__data, 'yang')");
     }
 
 }

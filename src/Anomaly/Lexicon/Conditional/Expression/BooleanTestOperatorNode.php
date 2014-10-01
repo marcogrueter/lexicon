@@ -8,7 +8,6 @@
 class BooleanTestOperatorNode extends LogicalOperatorNode
 {
 
-
     /**
      * @return null|string
      */
