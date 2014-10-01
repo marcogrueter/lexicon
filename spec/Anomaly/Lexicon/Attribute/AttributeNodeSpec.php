@@ -108,5 +108,28 @@ class AttributeNodeSpec extends Spec
             ->createChildNodes()
             ->compileAttributeValue('', 1)->shouldReturn("'yang'");
     }
+    
+    function it_can_compile_default_attribute_value()
+    {
+        $this->compileAttributeValue('', 0, 'default')->shouldReturn('default');
+    }
+    
+    function it_can_compile_source_from_array()
+    {
+        $this
+            ->setCurrentContent('foo="bar" yin="yang"')
+            ->createChildNodes()
+            ->compileSourceFromArray()
+            ->shouldReturn("['foo'=>'bar','yin'=>'yang']");
+    }
 
+    function it_can_compile_source()
+    {
+        $this
+            ->setCurrentContent('foo="bar" yin="yang"')
+            ->createChildNodes()
+            ->compile()
+            ->shouldReturn("['foo'=>'bar','yin'=>'yang']");
+    }
+    
 }

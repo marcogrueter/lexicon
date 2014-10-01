@@ -1,21 +1,19 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
-use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class BlockSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class BlockSpec extends ObjectBehavior
+class BlockSpec extends Spec
 {
 
-    function let(LexiconInterface $lexicon)
+    function let()
     {
-        $this->beConstructedWith($lexicon);
+        $this->beConstructedThrough('stub');
     }
 
     function it_is_initializable()
@@ -25,9 +23,9 @@ class BlockSpec extends ObjectBehavior
 
     function it_can_get_regex()
     {
-        $this->regex()->shouldReturn('/(\{\{\s*()(\s.*?)\}\})(.*?)(\{\{\s*\/\2\s*\}\})/ms');
+        $this->regex()->shouldReturn('/(\{\{\s*([a-zA-Z0-9_\.]+)(\s.*?)\}\})(.*?)(\{\{\s*\/\2\s*\}\})/ms');
     }
-    
+
     function it_can_setup_regex_match()
     {
         $this->setup();
@@ -47,7 +45,7 @@ class BlockSpec extends ObjectBehavior
     {
         $this->setClosingTag('{{ /books }}')->getClosingTag()->shouldReturn('{{ /books }}');
     }
-    
+
     function it_can_compile_source()
     {
         $this->compile();
@@ -55,9 +53,9 @@ class BlockSpec extends ObjectBehavior
 
     function it_can_compile_footer()
     {
-        $this->compileFooter();
+        $this->compileFooter('main content');
     }
-    
+
     function it_can_compile_children()
     {
         $this->compileChildren();
@@ -75,23 +73,27 @@ class BlockSpec extends ObjectBehavior
 
     function it_can_compile_filter()
     {
+        $this->setName('stub.md5');
+        $this->compile();
         $this->compileFilter();
     }
-    
+
     function it_can_compile_parse()
     {
+        $this->setName('stub.uppercase');
+        $this->compile();
         $this->compileParse();
     }
-    
+
     function it_can_get_traversable_source()
     {
 
     }
-    
+
     function it_can_add_to_and_get_footer()
     {
         $this->addToFooter('foo');
         $this->getFooter()->shouldReturn(['foo']);
     }
-    
+
 }

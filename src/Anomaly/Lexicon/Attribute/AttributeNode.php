@@ -86,17 +86,6 @@ class AttributeNode extends Node
         return $attributeNodeType;
     }
 
-
-    /**
-     * Alias for get attribute node types
-     *
-     * @return array
-     */
-    public function getNodeTypes()
-    {
-        return $this->getNodeFactory()->getAttributeNodeTypes();
-    }
-
     /**
      * Create child nodes
      *
@@ -262,16 +251,10 @@ class AttributeNode extends Node
     public function compileSourceFromArray($except = [])
     {
         $attributes = [];
-
         foreach ($this->compileArray($except) as $key => $value) {
-            $attributes[] = "{$key} => {$value}";
+            $attributes[] = "{$key}=>{$value}";
         }
-
-        if (!empty($attributes)) {
-            $attributes = implode(',', $attributes);
-        }
-
-        return '[' . $attributes . ']';
+        return '[' . implode(',', $attributes) . ']';
     }
 
     /**

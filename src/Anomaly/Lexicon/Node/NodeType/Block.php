@@ -4,6 +4,7 @@ use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Stub\LexiconStub;
 
 class Block extends Node implements RootInterface
 {
@@ -32,7 +33,7 @@ class Block extends Node implements RootInterface
     /**
      * @var array
      */
-    protected $footer = array();
+    protected $footer = [];
 
     /**
      * Get regex matcher
@@ -210,7 +211,7 @@ class Block extends Node implements RootInterface
      */
     public function compileFilter()
     {
-        $attributes = $this->newAttributeNode()->compile();
+        $attributes = $this->getAttributeNode()->compile();
 
         $finder = $this->getNodeFinder();
 
@@ -227,7 +228,7 @@ class Block extends Node implements RootInterface
      */
     public function compileParse()
     {
-        $attributes = $this->newAttributeNode()->compile();
+        $attributes = $this->getAttributeNode()->compile();
 
         $finder = $this->getNodeFinder();
 
@@ -246,7 +247,7 @@ class Block extends Node implements RootInterface
      */
     public function getIterateableSource()
     {
-        $attributes = $this->newAttributeNode()->compile();
+        $attributes = $this->getAttributeNode()->compile();
 
         $expected = Lexicon::EXPECTED_TRAVERSABLE;
 
@@ -293,6 +294,16 @@ class Block extends Node implements RootInterface
     {
         $this->footer[] = $content;
         return $this;
+    }
+
+    /**
+     * Stub for testing with PHPSpec
+     *
+     * @return Block
+     */
+    public static function stub()
+    {
+        return new static(LexiconStub::get());
     }
 
 }
