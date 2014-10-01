@@ -146,9 +146,9 @@ class ExpressionNode extends Conditional
         $conditionalNode = $nodeFactory->make(new Conditional($lexicon), []);
         $conditionalNode->setContent('foo or bar and baz && yin || yang');
         $expressionNode = $nodeFactory->make(new static($lexicon), [], $conditionalNode);
-        $expressionNode
+/*        $expressionNode
             ->setContent('foo or bar and baz && yin || yang')
-            ->createChildNodes();
+            ->createChildNodes();*/
         return $expressionNode;
     }
 

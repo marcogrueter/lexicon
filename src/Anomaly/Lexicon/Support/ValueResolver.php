@@ -43,7 +43,7 @@ class ValueResolver
      * @param string $value
      * @return string
      */
-    public function compile($value = '')
+    public function resolve($value = '')
     {
         // this shouldn't happen
         if (is_array($value) or is_null($value) or is_object($value)) {

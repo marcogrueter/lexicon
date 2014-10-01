@@ -147,8 +147,6 @@ class NodeFactorySpec extends Spec
         $nodeType->setOffset(0)->shouldBeCalled();
         $nodeType->setDepth(1)->shouldBeCalled();
         $nodeType->setup()->shouldBeCalled();
-        $nodeType->getContent()->shouldBeCalled();
-        $nodeType->setCurrentContent(null)->shouldBeCalled();
         $nodeType->getItemAliasFromRawAttributes()->shouldBeCalled()->willReturn('book');
         $nodeType->setItemAlias('book')->shouldBeCalled();
 

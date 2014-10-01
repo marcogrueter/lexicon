@@ -26,7 +26,7 @@ class SectionYieldSpec extends ObjectBehavior
 
     function it_can_compile_yield_content(AttributeNode $attributeNode)
     {
-        $this->compile()->shouldReturn('');
+        $this->compile()->shouldReturn("echo \$__data['__env']->yieldContent('foo');");
     }
     
 }

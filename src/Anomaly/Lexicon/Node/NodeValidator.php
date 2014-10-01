@@ -1,6 +1,5 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ValidatorInterface;
 use Anomaly\Lexicon\Stub\Node\NodeFinderStub;
@@ -18,7 +17,7 @@ class NodeValidator implements ValidatorInterface
     /**
      * @param NodeInterface $node
      */
-    public function __construct(ConditionalInterface $node)
+    public function __construct(NodeInterface $node)
     {
         $this->node = $node;
     }

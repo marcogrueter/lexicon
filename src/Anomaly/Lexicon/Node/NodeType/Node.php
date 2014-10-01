@@ -240,7 +240,7 @@ class Node implements NodeInterface
      */
     public function compileAttributes()
     {
-        return $this->getAttributeNode()->compile();
+        return $this->getAttributeNode()->createChildNodes()->compile();
     }
 
     /**

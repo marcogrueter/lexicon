@@ -23,7 +23,7 @@ class SectionYield extends Single
      */
     public function compile()
     {
-        $name = $this->getAttributeNode()->compileAttributeValue('name');
+        $name = $this->compileAttributeValue('name');
 
         $source = null;
 
@@ -37,11 +37,9 @@ class SectionYield extends Single
     public static function stub()
     {
         $lexicon = LexiconStub::get();
-        $node = new static($lexicon);
-        $attributeNode = new AttributeNode($lexicon);
-        $attributeNode->setRawAttributes('name="foo"');
-        $node->setAttributeNode($attributeNode);
-        return $node;
+        $factory = $lexicon->getFoundation()->getNodeFactory();
+        $node = $factory->make(new static($lexicon));
+        return $node->setRawAttributes('name="foo"');
     }
 
 }

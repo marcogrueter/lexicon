@@ -46,20 +46,12 @@ class ConditionalSpec extends Spec
         $this->getValidator()->shouldImplement('Anomaly\Lexicon\Contract\Node\ValidatorInterface');
     }
     
-    function it_can_create_child_nodes()
-    {
-        $this
-            ->setCurrentContent('foo or bar and baz && ying || yang')
-            ->createChildNodes()
-            ->getChildren()
-            ->shouldHaveNodeCount(9);
-    }
-    
-    function it_can_compile_source()
+    function it_can_compile_php()
     {
         $this
             ->setName('if')
             ->setCurrentContent('foo or bar and baz && ying || yang')
+            ->createChildNodes()
             ->compile()
             ->shouldReturn('');
     }

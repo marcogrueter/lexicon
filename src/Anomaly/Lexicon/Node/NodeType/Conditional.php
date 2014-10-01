@@ -70,16 +70,6 @@ class Conditional extends Single implements ConditionalInterface
     }
 
     /**
-     * Get conditional parser
-     *
-     * @return ConditionalCompiler
-     */
-    public function getCompiler()
-    {
-        return new ConditionalCompiler($this);
-    }
-
-    /**
      * @param $expression
      * @return Conditional
      */

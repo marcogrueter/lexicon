@@ -55,15 +55,23 @@ class ExpressionNodeSpec extends Spec
             ]
         );
     }
-    
-    function it_can_get_children()
+
+    function it_can_get_child_nodes()
     {
-        $this->getChildren()->shouldHaveNodeCount(9);
+        $this
+            ->setContent('foo or bar and baz && ying || yang')
+            ->createChildNodes()
+            ->getChildren()
+            ->shouldHaveNodeCount(9);
     }
     
-    function it_can_compile_expression()
+    function it_can_compile_php()
     {
-        $this->compile()->shouldReturn("\$__data['__env']->variable(\$__data, 'foo') or \$__data['__env']->variable(\$__data, 'bar') and \$__data['__env']->variable(\$__data, 'baz') && \$__data['__env']->variable(\$__data, 'yin') || \$__data['__env']->variable(\$__data, 'yang')");
+        $this
+            ->setContent('foo or bar and baz')
+            ->createChildNodes()
+            ->compile()
+            ->shouldReturn("\$__data['__env']->variable(\$__data, 'foo') or \$__data['__env']->variable(\$__data, 'bar') and \$__data['__env']->variable(\$__data, 'baz')");
     }
 
 }
