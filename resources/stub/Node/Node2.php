@@ -7,6 +7,13 @@
  */
 class Node2 extends Node
 {
+    /**
+     * Defer compile
+     *
+     * @var bool
+     */
+    protected $deferCompile = true;
+
 
     protected $id = 'stub-id-2';
 

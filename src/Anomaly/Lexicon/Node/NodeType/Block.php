@@ -156,12 +156,10 @@ class Block extends Node implements RootInterface
     public function compileFooter($source)
     {
         $footer = $this->getFooter();
-
         if (count($footer) > 0) {
             $source = str_replace('@parent', '', $source);
             $source = ltrim($source, PHP_EOL) . PHP_EOL . implode(PHP_EOL, array_reverse($footer));
         }
-
         return $source;
     }
 

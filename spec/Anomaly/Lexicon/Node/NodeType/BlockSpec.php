@@ -1,5 +1,8 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
+use Anomaly\Lexicon\Stub\Node\Node;
+use Anomaly\Lexicon\Stub\Node\Node2;
+use Anomaly\Lexicon\Stub\Node\Node3;
 use Anomaly\Lexicon\Test\Spec;
 
 /**
@@ -51,16 +54,6 @@ class BlockSpec extends Spec
         $this->compile();
     }
 
-    function it_can_compile_footer()
-    {
-        $this->compileFooter('main content');
-    }
-
-    function it_can_compile_children()
-    {
-        $this->compileChildren();
-    }
-
     function it_can_compile_opening_tag()
     {
         $this->compileOpeningTag();
@@ -94,6 +87,44 @@ class BlockSpec extends Spec
     {
         $this->addToFooter('foo');
         $this->getFooter()->shouldReturn(['foo']);
+    }
+
+    function it_can_compile_footer()
+    {
+        $this->addToFooter('that');
+        $this->compileFooter('this plus ')->shouldReturn('this plus '.PHP_EOL.'that');
+    }
+
+    function it_can_compile_children(Node $child, Node2 $child2, Node3 $child3)
+    {
+        $this->setId('stub-parent-id');
+
+        $factory = $this->getNodeFactory();
+
+        $child->getId()->willReturn('stub-id-1');
+        $child->setParentId("stub-parent-id")->shouldBeCalled();
+        $child->deferCompile()->willReturn(false);
+        $child->isExtractable()->willReturn(false);
+
+        $child2->getId()->willReturn('stub-id-2');
+        $child2->setParentId("stub-parent-id")->shouldBeCalled();
+        $child2->deferCompile()->willReturn(false);
+        $child2->isExtractable()->willReturn(false);
+        
+        $child3->getId()->willReturn('stub-id-3');
+        $child3->setParentId("stub-parent-id")->shouldBeCalled();
+        $child3->deferCompile()->willReturn(true);
+        $child3->isExtractable()->willReturn(false);
+
+        $factory->addNode($child);
+        $factory->addNode($child2);
+        $factory->addNode($child3);
+
+        $this->addChild($child);
+        $this->addChild($child2);
+        $this->addChild($child3);
+
+        $this->compileChildren();
     }
 
 }
