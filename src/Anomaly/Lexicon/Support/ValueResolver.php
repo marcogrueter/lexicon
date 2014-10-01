@@ -57,25 +57,32 @@ class ValueResolver
         }
 
         if (preg_match('/^\'(.*)\'$/', $value, $matches)) {
-
             $value = "'{$matches[1]}'";
+        }
 
-        } elseif (preg_match('/^"(.*)"$/', $value, $matches)) {
-
+        if (preg_match('/^"(.*)"$/', $value, $matches)) {
             $value = $matches[1];
+        }
 
-        } elseif (preg_match('/^(\d+)$/', $value, $matches)) {
-
+        if (preg_match('/^(\d+)$/', $value, $matches)) {
             $value = $matches[1];
+        }
 
-        } elseif (preg_match('/^(\d[\d\.]+)$/', $value, $matches)) {
-
+        if (preg_match('/^(\d[\d\.]+)$/', $value, $matches)) {
             $value = $matches[1];
+        }
 
-        } elseif ($node = $this->getNode()) {
-
+        if ($node = $this->getNode()) {
             $value = $node->compile();
+        }
 
+        return $value;
+    }
+
+    public function removeQuotes($value)
+    {
+        if (preg_match('/^\'(.*)\'$/', $value, $matches)) {
+            $value = $matches[1];
         }
 
         return $value;

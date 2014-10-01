@@ -228,9 +228,9 @@ class Node implements NodeInterface
      *
      * @return AttributeNode
      */
-    public function getAttributes()
+    public function getAttributeNode()
     {
-        return $this->attributeNode;
+        return $this->getNodeFactory()->make(new AttributeNode($this->getLexicon()), [], $this)->createChildNodes();
     }
 
     /**

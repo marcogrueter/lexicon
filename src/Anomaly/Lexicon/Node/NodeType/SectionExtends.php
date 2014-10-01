@@ -2,6 +2,7 @@
 
 
 use Anomaly\Lexicon\Contract\Node\RootInterface;
+use Anomaly\Lexicon\Stub\LexiconStub;
 
 class SectionExtends extends Single
 {
@@ -22,13 +23,24 @@ class SectionExtends extends Single
         /** @var RootInterface $rootNode */
         $rootNode = $this->getRootNode();
 
-        $attribute = "'test::view/layout'";// $this->newAttributeNode()->compileAttribute('layout');
+        $attribute = $this->getAttributeNode()->compileAttributeValue('layout');
 
         if (!empty($attribute)) {
             $rootNode->addToFooter("<?php echo \$__data['__env']->make({$attribute},\$__data)->render(); ?>");
         }
 
         return null;
+    }
+
+    /**
+     * @return SectionExtends
+     */
+    public static function stub()
+    {
+        $lexicon = LexiconStub::get();
+        $factory = $lexicon->getFoundation()->getNodeFactory();
+        $root = $factory->make(new Block($lexicon));
+        return $factory->make(new static($lexicon), [], $root);
     }
 
 }

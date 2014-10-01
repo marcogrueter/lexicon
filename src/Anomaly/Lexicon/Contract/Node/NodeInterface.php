@@ -279,14 +279,18 @@ interface NodeInterface extends ExtractionInterface
     public function isExtractable();
 
     /**
+     * Get node finder
+     *
      * @return NodeFinder
      */
     public function getNodeFinder();
 
     /**
+     * Get attribute node
+     *
      * @return AttributeNode
      */
-    public function getAttributes();
+    public function getAttributeNode();
 
     /**
      * Set attribute node

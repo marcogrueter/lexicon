@@ -2,6 +2,8 @@
 
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\NodeType\Node;
+use Anomaly\Lexicon\Node\NodeType\Variable;
+use Anomaly\Lexicon\Stub\LexiconStub;
 
 class AttributeNode extends Node
 {
@@ -64,7 +66,8 @@ class AttributeNode extends Node
      */
     public function detect($rawAttributes)
     {
-        return !empty($this->getMatches($rawAttributes));
+        $matches = $this->getMatches($rawAttributes);
+        return !empty($matches);
     }
 
     /**
@@ -74,14 +77,12 @@ class AttributeNode extends Node
     public function getAttributeNodeType()
     {
         $attributeNodeType = null;
-
-        foreach ($this->getLexicon()->getNodeFactory()->getAttributeNodeTypes() as $nodeType) {
+        foreach ($this->getNodeFactory()->getAttributeNodeTypes() as $nodeType) {
             if ($nodeType->detect($this->getCurrentContent())) {
                 $attributeNodeType = $nodeType;
                 break;
             }
         }
-
         return $attributeNodeType;
     }
 
@@ -93,7 +94,7 @@ class AttributeNode extends Node
      */
     public function getNodeTypes()
     {
-        return $this->getLexicon()->getNodeFactory()->getAttributeNodeTypes();
+        return $this->getNodeFactory()->getAttributeNodeTypes();
     }
 
     /**
@@ -115,6 +116,19 @@ class AttributeNode extends Node
             }
         }
 
+        return $this;
+    }
+
+    /**
+     * @param NodeInterface $nodeType
+     * @param array         $match
+     * @param int           $offset
+     * @return $this
+     */
+    public function createChildNode(NodeInterface $nodeType, array $match, $offset = 0)
+    {
+        $attributeNode = $this->getNodeFactory()->make($nodeType, $match, $this, $offset);
+        $this->addChild($attributeNode);
         return $this;
     }
 
@@ -206,8 +220,7 @@ class AttributeNode extends Node
      */
     public function compileArray($except = [])
     {
-        $attributes = array();
-
+        $attributes = [];
         /** @var $node AttributeNode */
         foreach ($this->getChildren() as $node) {
             $key   = $node->compileKey();
@@ -216,7 +229,6 @@ class AttributeNode extends Node
                 $attributes[$key] = $value;
             }
         }
-
         return $attributes;
     }
 
@@ -231,13 +243,13 @@ class AttributeNode extends Node
     public function compileAttributeValue($name, $offset = 0, $default = null)
     {
         $attributes = $this->compileArray();
+        $name = "'" . $name . "'";
 
         if (isset($attributes[$name])) {
             return $attributes[$name];
         } elseif (isset($attributes[$offset])) {
             return $attributes[$offset];
         }
-
         return $default;
     }
 
@@ -270,6 +282,19 @@ class AttributeNode extends Node
     public function compile()
     {
         return $this->compileSourceFromArray();
+    }
+
+    /**
+     * Lexicon
+     *
+     * @return AttributeNode
+     */
+    public static function stub()
+    {
+        $lexicon      = LexiconStub::get();
+        $nodeFactory  = $lexicon->getFoundation()->getNodeFactory();
+        $variableNode = $nodeFactory->make(new Variable($lexicon));
+        return $nodeFactory->make(new static($lexicon), [], $variableNode);
     }
 
 }
