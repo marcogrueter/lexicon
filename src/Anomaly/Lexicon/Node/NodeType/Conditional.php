@@ -115,17 +115,10 @@ class Conditional extends Single implements ConditionalInterface
      */
     public function compileExpression($name)
     {
-        /** @var NodeInterface $expressionNode */
-        $expressionNode = $this->getExpressionNode()
-            ->setCurrentContent($this->getCurrentContent())
-            ->createChildNodes();
-
-        $source = $expressionNode->compile();
-
+        $source = $this->getExpressionNode()->compile();
         if (in_array($name, ['unless', 'elseunless'])) {
             $source = "!({$source})";
         }
-
         return $source;
     }
 

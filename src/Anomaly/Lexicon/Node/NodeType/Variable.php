@@ -27,7 +27,7 @@ class Variable extends Single
      * @param array $attributes
      * @return string
      */
-    public function compile()
+    public function compile($useEcho = true)
     {
         $finder = $this->getNodeFinder();
 
@@ -39,7 +39,10 @@ class Variable extends Single
 
         $expected = Lexicon::EXPECTED_ECHO;
 
-        return "echo \$__data['__env']->variable({$item},'{$name}',{$attributes},'',null,'{$expected}');";
+        $echo = $useEcho ? 'echo' : null;
+        $semicolon = $useEcho ? ';' : null;
+
+        return "{$echo} \$__data['__env']->variable({$item},'{$name}',{$attributes},'',null,'{$expected}'){$semicolon}";
     }
 
     /**

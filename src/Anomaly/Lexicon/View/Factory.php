@@ -46,7 +46,7 @@ class Factory extends BaseFactory implements FactoryInterface
      * @return View
      */
     public function make($view, $data = [], $mergeData = [])
-    {dd($view);
+    {
         if (isset($this->aliases[$view])) {
             $view = $this->aliases[$view];
         }

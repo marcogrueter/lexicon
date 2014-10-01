@@ -1,6 +1,9 @@
 <?php namespace Anomaly\Lexicon\Node\NodeType;
 
 
+use Anomaly\Lexicon\Stub\LexiconStub;
+use Anomaly\Lexicon\Support\ValueResolver;
+
 class Includes extends Single
 {
 
@@ -18,7 +21,7 @@ class Includes extends Single
      */
     public function compile()
     {
-        $partial = $this->compileAttributeValue('partial');
+        $partial = $this->compileAttributeValue('view');
 
         $source = null;
 
@@ -38,14 +41,24 @@ class Includes extends Single
     public function getSharedAttributes()
     {
         $sharedAttributes = [];
-
-        if ($share   = $this->compileAttributeValue('share')) {
-            foreach($this->getMatches($share, "/({$this->getVariableRegex()})/s") as $match) {
-                dd($match);
+        if ($share   = $this->compileAttributeValue('share', 1)) {
+            $resolver = new ValueResolver();
+            $names = explode(',', $resolver->removeQuotes($share));
+            foreach($names as $name) {
+                $node = $this->getNodeFactory()
+                    ->make(new Variable($this->getLexicon()), [], $this)
+                    ->setName($name);
+                $sharedAttributes[] = "'{$name}'=>{$node->compile(false)}";
             }
         }
+        return '['.implode(',',$sharedAttributes).']';
+    }
 
-        return $sharedAttributes;
+    public static function stub()
+    {
+        $lexicon = LexiconStub::get();
+        $factory = $lexicon->getFoundation()->getNodeFactory();
+        return $factory->make(new static($lexicon));
     }
 
 }

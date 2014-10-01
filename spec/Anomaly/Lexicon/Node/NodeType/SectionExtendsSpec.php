@@ -23,7 +23,7 @@ class SectionExtendsSpec extends Spec
 
     function it_can_compile_source()
     {
-        $this->setRawAttributes('layout="test::foo"')->compile();
+        $this->setRawAttributes('view="test::foo"')->compile();
         $this->getRootNode()->getFooter()->shouldReturn(
             [
                 "<?php echo \$__data['__env']->make('test::foo',\$__data)->render(); ?>"
