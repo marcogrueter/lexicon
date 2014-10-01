@@ -65,6 +65,6 @@ interface BlockInterface extends NodeInterface
     /**
      * @return array|\IteratorAggregate
      */
-    public function getIterateableSource();
+    public function getTraversableSource();
 
 }

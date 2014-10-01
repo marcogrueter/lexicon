@@ -141,10 +141,7 @@ class Block extends Node implements RootInterface
         } elseif ($this->isParse()) {
             return $this->compileParse();
         }
-
-        $this->compileChildren();
-
-        return $this->getCurrentContent();
+        return $this->compileChildren()->getCurrentContent();
     }
 
     /**
@@ -171,20 +168,17 @@ class Block extends Node implements RootInterface
     public function compileChildren()
     {
         $nodeFactory = $this->getLexicon()->getFoundation()->getNodeFactory();
-
         /** @var $child NodeInterface */
         foreach ($this->getChildren() as $child) {
             if (!$child->deferCompile()) {
                 $nodeFactory->inject($child, $this);
             }
         }
-
         foreach ($this->getChildren() as $child) {
             if ($child->deferCompile()) {
                 $nodeFactory->inject($child, $this);
             }
         }
-
         return $this;
     }
 
@@ -198,8 +192,7 @@ class Block extends Node implements RootInterface
         if (!$this->isPhp() or $this->isFilter() or $this->isParse()) {
             return null;
         }
-
-        return "foreach ({$this->getIterateableSource()} as \$i => {$this->getItemSource()}):";
+        return "foreach({$this->getTraversableSource()} as \$i=>{$this->getItemSource()}):";
     }
 
     /**
@@ -239,11 +232,11 @@ class Block extends Node implements RootInterface
     }
 
     /**
-     * Compile iterateable source
+     * Compile traversable source
      *
      * @return string
      */
-    public function getIterateableSource()
+    public function getTraversableSource()
     {
         $attributes = $this->getAttributeNode()->compile();
 
@@ -268,7 +261,6 @@ class Block extends Node implements RootInterface
         if (!$this->isPhp() or $this->isFilter() or $this->isParse()) {
             return null;
         }
-
         return "endforeach;";
     }
 
@@ -301,7 +293,9 @@ class Block extends Node implements RootInterface
      */
     public static function stub()
     {
-        return new static(LexiconStub::get());
+        $lexicon = LexiconStub::get();
+        $factory = $lexicon->getFoundation()->getNodeFactory();
+        return $factory->make(new static($lexicon))->setName('books');
     }
 
 }

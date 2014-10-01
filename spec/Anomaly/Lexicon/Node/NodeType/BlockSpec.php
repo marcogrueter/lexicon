@@ -51,29 +51,40 @@ class BlockSpec extends Spec
 
     function it_can_compile_source()
     {
-        $this->compile();
+
+        $this
+            ->setCurrentContent('some-content')
+            ->compile()
+            ->shouldReturn('some-content');
+    }
+
+    function it_can_get_traversable_source()
+    {
+        $this->getTraversableSource()->shouldReturn("\$__data['__env']->variable(\$__data,'books',[],'',[],'traversable')");
     }
 
     function it_can_compile_opening_tag()
     {
-        $this->compileOpeningTag();
+        $this
+            ->compileOpeningTag()
+            ->shouldReturn("foreach(\$__data['__env']->variable(\$__data,'books',[],'',[],'traversable') as \$i=>\$booksItem):");
     }
 
     function it_can_compile_opening_tag_to_null_when_is_filter()
     {
         $this->setName('stub.md5');
-        $this->compileOpeningTag();
+        $this->compileOpeningTag()->shouldBe(null);
     }
 
     function it_can_compile_closing_tag()
     {
-        $this->compileClosingTag();
+        $this->compileClosingTag()->shouldReturn('endforeach;');
     }
 
     function it_can_compile_closing_tag_to_null_when_is_filter()
     {
         $this->setName('stub.md5');
-        $this->compileClosingTag();
+        $this->compileClosingTag()->shouldBe(null);
     }
 
     function it_can_compile_filter()
@@ -88,11 +99,6 @@ class BlockSpec extends Spec
         $this->setName('stub.uppercase');
         $this->compile();
         $this->compileParse();
-    }
-
-    function it_can_get_traversable_source()
-    {
-
     }
 
     function it_can_add_to_and_get_footer()
