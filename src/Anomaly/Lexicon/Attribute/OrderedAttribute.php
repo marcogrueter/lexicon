@@ -1,5 +1,7 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
+use Anomaly\Lexicon\Stub\LexiconStub;
+
 class OrderedAttribute extends AttributeNode
 {
 
@@ -10,9 +12,11 @@ class OrderedAttribute extends AttributeNode
      */
     public function setup()
     {
+        $rawAttributes = ($parent = $this->getParent()) ? $parent->getRawAttributes() : null;
+
         $this
             ->setValue($this->match(2))
-            ->setContent($rawAttributes = $this->getParent()->getRawAttributes())
+            ->setContent($rawAttributes)
             ->setCurrentContent($rawAttributes)
             ->setExtractionContent($this->match(0));
     }
@@ -45,6 +49,16 @@ class OrderedAttribute extends AttributeNode
     public function regex()
     {
         return '/\s*(\'|"|&#?\w+;)(.*?)(?<!\\\\)\1/ms';
+    }
+
+    /**
+     * Stub for testing with PHPSpec
+     *
+     * @return AttributeNode|static
+     */
+    public static function stub()
+    {
+        return new static(LexiconStub::get());
     }
 
 }

@@ -74,6 +74,7 @@ class BooleanTestNode extends ExpressionNode
 
             $source = "\$__data['__env']->booleanTest({$left->compile()},{$right->compile()},{$operator->compile()})";
         } else {
+            $children = $this->createChildNodes()->getChildren();
             /** @var ValueNode $valueNode */
             $valueNode = $children[0];
             $source = $valueNode->compile();
