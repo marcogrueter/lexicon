@@ -59,7 +59,7 @@ class SplitterNode extends Node
             ? $this->getDelimiterNode()
             : $this->getSegmentNode();
 
-        $child = $nodeFactory->make($nodeType, [$match], $this->getParent(), $offset, $this->getDepth());
+        $child = $nodeFactory->make($nodeType, [$match], $this, $offset, $this->getDepth());
 
         $this->addChild($child);
     }
@@ -107,7 +107,8 @@ class SplitterNode extends Node
         foreach($this->getChildren() as $node) {
             $segments[] = $node->compile();
         }
-        return implode('.', $segments);
+        $value = implode('.', $segments);
+        return $value;
     }
 
     public static function stub()

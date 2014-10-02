@@ -253,7 +253,8 @@ class AttributeNode extends Node
         foreach ($this->compileArray($except) as $key => $value) {
             $attributes[] = "{$key}=>{$value}";
         }
-        return '[' . implode(',', $attributes) . ']';
+        $attributes = '[' . implode(',', $attributes) . ']';
+        return $attributes;
     }
 
     /**

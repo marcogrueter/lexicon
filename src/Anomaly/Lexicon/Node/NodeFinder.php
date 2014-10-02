@@ -65,26 +65,21 @@ class NodeFinder
         $node = $this->getNode();
 
         if ($this->hasRootAliasPrefix()) {
-
             $source = '$__data';
-
         } elseif ($node instanceof AttributeNode) {
-
-            if ($parent = $this->getAttributeNodeParent()) {
-                $source = $parent->getItemSource();
-            }
-
-        } elseif (!$this->isChildOfRoot()) {
-
-            if ($node = $this->getNodeByAlias()) {
-
+            if ($node = $this->getAttributeNodeParent()) {
                 $source = $node->getItemSource();
-
-            } elseif ($parent = $this->getParent()) {
-
-                $source = $parent->getItemSource();
-
             }
+        } elseif (!$this->isChildOfRoot()) {
+            if ($node = $this->getNodeByAlias()) {
+                $source = $node->getItemSource();
+            } elseif ($parent = $this->getParent()) {
+                $source = $parent->getItemSource();
+            }
+        }
+
+        if ($node and $node->getId() == $this->getNode()->getId()) {
+            $source = '$__data';
         }
 
         return $source;
