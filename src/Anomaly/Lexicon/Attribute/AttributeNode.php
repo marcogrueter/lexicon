@@ -28,16 +28,6 @@ class AttributeNode extends Node
     protected $extractable = false;
 
     /**
-     * Default dummy regex
-     *
-     * @return string
-     */
-    public function regex()
-    {
-        return '//';
-    }
-
-    /**
      * Setup properties using the regex matches
      *
      * @return void
@@ -71,14 +61,22 @@ class AttributeNode extends Node
     }
 
     /**
+     * @return array
+     */
+    public function getAttributeNodeTypes()
+    {
+        return $this->getNodeFactory()->getAttributeNodeTypes();
+    }
+
+    /**
      * @todo - update this interface for an attribute specific one
      * @return NodeInterface|null
      */
     public function getAttributeNodeType()
     {
         $attributeNodeType = null;
-        foreach ($this->getNodeFactory()->getAttributeNodeTypes() as $nodeType) {
-            if ($nodeType->detect($this->getCurrentContent())) {
+        foreach ($this->getAttributeNodeTypes() as $nodeType) {
+            if ($nodeType->detect($this->getContent())) {
                 $attributeNodeType = $nodeType;
                 break;
             }
@@ -100,7 +98,8 @@ class AttributeNode extends Node
 
         /** @var AttributeNode $nodeType */
         if ($nodeType) {
-            foreach ($nodeType->getMatches($this->getCurrentContent()) as $offset => $match) {
+            $matches = $nodeType->getMatches($this->getContent());
+            foreach ($matches as $offset => $match) {
                 $this->createChildNode($nodeType, $match, $offset);
             }
         }
@@ -277,6 +276,7 @@ class AttributeNode extends Node
         $lexicon      = LexiconStub::get();
         $nodeFactory  = $lexicon->getFoundation()->getNodeFactory();
         $variableNode = $nodeFactory->make(new Variable($lexicon));
+        $variableNode->setName('example');
         return $nodeFactory->make(new static($lexicon), [], $variableNode);
     }
 

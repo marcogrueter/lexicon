@@ -726,7 +726,6 @@ class Node implements NodeInterface
      */
     public function getSingleMatch($text, $regex)
     {
-        $match = [];
         preg_match($regex, $text, $match);
         return $match;
     }
@@ -743,7 +742,6 @@ class Node implements NodeInterface
         if (!$regex) {
             $regex = $this->regex();
         }
-        $matches = [];
         preg_match_all($regex, $string, $matches, PREG_SET_ORDER);
         return $matches;
     }

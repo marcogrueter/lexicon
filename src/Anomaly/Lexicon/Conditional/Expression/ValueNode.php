@@ -19,7 +19,6 @@ class ValueNode extends ExpressionNode
         $name = $this->getContent();
         $source = null;
         if (!empty($name)) {
-            // TODO: use value resolver
             $source = "\$__data['__env']->variable(\$__data, '{$name}')";
         }
         return $source;

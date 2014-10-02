@@ -30,9 +30,7 @@ class Variable extends Single
     public function compile($useEcho = true)
     {
         $finder = $this->getNodeFinder();
-
         $item = $finder->getItemSource();
-
         $name = $finder->getName();
 
         $attributes = $this->compileAttributes();

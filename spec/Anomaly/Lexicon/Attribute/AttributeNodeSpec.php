@@ -29,20 +29,20 @@ class AttributeNodeSpec extends Spec
 
     function it_can_detect_named_attributes()
     {
-        $this->detect('foo="bar"')->shouldBe(true);
+        $this->detect('foo="bar"')->shouldBeBoolean();
     }
 
     function it_can_get_detected_attribute_node_type()
     {
         $this
-            ->setCurrentContent('foo="bar"')
+            ->setContent('foo="bar"')
             ->getAttributeNodeType()
             ->shouldHaveType('Anomaly\Lexicon\Attribute\NamedAttribute');
     }
 
     function it_can_create_child_nodes()
     {
-        $this->setCurrentContent('foo="bar" yin="yang"')
+        $this->setContent('foo="bar" yin="yang"')
             ->createChildNodes()
             ->getChildren()
             ->shouldHaveNodeCount(2);
@@ -84,7 +84,7 @@ class AttributeNodeSpec extends Spec
     function it_can_compile_array()
     {
         $this
-            ->setCurrentContent('foo="bar" yin="yang"')
+            ->setContent('foo="bar" yin="yang"')
             ->createChildNodes()
             ->compileArray()
             ->shouldReturn([
@@ -96,7 +96,7 @@ class AttributeNodeSpec extends Spec
     function it_can_compile_named_attribute_value()
     {
         $this
-            ->setCurrentContent('foo="bar" yin="yang"')
+            ->setContent('foo="bar" yin="yang"')
             ->createChildNodes()
             ->compileAttributeValue('foo')->shouldReturn("'bar'");
     }
@@ -104,7 +104,7 @@ class AttributeNodeSpec extends Spec
     function it_can_compile_ordered_attribute_value()
     {
         $this
-            ->setCurrentContent('"bar" "yang"')
+            ->setContent('"bar" "yang"')
             ->createChildNodes()
             ->compileAttributeValue('', 1)->shouldReturn("'yang'");
     }
@@ -117,7 +117,7 @@ class AttributeNodeSpec extends Spec
     function it_can_compile_source_from_array()
     {
         $this
-            ->setCurrentContent('foo="bar" yin="yang"')
+            ->setContent('foo="bar" yin="yang"')
             ->createChildNodes()
             ->compileSourceFromArray()
             ->shouldReturn("['foo'=>'bar','yin'=>'yang']");
@@ -126,10 +126,19 @@ class AttributeNodeSpec extends Spec
     function it_can_compile_source()
     {
         $this
-            ->setCurrentContent('foo="bar" yin="yang"')
+            ->setContent('foo="bar" yin="yang"')
             ->createChildNodes()
             ->compile()
             ->shouldReturn("['foo'=>'bar','yin'=>'yang']");
+    }
+
+    function it_can_compile_php_with_embedded_attributes()
+    {
+        $this
+            ->setContent('foo="bar/{var \'hello\'}" yin="yang"')
+            ->createChildNodes()
+            ->compile()
+            ->shouldReturn("['foo'=>'bar/'.\$__data['__env']->variable(\$exampleItem,'var',[0=>'hello'],'',null,'echo').'','yin'=>'yang']");
     }
     
 }

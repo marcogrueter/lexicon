@@ -55,9 +55,9 @@ class NodeFactory
      * @var array
      */
     protected $attributeNodeTypes = [
-        'Anomaly\Lexicon\Attribute\VariableAttribute',
         'Anomaly\Lexicon\Attribute\NamedAttribute',
         'Anomaly\Lexicon\Attribute\OrderedAttribute',
+        'Anomaly\Lexicon\Attribute\VariableAttribute',
     ];
 
     /**

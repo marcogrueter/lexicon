@@ -1,10 +1,10 @@
 <?php namespace Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Attribute\AttributeNode;
+use Anomaly\Lexicon\Attribute\SplitterNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
-use Anomaly\Lexicon\Node\NodeType\Block;
 use Anomaly\Lexicon\Node\NodeType\Node;
-use Anomaly\Lexicon\Stub\LexiconStub;
 use Anomaly\Lexicon\Stub\Node\NodeFinderStub;
 
 /**
@@ -62,9 +62,17 @@ class NodeFinder
     {
         $source = '$__data';
 
+        $node = $this->getNode();
+
         if ($this->hasRootAliasPrefix()) {
 
             $source = '$__data';
+
+        } elseif ($node instanceof AttributeNode) {
+
+            if ($parent = $this->getAttributeNodeParent()) {
+                $source = $parent->getItemSource();
+            }
 
         } elseif (!$this->isChildOfRoot()) {
 
@@ -135,7 +143,6 @@ class NodeFinder
         $node = $this->getNode()->getParent();
 
         while ($node and $node->getItemAlias() !== $this->getAlias() and $node->getParent()) {
-
             $node = $node->getParent();
         }
 
@@ -143,6 +150,15 @@ class NodeFinder
             $node = null;
         }
 
+        return $node;
+    }
+
+    public function getAttributeNodeParent()
+    {
+        $node = $this->getNode();
+        while (($node instanceof AttributeNode or $node instanceof SplitterNode) and $node->getParent()) {
+            $node = $node->getParent();
+        }
         return $node;
     }
 

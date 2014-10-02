@@ -1,5 +1,6 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
+use Anomaly\Lexicon\Contract\Attribute\NodeInterface;
 use Anomaly\Lexicon\Stub\LexiconStub;
 
 class OrderedAttribute extends AttributeNode
@@ -49,6 +50,19 @@ class OrderedAttribute extends AttributeNode
     public function regex()
     {
         return '/\s*(\'|"|&#?\w+;)(.*?)(?<!\\\\)\1/ms';
+    }
+
+    /**
+     * Compile value
+     *
+     * @return string
+     */
+    public function compileValue()
+    {
+        $splitter = $this->getNodeFactory()->make(new SplitterNode($this->getLexicon()), [], $this);
+        $splitter->setContent($this->getValue());
+        $value = $splitter->createChildNodes()->compile();
+        return $value;
     }
 
     /**

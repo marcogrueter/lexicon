@@ -27,6 +27,16 @@ class OrderedAttributeSpec extends Spec
         $this->regex()->shouldReturn('/\s*(\'|"|&#?\w+;)(.*?)(?<!\\\\)\1/ms');
     }
     
+    function it_can_get_single_quote_matches()
+    {
+        $this->getMatches(" 'value1' 'value2' ")->shouldHaveCount(2);
+    }
+
+    function it_can_get_double_quote_matches()
+    {
+        $this->getMatches(' "value1" "value2" ')->shouldHaveCount(2);
+    }
+    
     function it_can_setup_regex_match()
     {
         $this->setup();

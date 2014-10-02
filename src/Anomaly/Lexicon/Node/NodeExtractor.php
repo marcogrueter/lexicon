@@ -103,7 +103,7 @@ class NodeExtractor
             $parent->getCurrentContent(),
             self::LIMIT
         );
-        //dd($content);
+
         $parent->setCurrentContent($content);
     }
 
