@@ -50,10 +50,18 @@ class ConditionalSpec extends Spec
     {
         $this
             ->setName('if')
-            ->setCurrentContent('foo or bar and baz && ying || yang')
-            ->createChildNodes()
+            ->setContent('foo or bar and baz && ying || yang')
             ->compile()
-            ->shouldReturn('');
+            ->shouldReturn("if(\$__data['__env']->variable(\$__data, 'foo') or \$__data['__env']->variable(\$__data, 'bar') and \$__data['__env']->variable(\$__data, 'baz') && \$__data['__env']->variable(\$__data, 'ying') || \$__data['__env']->variable(\$__data, 'yang')):");
     }
 
+    function it_can_compile_unless_to_php()
+    {
+        $this
+            ->setName('unless')
+            ->setContent('foo or bar and baz && ying || yang')
+            ->compile()
+            ->shouldReturn("if(!(\$__data['__env']->variable(\$__data, 'foo') or \$__data['__env']->variable(\$__data, 'bar') and \$__data['__env']->variable(\$__data, 'baz') && \$__data['__env']->variable(\$__data, 'ying') || \$__data['__env']->variable(\$__data, 'yang'))):");
+    }
+    
 }

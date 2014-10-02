@@ -1,5 +1,7 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
+use Anomaly\Lexicon\Lexicon;
+
 /**
  * Class VariableAttribute
  *
@@ -42,10 +44,9 @@ class VariableAttribute extends AttributeNode
     public function compileValue()
     {
         $attributes = $this->compileAttributes();
-
         $name = $this->getValue();
-
-        return "\$__data['__env']->variable(\$__data, '{$name}', {$attributes}, '', null, 'echo')";
+        $expected = Lexicon::EXPECTED_ECHO;
+        return "\$__data['__env']->variable(\$__data,'{$name}',{$attributes},'',null,'{$expected}')";
     }
 
 } 

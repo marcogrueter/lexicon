@@ -2,6 +2,8 @@
 
 
 
+use Anomaly\Lexicon\Stub\LexiconStub;
+
 class Section extends Single
 {
 
@@ -19,7 +21,7 @@ class Section extends Single
      */
     public function compile()
     {
-        $name = null; //$this->newAttributeNode()->compileAttribute('name');
+        $name = $this->compileAttributeValue('name');
 
         $source = null;
 
@@ -28,6 +30,19 @@ class Section extends Single
         }
 
         return $source;
+    }
+
+    /**
+     * Stub for testing with PHPSpec
+     *
+     * @return Section
+     */
+    public static function stub()
+    {
+        $lexicon = LexiconStub::get();
+        $factory = $lexicon->getFoundation()->getNodeFactory();
+        $node = $factory->make(new static($lexicon));
+        return $node->setRawAttributes('name="foo"');
     }
 
 }

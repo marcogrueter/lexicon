@@ -17,25 +17,6 @@ class ValueResolver
         'true',
         'false',
     );
-    /**
-     * @var NodeInterface|null
-     */
-    private $node;
-
-    public function __construct(NodeInterface $node = null)
-    {
-        $this->node = $node;
-    }
-
-    /**
-     * Get node
-     *
-     * @return NodeInterface|null
-     */
-    public function getNode()
-    {
-        return $this->node;
-    }
 
     /**
      * Resolve value
@@ -54,26 +35,14 @@ class ValueResolver
 
         if (in_array($value, $this->pass)) {
             return $value;
-        }
-
-        if (preg_match('/^\'(.*)\'$/', $value, $matches)) {
+        } elseif (preg_match('/^\'(.*)\'$/', $value, $matches)) {
             $value = "'{$matches[1]}'";
-        }
-
-        if (preg_match('/^"(.*)"$/', $value, $matches)) {
+        } elseif (preg_match('/^"(.*)"$/', $value, $matches)) {
             $value = $matches[1];
-        }
-
-        if (preg_match('/^(\d+)$/', $value, $matches)) {
+        } elseif (preg_match('/^(\d+)$/', $value, $matches)) {
             $value = $matches[1];
-        }
-
-        if (preg_match('/^(\d[\d\.]+)$/', $value, $matches)) {
+        } elseif (preg_match('/^(\d[\d\.]+)$/', $value, $matches)) {
             $value = $matches[1];
-        }
-
-        if ($node = $this->getNode()) {
-            $value = $node->compile();
         }
 
         return $value;

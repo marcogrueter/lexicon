@@ -45,7 +45,7 @@ class Conditional extends Single implements ConditionalInterface
     {
         $this
             ->setCurrentContent($this->match(2))
-            ->setExtractionContent($this->match(0))
+            ->setContent($this->match(0))
             ->setName($this->match(1));
     }
 
@@ -70,33 +70,13 @@ class Conditional extends Single implements ConditionalInterface
     }
 
     /**
-     * @param $expression
-     * @return Conditional
-     */
-    public function setExpression($expression)
-    {
-        $this->expression = $expression;
-        return $this;
-    }
-
-    /**
-     * Get expression
-     *
-     * @return string
-     */
-    public function getExpression()
-    {
-        return $this->expression;
-    }
-
-    /**
      * Get expression node
      *
      * @return ExpressionNode
      */
     public function getExpressionNode()
     {
-        return $this->getNodeFactory()->make(new ExpressionNode($this->getLexicon()), [], $this);
+        return $this->getNodeFactory()->make(new ExpressionNode($this->getLexicon()), [$this->getContent()], $this)->createChildNodes();
     }
 
     /**

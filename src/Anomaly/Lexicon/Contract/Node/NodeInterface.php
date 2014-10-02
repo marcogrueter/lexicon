@@ -56,14 +56,6 @@ interface NodeInterface extends ExtractionInterface
     public function setName($name);
 
     /**
-     * Set item name
-     *
-     * @param $itemName string
-     * @return NodeInterface
-     */
-    public function setItemName($itemName);
-
-    /**
      * @return NodeInterface
      */
     public function getParent();
@@ -117,14 +109,6 @@ interface NodeInterface extends ExtractionInterface
      * @return string
      */
     public function getCurrentContent();
-
-    /**
-     * Set node validator
-     *
-     * @param ValidatorInterface $validator
-     * @return NodeInterface
-     */
-    public function setValidator(ValidatorInterface $validator);
 
     /**
      * Get node validator
@@ -291,14 +275,6 @@ interface NodeInterface extends ExtractionInterface
      * @return AttributeNode
      */
     public function getAttributeNode();
-
-    /**
-     * Set attribute node
-     *
-     * @param $attributeNode
-     * @return NodeInterface
-     */
-    public function setAttributeNode(AttributeNode $attributeNode);
 
     /**
      * @param $match

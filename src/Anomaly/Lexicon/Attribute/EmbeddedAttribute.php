@@ -1,40 +1,20 @@
 <?php namespace Anomaly\Lexicon\Attribute;
 
-use Anomaly\Lexicon\Contract\Node\ExtractionInterface;
+use Anomaly\Lexicon\Stub\LexiconStub;
 
-class EmbeddedAttribute implements ExtractionInterface
+class EmbeddedAttribute extends AttributeNode
 {
-    protected $content;
 
-    protected $name;
-
-    protected $attributes;
-
-    public function __construct($match)
+    public function setup()
     {
-        $this->content   = isset($match[0]) ? $match[0] : '';
-        $this->name       = isset($match[1]) ? $match[1] : '';
-        $this->attributes = isset($match[2]) ? $match[2] : '';
+        $this->setContent($this->match(0));
+        $this->setName($this->match(1));
+        $this->setRawAttributes($this->match(2));
     }
 
-    public function getContent()
+    public static function stub()
     {
-        return $this->content;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    public function getId()
-    {
-        return md5($this->content);
+        return new static(LexiconStub::get());
     }
 
 }

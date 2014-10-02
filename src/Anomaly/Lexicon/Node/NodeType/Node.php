@@ -503,20 +503,7 @@ class Node implements NodeInterface
         if ($suffix) {
             $suffix .= '__';
         }
-
         return get_called_class() . '__' . $this->getName() . '__' . $this->getId() . '__' . $suffix;
-    }
-
-    /**
-     * Set item name
-     *
-     * @param $itemName
-     * @return NodeInterface
-     */
-    public function setItemName($itemName)
-    {
-        $this->itemName = $itemName;
-        return $this;
     }
 
     /**
@@ -560,8 +547,8 @@ class Node implements NodeInterface
     {
         $node = $this;
 
-        while (!$node->isRoot()) {
-            $node = $this->getParent();
+        while ($node->getParent()) {
+            $node = $node->getParent();
         }
 
         return $node;
@@ -655,18 +642,6 @@ class Node implements NodeInterface
     }
 
     /**
-     * Set node validator
-     *
-     * @param ValidatorInterface $validator
-     * @return NodeInterface
-     */
-    public function setValidator(ValidatorInterface $validator)
-    {
-        $this->validator = $validator;
-        return $this;
-    }
-
-    /**
      * Get node validator
      *
      * @return ValidatorInterface
@@ -684,7 +659,9 @@ class Node implements NodeInterface
      */
     public function validate()
     {
-        return ($validator = $this->getValidator()) ? $validator->isValid() : $this->isValid();
+        return (($validator = $this->getValidator())) instanceof ValidatorInterface
+            ? $validator->isValid()
+            : $this->isValid();
     }
 
     /**
@@ -829,18 +806,6 @@ class Node implements NodeInterface
     }
 
     /**
-     * Set attribute node
-     *
-     * @param AttributeNode $attributeNode
-     * @return $this|NodeInterface
-     */
-    public function setAttributeNode(AttributeNode $attributeNode)
-    {
-        $this->attributeNode = $attributeNode;
-        return $this;
-    }
-
-    /**
      * Get setup from regex match
      *
      * @return mixed
@@ -850,13 +815,13 @@ class Node implements NodeInterface
     }
 
     /**
-     * Get regex string
+     * Regex
      *
      * @return string
      */
     public function regex()
     {
-        return '';
+        return "/\{\{\s*({$this->getVariableRegex()})(\s+.*?)?\s*(\/)?\}\}/ms";
     }
 
     /**
