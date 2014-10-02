@@ -190,4 +190,27 @@ class FactorySpec extends ObjectBehavior
         $this->booleanTest(5, 3, '>')->shouldBe(true);
     }
 
+
+    /** Rendering views examples */
+    function it_can_render_block()
+    {
+
+        $data = [
+            'books' => [
+                [
+                    'title' => 'Foo'
+                ],
+                [
+                    'title' => 'Bar'
+                ],
+            ]
+        ];
+
+        $this->make('test::block', $data)->render()->shouldReturn('<ul>
+    <li>Foo</li>
+    <li>Bar</li>
+</ul>');
+
+    }
+
 }

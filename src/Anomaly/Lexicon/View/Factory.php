@@ -268,7 +268,7 @@ class Factory extends BaseFactory implements FactoryInterface
 
         return $finalResult;
     }
-
+    
     /**
      * Factory stub for PHPSpec test
      *

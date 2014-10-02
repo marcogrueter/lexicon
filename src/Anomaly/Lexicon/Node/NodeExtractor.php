@@ -148,7 +148,11 @@ class NodeExtractor
      */
     public function injectContent(NodeInterface $child, NodeInterface $parent)
     {
-        $source = $child->isPhp() ? $this->php($child->compile()) : $child->compile();
+        if ($child instanceof BlockInterface or !$child->isPhp()) {
+            $source = $child->compile();
+        } else {
+            $source = $this->php($child->compile());
+        }
 
         $content = preg_replace(
             $this->search($child->getExtractionId()),
