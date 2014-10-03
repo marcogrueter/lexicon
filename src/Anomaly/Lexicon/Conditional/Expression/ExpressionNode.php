@@ -16,16 +16,6 @@ class ExpressionNode extends Conditional
     protected $extractable = false;
 
     /**
-     * Setup properties using the regex matches
-     *
-     * @return void
-     */
-    public function setup()
-    {
-        $this->setContent(trim($this->match(0)));
-    }
-
-    /**
      * @return \Anomaly\Lexicon\Conditional\ConditionalHandler
      */
     public function getConditionalHandler()
@@ -91,7 +81,9 @@ class ExpressionNode extends Conditional
             ? $this->getOperatorNodeType()
             : $this->getExpressionNodeType();
 
-        $child = $nodeFactory->make($nodeType, [$match], $this, $offset, $this->getDepth());
+        $child = $nodeFactory
+            ->make($nodeType, [], $this, $offset, $this->getDepth())
+            ->setContent($match);
 
         $this->addChild($child);
     }

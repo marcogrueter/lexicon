@@ -337,7 +337,9 @@ class Node implements NodeInterface
     public function addChild(NodeInterface $node)
     {
         $node->setParentId($this->getId());
-        $this->children[$node->getId()] = $node->getId();
+        if (!in_array($node->getId(), $this->children)) {
+            $this->children[] = $node->getId();
+        }
         return $this;
     }
 
@@ -500,10 +502,15 @@ class Node implements NodeInterface
      */
     public function getExtractionId($suffix = null)
     {
-        if ($suffix) {
-            $suffix .= '__';
-        }
-        return get_called_class() . '__' . $this->getName() . '__' . $this->getId() . '__' . $suffix;
+        $reflection = new \ReflectionClass($this);
+
+        $suffix = $suffix ? "_{$suffix}@ " : '@ ';
+
+        return
+            ' @' . $reflection->getShortName() .
+            '_' . $this->getName() .
+            '_' . $this->getId() .
+            $suffix;
     }
 
     /**
@@ -702,7 +709,6 @@ class Node implements NodeInterface
     public function getVariableRegex()
     {
         $glue = preg_quote($this->getLexicon()->getScopeGlue(), '/');
-
         return $glue === '\\.' ? '[a-zA-Z0-9_' . $glue . ']+' : '[a-zA-Z0-9_\.' . $glue . ']+';
     }
 
@@ -742,7 +748,7 @@ class Node implements NodeInterface
         if (!$regex) {
             $regex = $this->regex();
         }
-        preg_match_all($regex, $string, $matches, PREG_SET_ORDER);
+        preg_match_all($regex, $string, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
         return $matches;
     }
 
@@ -797,7 +803,7 @@ class Node implements NodeInterface
     public function get(array $array, $key, $value = null)
     {
         if (array_key_exists($key, $array)) {
-            $value = $array[$key];
+            $value = $array[$key][0];
         }
 
         return $value;
@@ -874,7 +880,8 @@ class Node implements NodeInterface
      */
     public function getPosition()
     {
-        return $this->getParent() ? (int)strpos($this->getParent()->getCurrentContent(), $this->getExtractionId()) : 0;
+        $match = $this->getMatch();
+        return isset($match[0]) and isset($match[0][1]) ? $match[0][1] : 0;
     }
 
     /**

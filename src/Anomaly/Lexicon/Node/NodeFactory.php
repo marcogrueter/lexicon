@@ -1,6 +1,7 @@
 <?php namespace Anomaly\Lexicon\Node;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\RootInterface;
 use Anomaly\Lexicon\Exception\RootNodeTypeNotFoundException;
@@ -212,10 +213,8 @@ class NodeFactory
         );
 
         $parent->addChild($node);
-
-        $this->createChildNodes($node);
-
         $this->extract($node, $parent);
+        $this->createChildNodes($node);
 
         return $node;
     }
@@ -259,11 +258,9 @@ class NodeFactory
     public function getAttributeNodeTypes()
     {
         $nodeTypes = [];
-
         foreach ($this->attributeNodeTypes as $nodeType) {
             $nodeTypes[] = $this->newNodeType($nodeType);
         }
-
         return $nodeTypes;
     }
 

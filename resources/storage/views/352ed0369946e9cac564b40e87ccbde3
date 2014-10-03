@@ -1,0 +1,12 @@
+<?php namespace Anomaly\Lexicon\View; class LexiconView_352ed0369946e9cac564b40e87ccbde3 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render($__data) {
+?><?php if($__data['__env']->variable($__data, ' first_name')): ?>
+    <h2><?php echo $__data['__env']->variable($__data,'first_name',[],'',null,'echo'); ?></h2>
+<?php elseif($__data['__env']->variable($__data, ' last_name')): ?>
+    <h2><?php echo $__data['__env']->variable($__data,'last_name',[],'',null,'echo'); ?></h2>
+<?php else: ?>
+    Nobody.
+<?php endif; ?>
+
+        <?php if($__data['__env']->variable($__data, ' title')): ?>
+            <?php echo $__data['__env']->variable($__data,'title',[],'',null,'echo'); ?>
+        <?php endif; ?><?php }} ?>

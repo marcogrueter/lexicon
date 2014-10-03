@@ -1,10 +1,8 @@
 <?php namespace Anomaly\Lexicon\Node\NodeType;
 
-use Anomaly\Lexicon\Conditional\ConditionalCompiler;
 use Anomaly\Lexicon\Conditional\ConditionalValidator;
 use Anomaly\Lexicon\Conditional\Expression\ExpressionNode;
 use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
-use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Stub\LexiconStub;
 
 class Conditional extends Single implements ConditionalInterface
@@ -20,6 +18,17 @@ class Conditional extends Single implements ConditionalInterface
         'unless',
         'elseunless'
     );
+
+    public function setStart($start)
+    {
+        $this->start = $start;
+        return $this;
+    }
+
+    public function getStart()
+    {
+        return $this;
+    }
 
     /**
      * Expression
@@ -46,6 +55,7 @@ class Conditional extends Single implements ConditionalInterface
         $this
             ->setCurrentContent($this->match(2))
             ->setContent($this->match(0))
+            ->setExtractionContent($this->match(0))
             ->setName($this->match(1));
     }
 
@@ -76,7 +86,13 @@ class Conditional extends Single implements ConditionalInterface
      */
     public function getExpressionNode()
     {
-        return $this->getNodeFactory()->make(new ExpressionNode($this->getLexicon()), [$this->getContent()], $this)->createChildNodes();
+        return $this->getNodeFactory()->make(
+            new ExpressionNode($this->getLexicon()),
+            [],
+            $this
+        )
+            ->setContent($this->getCurrentContent())
+            ->createChildNodes();
     }
 
     /**

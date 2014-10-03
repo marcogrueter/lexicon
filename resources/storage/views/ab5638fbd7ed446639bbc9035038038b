@@ -3,4 +3,10 @@
 <?php foreach($__data['__env']->variable($__data,'books',[],'',[],'traversable') as $i=>$booksItem): ?>
     <li><?php echo $__data['__env']->variable($booksItem,'title',[],'',null,'echo'); ?></li>
 <?php endforeach; ?>
+</ul>
+
+<ul>
+    <?php foreach($__data['__env']->variable($__data,'books',[],'',[],'traversable') as $i=>$booksItem): ?>
+    <li><?php echo $__data['__env']->variable($booksItem,'name',[],'',null,'echo'); ?></li>
+    <?php endforeach; ?>
 </ul><?php }} ?>

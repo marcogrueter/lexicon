@@ -21,6 +21,12 @@ class NodeSpec extends Spec
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\Node');
     }
 
+    // TODO: remove
+/*    function it_tests_get_matches()
+    {
+        $this->testGetMatches('{{ books }}{{ /books }}{{ books }}{{ /books }}', '/(\{\{\s*([a-zA-Z0-9_\.]+)(\s.*?)\}\})(.*?)(\{\{\s*\/\2\s*\}\})/ms');
+    }*/
+
     function it_can_set_and_get_match()
     {
         $this->setMatch([])->getMatch()->shouldBeArray();

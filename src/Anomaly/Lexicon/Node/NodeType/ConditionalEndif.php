@@ -3,24 +3,10 @@
 use Anomaly\Lexicon\Conditional\Validator\EndifValidator;
 use Anomaly\Lexicon\Contract\Node\ConditionalEndInterface;
 
-class ConditionalEndif extends Conditional implements ConditionalEndInterface
+class ConditionalEndif extends Single
 {
-    /**
-     * Name
-     *
-     * @var string
-     */
-    public $name = 'endif';
 
-    /**
-     * Setup properties using the regex matches
-     *
-     * @return void
-     */
-    public function setup()
-    {
-        $this->setExtractionContent($this->match(0));
-    }
+    protected $name = 'endif';
 
     /**
      * Compile source

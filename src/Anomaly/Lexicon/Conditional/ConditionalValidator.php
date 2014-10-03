@@ -28,7 +28,7 @@ class ConditionalValidator extends NodeValidator
      */
     public function isValidIf()
     {
-        return $this->isEqualCount('if', 'endif');
+        return true;//$this->isEqualCount('if', 'endif');
     }
 
     /**
@@ -38,7 +38,7 @@ class ConditionalValidator extends NodeValidator
      */
     public function isValidElseif()
     {
-        return $this->isEqualCount('if', 'endif') and $this->isAfter('if');
+        return true;//$this->isEqualCount('if', 'endif') and $this->isAfter('if');
     }
 
     /**
@@ -48,7 +48,7 @@ class ConditionalValidator extends NodeValidator
      */
     public function isValidElse()
     {
-        return $this->isEqualCount('if', 'endif');
+        return true;//$this->isEqualCount('if', 'endif');
     }
 
     /**
@@ -58,7 +58,7 @@ class ConditionalValidator extends NodeValidator
      */
     public function isValidEndif()
     {
-        return $this->isEqualCount('if', 'endif');
+        return true;//$this->isEqualCount('if', 'endif');
             /* and $this->isAfterExisting('if') and
             $this->isAfter('elseif') and
             $this->isAfter('else')*/

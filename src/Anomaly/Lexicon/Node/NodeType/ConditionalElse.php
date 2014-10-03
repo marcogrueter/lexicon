@@ -21,7 +21,9 @@ class ConditionalElse extends Conditional
      */
     public function setup()
     {
-        $this->setExtractionContent($this->match(0));
+        $this
+            ->setName($this->match(1))
+            ->setExtractionContent($this->match(0));
     }
 
     /**

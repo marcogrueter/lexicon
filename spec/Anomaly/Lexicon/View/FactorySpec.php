@@ -190,8 +190,8 @@ class FactorySpec extends ObjectBehavior
         $this->booleanTest(5, 3, '>')->shouldBe(true);
     }
 
-
     /** Rendering views examples */
+
     function it_can_render_block()
     {
 
@@ -210,6 +210,25 @@ class FactorySpec extends ObjectBehavior
     <li>Foo</li>
     <li>Bar</li>
 </ul>');
+
+    }
+
+    function it_can_render_comment()
+    {
+        $this->make('test::comment')->render()->shouldReturn('<h1>This content will remain.</h1>
+
+');
+    }
+
+    function it_can_render_conditional()
+    {
+
+        $data = [
+            'first_name' => 'Lex',
+            'last_name' => 'Luthor',
+        ];
+
+        $this->make('test::conditional', $data)->render()->shouldReturn('');
 
     }
 

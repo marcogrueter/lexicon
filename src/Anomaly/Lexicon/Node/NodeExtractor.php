@@ -26,6 +26,10 @@ class NodeExtractor
      */
     const CLOSING_TAG = 'closing';
 
+    protected $extracted = [];
+
+    protected $injected = [];
+
     /**
      * Extract parent content
      *
@@ -34,10 +38,11 @@ class NodeExtractor
      */
     public function extract(NodeInterface $child, NodeInterface $parent)
     {
-        if ($child->isExtractable()) {
+        if ($child->isExtractable() and !in_array($child->getId(), $this->extracted)) {
             $this->extractOpening($child, $parent);
             $this->extractClosing($child, $parent);
             $this->extractContent($child, $parent);
+            $this->extracted[] = $child->getId();
         }
     }
 
@@ -49,10 +54,11 @@ class NodeExtractor
      */
     public function inject(NodeInterface $child, NodeInterface $parent)
     {
-        if ($child->isExtractable()) {
+        if ($child->isExtractable() and !in_array($child->getId(), $this->injected)) {
             $this->injectOpening($child, $parent);
             $this->injectClosing($child, $parent);
             $this->injectContent($child, $parent);
+            $this->injected[] = $child->getId();
         }
     }
 
@@ -103,7 +109,7 @@ class NodeExtractor
             $parent->getCurrentContent(),
             self::LIMIT
         );
-        echo $content . PHP_EOL;
+        echo '_START_' . PHP_EOL . $content . PHP_EOL . '_END_' . PHP_EOL . PHP_EOL;
         $parent->setCurrentContent($content);
     }
 
@@ -117,7 +123,8 @@ class NodeExtractor
             $content = preg_replace(
                 $this->search($child->getExtractionId(static::OPENING_TAG)),
                 $child->validate() ? $this->php($source) : null,
-                $parent->getCurrentContent()
+                $parent->getCurrentContent(),
+                self::LIMIT
             );
 
             $parent->setCurrentContent($content);
@@ -134,7 +141,8 @@ class NodeExtractor
             $content = preg_replace(
                 $this->search($child->getExtractionId(static::CLOSING_TAG)),
                 $child->validate() ? $this->php($source) : null,
-                $parent->getCurrentContent()
+                $parent->getCurrentContent(),
+                self::LIMIT
             );
 
             $parent->setCurrentContent($content);
@@ -155,7 +163,8 @@ class NodeExtractor
         $content = preg_replace(
             $this->search($child->getExtractionId()),
             $child->validate() ? $source : null,
-            $parent->getCurrentContent()
+            $parent->getCurrentContent(),
+            self::LIMIT
         );
 
         $parent->setCurrentContent($content);
