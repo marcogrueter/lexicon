@@ -103,7 +103,7 @@ class NodeExtractor
             $parent->getCurrentContent(),
             self::LIMIT
         );
-
+        echo $content . PHP_EOL;
         $parent->setCurrentContent($content);
     }
 
@@ -117,8 +117,7 @@ class NodeExtractor
             $content = preg_replace(
                 $this->search($child->getExtractionId(static::OPENING_TAG)),
                 $child->validate() ? $this->php($source) : null,
-                $parent->getCurrentContent(),
-                self::LIMIT
+                $parent->getCurrentContent()
             );
 
             $parent->setCurrentContent($content);
@@ -135,8 +134,7 @@ class NodeExtractor
             $content = preg_replace(
                 $this->search($child->getExtractionId(static::CLOSING_TAG)),
                 $child->validate() ? $this->php($source) : null,
-                $parent->getCurrentContent(),
-                self::LIMIT
+                $parent->getCurrentContent()
             );
 
             $parent->setCurrentContent($content);
@@ -157,8 +155,7 @@ class NodeExtractor
         $content = preg_replace(
             $this->search($child->getExtractionId()),
             $child->validate() ? $source : null,
-            $parent->getCurrentContent(),
-            self::LIMIT
+            $parent->getCurrentContent()
         );
 
         $parent->setCurrentContent($content);
