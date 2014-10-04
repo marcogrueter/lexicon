@@ -1,16 +1,14 @@
 <?php namespace spec\Anomaly\Lexicon\Plugin;
 
-use Anomaly\Lexicon\Plugin\StubPlugin;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class PluginSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Plugin
  */
-class PluginSpec extends ObjectBehavior
+class PluginSpec extends Spec
 {
 
     function it_is_initializable()
@@ -22,29 +20,29 @@ class PluginSpec extends ObjectBehavior
     {
         $this->setPluginName('foo')->getPluginName()->shouldReturn('foo');
     }
-    
+
     function it_can_set_and_get_named_attributes()
     {
         $this->setAttributes(['foo' => 'bar', 'ying' => 'yang']);
         $this->getAttribute('ying')->shouldReturn('yang');
     }
-    
+
     function it_can_set_and_get_ordered_attributes_by_offset()
     {
         $this->setAttributes(['foo', 'bar', 'baz']);
         $this->getAttribute('', 1)->shouldReturn('bar');
     }
-    
+
     function it_gets_default_value_if_attribute_is_not_found()
     {
-        $this->getAttribute('foo', 0,'default')->shouldReturn('default');
+        $this->getAttribute('foo', 0, 'default')->shouldReturn('default');
     }
-    
+
     function it_can_set_and_get_content()
     {
         $this->setContent('Hello')->getContent()->shouldReturn('Hello');
     }
-    
+
     function it_can_call_magic_methods()
     {
         $this->__call('foo', [])->shouldReturn(null);

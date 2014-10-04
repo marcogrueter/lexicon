@@ -37,13 +37,10 @@ class AttributeNode extends Node
         $rawAttributes = '';
 
         if ($parent = $this->getParent()) {
-            $this->setParentId($parent->getId());
             $rawAttributes = $parent->getRawAttributes();
         }
 
         $this
-            ->setKey($this->match(1))
-            ->setValue($this->match(3))
             ->setContent($rawAttributes)
             ->setCurrentContent($rawAttributes);
     }

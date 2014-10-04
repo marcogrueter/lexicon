@@ -1,16 +1,14 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
-use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class BreaksSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class BreaksSpec extends ObjectBehavior
+class BreaksSpec extends Spec
 {
 
     function let()
@@ -27,7 +25,7 @@ class BreaksSpec extends ObjectBehavior
     {
         $this->isValid()->shouldBeBoolean();
     }
-    
+
     function it_can_compile_break()
     {
         $this->compile()->shouldReturn('break;');

@@ -1,0 +1,22 @@
+{{ if first_name }}
+    <h2>{{ first_name }}</h2>
+{{ elseif last_name }}
+    <h2>{{ last_name }}</h2>
+{{ else }}
+    Nobody.
+{{ endif }}
+
+<hr/>
+{{ unless first_name }}
+<h2>{{ first_name }}</h2>
+{{ elseunless last_name }}
+<h2>{{ last_name }}</h2>
+{{ else }}
+Something.
+{{ endif }}
+
+<hr/>
+{{ if title or var > 5 }}
+    {{ title }}
+{{ endif }}
+

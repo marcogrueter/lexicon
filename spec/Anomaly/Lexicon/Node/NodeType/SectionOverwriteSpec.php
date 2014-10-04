@@ -1,16 +1,15 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class SectionOverwriteSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class SectionOverwriteSpec extends ObjectBehavior
+class SectionOverwriteSpec extends Spec
 {
 
     function let(LexiconInterface $lexicon)
@@ -27,5 +26,5 @@ class SectionOverwriteSpec extends ObjectBehavior
     {
         $this->compile()->shouldReturn("\$__data['__env']->stopSection(true);");
     }
-    
+
 }

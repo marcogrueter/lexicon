@@ -3,8 +3,7 @@
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Node\NodeExtractor;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class NodeExtractorSpec
@@ -12,7 +11,7 @@ use Prophecy\Argument;
  * @author Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class NodeExtractorSpec extends ObjectBehavior
+class NodeExtractorSpec extends Spec
 {
 
     function it_is_initializable()

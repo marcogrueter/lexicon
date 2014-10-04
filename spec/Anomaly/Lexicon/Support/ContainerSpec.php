@@ -1,15 +1,14 @@
 <?php namespace spec\Anomaly\Lexicon\Support;
 
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class ContainerSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Support
  */
-class ContainerSpec extends ObjectBehavior
+class ContainerSpec extends Spec
 {
 
     function it_is_initializable()
@@ -30,10 +29,10 @@ class ContainerSpec extends ObjectBehavior
     {
         $this->boot();
     }
-    
+
     function it_can_run_booted_callbacks()
     {
-        $closure = function() {
+        $closure = function () {
             return 'hello';
         };
 

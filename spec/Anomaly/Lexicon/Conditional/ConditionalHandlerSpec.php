@@ -1,7 +1,6 @@
 <?php namespace spec\Anomaly\Lexicon\Conditional;
 
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class ConditionalHandlerSpec
@@ -9,7 +8,7 @@ use Prophecy\Argument;
  * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Conditional
  */
-class ConditionalHandlerSpec extends ObjectBehavior
+class ConditionalHandlerSpec extends Spec
 {
 
     function it_is_initializable()
@@ -21,8 +20,8 @@ class ConditionalHandlerSpec extends ObjectBehavior
     {
         $this->registerBooleanTestTypes(
             [
-                'stringTest'      => 'Anomaly\Lexicon\Conditional\Test\StringTest',
-                'itemTest' => 'Anomaly\Lexicon\Conditional\Test\ItemTest'
+                'stringTest' => 'Anomaly\Lexicon\Conditional\Test\StringTest',
+                'itemTest'   => 'Anomaly\Lexicon\Conditional\Test\ItemTest'
             ]
         )->getTestTypes()->shouldHaveCount(2);
     }
@@ -31,8 +30,8 @@ class ConditionalHandlerSpec extends ObjectBehavior
     {
         $this->registerBooleanTestTypes(
             [
-                'stringTest'      => 'Anomaly\Lexicon\Conditional\Test\StringTest',
-                'itemTest' => 'Anomaly\Lexicon\Conditional\Test\ItemTest'
+                'stringTest' => 'Anomaly\Lexicon\Conditional\Test\StringTest',
+                'itemTest'   => 'Anomaly\Lexicon\Conditional\Test\ItemTest'
             ]
         )->getTestOperators()->shouldBeArray();
     }

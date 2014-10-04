@@ -1,7 +1,6 @@
 <?php namespace spec\Anomaly\Lexicon\Node;
 
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class NodeFinderSpec
@@ -9,7 +8,7 @@ use Prophecy\Argument;
  * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class NodeFinderSpec extends ObjectBehavior
+class NodeFinderSpec extends Spec
 {
 
     function let()
@@ -58,7 +57,7 @@ class NodeFinderSpec extends ObjectBehavior
     {
         $this->isChildOfRoot()->shouldBeBoolean();
     }
-    
+
     function it_can_get_alias()
     {
         $this->getNode()->setName('.alias.foo.bar.baz');
@@ -70,7 +69,7 @@ class NodeFinderSpec extends ObjectBehavior
         $this->getNode()->setName('.alias.foo.bar.baz');
         $this->getAliasPrefix()->shouldReturn('.alias.');
     }
-    
+
     function it_can_get_node_by_alias()
     {
         $this->getNode()->setName('.library.foo.bar.baz');
@@ -84,7 +83,7 @@ class NodeFinderSpec extends ObjectBehavior
     {
         $this->hasRootAliasPrefix()->shouldBeBoolean();
     }
-    
+
     function it_can_have_alias_prefix()
     {
         $this->hasAliasPrefix()->shouldBeBoolean();
@@ -99,7 +98,7 @@ class NodeFinderSpec extends ObjectBehavior
     {
         $this->getLexicon()->shouldImplement('Anomaly\Lexicon\Contract\LexiconInterface');
     }
-    
+
     function it_can_get_glue()
     {
         $this->glue()->shouldBeString();

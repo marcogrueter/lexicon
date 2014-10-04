@@ -1,9 +1,7 @@
 <?php namespace spec\Anomaly\Lexicon;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Support\Container;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class LexiconServiceProviderSpec
@@ -11,7 +9,7 @@ use Prophecy\Argument;
  * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon
  */
-class LexiconServiceProviderSpec extends ObjectBehavior
+class LexiconServiceProviderSpec extends Spec
 {
 
     function let()

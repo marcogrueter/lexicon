@@ -1,6 +1,7 @@
 <?php namespace Anomaly\Lexicon\Test;
 
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
+use Illuminate\Contracts\View\View;
 use PhpSpec\ObjectBehavior;
 
 /**
@@ -27,6 +28,13 @@ class Spec extends ObjectBehavior
             },
             'haveNodeCount' => function ($nodeArray, $expectedCount = 0) {
                 return $this->hasNodes($nodeArray) and (count($nodeArray) == $expectedCount);
+            },
+            'render'        => function (View $view, $expected) {
+                $content = $view->render();
+                if (!($doesHave = ($content == $expected))) {
+                    echo 'Result: ' . "'{$content}'".PHP_EOL;
+                }
+                return $doesHave;
             },
         ];
     }

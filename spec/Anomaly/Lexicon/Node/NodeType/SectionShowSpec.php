@@ -1,16 +1,15 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class SectionShowSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class SectionShowSpec extends ObjectBehavior
+class SectionShowSpec extends Spec
 {
 
     function let(LexiconInterface $lexicon)
@@ -27,5 +26,5 @@ class SectionShowSpec extends ObjectBehavior
     {
         $this->compile()->shouldReturn("echo \$__data['__env']->yieldSection();");
     }
-    
+
 }

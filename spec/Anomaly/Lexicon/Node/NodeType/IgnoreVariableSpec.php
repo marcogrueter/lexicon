@@ -1,16 +1,15 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class IgnoreVariableSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class IgnoreVariableSpec extends ObjectBehavior
+class IgnoreVariableSpec extends Spec
 {
 
     function let(LexiconInterface $lexicon)

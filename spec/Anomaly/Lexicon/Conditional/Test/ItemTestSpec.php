@@ -2,8 +2,7 @@
 
 use Anomaly\Lexicon\Stub\ArrayAccessObject;
 use Anomaly\Lexicon\Stub\SimpleObject;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class ItemTestSpec
@@ -11,7 +10,7 @@ use Prophecy\Argument;
  * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Conditional\Test
  */
-class ItemTestSpec extends ObjectBehavior
+class ItemTestSpec extends Spec
 {
 
     function it_is_initializable()

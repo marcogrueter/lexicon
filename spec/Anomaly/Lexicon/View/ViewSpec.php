@@ -1,9 +1,7 @@
 <?php namespace spec\Anomaly\Lexicon\View;
 
-
+use Anomaly\Lexicon\Test\Spec;
 use Illuminate\Container\Container;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * Class ViewSpec
@@ -11,7 +9,7 @@ use Prophecy\Argument;
  * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\View
  */
-class ViewSpec extends ObjectBehavior
+class ViewSpec extends Spec
 {
 
     function let()
@@ -28,17 +26,17 @@ class ViewSpec extends ObjectBehavior
     {
         $this->using('custom_node_set');
     }
-    
+
     function it_can_use_node_set_by_calling_a_magic_method()
     {
         $this->usingCustomNodeSet();
     }
-    
+
     function it_can_call_any_other_magic_method()
     {
         $this->withFoo('bar');
     }
-    
+
     function it_can_render_the_contents_of_the_view()
     {
         $this->render()->shouldReturn('<h1>Hello Mr. Anderson!</h1>');

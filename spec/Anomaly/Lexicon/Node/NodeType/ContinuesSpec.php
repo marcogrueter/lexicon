@@ -1,16 +1,14 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
-use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class ContinuesSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class ContinuesSpec extends ObjectBehavior
+class ContinuesSpec extends Spec
 {
 
     function let()

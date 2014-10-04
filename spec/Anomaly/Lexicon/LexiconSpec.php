@@ -9,11 +9,10 @@ use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Plugin\PluginHandler;
 use Anomaly\Lexicon\Stub\Node\Node;
 use Anomaly\Lexicon\Support\Container;
+use Anomaly\Lexicon\Test\Spec;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * Class LexiconSpec
@@ -21,7 +20,7 @@ use Prophecy\Argument;
  * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon
  */
-class LexiconSpec extends ObjectBehavior
+class LexiconSpec extends Spec
 {
 
     function it_is_initializable()

@@ -1,0 +1,24 @@
+<?php namespace Anomaly\Lexicon\View; class LexiconView_ec51421b1101f38edbbf7a63333fec43 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render($__data) {
+?><?php if($__data['__env']->variable($__data, 'first_name')): ?>
+    <h2><?php echo $__data['__env']->variable($__data,'first_name',[],'',null,'echo'); ?></h2>
+<?php elseif($__data['__env']->variable($__data, 'last_name')): ?>
+    <h2><?php echo $__data['__env']->variable($__data,'last_name',[],'',null,'echo'); ?></h2>
+<?php else: ?>
+    Nobody.
+<?php endif; ?>
+
+<hr/>
+<?php if(!($__data['__env']->variable($__data, 'first_name'))): ?>
+<h2><?php echo $__data['__env']->variable($__data,'first_name',[],'',null,'echo'); ?></h2>
+<?php elseif(!($__data['__env']->variable($__data, 'last_name'))): ?>
+<h2><?php echo $__data['__env']->variable($__data,'last_name',[],'',null,'echo'); ?></h2>
+<?php else: ?>
+Something.
+<?php endif; ?>
+
+<hr/>
+<?php if($__data['__env']->variable($__data, 'title') or $__data['__env']->variable($__data, 'var')): ?>
+    <?php echo $__data['__env']->variable($__data,'title',[],'',null,'echo'); ?>
+<?php endif; ?>
+
+<?php }} ?>

@@ -16,7 +16,7 @@ class ValueNode extends ExpressionNode
      */
     public function compile()
     {
-        $name = $this->getContent();
+        $name = trim($this->getContent());
         $source = null;
         if (!empty($name)) {
             $source = "\$__data['__env']->variable(\$__data, '{$name}')";

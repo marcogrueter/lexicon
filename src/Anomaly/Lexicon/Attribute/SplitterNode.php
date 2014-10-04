@@ -59,7 +59,13 @@ class SplitterNode extends Node
             ? $this->getDelimiterNode()
             : $this->getSegmentNode();
 
-        $child = $nodeFactory->make($nodeType, [$match], $this, $offset, $this->getDepth());
+        $child = $nodeFactory->make(
+            $nodeType,
+            [[$match]], // this needs to be like [0][0]
+            $this,
+            $offset,
+            $this->getDepth()
+        );
 
         $this->addChild($child);
     }

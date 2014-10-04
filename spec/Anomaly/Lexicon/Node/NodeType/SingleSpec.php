@@ -1,16 +1,15 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class SingleSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node\NodeType
  */
-class SingleSpec extends ObjectBehavior
+class SingleSpec extends Spec
 {
 
     function let(LexiconInterface $lexicon)
@@ -22,12 +21,12 @@ class SingleSpec extends ObjectBehavior
     {
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\Single');
     }
-    
+
     function it_can_get_regex()
     {
         $this->regex()->shouldReturn('/\{\{\s*(root)(\s.*?)?\s*(\/)?\}\}/ms');
     }
-    
+
     function it_can_setup_regex_matches()
     {
         $this->setup();

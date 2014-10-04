@@ -68,11 +68,11 @@ class View extends BaseView implements ViewInterface
         return LexiconStub::factory()->make('test::hello', $data);
     }
 
-    public function render()
+    /*public function render()
     {
         $render = parent::render();
         echo $render;
         return $render;
-    }
+    }*/
 
 }

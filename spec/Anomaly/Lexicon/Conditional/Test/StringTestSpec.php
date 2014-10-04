@@ -1,22 +1,21 @@
 <?php namespace spec\Anomaly\Lexicon\Conditional\Test;
 
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class StringTestSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Conditional\Test
  */
-class StringTestSpec extends ObjectBehavior
+class StringTestSpec extends Spec
 {
 
     function it_is_initializable()
     {
         $this->shouldHaveType('Anomaly\Lexicon\Conditional\Test\StringTest');
     }
-    
+
     function it_can_test_if_it_contains_a_string()
     {
         $this->contains('funkadelic', 'funk')->shouldBe(true);

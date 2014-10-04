@@ -2,6 +2,7 @@
 
 use Anomaly\Lexicon\Contract\Support\ContainerInterface;
 use Anomaly\Lexicon\Lexicon;
+use Anomaly\Lexicon\Test\Spec;
 use Anomaly\Lexicon\View\Engine;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Container\Container;
@@ -9,8 +10,6 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionInterface;
 use Illuminate\View\Engines\EngineResolver;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * Class FoundationSpec
@@ -18,7 +17,7 @@ use Prophecy\Argument;
  * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon
  */
-class FoundationSpec extends ObjectBehavior
+class FoundationSpec extends Spec
 {
 
     function let()

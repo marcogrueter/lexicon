@@ -39,7 +39,7 @@ class OrderedAttribute extends AttributeNode
      */
     public function compileKey()
     {
-        return $this->getOffset();
+        return $this->getKey();
     }
 
     /**

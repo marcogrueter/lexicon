@@ -1,16 +1,15 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class SectionStopSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class SectionStopSpec extends ObjectBehavior
+class SectionStopSpec extends Spec
 {
 
     function let(LexiconInterface $lexicon)

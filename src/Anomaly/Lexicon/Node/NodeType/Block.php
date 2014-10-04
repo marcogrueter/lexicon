@@ -141,7 +141,7 @@ class Block extends Node implements RootInterface
         } elseif ($this->isParse()) {
             return $this->compileParse();
         }
-        return $this->compileChildren()->getCurrentContent();
+        return $this->compileFooter($this->compileChildren()->getCurrentContent());
     }
 
     /**

@@ -109,7 +109,7 @@ class NodeExtractor
             $parent->getCurrentContent(),
             self::LIMIT
         );
-        echo '_START_' . PHP_EOL . $content . PHP_EOL . '_END_' . PHP_EOL . PHP_EOL;
+
         $parent->setCurrentContent($content);
     }
 

@@ -1,16 +1,7 @@
-{{ sites as site }}
-
-        {{ categories as category }}
-
-        {{ blogs as post }}
-
-            {{ .site.name }}
-            {{ .category.name }}
-            {{ .post.name }}
-            {{ name }}
-
-        {{ /blogs }}
-
-        {{ /categories }}
-
-{{ /sites }}
+<ul>
+{{ categories as category }}
+    {{ posts as post }}
+    <li>{{ .category.name }} - {{ name }}</li>
+    {{ /posts }}
+{{ /categories }}
+</ul>

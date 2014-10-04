@@ -1,24 +1,22 @@
 <?php namespace spec\Anomaly\Lexicon\Conditional;
 
-use Anomaly\Lexicon\Contract\Attribute\NodeInterface;
 use Anomaly\Lexicon\Contract\Node\ConditionalInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class ConditionalValidatorSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Conditional
  */
-class ConditionalValidatorSpec extends ObjectBehavior
+class ConditionalValidatorSpec extends Spec
 {
 
     function let(ConditionalInterface $node)
     {
         $this->beConstructedWith($node);
     }
-    
+
     function it_is_initializable()
     {
         $this->shouldHaveType('Anomaly\Lexicon\Conditional\ConditionalValidator');

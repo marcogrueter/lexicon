@@ -1,8 +1,7 @@
 <?php namespace spec\Anomaly\Lexicon\View;
 
+use Anomaly\Lexicon\Test\Spec;
 use Anomaly\Lexicon\View\Factory;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * Class EngineSpec
@@ -10,7 +9,7 @@ use Prophecy\Argument;
  * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\View
  */
-class EngineSpec extends ObjectBehavior
+class EngineSpec extends Spec
 {
 
     function let()

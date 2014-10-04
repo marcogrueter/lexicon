@@ -5,12 +5,11 @@ use Anomaly\Lexicon\Stub\ArrayAccessObject;
 use Anomaly\Lexicon\Stub\SimpleObject;
 use Anomaly\Lexicon\Stub\StringObject;
 use Anomaly\Lexicon\Stub\TraversableObject;
+use Anomaly\Lexicon\Test\Spec;
 use Anomaly\Lexicon\View\Engine;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\ViewFinderInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * Class FactorySpec
@@ -18,7 +17,7 @@ use Prophecy\Argument;
  * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\View
  */
-class FactorySpec extends ObjectBehavior
+class FactorySpec extends Spec
 {
 
     function let()
@@ -190,9 +189,12 @@ class FactorySpec extends ObjectBehavior
         $this->booleanTest(5, 3, '>')->shouldBe(true);
     }
 
-    /** Rendering views examples */
+    /**
+     * Rendering views examples
+     * The test views are stored in the resources/views folder
+     */
 
-    function it_can_render_block()
+    function it_can_render_blocks()
     {
 
         $data = [
@@ -206,21 +208,20 @@ class FactorySpec extends ObjectBehavior
             ]
         ];
 
-        $this->make('test::block', $data)->render()->shouldReturn('<ul>
+        $this->make('test::blocks', $data)->render()->shouldReturn('<ul>
     <li>Foo</li>
     <li>Bar</li>
 </ul>');
 
     }
 
-    function it_can_render_comment()
+    function it_can_render_comments()
     {
-        $this->make('test::comment')->render()->shouldReturn('<h1>This content will remain.</h1>
-
+        $this->make('test::comments')->shouldRender('<h1>This content will remain.</h1>
 ');
     }
 
-    function it_can_render_conditional()
+    function it_can_render_conditionals()
     {
 
         $data = [
@@ -228,8 +229,113 @@ class FactorySpec extends ObjectBehavior
             'last_name' => 'Luthor',
         ];
 
-        $this->make('test::conditional', $data)->render()->shouldReturn('');
+        $this->make('test::conditionals', $data)->shouldRender('<h2>Lex</h2>
 
+<hr/>
+Something.
+
+<hr/>
+
+');
     }
 
+    function it_can_render_variables_from_different_scopes()
+    {
+        $data = [
+            'categories' => [
+                [
+                    'name'  => 'Art',
+                    'posts' => [
+                        [
+                            'name' => 'Van Goh painting style'
+                        ],
+                        [
+                            'name' => 'What is art? What is not?'
+                        ]
+                    ]
+                ],
+                [
+                    'name'  => 'PHP',
+                    'posts' => [
+                        [
+                            'name' => 'Getting started with Laravel'
+                        ],
+                        [
+                            'name' => 'Using composer'
+                        ]
+                    ]
+                ]
+            ],
+        ];
+
+        $this->make('test::scopes', $data)->shouldRender('<ul>
+        <li>Art - Van Goh painting style</li>
+        <li>Art - What is art? What is not?</li>
+            <li>PHP - Getting started with Laravel</li>
+        <li>PHP - Using composer</li>
+    </ul>');
+
+    }
+    
+    function it_can_render_different_blocks_with_the_same_variable_tag()
+    {
+        $data = [
+            'messages' => [
+                'success' => [
+                    [
+                        'message' => 'Everything is cool.'
+                    ],
+                    [
+                        'message' => 'Good job.'
+                    ]
+                ],
+                'error' => [
+                    [
+                        'message' => 'Oh crap.'
+                    ],
+                    [
+                        'message' => 'Something fucked up.'
+                    ]
+                ]
+            ],
+        ];
+
+        $this
+            ->make('test::different-blocks-with-same-variable', $data)
+            ->shouldRender('<ul>
+        <li>Everything is cool.</li>
+        <li>Good job.</li>
+    </ul>
+<ul>
+        <li>Oh crap.</li>
+        <li>Something fucked up.</li>
+    </ul>');
+    }
+
+    function it_can_render_extends()
+    {
+        $this
+            ->make('test::extends')
+            ->shouldRender('<div class="sidebar">This is some sidebar content.</div>
+<div class="content">Injecting this content into the yield section.</div>
+');
+    }
+    
+    function it_can_render_ignore_block_and_ignore_variable()
+    {
+        $this
+            ->make('test::ignore')
+            ->shouldRender('These tags will remain unparsed.
+    {{ tag1 }}{{ tag2 }}{{ tag3 }}
+
+{{ single }}');
+    }
+    
+    function it_can_render_include()
+    {
+        $this
+            ->make('test::include')
+            ->shouldRender('Original content. This is some sample partial content.');
+    }
+    
 }

@@ -6,7 +6,7 @@ use Anomaly\Lexicon\Test\Spec;
 /**
  * Class BooleanTestOperatorNodeSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Conditional\Expression
  */
 class BooleanTestOperatorNodeSpec extends Spec
@@ -27,5 +27,5 @@ class BooleanTestOperatorNodeSpec extends Spec
         $this->setContent('foo');
         $this->compile()->shouldReturn("'foo'");
     }
-    
+
 }

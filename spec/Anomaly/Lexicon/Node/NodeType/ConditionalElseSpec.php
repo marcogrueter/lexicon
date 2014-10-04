@@ -1,16 +1,15 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class ConditionalElseSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class ConditionalElseSpec extends ObjectBehavior
+class ConditionalElseSpec extends Spec
 {
 
     function let(LexiconInterface $lexicon)
@@ -32,7 +31,7 @@ class ConditionalElseSpec extends ObjectBehavior
     {
         $this->setup();
     }
-    
+
     function it_can_compile_conditional_else()
     {
         $this->compile()->shouldReturn('else:');

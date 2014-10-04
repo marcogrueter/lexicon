@@ -3,8 +3,7 @@
 use Anomaly\Lexicon\Stub\Node\Node;
 use Anomaly\Lexicon\Stub\Node\Node2;
 use Anomaly\Lexicon\Stub\Node\Node3;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class NodeCollectionSpec
@@ -12,7 +11,7 @@ use Prophecy\Argument;
  * @author Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class NodeCollectionSpec extends ObjectBehavior
+class NodeCollectionSpec extends Spec
 {
 
     function it_is_initializable()

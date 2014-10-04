@@ -1,16 +1,14 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
-use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class RecursiveSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class RecursiveSpec extends ObjectBehavior
+class RecursiveSpec extends Spec
 {
 
     function let()
@@ -27,5 +25,5 @@ class RecursiveSpec extends ObjectBehavior
     {
         $this->compile()->shouldReturn("echo \$__data['__env']->parse('{{ children }}',\$__data);");
     }
-    
+
 }

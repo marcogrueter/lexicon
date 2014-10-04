@@ -1,17 +1,16 @@
 <?php namespace spec\Anomaly\Lexicon\View;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Test\Spec;
 use Illuminate\Filesystem\Filesystem;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * Class CompilerSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\View
  */
-class CompilerSpec extends ObjectBehavior
+class CompilerSpec extends Spec
 {
 
     function let()
@@ -53,12 +52,12 @@ class CompilerSpec extends ObjectBehavior
     {
         $this->compile($this->path('hello.html'));
     }
-    
+
     function it_can_compile_string_template()
     {
         $this->compileParse('<h1>Hello {{ name }}!</h1>');
     }
-    
+
     public function path($path)
     {
         return __DIR__ . '/../../../../resources/views/' . $path;

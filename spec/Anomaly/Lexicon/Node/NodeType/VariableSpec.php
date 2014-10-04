@@ -1,13 +1,10 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
 use Anomaly\Lexicon\Attribute\AttributeNode;
-use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Node\NodeFinder;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
-
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class VariableSpec
@@ -15,7 +12,7 @@ use Prophecy\Argument;
  * @author Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class VariableSpec extends ObjectBehavior
+class VariableSpec extends Spec
 {
 
     function let()

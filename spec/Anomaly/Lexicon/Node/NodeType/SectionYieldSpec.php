@@ -1,17 +1,15 @@
 <?php namespace spec\Anomaly\Lexicon\Node\NodeType;
 
 use Anomaly\Lexicon\Attribute\AttributeNode;
-use Anomaly\Lexicon\Contract\LexiconInterface;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class SectionYieldSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Node
  */
-class SectionYieldSpec extends ObjectBehavior
+class SectionYieldSpec extends Spec
 {
 
     function let()
@@ -28,5 +26,5 @@ class SectionYieldSpec extends ObjectBehavior
     {
         $this->compile()->shouldReturn("echo \$__data['__env']->yieldContent('foo');");
     }
-    
+
 }

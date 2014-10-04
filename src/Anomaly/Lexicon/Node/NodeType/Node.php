@@ -216,7 +216,7 @@ class Node implements NodeInterface
         // [0] original string
         // [1] as
         // [2] loop item
-        if (preg_match('/\s*(as)\s*(\w+)$/', $this->getRawAttributes(), $match)) {
+        if (preg_match('/\s*?(as)\s*(\w+)\s*$/', $this->getRawAttributes(), $match)) {
             $result = $match[2];
         }
 

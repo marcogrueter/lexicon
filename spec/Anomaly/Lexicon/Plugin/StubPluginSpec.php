@@ -1,15 +1,14 @@
 <?php namespace spec\Anomaly\Lexicon\Plugin;
 
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Anomaly\Lexicon\Test\Spec;
 
 /**
  * Class StubPluginSpec
  *
- * @author Osvaldo Brignoni <obrignoni@anomaly.is>
+ * @author  Osvaldo Brignoni <obrignoni@anomaly.is>
  * @package spec\Anomaly\Lexicon\Plugin
  */
-class StubPluginSpec extends ObjectBehavior
+class StubPluginSpec extends Spec
 {
 
     function it_is_initializable()
@@ -21,7 +20,7 @@ class StubPluginSpec extends ObjectBehavior
     {
         $this->foo()->shouldReturn('FOO, BAR, BAZ!');
     }
-    
+
     function it_can_filter()
     {
         $this->setAttributes(['value' => 'text']);
