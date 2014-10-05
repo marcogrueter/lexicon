@@ -1,0 +1,2 @@
+<?php namespace Anomaly\Lexicon\View; class LexiconView_1571dde4c1ba870ab15b160ab2f8c955 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render($__data) {
+?>Original content. <?php echo $__data['__env']->make('test::partial',array_merge($__data,[]))->render(); ?><?php }} ?>
