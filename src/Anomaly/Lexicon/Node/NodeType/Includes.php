@@ -48,7 +48,7 @@ class Includes extends Single
                 $node = $this->getNodeFactory()
                     ->make(new Variable($this->getLexicon()), [], $this)
                     ->setName($name);
-                $sharedAttributes[] = "'{$name}'=>{$node->compile(false)}";
+                $sharedAttributes[] = "'{$name}'=>{$node->compile(false, false)}";
             }
         }
         return '['.implode(',',$sharedAttributes).']';

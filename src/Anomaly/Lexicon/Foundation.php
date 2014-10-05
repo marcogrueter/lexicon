@@ -471,7 +471,7 @@ class Foundation
      */
     public function isDebug()
     {
-        return $this->lexicon->isDebug() ?: $this->getConfig('lexicon::debug', false);
+        return $this->lexicon->isDebug() ?: $this->getConfig('app.debug', false);
     }
 
     /**

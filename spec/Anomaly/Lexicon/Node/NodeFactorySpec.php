@@ -40,12 +40,11 @@ class NodeFactorySpec extends Spec
 
     function it_can_remove_a_node_type_from_a_node_group()
     {
-        $this->getNodeTypes()->shouldHaveNodeCount(17);
-
+        $this->getNodeTypes()->shouldHaveNodeCount(18);
 
         $this
             ->removeNodeTypeFromNodeGroup('Anomaly\Lexicon\Node\NodeType\Variable')
-            ->getNodeTypes()->shouldHaveNodeCount(16);
+            ->getNodeTypes()->shouldHaveNodeCount(17);
     }
 
     function it_can_set_and_get_node_types()

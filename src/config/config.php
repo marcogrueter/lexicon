@@ -15,18 +15,13 @@ return array(
      */
     'scopeGlue'        => '.',
     /**
-     * When debug is turned on it enables exceptions on certain parts where things fail silently. Generic exceptions
-     * will always be logged.
-     */
-    'debug'            => true,
-    /**
      * PHP is escaped from views by default but you can enable it if you need it for any reason. It is highly
      * recommended that you keep this disabled as it will make templates insecure.
      */
     'allowPhp'         => false,
     /**
      * Plugins used for interpreting and outputting custom data. You can add you custom plugins here. Each one must have
-     * a key that will represent the tag. i.e {{ counter.offset }}
+     * a key that will represent the tag. i.e {{ counter.count }}
      */
     'plugins'          => [
         'counter' => 'Anomaly\Lexicon\Plugin\CounterPlugin',
