@@ -21,7 +21,7 @@ class Includes extends Single
      */
     public function compile()
     {
-        $partial = $this->compileAttributeValue('view');
+        $partial = $this->compileAttributeValue('partial');
 
         $source = null;
 

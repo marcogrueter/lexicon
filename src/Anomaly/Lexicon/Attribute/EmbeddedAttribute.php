@@ -73,8 +73,7 @@ class EmbeddedAttribute extends AttributeNode
         $item = $finder->getItemSource();
         $name = $finder->getName();
         $rawAttributes = $this->getRawAttributes();
-        $expected = Lexicon::EXPECTED_ECHO;
-
+        $expected = Lexicon::EXPECTED_STRING;
 
         $attributes = $this
             ->setContent($rawAttributes)

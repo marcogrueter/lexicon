@@ -53,8 +53,7 @@ class Conditional extends Single implements ConditionalInterface
     public function setup()
     {
         $this
-            ->setCurrentContent($this->match(2))
-            ->setContent($this->match(0))
+            ->setContent($this->match(2))
             ->setExtractionContent($this->match(0))
             ->setName($this->match(1));
     }
@@ -91,7 +90,7 @@ class Conditional extends Single implements ConditionalInterface
             [],
             $this
         )
-            ->setContent($this->getCurrentContent())
+            ->setContent($this->getContent())
             ->createChildNodes();
     }
 

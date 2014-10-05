@@ -23,7 +23,7 @@ class SectionExtends extends Single
         /** @var RootInterface $rootNode */
         $rootNode = $this->getRootNode();
 
-        $attribute = $this->getAttributeNode()->compileAttributeValue('view');
+        $attribute = $this->getAttributeNode()->compileAttributeValue('layout');
 
         if (!empty($attribute)) {
             $rootNode->addToFooter("<?php echo \$__data['__env']->make({$attribute},\$__data)->render(); ?>");

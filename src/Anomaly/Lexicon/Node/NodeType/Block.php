@@ -206,7 +206,7 @@ class Block extends Node implements RootInterface
 
         $finder = $this->getNodeFinder();
 
-        $expected = Lexicon::EXPECTED_ECHO;
+        $expected = Lexicon::EXPECTED_STRING;
 
         return "echo \$__data['__env']->variable({$finder->getItemSource()},'{$finder->getName(
         )}',{$attributes},'{$this->getContent()}','','{$expected}');";
@@ -223,7 +223,7 @@ class Block extends Node implements RootInterface
 
         $finder = $this->getNodeFinder();
 
-        $expected = Lexicon::EXPECTED_ECHO;
+        $expected = Lexicon::EXPECTED_STRING;
 
         $content = addslashes($this->getContent());
 

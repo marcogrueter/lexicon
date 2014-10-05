@@ -881,7 +881,7 @@ class Node implements NodeInterface
     public function getPosition()
     {
         $match = $this->getMatch();
-        return isset($match[0]) and isset($match[0][1]) ? $match[0][1] : 0;
+        return (isset($match[0]) and isset($match[0][1])) ? $match[0][1] : 0;
     }
 
     /**
