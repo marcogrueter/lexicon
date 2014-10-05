@@ -313,7 +313,7 @@ class Foundation
         $this->bindShared(
             'blade.compiler',
             function () {
-                return new BladeCompiler($this->getFilesystem(), $this->getLexicon()->getStoragePath());
+                return new BladeCompiler($this->getFilesystem(), $this->getStoragePath());
             }
         );
 
@@ -613,7 +613,7 @@ class Foundation
         $storagePath = __DIR__ . '/../../../resources/storage/views';
 
         if (!$this->isStandalone() and $container['path.storage']) {
-            $storagePath = $container['path.storage'] . '/views';
+            $storagePath = $container['path.storage'] . '/framework/views';
         }
 
         if ($override = $this->getLexicon()->getStoragePath()) {
