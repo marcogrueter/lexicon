@@ -27,20 +27,42 @@ class Variable extends Single
      * @param array $attributes
      * @return string
      */
-    public function compile($useEcho = true)
+    public function compile($echo = true, $escaped = true)
+    {
+        return $this->compileVariable($echo, $escaped);
+    }
+
+    /**
+     * Compile variable
+     *
+     * @param      $item
+     * @param      $name
+     * @param      $attributes
+     * @param      $expected
+     * @param bool $useEcho
+     * @return string
+     */
+    public function compileVariable($echo = true, $escaped = true)
     {
         $finder = $this->getNodeFinder();
-        $item = $finder->getItemSource();
-        $name = $finder->getName();
 
+        $item       = $finder->getItemSource();
+        $name       = $finder->getName();
         $attributes = $this->compileAttributes();
 
-        $expected = Lexicon::EXPECTED_ECHO;
+        $expected = Lexicon::EXPECTED_STRING;
 
-        $echo = $useEcho ? 'echo' : null;
-        $semicolon = $useEcho ? ';' : null;
+        $source = "\$__data['__env']->variable({$item},'{$name}',{$attributes},'',null,'{$expected}')";
 
-        return "{$echo} \$__data['__env']->variable({$item},'{$name}',{$attributes},'',null,'{$expected}'){$semicolon}";
+        if ($escaped) {
+            $source = "e({$source})";
+        }
+
+        if ($echo) {
+            $source = "echo {$source};";
+        }
+
+        return $source;
     }
 
     /**
