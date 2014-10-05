@@ -21,9 +21,9 @@ class SectionExtendsSpec extends Spec
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeType\SectionExtends');
     }
 
-    function it_can_compile_source()
+    function it_can_compile_php()
     {
-        $this->setRawAttributes('view="test::foo"')->compile();
+        $this->setRawAttributes('layout="test::foo"')->compile();
         $this->getRootNode()->getFooter()->shouldReturn(
             [
                 "<?php echo \$__data['__env']->make('test::foo',\$__data)->render(); ?>"

@@ -139,49 +139,49 @@ class FactorySpec extends Spec
     
     function it_can_get_any_value()
     {
-        $this->expected('whatever', Lexicon::EXPECTED_ANY)->shouldReturn('whatever');
+        $this->expected('whatever', 'any')->shouldReturn('whatever');
     }
     
     function it_can_get_string_that_is_expected_to_be_echoed()
     {
-        $this->expected('string', Lexicon::EXPECTED_ECHO)->shouldReturn('string');
+        $this->expected('string', 'string')->shouldReturn('string');
     }
 
     function it_can_get_float_that_is_expected_to_be_echoed()
     {
-        $this->expected(3.50, Lexicon::EXPECTED_ECHO)->shouldReturn(3.50);
+        $this->expected(3.50, 'string')->shouldReturn(3.50);
     }
 
     function it_can_get_number_that_is_expected_to_be_echoed()
     {
-        $this->expected(3, Lexicon::EXPECTED_ECHO)->shouldReturn(3);
+        $this->expected(3, 'string')->shouldReturn(3);
     }
 
     function it_can_get_boolean_that_is_expected_to_be_echoed()
     {
-        $this->expected(true, Lexicon::EXPECTED_ECHO)->shouldBe(true);
+        $this->expected(true, 'string')->shouldBe(true);
     }
 
     function it_can_get_null_that_is_expected_to_be_echoed()
     {
-        $this->expected(null, Lexicon::EXPECTED_ECHO)->shouldReturn(null);
+        $this->expected(null, 'string')->shouldReturn(null);
     }
 
     function it_can_get_object_that_implements_toString_and_is_expected_to_be_echoed()
     {
         $stringObject = new StringObject();
-        $this->expected($stringObject, Lexicon::EXPECTED_ECHO)->shouldReturn($stringObject);
+        $this->expected($stringObject, 'string')->shouldReturn($stringObject);
     }
 
     function it_can_get_array_that_is_expected_to_be_traversable()
     {
-        $this->expected(array(), Lexicon::EXPECTED_TRAVERSABLE)->shouldReturn(array());
+        $this->expected(array(), 'traversable')->shouldReturn(array());
     }
 
     function it_can_get_object_that_is_expected_to_be_traversable()
     {
         $traversableObject = new TraversableObject();
-        $this->expected($traversableObject, Lexicon::EXPECTED_TRAVERSABLE)->shouldReturn($traversableObject);
+        $this->expected($traversableObject, 'traversable')->shouldReturn($traversableObject);
     }
 
     function it_can_run_a_boolean_test_values()
@@ -337,5 +337,7 @@ Something.
             ->make('test::include')
             ->shouldRender('Original content. This is some sample partial content.');
     }
+
     
+
 }

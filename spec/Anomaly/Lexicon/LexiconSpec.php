@@ -254,6 +254,18 @@ class LexiconSpec extends Spec
 
     function it_can_add_and_get_view_namespaces()
     {
-        $this->addNamespace('foo', __DIR__)->getNamespaces()->shouldHaveCount(1);
+        $this->addNamespace('foo', 'some/directory')->getNamespaces()->shouldHaveCount(1);
     }
+    
+    function it_can_set_and_get_magic_method_objects()
+    {
+        $this->addMagicMethodClasses(['Foo']);
+        $this->addMagicMethodClass('Bar');
+        $this->getMagicMethodClasses()->shouldReturn([
+                'Illuminate\Database\Eloquent\Relations\Relation',
+                'Foo',
+                'Bar'
+            ]);
+    }
+
 }

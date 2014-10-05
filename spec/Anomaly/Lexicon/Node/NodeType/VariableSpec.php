@@ -29,12 +29,29 @@ class VariableSpec extends Spec
     {
         $this->regex()->shouldReturn('/\{\{\s*([a-zA-Z0-9_\.]+)(\s+.*?)?\s*(\/)?\}\}/ms');
     }
-
-    function it_can_compile_variable(AttributeNode $attributeNode, NodeFinder $nodeFinder, NodeFactory $nodeFactory)
+    
+    function it_can_compile_variable_php()
     {
         $this->setName('foo');
-        $expected = Lexicon::EXPECTED_ECHO;
-        $this->compile()->shouldReturn("echo \$__data['__env']->variable(\$__data,'foo',[],'',null,'{$expected}');");
+        $this->compileVariable(false)->shouldReturn("e(\$__data['__env']->variable(\$__data,'foo',[],'',null,'string'))");
+    }
+
+    function it_can_compile_echo_variable_php()
+    {
+        $this->setName('foo');
+        $this->compileVariable(true)->shouldReturn("echo e(\$__data['__env']->variable(\$__data,'foo',[],'',null,'string'));");
+    }
+
+    function it_can_compile_unescaped_variable_php()
+    {
+        $this->setName('foo');
+        $this->compileVariable(true, false)->shouldReturn("echo \$__data['__env']->variable(\$__data,'foo',[],'',null,'string');");
+    }
+
+    function it_can_compile_php()
+    {
+        $this->setName('foo');
+        $this->compile()->shouldReturn("echo e(\$__data['__env']->variable(\$__data,'foo',[],'',null,'string'));");
     }
 
     function it_can_compile_key()

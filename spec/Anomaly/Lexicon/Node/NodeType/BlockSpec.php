@@ -49,7 +49,7 @@ class BlockSpec extends Spec
         $this->setClosingTag('{{ /books }}')->getClosingTag()->shouldReturn('{{ /books }}');
     }
 
-    function it_can_compile_source()
+    function it_can_compile_php()
     {
 
         $this

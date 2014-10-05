@@ -24,7 +24,7 @@ class IncludesSpec extends Spec
     function it_can_compile_php()
     {
         $this
-            ->setRawAttributes('view="baz" share="title,author"')
+            ->setRawAttributes('partial="baz" share="title,author"')
             ->compile()
             ->shouldReturn("echo \$__data['__env']->make('baz',array_merge(\$__data,['title'=> \$__data['__env']->variable(\$__data,'title',[],'',null,'echo'),'author'=> \$__data['__env']->variable(\$__data,'author',[],'',null,'echo')]))->render();");
     }

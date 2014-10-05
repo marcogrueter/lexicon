@@ -114,7 +114,7 @@ class AttributeNodeSpec extends Spec
         $this->compileAttributeValue('', 0, 'default')->shouldReturn('default');
     }
     
-    function it_can_compile_source_from_array()
+    function it_can_compile_php_from_array()
     {
         $this
             ->setContent('foo="bar" yin="yang"')
@@ -123,7 +123,7 @@ class AttributeNodeSpec extends Spec
             ->shouldReturn("['foo'=>'bar','yin'=>'yang']");
     }
 
-    function it_can_compile_source()
+    function it_can_compile_php()
     {
         $this
             ->setContent('foo="bar" yin="yang"')
@@ -138,7 +138,7 @@ class AttributeNodeSpec extends Spec
             ->setContent('foo="bar/{var \'hello\'}" yin="yang"')
             ->createChildNodes()
             ->compile()
-            ->shouldReturn("['foo'=>'bar/'.\$__data['__env']->variable(\$exampleItem,'var',[0=>'hello'],'',null,'echo').'','yin'=>'yang']");
+            ->shouldReturn("['foo'=>'bar/'.\$__data['__env']->variable(\$exampleItem,'var',[0=>'hello'],'',null,'string').'','yin'=>'yang']");
     }
     
 }
