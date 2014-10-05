@@ -31,7 +31,11 @@ class NodeFinderStub
         $endif = $nodeFactory->make(new ConditionalEndif($lexicon),[],null,0,0,'endif');
         $endif->setName('endif');
 
-        $schoolName = $nodeFactory->make(new NodeStub($lexicon),[],null,0,0,'name');
+        $match = [
+            ['content', 25]
+        ];
+
+        $schoolName = $nodeFactory->make(new NodeStub($lexicon),$match,null,0,0,'name');
         $schoolName->setName('name');
 
         $books = $nodeFactory->make(new Block($lexicon),[],null,0,0,'books');
