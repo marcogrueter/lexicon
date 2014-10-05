@@ -133,7 +133,18 @@ class Lexicon implements LexiconInterface
      *
      * @var array
      */
-    protected $booleanTestTypes = [];
+    protected $booleanTestTypes = [
+
+    ];
+
+    /**
+     * Magic method objects
+     *
+     * @var array
+     */
+    protected $magicMethodClasses = [
+        'Illuminate\Database\Eloquent\Relations\Relation'
+    ];
 
     /**
      * Are we using the package outside of Laravel?
@@ -177,7 +188,7 @@ class Lexicon implements LexiconInterface
     /**
      * Expected echo
      */
-    const EXPECTED_ECHO = 'echo';
+    const EXPECTED_STRING = 'string';
 
     /**
      * Expected numeric
@@ -741,5 +752,52 @@ class Lexicon implements LexiconInterface
         }
         return $this;
     }
-    
+
+    /**
+     * Add magic method classes
+     *
+     * @param $magicMethodClasses
+     * @return $this
+     */
+    public function addMagicMethodClasses(array $magicMethodClasses)
+    {
+        foreach($magicMethodClasses as $magicMethodClass) {
+            $this->addMagicMethodClass($magicMethodClass);
+        }
+        return $this;
+    }
+
+    /**
+     * Add magic method class
+     *
+     * @param $magicMethodClass
+     * @return $this
+     */
+    public function addMagicMethodClass($magicMethodClass)
+    {
+        $this->magicMethodClasses[] = $magicMethodClass;
+        return $this;
+    }
+
+    /**
+     * Get magic method classes
+     *
+     * @return array
+     */
+    public function getMagicMethodClasses()
+    {
+        return $this->magicMethodClasses;
+    }
+
+    /**
+     * Is magic method object
+     *
+     * @param $obj
+     * @return bool
+     */
+    public function isMagicMethodObject($obj)
+    {
+        return (is_object($obj) and array_intersect(array_values(class_parents($obj)), $this->magicMethodClasses));
+    }
+
 }

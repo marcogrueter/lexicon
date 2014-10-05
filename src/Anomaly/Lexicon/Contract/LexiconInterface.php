@@ -307,4 +307,35 @@ interface LexiconInterface
      */
     public function getConfigPath();
 
+    /**
+     * An array of string classes
+     *
+     * @param array $classes
+     * @return LexiconInterface
+     */
+    public function addMagicMethodClasses(array $magicMethodClasses);
+
+    /**
+     * Add magic method class
+     *
+     * @param array $magicMethodClass
+     * @return LexiconInterface
+     */
+    public function addMagicMethodClass($magicMethodClass);
+
+    /**
+     * Get magic method classes
+     *
+     * @return array
+     */
+    public function getMagicMethodClasses();
+
+    /**
+     * Is magic method object
+     *
+     * @param $obj
+     * @return bool
+     */
+    public function isMagicMethodObject($obj);
+
 }

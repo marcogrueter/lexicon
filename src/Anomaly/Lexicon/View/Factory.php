@@ -177,21 +177,21 @@ class Factory extends BaseFactory implements FactoryInterface
 
                 } elseif (is_object($data)) {
 
-                    if ($data instanceof \ArrayAccess) {
-
-                        if (!isset($data[$nextPart])) {
-
-                            return $this->expected(null, $expected, $default);
-
-                        }
-
-                        $data = $data[$nextPart];
-
-                    } elseif (method_exists($data, $nextPart)) {
+                    if (method_exists($data, $nextPart)) {
 
                         try {
 
-                            $data = call_user_func_array([$data, $nextPart], $attributes);
+                            $object = call_user_func_array([$data, $nextPart], $attributes);
+
+                            if ($this->getLexicon()->isMagicMethodObject($object)) {
+
+                                $data = $data->{$nextPart};
+
+                            } else {
+
+                                $data = $object;
+
+                            }
 
                         } catch (\Exception $e) {
 
@@ -200,6 +200,16 @@ class Factory extends BaseFactory implements FactoryInterface
                             return $this->expected(null, $expected, $default);
 
                         }
+
+                    } elseif ($data instanceof \ArrayAccess) {
+
+                        if (!$data->offsetExists($nextPart)) {
+
+                            return $this->expected(null, $expected, $default);
+
+                        }
+
+                        $data = $data->offsetGet($nextPart);
 
                     } else {
 
@@ -238,7 +248,7 @@ class Factory extends BaseFactory implements FactoryInterface
 
             $finalResult = $data;
 
-        } elseif ($expected == Lexicon::EXPECTED_ECHO) {
+        } elseif ($expected == Lexicon::EXPECTED_STRING) {
 
             if (
                 is_string($data) or
@@ -268,7 +278,7 @@ class Factory extends BaseFactory implements FactoryInterface
 
         return $finalResult;
     }
-    
+
     /**
      * Factory stub for PHPSpec test
      *
