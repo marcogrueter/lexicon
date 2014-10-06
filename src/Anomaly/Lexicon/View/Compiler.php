@@ -103,7 +103,7 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
      * Compile the view at the given path.
      *
      * @param  string $path
-     * @return void
+     * @return string
      */
     public function compile($path = null)
     {
@@ -113,16 +113,22 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
 
         if ($this->getLexicon()->isStringTemplate($path)) {
 
-            $this->compileFromString($path, $compiledPath);
+            return $this->compileFromString($path, $compiledPath);
 
         } else {
 
-            $this->compileFromFile($path, $compiledPath);
+            return $this->compileFromFile($path, $compiledPath);
 
         }
 
     }
 
+    /**
+     * @param $path
+     * @param $compiledPath
+     * @return string
+     * @throws \Illuminate\Filesystem\FileNotFoundException
+     */
     public function compileFromFile($path, $compiledPath)
     {
         $this->setHash(substr(strrchr($compiledPath, '/'), 1));
@@ -132,6 +138,8 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
         if (!is_null($this->cachePath)) {
             $this->files->put($compiledPath, $contents);
         }
+
+        return $contents;
     }
 
     /**
@@ -150,6 +158,8 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
         if (!is_null($this->cachePath)) {
             $this->files->put($compiledPath, $contents);
         }
+
+        return $contents;
     }
 
     /**
