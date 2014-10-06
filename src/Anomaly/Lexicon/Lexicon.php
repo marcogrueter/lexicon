@@ -514,7 +514,7 @@ class Lexicon implements LexiconInterface
      * @param $path string
      * @return $this
      */
-    public function addParsePath($path)
+    public function addStringTemplate($path)
     {
         $this->parsePaths[$path] = $path;
         return $this;
@@ -536,7 +536,7 @@ class Lexicon implements LexiconInterface
      * @param $path
      * @return bool
      */
-    public function isParsePath($path)
+    public function isStringTemplate($path)
     {
         return in_array($path, $this->parsePaths);
     }

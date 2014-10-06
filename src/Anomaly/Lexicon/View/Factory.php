@@ -32,7 +32,7 @@ class Factory extends BaseFactory implements FactoryInterface
      */
     public function parse($view, $data = [], $mergeData = [])
     {
-        $this->getLexicon()->addParsePath($view);
+        $this->getLexicon()->addStringTemplate($view);
 
         return $this->newView($this->getLexiconEngine(), md5($view), $view, $data, $mergeData);
     }

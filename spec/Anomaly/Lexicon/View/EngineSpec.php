@@ -36,7 +36,7 @@ class EngineSpec extends Spec
     {
         /**
          * This works because we did...
-         * $lexicon->addParsePath('<h1>Hello {{ name }}</h1>');
+         * $lexicon->addStringTemplate('<h1>Hello {{ name }}</h1>');
          * from the Engine stub.
          */
         $this->get(
@@ -52,7 +52,7 @@ class EngineSpec extends Spec
     {
         /**
          * This works because we did...
-         * $lexicon->addParsePath('<h1>Hello {{ name }}</h1>');
+         * $lexicon->addStringTemplate('<h1>Hello {{ name }}</h1>');
          * from the Engine stub.
          */
         $this->get(

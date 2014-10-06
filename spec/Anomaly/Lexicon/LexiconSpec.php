@@ -113,14 +113,14 @@ class LexiconSpec extends Spec
     
     function it_can_add_parse_path()
     {
-        $this->addParsePath('{{ foo }}');
+        $this->addStringTemplate('{{ foo }}');
         $this->getParsePaths()->shouldHaveKey('{{ foo }}');
     }
 
     function it_can_check_if_path_is_parse_able()
     {
-        $this->addParsePath('{{ bar }}');
-        $this->isParsePath('{{ bar }}')->shouldBe(true);
+        $this->addStringTemplate('{{ bar }}');
+        $this->isStringTemplate('{{ bar }}')->shouldBe(true);
     }
 
     function it_can_get_view_template_path()

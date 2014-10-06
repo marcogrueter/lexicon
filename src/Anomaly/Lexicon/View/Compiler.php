@@ -13,6 +13,9 @@ class Compiler extends BaseCompiler implements CompilerInterface
      */
     protected $lexicon;
 
+    /**
+     * @var
+     */
     protected $hash;
 
     /**
@@ -21,6 +24,13 @@ class Compiler extends BaseCompiler implements CompilerInterface
      * @var string
      */
     protected $path;
+
+    /**
+     * @var array
+     */
+    protected $sequence = [
+        'Anomaly\Lexicon\View\LexiconCompiler'
+    ];
 
     /**
      * Compiler interface
@@ -96,7 +106,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
 
         $compiledPath = $this->getCompiledPath($path);
 
-        if ($this->getLexicon()->isParsePath($path)) {
+        if ($this->getLexicon()->isStringTemplate($path)) {
 
             $this->compileFromString($path, $compiledPath);
 
@@ -112,9 +122,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
     {
         $this->setHash(substr(strrchr($compiledPath, '/'), 1));
 
-        $nodeGroup = $this->getLexicon()->getFoundation()->getNodeFactory()->getNodeGroupFromPath($path);
-
-        $contents = $this->compileString($this->files->get($path), $nodeGroup);
+        $contents = $this->compileString($this->files->get($path));
 
         if (!is_null($this->cachePath)) {
             $this->files->put($compiledPath, $contents);
@@ -124,15 +132,15 @@ class Compiler extends BaseCompiler implements CompilerInterface
     /**
      * Compile the given string parse-able contents.
      *
-     * @param $content
+     * @param $string
      * @internal param string $value
      * @return string
      */
-    public function compileFromString($content, $compiledPath)
+    public function compileFromString($string, $compiledPath)
     {
         $this->setHash(substr(strrchr($compiledPath, '/'), 1));
 
-        $contents = $this->compileString($content);
+        $contents = $this->compileString($string);
 
         if (!is_null($this->cachePath)) {
             $this->files->put($compiledPath, $contents);
@@ -142,52 +150,59 @@ class Compiler extends BaseCompiler implements CompilerInterface
     /**
      * Compile string
      *
-     * @param string $content
+     * @param string $string
      * @return string
      */
-    public function compileString($content = '', $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
+    public function compileString($string = '')
     {
         if (!$this->getLexicon()->isPhpAllowed()) {
-            $content = $this->escapePhp($content);
+            $string = $this->escapePhp($string);
         }
 
-        return $this->compileView($this->getRootNode($content, $nodeGroup)->compile());
+        foreach($this->getCompilerSequence() as $compiler) {
+            $string = $compiler->compile($string);
+        }
+
+        return $this->compileView($string);
     }
 
     /**
-     * Get root node
-     *
-     * @param string $content
-     * @return \Anomaly\Lexicon\Contract\Node\RootInterface
+     * Get compiler sequence
      */
-    public function getRootNode($content = '', $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
+    public function getCompilerSequence()
     {
-        return $this->getLexicon()->getFoundation()->getNodeFactory()->getRootNode($content, $nodeGroup);
+        $compilers = [];
+
+        foreach($this->sequence as $class) {
+            $compilers[] = new $class($this->getLexicon());
+        }
+
+        return $compilers;
     }
 
     /**
      * Escape PHP
      *
-     * @param $content
+     * @param $string
      * @return mixed
      */
-    public function escapePhp($content)
+    public function escapePhp($string)
     {
-        return str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $content);
+        return str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $string);
     }
 
     /**
      * Determine if the view at the given path is expired.
      *
-     * @param $content
+     * @param $string
      * @internal param string $path
      * @return bool
      */
-    public function isNotParsed($content)
+    public function isNotParsed($string)
     {
         $isNotParsed = false;
 
-        $compiled = $this->getCompiledPath($content);
+        $compiled = $this->getCompiledPath($string);
 
         // If the compiled file doesn't exist we will indicate that the view is expired
         // so that it can be re-compiled. Else, we will verify the last modification
@@ -232,7 +247,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
             return true;
         }
 
-        if ($lexicon->isParsePath($path) and $this->isNotParsed($path)) {
+        if ($lexicon->isStringTemplate($path) and $this->isNotParsed($path)) {
             return true;
         }
 

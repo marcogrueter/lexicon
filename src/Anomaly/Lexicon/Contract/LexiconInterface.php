@@ -146,7 +146,7 @@ interface LexiconInterface
      * @param $path
      * @return LexiconInterface
      */
-    public function addParsePath($path);
+    public function addStringTemplate($path);
 
     /**
      * Get the array of parse-able paths
@@ -159,7 +159,7 @@ interface LexiconInterface
      * @param $path
      * @return bool
      */
-    public function isParsePath($path);
+    public function isStringTemplate($path);
 
     /**
      * Is debug enabled
