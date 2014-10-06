@@ -2,7 +2,6 @@
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\CompilerInterface;
-use Anomaly\Lexicon\Node\NodeFactory;
 
 /**
  * Class LexiconCompiler
@@ -39,27 +38,14 @@ class LexiconCompiler implements CompilerInterface
      * @param $string
      * @return string
      */
-    public function compile($string)
+    public function compile($string, $path = null)
     {
-        return $this->getRootNode($string)->compile();
-    }
-
-    /**
-     * Get root node
-     *
-     * @param string $content
-     * @return \Anomaly\Lexicon\Contract\Node\RootInterface
-     */
-    public function getRootNode($string = '')
-    {
-        $lexicon = $this->getLexicon();
-
-        /** @var NodeFactory $nodeFactory */
-        $nodeFactory = $lexicon->getFoundation()->getNodeFactory();
-
-        $nodeGroup = $nodeFactory->getNodeGroupFromPath($string);
-
-        return $nodeFactory->getRootNode($string, $nodeGroup);
+        return $this
+            ->getLexicon()
+            ->getFoundation()
+            ->getNodeFactory()
+            ->getRootNode($string, $path)
+            ->compile();
     }
 
 } 

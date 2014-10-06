@@ -166,7 +166,7 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
 
         /** @var CompilerInterface $compiler */
         foreach ($this->getCompilerSequence() as $compiler) {
-            $string = $compiler->compile($string);
+            $string = $compiler->compile($string, $this->getPath());
         }
 
         return $this->compileView($string);

@@ -386,18 +386,18 @@ class NodeFactory
     /**
      * Get root node
      *
-     * @param $content
+     * @param $string
      * @return NodeInterface
      * @throws RootNodeTypeNotFoundException
      */
-    public function getRootNode($content, $nodeGroup = self::DEFAULT_NODE_GROUP)
+    public function getRootNode($string, $path = null)
     {
         $rootNode = $this
-            ->make($this->getRootNodeType($nodeGroup))
+            ->make($this->getRootNodeType($this->getNodeGroupFromPath($path)))
             ->setName('root')
-            ->setContent($content)
-            ->setExtractionContent($content)
-            ->setCurrentContent($content);
+            ->setContent($string)
+            ->setExtractionContent($string)
+            ->setCurrentContent($string);
 
         $this->createChildNodes($rootNode);
 

@@ -686,7 +686,7 @@ class Foundation
      */
     public function getCompilerSequence()
     {
-        return $this->getLexicon()->getCompilerSquence() ?: $this->getConfig('lexicon::compilers', [
+        return $this->getLexicon()->getCompilerSequence() ?: $this->getConfig('lexicon::compilers', [
                 'Anomaly\Lexicon\View\LexiconCompiler'
             ]);
     }

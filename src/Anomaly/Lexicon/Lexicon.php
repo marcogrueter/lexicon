@@ -135,7 +135,7 @@ class Lexicon implements LexiconInterface
     /**
      * @var
      */
-    protected $compilerSequence;
+    protected $compilerSequence = [];
 
     /**
      * Magic method objects
@@ -805,7 +805,7 @@ class Lexicon implements LexiconInterface
      *
      * @return mixed
      */
-    public function getCompilerSquence()
+    public function getCompilerSequence()
     {
         return $this->compilerSequence;
     }

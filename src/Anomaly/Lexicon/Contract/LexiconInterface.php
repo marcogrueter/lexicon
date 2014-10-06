@@ -343,6 +343,6 @@ interface LexiconInterface
      *
      * @return mixed
      */
-    public function getCompilerSquence();
+    public function getCompilerSequence();
 
 }

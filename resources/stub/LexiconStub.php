@@ -30,7 +30,7 @@ class LexiconStub
             ->setStandalone(true)
             ->addNamespace('test', __DIR__ . '/../views')
             ->setStoragePath(__DIR__ . '/../storage/views')
-            ->addParsePath('<h1>Hello {{ name }}</h1>')
+            ->addStringTemplate('<h1>Hello {{ name }}</h1>')
             ->registerPlugin('stub', 'Anomaly\Lexicon\Plugin\StubPlugin')
             ->registerNodeGroup(
                 [
