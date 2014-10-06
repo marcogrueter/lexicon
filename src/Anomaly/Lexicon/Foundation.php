@@ -682,6 +682,16 @@ class Foundation
     }
 
     /**
+     * Get compiler sequence
+     */
+    public function getCompilerSequence()
+    {
+        return $this->getLexicon()->getCompilerSquence() ?: $this->getConfig('lexicon::compilers', [
+                'Anomaly\Lexicon\View\LexiconCompiler'
+            ]);
+    }
+
+    /**
      * Wrap a Closure such that it is shared.
      *
      * @param  \Closure $closure

@@ -338,4 +338,11 @@ interface LexiconInterface
      */
     public function isMagicMethodObject($obj);
 
+    /**
+     * Get compiler sequence
+     *
+     * @return mixed
+     */
+    public function getCompilerSquence();
+
 }

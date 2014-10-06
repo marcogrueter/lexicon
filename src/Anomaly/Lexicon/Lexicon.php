@@ -7,9 +7,6 @@ use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Node\NodeFactory;
 use Anomaly\Lexicon\Support\Container;
 use Illuminate\Contracts\Container\Container as BaseContainer;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Session\SessionInterface;
 
 class Lexicon implements LexiconInterface
 {
@@ -133,9 +130,12 @@ class Lexicon implements LexiconInterface
      *
      * @var array
      */
-    protected $booleanTestTypes = [
+    protected $booleanTestTypes = [];
 
-    ];
+    /**
+     * @var
+     */
+    protected $compilerSequence;
 
     /**
      * Magic method objects
@@ -400,7 +400,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerNodeGroups(array $nodeGroups = [])
     {
-        foreach($nodeGroups as $nodeGroup => $nodeTypes) {
+        foreach ($nodeGroups as $nodeGroup => $nodeTypes) {
             $this->registerNodeGroup($nodeTypes, $nodeGroup);
         }
         return $this;
@@ -414,7 +414,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerNodeGroup(array $nodeTypes, $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        foreach($nodeTypes as $nodeType) {
+        foreach ($nodeTypes as $nodeType) {
             $this->registerNodeType($nodeType, $nodeGroup);
         }
         return $this;
@@ -451,7 +451,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerPlugins(array $plugins)
     {
-        foreach($plugins as $name => $plugin) {
+        foreach ($plugins as $name => $plugin) {
             $this->registerPlugin($name, $plugin);
         }
 
@@ -747,7 +747,7 @@ class Lexicon implements LexiconInterface
      */
     public function registerBooleanTestTypes(array $booleanTestTypes)
     {
-        foreach($booleanTestTypes as $type => $class) {
+        foreach ($booleanTestTypes as $type => $class) {
             $this->registerBooleanTestType($type, $class);
         }
         return $this;
@@ -761,7 +761,7 @@ class Lexicon implements LexiconInterface
      */
     public function addMagicMethodClasses(array $magicMethodClasses)
     {
-        foreach($magicMethodClasses as $magicMethodClass) {
+        foreach ($magicMethodClasses as $magicMethodClass) {
             $this->addMagicMethodClass($magicMethodClass);
         }
         return $this;
@@ -800,4 +800,13 @@ class Lexicon implements LexiconInterface
         return (is_object($obj) and array_intersect(array_values(class_parents($obj)), $this->magicMethodClasses));
     }
 
+    /**
+     * Get compiler sequence
+     *
+     * @return mixed
+     */
+    public function getCompilerSquence()
+    {
+        return $this->compilerSequence;
+    }
 }

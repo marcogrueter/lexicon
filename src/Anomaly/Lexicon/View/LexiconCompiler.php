@@ -1,6 +1,7 @@
 <?php namespace Anomaly\Lexicon\View;
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\View\CompilerInterface;
 use Anomaly\Lexicon\Node\NodeFactory;
 
 /**
@@ -8,7 +9,7 @@ use Anomaly\Lexicon\Node\NodeFactory;
  *
  * @package Anomaly\Lexicon\View
  */
-class LexiconCompiler 
+class LexiconCompiler implements CompilerInterface
 {
 
     /**

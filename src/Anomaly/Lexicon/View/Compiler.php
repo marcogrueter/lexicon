@@ -2,11 +2,16 @@
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\CompilerInterface;
-use Anomaly\Lexicon\Node\NodeFactory;
+use Anomaly\Lexicon\Contract\View\CompilerSequenceInterface;
 use Anomaly\Lexicon\Stub\LexiconStub;
 use Illuminate\View\Compilers\Compiler as BaseCompiler;
 
-class Compiler extends BaseCompiler implements CompilerInterface
+/**
+ * Class Compiler
+ *
+ * @package Anomaly\Lexicon\View
+ */
+class Compiler extends BaseCompiler implements CompilerSequenceInterface
 {
     /**
      * @var LexiconInterface
@@ -159,7 +164,8 @@ class Compiler extends BaseCompiler implements CompilerInterface
             $string = $this->escapePhp($string);
         }
 
-        foreach($this->getCompilerSequence() as $compiler) {
+        /** @var CompilerInterface $compiler */
+        foreach ($this->getCompilerSequence() as $compiler) {
             $string = $compiler->compile($string);
         }
 
@@ -173,7 +179,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
     {
         $compilers = [];
 
-        foreach($this->sequence as $class) {
+        foreach ($this->getLexicon()->getFoundation()->getCompilerSequence() as $class) {
             $compilers[] = new $class($this->getLexicon());
         }
 

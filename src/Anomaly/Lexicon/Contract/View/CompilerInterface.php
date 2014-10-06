@@ -1,20 +1,14 @@
 <?php namespace Anomaly\Lexicon\Contract\View;
 
-use Anomaly\Lexicon\Contract\LexiconInterface;
-use Illuminate\View\Compilers\CompilerInterface as BaseCompilerInterface;
-
-interface CompilerInterface extends BaseCompilerInterface
+interface CompilerInterface
 {
 
     /**
-     * @param $lexicon LexiconInterface
-     * @return mixed
+     * Compile string
+     *
+     * @param $string
+     * @return string
      */
-    public function setLexicon(LexiconInterface $lexicon);
-
-    /**
-     * @return LexiconInterface
-     */
-    public function getLexicon();
+    public function compile($string);
 
 }
