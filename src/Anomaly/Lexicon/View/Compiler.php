@@ -96,14 +96,46 @@ class Compiler extends BaseCompiler implements CompilerInterface
 
         $compiledPath = $this->getCompiledPath($path);
 
+        if ($this->getLexicon()->isParsePath($path)) {
+
+            $this->compileFromString($path, $compiledPath);
+
+        } else {
+
+            $this->compileFromFile($path, $compiledPath);
+
+        }
+
+    }
+
+    public function compileFromFile($path, $compiledPath)
+    {
         $this->setHash(substr(strrchr($compiledPath, '/'), 1));
 
-        $nodeGroup = $this->getLexicon()->getFoundation()->getNodeFactory()->getNodeGroupFromPath($this->getPath());
+        $nodeGroup = $this->getLexicon()->getFoundation()->getNodeFactory()->getNodeGroupFromPath($path);
 
-        $contents = $this->compileView($this->compileString($this->files->get($path), $nodeGroup));
+        $contents = $this->compileString($this->files->get($path), $nodeGroup);
 
         if (!is_null($this->cachePath)) {
-            $this->files->put($this->getCompiledPath($path), $contents);
+            $this->files->put($compiledPath, $contents);
+        }
+    }
+
+    /**
+     * Compile the given string parse-able contents.
+     *
+     * @param $content
+     * @internal param string $value
+     * @return string
+     */
+    public function compileFromString($content, $compiledPath)
+    {
+        $this->setHash(substr(strrchr($compiledPath, '/'), 1));
+
+        $contents = $this->compileString($content);
+
+        if (!is_null($this->cachePath)) {
+            $this->files->put($compiledPath, $contents);
         }
     }
 
@@ -119,7 +151,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
             $content = $this->escapePhp($content);
         }
 
-        return $this->getRootNode($content, $nodeGroup)->compile();
+        return $this->compileView($this->getRootNode($content, $nodeGroup)->compile());
     }
 
     /**
@@ -130,28 +162,7 @@ class Compiler extends BaseCompiler implements CompilerInterface
      */
     public function getRootNode($content = '', $nodeGroup = NodeFactory::DEFAULT_NODE_GROUP)
     {
-        // TODO: Where to set and get node group
         return $this->getLexicon()->getFoundation()->getNodeFactory()->getRootNode($content, $nodeGroup);
-    }
-
-    /**
-     * Compile the given string parse-able contents.
-     *
-     * @param $content
-     * @internal param string $value
-     * @return string
-     */
-    public function compileParse($content)
-    {
-        $compiledPath = $this->getCompiledPath($content);
-
-        $this->setHash(substr(strrchr($compiledPath, '/'), 1));
-
-        $contents = $this->compileView($this->compileString($content));
-
-        if (!is_null($this->cachePath)) {
-            $this->files->put($this->getCompiledPath($content), $contents);
-        }
     }
 
     /**
@@ -203,6 +214,29 @@ class Compiler extends BaseCompiler implements CompilerInterface
         ];
 
         return str_replace(array_keys($data), $data, $this->getViewTemplate());
+    }
+
+    /**
+     * Is expired
+     *
+     * @param string $path
+     * @return bool
+     */
+    public function isExpired($path)
+    {
+        $lexicon = $this->getLexicon();
+
+        $foundation = $lexicon->getFoundation();
+
+        if ($foundation->isDebug()) {
+            return true;
+        }
+
+        if ($lexicon->isParsePath($path) and $this->isNotParsed($path)) {
+            return true;
+        }
+
+        return parent::isExpired($path);
     }
 
     /**

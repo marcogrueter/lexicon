@@ -21,46 +21,6 @@ class Engine extends CompilerEngine implements EngineInterface
     protected $compiler;
 
     /**
-     * Get the evaluated contents of the view.
-     *
-     * @param  string $__path
-     * @param  array  $__data
-     * @return string
-     */
-    public function get($__path, array $__data = array())
-    {
-        $this->lastCompiled[] = $__path;
-
-        /** @var LexiconInterface $lexicon */
-        $lexicon = $this->getLexicon();
-
-        $foundation = $this->getLexicon()->getFoundation();
-
-        $compiler = $this->getCompiler();
-
-        // If this given view has expired, which means it has simply been edited since
-        // it was last compiled, we will re-compile the views so we can evaluate a
-        // fresh copy of the view. We'll pass the compiler the path of the view.
-
-        if ($lexicon->isParsePath($__path) and ($foundation->isDebug() or $compiler->isNotParsed($__path))) {
-            $compiler->compileParse($__path);
-        } elseif (!$lexicon->isParsePath($__path) and ($foundation->isDebug() or $compiler->isExpired($__path))) {
-            $compiler->compile($__path);
-        }
-
-        $compiled = $compiler->getCompiledPath($__path);
-
-        // Once we have the path to the compiled file, we will evaluate the paths with
-        // typical PHP just like any other templates. We also keep a stack of views
-        // which have been rendered for right exception messages to be generated.
-        $results = $this->evaluatePath($compiled, $__data);
-
-        array_pop($this->lastCompiled);
-
-        return $results;
-    }
-
-    /**
      * Get the evaluated contents of the view at the given path.
      *
      * @param  string $__path
