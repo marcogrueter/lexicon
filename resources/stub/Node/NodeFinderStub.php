@@ -19,38 +19,28 @@ class NodeFinderStub
         $lexicon     = LexiconStub::get();
         $nodeFactory = $lexicon->getFoundation()->getNodeFactory();
 
-        $if = $nodeFactory->make(new Conditional($lexicon),[],null,0,0,'if');
+        $if = $nodeFactory->make(new Conditional($lexicon));
         $if->setName('if');
 
-        $if2 = $nodeFactory->make(new Conditional($lexicon),[],null,0,0,'if');
+        $if2 = $nodeFactory->make(new Conditional($lexicon));
         $if2->setName('if');
 
-        $elseif = $nodeFactory->make(new Conditional($lexicon),[],null,0,0,'elseif');
+        $elseif = $nodeFactory->make(new Conditional($lexicon));
         $elseif->setName('elseif');
 
-        $endif = $nodeFactory->make(new ConditionalEndif($lexicon),[],null,0,0,'endif');
+        $endif = $nodeFactory->make(new ConditionalEndif($lexicon));
         $endif->setName('endif');
 
         $match = [
             ['content', 25]
         ];
 
-        $schoolName = $nodeFactory->make(new NodeStub($lexicon),$match,null,0,0,'name');
+        $schoolName = $nodeFactory->make(new NodeStub($lexicon),$match);
         $schoolName->setName('name');
 
-        $books = $nodeFactory->make(new Block($lexicon),[],null,0,0,'books');
+        $books = $nodeFactory->make(new Block($lexicon));
         $books->setName('books');
         $books->setItemAlias('book');
-
-        $books->setCurrentContent(
-            '
-        Anomaly\Lexicon\Node\NodeType\Conditional__if__if__
-        Anomaly\Lexicon\Node\NodeType\Conditional__if2__if2__
-        Anomaly\Lexicon\Node\NodeType\Conditional__elseif__elseif__
-        Anomaly\Lexicon\Node\NodeType\ConditionalEndif__endif__enif__
-        Anomaly\Lexicon\Stub\Node\Node__name__name__
-        '
-        );
 
         $books->addChild($schoolName);
         $books->addChild($if);
@@ -58,12 +48,14 @@ class NodeFinderStub
         $books->addChild($elseif);
         $books->addChild($endif);
 
-        $libraries = $nodeFactory->make(new Block($lexicon),[],null,0,0,'libraries');
+        dd($books->getChildren());
+
+        $libraries = $nodeFactory->make(new Block($lexicon));
         $libraries->addChild($books);
         $libraries->setName('libraries');
         $libraries->setItemAlias('library');
 
-        $schools = $nodeFactory->make(new Block($lexicon),[],null,0,0,'schools');
+        $schools = $nodeFactory->make(new Block($lexicon));
         $schools->addChild($libraries);
         $schools->setName('schools');
         $schools->setItemAlias('school');
