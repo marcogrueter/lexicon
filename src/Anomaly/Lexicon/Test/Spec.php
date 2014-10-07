@@ -45,10 +45,10 @@ class Spec extends ObjectBehavior
      * @param array $nodeArray
      * @return bool
      */
-    public function hasNodes(array $nodeArray)
+    public function hasNodes($nodeArray)
     {
         $hasNodes = true;
-        if (is_array($nodeArray)) {
+        if (is_array($nodeArray) or $nodeArray instanceof \IteratorAggregate) {
             foreach ($nodeArray as $node) {
                 if (!($node instanceof NodeInterface)) {
                     $hasNodes = false;
