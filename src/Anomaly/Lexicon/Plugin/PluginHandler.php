@@ -3,6 +3,7 @@
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginInterface;
+use Anomaly\Lexicon\Contract\Support\ContainerInterface;
 
 /**
  * Class PluginHandler
@@ -22,6 +23,10 @@ class PluginHandler implements PluginHandlerInterface
      */
     protected $plugins = [];
 
+    /**
+     * @var string
+     */
+    protected $bindingPrefix = 'anomaly.lexicon.plugin.';
 
     /**
      * Set lexicon
@@ -41,6 +46,14 @@ class PluginHandler implements PluginHandlerInterface
     public function getLexicon()
     {
         return $this->lexicon;
+    }
+
+    /**
+     * Get binding
+     */
+    public function getBinding($name)
+    {
+        return $this->bindingPrefix . $name;
     }
 
     /**
@@ -66,8 +79,30 @@ class PluginHandler implements PluginHandlerInterface
      */
     public function registerPlugin($name, $class)
     {
+        /** @var ContainerInterface $container */
+        $container            = $this->getLexicon()->getContainer();
         $this->plugins[$name] = $class;
+
+        $container->bindShared(
+            $this->getBinding($name),
+            function () use ($class, $container) {
+                return new $class($container);
+            }
+        );
+
         return $this;
+    }
+
+    /**
+     * @param PluginInterface $plugin
+     */
+    public function registerPluginInstance(PluginInterface $plugin)
+    {
+        /** @var ContainerInterface $container */
+        $container            = $this->getLexicon()->getContainer();
+        $name                 = $plugin->getPluginName();
+        $this->plugins[$name] = get_class($plugin);
+        $container->instance($this->getBinding($name), $plugin);
     }
 
     /**
@@ -78,15 +113,10 @@ class PluginHandler implements PluginHandlerInterface
      */
     public function get($name)
     {
-        $parts = explode($this->getLexicon()->getScopeGlue(), $name);
-
-        $plugin = null;
-
-        if (count($parts) > 1) {
-            $plugin = !empty($this->plugins[$parts[0]]) ? new $this->plugins[$parts[0]] : null;
-        }
-
-        return $plugin;
+        $lexicon   = $this->getLexicon();
+        $container = $lexicon->getContainer();
+        $name      = explode($lexicon->getScopeGlue(), $name)[0];
+        return isset($this->plugins[$name]) ? $container[$this->getBinding($name)] : null;
     }
 
 
@@ -115,12 +145,10 @@ class PluginHandler implements PluginHandlerInterface
     public function isParse($name)
     {
         $isParse = false;
-
         if ($plugin = $this->get($name)) {
-            $parts   = explode($this->getLexicon()->getScopeGlue(), $name);
-            $isParse = $plugin->isParse($parts[1]);
+            $method  = explode($this->getLexicon()->getScopeGlue(), $name)[1];
+            $isParse = $plugin->isParse($method);
         }
-
         return $isParse;
     }
 
@@ -133,12 +161,10 @@ class PluginHandler implements PluginHandlerInterface
     public function isFilter($name)
     {
         $isFilter = false;
-
         if ($plugin = $this->get($name)) {
-            $parts    = explode($this->getLexicon()->getScopeGlue(), $name);
-            $isFilter = $plugin->isFilter($parts[1]);
+            $method   = explode($this->getLexicon()->getScopeGlue(), $name)[1];
+            $isFilter = $plugin->isFilter($method);
         }
-
         return $isFilter;
     }
 
