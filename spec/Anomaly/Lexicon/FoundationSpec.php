@@ -49,8 +49,6 @@ class FoundationSpec extends Spec
         $this->registerEngineResolver();
         $this->registerViewFinder();
         $this->registerFactory();
-        $this->registerSessionStore();
-        $this->registerSessionBinder($this->sessionHasErrors());
         $this->register($container)->shouldHaveType('Anomaly\Lexicon\Foundation');
         $container
             ->make('anomaly.lexicon')
@@ -102,37 +100,12 @@ class FoundationSpec extends Spec
         $this->getConfig('lexicon::nodeGroups')->shouldReturn([1, 2 ,3]);
     }
 
-    function it_can_get_session_driver()
-    {
-        $this->getSessionDriver()->shouldReturn('array');
-    }
-
     function it_can_get_storage_path()
     {
         $container = $this->getContainer();
         $container['path.storage'] = '../some/folder';
         $this->getLexicon()->setStandalone(false);
         $this->getStoragePath()->shouldBeString();
-    }
-    
-    function it_can_get_session_store()
-    {
-        $this->getSessionStore();
-    }
-
-    function it_can_check_if_session_has_errors()
-    {
-        $this->sessionHasErrors()->shouldBeBoolean();
-    }
-
-    function it_can_register_session_binder(Container $container)
-    {
-        $this->registerSessionBinder($container);
-    }
-
-    function it_can_register_session_binder_when_session_has_errors(Container $container)
-    {
-        $this->registerSessionBinder($container, true);
     }
 
     function it_can_get_view_paths()
