@@ -74,8 +74,8 @@ class Foundation
         $this->registerEngineResolver();
         $this->registerViewFinder();
         $this->registerFactory();
-        $this->registerSessionStore();
-        $this->registerSessionBinder($this->sessionHasErrors());
+/*        $this->registerSessionStore();
+        $this->registerSessionBinder($this->sessionHasErrors());*/
 
         return $this;
     }
@@ -387,7 +387,7 @@ class Foundation
 
         if ($this->isStandalone()) {
 
-            $this->getConfigRepository()->set('session.driver', 'array');
+/*            $this->getConfigRepository()->set('session.driver', 'array');
 
             $this->bindShared(
                 'session',
@@ -402,10 +402,9 @@ class Foundation
                 'session.store',
                 function () use ($container) {
                     $session = $container['session'];
-                    /** @var SessionManager $session */
                     return $session->driver();
                 }
-            );
+            );*/
         }
     }
 
