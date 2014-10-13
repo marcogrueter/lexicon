@@ -2,6 +2,7 @@
 
 use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Stub\ArrayAccessObject;
+use Anomaly\Lexicon\Stub\MagicMethodObjectParent;
 use Anomaly\Lexicon\Stub\SimpleObject;
 use Anomaly\Lexicon\Stub\StringObject;
 use Anomaly\Lexicon\Stub\TraversableObject;
@@ -189,6 +190,12 @@ class FactorySpec extends Spec
         $this->booleanTest(5, 3, '>')->shouldBe(true);
     }
 
+    function it_can_get_a_magic_method_object_as_property()
+    {
+        $this->getLexicon()->addMagicMethodClass('Anomaly\Lexicon\Stub\MagicMethodObject');
+        $this->variable(['something' => new MagicMethodObjectParent()], 'something.magic_method_object');
+    }
+    
     /**
      * Rendering views examples
      * The test views are stored in the resources/views folder
@@ -337,7 +344,5 @@ Something.
             ->make('test::include')
             ->shouldRender('Original content. This is some sample partial content.');
     }
-
-    
 
 }

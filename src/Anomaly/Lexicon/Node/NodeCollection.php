@@ -1,5 +1,6 @@
 <?php namespace Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -12,18 +13,12 @@ class NodeCollection extends Collection
 {
 
     /**
-     * Get a node by id
-     *
-     * @param $id
+     * @param mixed $id
      * @return mixed|null
      */
     public function getById($id)
     {
-        return $this->first(
-            function ($offset) use ($id) {
-                return ($this->get($offset)->getId() === $id);
-            }
-        );
+        return $this->offsetExists($id) ? $this->get($id) : null;
     }
 
     /**
@@ -31,13 +26,13 @@ class NodeCollection extends Collection
      */
     public function getByIds(array $ids)
     {
-        return array_values(
-            $this->filter(
-                function ($node) use ($ids) {
-                    return in_array($node->getId(), $ids);
-                }
-            )->toArray()
-        );
+        $nodes = [];
+        foreach($ids as $id) {
+            if ($node = $this->getById($id)) {
+                $nodes[$id] = $node;
+            }
+        }
+        return new static($nodes);
     }
 
 }

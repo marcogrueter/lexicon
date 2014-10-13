@@ -4,6 +4,7 @@ use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginInterface;
 use Anomaly\Lexicon\Contract\Support\ContainerInterface;
+use Anomaly\Lexicon\Stub\LexiconStub;
 
 /**
  * Class PluginHandler
@@ -82,14 +83,13 @@ class PluginHandler implements PluginHandlerInterface
         /** @var ContainerInterface $container */
         $container            = $this->getLexicon()->getContainer();
         $this->plugins[$name] = $class;
-
-        $container->bindShared(
-            $this->getBinding($name),
-            function () use ($class, $container) {
-                return new $class($container);
-            }
+        $container->bind(
+            'anomaly.lexicon.plugin' . $name,
+            function () use ($class) {
+                return new $class;
+            },
+            true
         );
-
         return $this;
     }
 
@@ -102,7 +102,7 @@ class PluginHandler implements PluginHandlerInterface
         $container            = $this->getLexicon()->getContainer();
         $name                 = $plugin->getPluginName();
         $this->plugins[$name] = get_class($plugin);
-        $container->instance($this->getBinding($name), $plugin);
+        $container->instance($this->plugins[$name], $plugin);
     }
 
     /**
@@ -116,7 +116,7 @@ class PluginHandler implements PluginHandlerInterface
         $lexicon   = $this->getLexicon();
         $container = $lexicon->getContainer();
         $name      = explode($lexicon->getScopeGlue(), $name)[0];
-        return isset($this->plugins[$name]) ? $container[$this->getBinding($name)] : null;
+        return isset($this->plugins[$name]) ? $container[$this->plugins[$name]] : null;
     }
 
 
@@ -166,6 +166,11 @@ class PluginHandler implements PluginHandlerInterface
             $isFilter = $plugin->isFilter($method);
         }
         return $isFilter;
+    }
+
+    public static function stub()
+    {
+        return (new static())->setLexicon(LexiconStub::get());
     }
 
 }

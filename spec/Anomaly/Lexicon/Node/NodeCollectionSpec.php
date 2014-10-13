@@ -21,13 +21,9 @@ class NodeCollectionSpec extends Spec
 
     function it_can_get_node_by_id(Node $node1, Node2 $node2, Node3 $node3)
     {
-        $this->push($node1);
-        $this->push($node2);
-        $this->push($node3);
-
-        $node1->getId()->willReturn('stub-id-1');
-        $node2->getId()->willReturn('stub-id-2');
-        $node3->getId()->willReturn('stub-id-3');
+        $this->put('stub-id-1', $node1);
+        $this->put('stub-id-2', $node2);
+        $this->put('stub-id-3', $node3);
 
         $this
             ->getById('stub-id-3')
@@ -36,13 +32,9 @@ class NodeCollectionSpec extends Spec
     
     function it_can_get_multiple_nodes_by_id(Node $node1, Node2 $node2, Node3 $node3)
     {
-        $this->push($node1);
-        $this->push($node2);
-        $this->push($node3);
-
-        $node1->getId()->willReturn('stub-id-1');
-        $node2->getId()->willReturn('stub-id-2');
-        $node3->getId()->willReturn('stub-id-3');
+        $this->put('stub-id-1', $node1);
+        $this->put('stub-id-2', $node2);
+        $this->put('stub-id-3', $node3);
 
         $this->getByIds(['stub-id-1', 'stub-id-2'])->shouldHaveCount(2);
     }

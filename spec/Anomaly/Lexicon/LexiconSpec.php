@@ -114,10 +114,10 @@ class LexiconSpec extends Spec
     function it_can_add_parse_path()
     {
         $this->addStringTemplate('{{ foo }}');
-        $this->getParsePaths()->shouldHaveKey('{{ foo }}');
+        $this->getStringTemplates()->shouldHaveKey('{{ foo }}');
     }
 
-    function it_can_check_if_path_is_parse_able()
+    function it_can_check_if_path_is_string_template()
     {
         $this->addStringTemplate('{{ bar }}');
         $this->isStringTemplate('{{ bar }}')->shouldBe(true);

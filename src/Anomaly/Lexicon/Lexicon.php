@@ -58,7 +58,7 @@ class Lexicon implements LexiconInterface
     /**
      * @var array
      */
-    protected $parsePaths = [];
+    protected $stringTemplates = [];
 
     /**
      * Debug mode
@@ -509,36 +509,36 @@ class Lexicon implements LexiconInterface
     }
 
     /**
-     * Add parse path
+     * Add string template
      *
      * @param $path string
      * @return $this
      */
     public function addStringTemplate($path)
     {
-        $this->parsePaths[$path] = $path;
+        $this->stringTemplates[$path] = $path;
         return $this;
     }
 
     /**
-     * Get parse paths
+     * Get string templates
      *
      * @return array
      */
-    public function getParsePaths()
+    public function getStringTemplates()
     {
-        return $this->parsePaths;
+        return $this->stringTemplates;
     }
 
     /**
-     * Is parse path
+     * Is string template
      *
      * @param $path
      * @return bool
      */
-    public function isStringTemplate($path)
+    public function isStringTemplate($string)
     {
-        return in_array($path, $this->parsePaths);
+        return in_array($string, $this->getStringTemplates());
     }
 
     /**
@@ -797,7 +797,18 @@ class Lexicon implements LexiconInterface
      */
     public function isMagicMethodObject($obj)
     {
-        return (is_object($obj) and array_intersect(array_values(class_parents($obj)), $this->magicMethodClasses));
+        $classes = [];
+
+        if (is_object($obj)) {
+            $class = get_class($obj);
+            $parents = class_parents($obj);
+            $classes = array_intersect(
+                array_values(array_merge($parents, [$class])),
+                $this->getMagicMethodClasses()
+            );
+        }
+
+        return !empty($classes);
     }
 
     /**

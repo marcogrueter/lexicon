@@ -18,7 +18,6 @@ use Illuminate\Config\Repository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Session\SessionInterface;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\ViewErrorBag;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -217,9 +216,9 @@ class Foundation
             function () {
 
                 $nodeFactory = new NodeFactory(
-                    $this->getLexicon(),
+                    $lexicon = $this->getLexicon(),
                     new NodeCollection(),
-                    new NodeExtractor()
+                    new NodeExtractor($lexicon)
                 );
 
                 $nodeGroups = array_merge(
@@ -612,8 +611,8 @@ class Foundation
 
         $storagePath = __DIR__ . '/../../../resources/storage/views';
 
-        if (!$this->isStandalone() and $container['path.storage']) {
-            $storagePath = $container['path.storage'] . '/framework/views';
+        if (!$this->isStandalone() and $this->getConfig('view.compiled')) {
+            $storagePath = $this->getConfig('view.compiled');
         }
 
         if ($override = $this->getLexicon()->getStoragePath()) {
@@ -686,9 +685,12 @@ class Foundation
      */
     public function getCompilerSequence()
     {
-        return $this->getLexicon()->getCompilerSequence() ?: $this->getConfig('lexicon::compilers', [
+        return $this->getLexicon()->getCompilerSequence() ?: $this->getConfig(
+            'lexicon::compilerSequence',
+            [
                 'Anomaly\Lexicon\View\LexiconCompiler'
-            ]);
+            ]
+        );
     }
 
     /**

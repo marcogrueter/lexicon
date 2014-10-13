@@ -1,7 +1,9 @@
 <?php namespace Anomaly\Lexicon\Node;
 
+use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
+use Anomaly\Lexicon\Stub\LexiconStub;
 
 /**
  * Class NodeExtractor
@@ -26,9 +28,36 @@ class NodeExtractor
      */
     const CLOSING_TAG = 'closing';
 
+    /**
+     * @var array
+     */
     protected $extracted = [];
 
+    /**
+     * @var array
+     */
     protected $injected = [];
+
+    /**
+     * @var LexiconInterface
+     */
+    private $lexicon;
+
+    /**
+     * @param LexiconInterface $lexicon
+     */
+    public function __construct(LexiconInterface $lexicon)
+    {
+        $this->lexicon = $lexicon;
+    }
+
+    /**
+     * @return LexiconInterface
+     */
+    public function getLexicon()
+    {
+        return $this->lexicon;
+    }
 
     /**
      * Extract parent content
@@ -120,6 +149,8 @@ class NodeExtractor
     {
         if ($child instanceof BlockInterface and $source = $child->compileOpeningTag()) {
 
+
+
             $content = preg_replace(
                 $this->search($child->getExtractionId(static::OPENING_TAG)),
                 $child->validate() ? $this->php($source) : null,
@@ -160,9 +191,17 @@ class NodeExtractor
             $source = $this->php($child->compile());
         }
 
+        if (!$validate = $child->validate()) {
+            $this
+                ->getLexicon()
+                ->getFoundation()
+                ->getNodeFactory()
+                ->getCollection()->forget($child->getId());
+        }
+
         $content = preg_replace(
             $this->search($child->getExtractionId()),
-            $child->validate() ? $source : null,
+            $source,
             $parent->getCurrentContent(),
             self::LIMIT
         );
@@ -193,6 +232,14 @@ class NodeExtractor
             $source = '<?php ' . $source . ' ?>';
         }
         return $source;
+    }
+
+    /**
+     * Stub for testing with PHPSpec
+     */
+    public static function stub()
+    {
+        return new static(LexiconStub::get());
     }
 
 }

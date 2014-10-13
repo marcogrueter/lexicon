@@ -18,50 +18,13 @@ class ConditionalValidator extends NodeValidator
      */
     public function isValid()
     {
-        return $this->{'isValid' . $this->getNode()->getConstructName()}();
+        return true; //$this->{'validate' . $this->getNode()->getConstructName()}();
     }
 
-    /**
-     * Is valid if
-     *
-     * @return bool
-     */
-    public function isValidIf()
+    public function validate()
     {
-        return true;//$this->isEqualCount('if', 'endif');
+        return true;
     }
 
-    /**
-     * Is valid elseif
-     *
-     * @return bool
-     */
-    public function isValidElseif()
-    {
-        return true;//$this->isEqualCount('if', 'endif') and $this->isAfter('if');
-    }
-
-    /**
-     * Is valid else
-     *
-     * @return bool
-     */
-    public function isValidElse()
-    {
-        return true;//$this->isEqualCount('if', 'endif');
-    }
-
-    /**
-     * Is valid endif
-     *
-     * @return bool
-     */
-    public function isValidEndif()
-    {
-        return true;//$this->isEqualCount('if', 'endif');
-            /* and $this->isAfterExisting('if') and
-            $this->isAfter('elseif') and
-            $this->isAfter('else')*/
-    }
 
 } 

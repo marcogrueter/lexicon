@@ -151,7 +151,7 @@ class NodeFactory
      */
     public function addNode(NodeInterface $node)
     {
-        $this->getCollection()->push($node);
+        $this->getCollection()->put($node->getId(), $node);
         return $this;
     }
 

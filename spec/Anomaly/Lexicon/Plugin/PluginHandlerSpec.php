@@ -15,9 +15,9 @@ use Prophecy\Argument;
 class PluginHandlerSpec extends ObjectBehavior
 {
 
-    function let(LexiconInterface $lexicon)
+    function let()
     {
-        $this->setLexicon($lexicon);
+        $this->beConstructedThrough('stub');
     }
     
     function it_is_initializable()

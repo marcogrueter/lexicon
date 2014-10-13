@@ -14,6 +14,11 @@ use Anomaly\Lexicon\Test\Spec;
 class NodeExtractorSpec extends Spec
 {
 
+    function let()
+    {
+        $this->beConstructedThrough('stub');
+    }
+
     function it_is_initializable()
     {
         $this->shouldHaveType('Anomaly\Lexicon\Node\NodeExtractor');

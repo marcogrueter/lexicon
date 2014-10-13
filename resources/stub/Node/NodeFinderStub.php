@@ -48,7 +48,7 @@ class NodeFinderStub
         $books->addChild($elseif);
         $books->addChild($endif);
 
-        dd($books->getChildren());
+        //dd($books->getChildren());
 
         $libraries = $nodeFactory->make(new Block($lexicon));
         $libraries->addChild($books);
@@ -59,6 +59,7 @@ class NodeFinderStub
         $schools->addChild($libraries);
         $schools->setName('schools');
         $schools->setItemAlias('school');
+        $schoolName->addChild($schools);
 
         $root = $nodeFactory->make(new Block($lexicon));
         $root->addChild($schools);

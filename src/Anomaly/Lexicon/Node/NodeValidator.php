@@ -42,7 +42,14 @@ class NodeValidator implements ValidatorInterface
         /** @var NodeInterface $node */
         if ($siblings = $this->getNode()->getSiblings()) {
             foreach ($siblings as $node) {
-                if ($node->getName() == $name) {
+
+                if (method_exists($node, 'getConstructName')) {
+                    $nodeName = $node->getConstructName();
+                } else {
+                    $nodeName = $node->getName();
+                }
+
+                if ($nodeName == $name) {
                     $count++;
                 }
             }
@@ -68,7 +75,9 @@ class NodeValidator implements ValidatorInterface
      */
     public function hasSiblings($name)
     {
-        return count($this->getNode()->getSiblings()) > 0;
+        $siblings = $this->getNode()->getSiblings();
+
+        return count($siblings);
     }
 
     /**

@@ -141,6 +141,7 @@ class NodeFactorySpec extends Spec
     {
         $nodeType->setId($id = 'F4pwOfe4eAaTJxFf483ZsQnFL3ALqXjl')->shouldBeCalled();
         $nodeType->incrementDepth()->willReturn(true);
+        $nodeType->getId()->shouldBeCalled();
         $nodeType->setParentId(null)->shouldBeCalled();
         $nodeType->setMatch([])->shouldBeCalled();
         $nodeType->setOffset(0)->shouldBeCalled();

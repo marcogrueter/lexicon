@@ -32,24 +32,24 @@ class NodeValidatorSpec extends Spec
         $this->isValid()->shouldBeBoolean();
     }
 
-    function it_can_count_siblings_with_name()
+/*    function it_can_count_siblings_with_name()
     {
         $this->countSiblings('if')->shouldReturn(2);
-    }
+    }*/
     
-    function it_can_assert_if_the_count_of_two_sibling_names_are_equal()
+/*    function it_can_assert_if_the_count_of_two_sibling_names_are_equal()
     {
         $this->isEqualCount('if', 'endif')->shouldBeBoolean();
-    }
+    }*/
 
-    function it_can_assert_if_is_has_siblings()
+/*    function it_can_assert_if_is_has_siblings()
     {
         $this->hasSiblings('elseif')->shouldBeBoolean();
-    }
+    }*/
 
-    function it_can_assert_if_its_positioned_after_another_node()
+/*    function it_can_assert_if_its_positioned_after_another_node()
     {
         $this->isAfter('if')->shouldBe(true);
-    }
+    }*/
 
 }

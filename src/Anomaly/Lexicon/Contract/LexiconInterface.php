@@ -153,7 +153,7 @@ interface LexiconInterface
      *
      * @return array
      */
-    public function getParsePaths();
+    public function getStringTemplates();
 
     /**
      * @param $path
