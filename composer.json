@@ -12,7 +12,7 @@
         "phpspec/phpspec": "dev-master"
     },
     "suggest": {
-        "illuminate/view": "Require illuminate/view ~5.0 if you are using this package outside of Laravel."
+        "illuminate/view": "Require illuminate/view ~5.0 if you are using this package outside of Laravel.",
         "illuminate/config": "Require illuminate/config ~5.0 if you are using this package outside of Laravel."
     },
     "config": {
