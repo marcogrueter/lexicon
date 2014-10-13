@@ -9,5 +9,6 @@ php:
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction --dev
+  - composer require illuminate/view:5.0
 
 script: bin/phpspec run -v
