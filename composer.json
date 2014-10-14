@@ -1,6 +1,9 @@
 {
     "name": "anomaly/lexicon",
-    "description": "An expressive template engine with extensible vocabulary.",
+    "description": "An expressive template engine.",
+    "keywords": ["template","engine","parser"],
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Osvaldo Brignoni",
