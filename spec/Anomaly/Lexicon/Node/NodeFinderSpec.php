@@ -70,11 +70,11 @@ class NodeFinderSpec extends Spec
         $this->getAliasPrefix()->shouldReturn('.alias.');
     }
 
-    function it_can_get_node_by_alias()
+    function it_can_get_block_node_by_alias()
     {
         $this->getNode()->setName('.library.foo.bar.baz');
 
-        $node = $this->getNodeByAlias();
+        $node = $this->getParentBlockByAlias();
         $node->shouldHaveType('Anomaly\Lexicon\Node\NodeType\Block');
         $node->getName()->shouldReturn('libraries');
     }

@@ -49,6 +49,7 @@ class Spec extends ObjectBehavior
     public function stringEquals($subject, $value)
     {
         if (!($equals = ($subject === $value))) {
+            $subject = str_replace("'", "\'",$subject);
             echo 'Actual: ' . "'{$subject}'" . PHP_EOL;
         }
         return $equals;

@@ -1,7 +1,5 @@
 <?php namespace Anomaly\Lexicon\Node;
 
-use Anomaly\Lexicon\Attribute\AttributeNode;
-use Anomaly\Lexicon\Attribute\SplitterNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
@@ -63,24 +61,21 @@ class NodeFinder
     {
         $source = '$__data';
 
-        $node = $this->getNode();
-
-        if ($this->hasRootAliasPrefix()) {
-            $source = '$__data';
-        } elseif ($node instanceof AttributeNode) {
-            if ($node = $this->getAttributeNodeParent()) {
-                $source = $node->getItemSource();
-            }
-        } elseif (!$this->isChildOfRoot()) {
-            if ($node = $this->getNodeByAlias()) {
-                $source = $node->getItemSource();
-            } elseif ($parent = $this->getParent()) {
-                $source = $parent->getItemSource();
-            }
-        }
-
-        if ($node and ($node->getId() == $this->getNode()->getId() or $node->isRoot())) {
-            $source = '$__data';
+        if (
+            (
+                $this->hasAliasPrefix()
+                and !$this->hasRootAliasPrefix() and
+                $node = $this->getParentBlockByAlias()
+                and !$node->isRoot()
+            )
+            or
+            (
+                !$this->hasRootAliasPrefix()
+                and $node = $this->getParentBlock()
+                and !$node->isRoot()
+            )
+        ) {
+            $source = $node->getItemSource();
         }
 
         return $source;
@@ -134,11 +129,34 @@ class NodeFinder
      * @param $alias
      * @return NodeInterface|null
      */
-    public function getNodeByAlias()
+    public function getParentBlockByAlias()
     {
         $node = $this->getNode()->getParent();
 
-        while ($node and $node->getItemAlias() !== $this->getAlias() and $node->getParent()) {
+        while ($node->getParent() and $node->getItemAlias() !== $this->getAlias()) {
+            $node = $node->getParent();
+        }
+
+        if ($node and $node->isRoot()) {
+            $node = $this->getNode()->getParent();
+        }
+
+        if ($node and (
+                !($node instanceof BlockInterface) or
+                $node->getId() === $this->getNode()->getId()
+            )
+        ) {
+            $node = null;
+        }
+
+        return $node;
+    }
+
+    public function getParentBlock()
+    {
+        $node = $this->getNode()->getParent();
+
+        while ($node and !($node instanceof BlockInterface)) {
             $node = $node->getParent();
         }
 
@@ -152,7 +170,7 @@ class NodeFinder
     public function getAttributeNodeParent()
     {
         $node = $this->getNode()->getParent();
-        while (!($node instanceof BlockInterface) and $node->getParent()) {
+        while ($node and !($node instanceof BlockInterface) and !$node->isRoot()) {
             $node = $node->getParent();
         }
         return $node;

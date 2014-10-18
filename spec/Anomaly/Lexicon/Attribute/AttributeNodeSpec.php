@@ -138,7 +138,7 @@ class AttributeNodeSpec extends Spec
             ->setContent('foo="bar/{var \'hello\'}" yin="yang"')
             ->createChildNodes()
             ->compile()
-            ->shouldReturn("['foo'=>'bar/'.\$__data['__env']->variable(\$exampleItem,'var',[0=>'hello'],'',null,'string').'','yin'=>'yang']");
+            ->shouldCompile("['foo'=>'bar/'.\$__data['__env']->variable(\$__data,'var',[0=>'hello'],'',null,'string').'','yin'=>'yang']");
     }
     
 }

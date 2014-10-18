@@ -22,17 +22,41 @@ class LexiconCompilerSpec extends Spec
 
     function it_can_compile_context_variables()
     {
-        $this->compile(
-            '{{ if theme.actions }}
-            {{ theme.actions }}
-            <a href="{{ foo.to "{path}" }}" class="btn btn-success">{{ title }}</a>
-            {{ /theme.actions }}
-            {{ endif }}'
-        )->shouldCompile('<?php if($__data[\'__env\']->variable($__data, \'theme.actions\')): ?>
-            <?php foreach($__data[\'__env\']->variable($__data,\'theme.actions\',[],\'\',[],\'traversable\') as $i=>$themeActionsItem): ?>
-            <a href="<?php echo e($__data[\'__env\']->variable($themeActionsItem,\'foo.to\',[0=>\'\'.$__data[\'__env\']->variable($themeActionsItem,\'path\',[],\'\',null,\'string\').\'\'],\'\',null,\'string\')); ?>" class="btn btn-success"><?php echo e($__data[\'__env\']->variable($themeActionsItem,\'title\',[],\'\',null,\'string\')); ?></a>
-            <?php endforeach; ?>
-            <?php endif; ?>');
+        $this
+            ->compile(
+                '{{ theme.actions }}
+                <a href="{{ foo.to "{path}" }}" class="btn btn-success">{{ title }}</a>
+                {{ /theme.actions }}'
+            )->shouldCompile(
+                '<?php foreach($__data[\'__env\']->variable($__data,\'theme.actions\',[],\'\',[],\'traversable\') as $i=>$themeActionsItem): ?>
+                <a href="<?php echo e($__data[\'__env\']->variable($themeActionsItem,\'foo.to\',[0=>\'\'.$__data[\'__env\']->variable($themeActionsItem,\'path\',[],\'\',null,\'string\').\'\'],\'\',null,\'string\')); ?>" class="btn btn-success"><?php echo e($__data[\'__env\']->variable($themeActionsItem,\'title\',[],\'\',null,\'string\')); ?></a>
+                <?php endforeach; ?>'
+            );
+    }
+
+    function it_can_compile_conditional()
+    {
+        $this
+            ->compile(
+                '{{ if foo }}
+                    // do something
+                {{ endif }}'
+            )->shouldCompile(
+                '<?php if($__data[\'__env\']->variable($__data, \'foo\')): ?>
+                    // do something
+                <?php endif; ?>'
+            );
+
+/*        $this
+            ->compile(
+                '{{ if foo and yin == yang }}
+                    // do something
+                {{ endif }}'
+            )->shouldCompile(
+                '<?php if($__data[\'__env\']->variable($__data, \'foo\')): ?>
+                    // do something
+                <?php endif; ?>'
+            );*/
     }
 
 }
