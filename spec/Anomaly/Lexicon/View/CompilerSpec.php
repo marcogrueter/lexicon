@@ -69,27 +69,38 @@ class CompilerSpec extends Spec
 
     function it_can_compile_php()
     {
-        $this->compile($this->path('hello.html'))->shouldReturn("<?php namespace Anomaly\Lexicon\View; class LexiconView_89161ae7e80908f946fc5b33a0948118 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render(\$__data) {
-?><h1>Hello <?php echo e(\$__data['__env']->variable(\$__data,'name',[],'',null,'string')); ?>!</h1><?php }} ?>");
+        $this->compile($this->path('hello.html'))->shouldBeCompiled($this->path('hello.html'));
     }
 
     function it_can_compile_php_when_path_is_string_template()
     {
         $this->getLexicon()->addStringTemplate('<h1>{{ variable }}</h1>');
-        $this->compile('<h1>{{ variable }}</h1>')->shouldBeString();
+        $this->compile('<h1>{{ variable }}</h1>')->shouldBeCompiled('<h1>{{ variable }}</h1>');
     }
 
     function it_can_compile_php_from_string_template()
     {
         $this->getLexicon()->addStringTemplate('<h1>{{ variable }}</h1>');
-        $compiledPath = $this->getCompiledPath('<h1>{{ variable }}</h1>');
-        $this->compileFromString('<h1>{{ variable }}</h1>', $compiledPath)->shouldReturn("<?php namespace Anomaly\Lexicon\View; class LexiconView_626f1bdbf536276e4875db3ec9bcabd6 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render(\$__data) {
-?><h1><?php echo e(\$__data['__env']->variable(\$__data,'variable',[],'',null,'string')); ?></h1><?php }} ?>");
+        $this->compileFromString('<h1>{{ variable }}</h1>', $this->getCompiledPath('<h1>{{ variable }}</h1>'))->shouldBeCompiled('<h1>{{ variable }}</h1>');
     }
 
     public function path($path)
     {
         return __DIR__ . '/../../../../resources/views/' . $path;
+    }
+
+    public function compiled($path)
+    {
+        return __DIR__ . '/../../../../resources/storage/views/' . $path;
+    }
+
+    public function getMatchers()
+    {
+        return [
+            'beCompiled' => function($subject, $path) {
+                return is_file($this->compiled(md5($path)));
+            }
+        ];
     }
 
 }
