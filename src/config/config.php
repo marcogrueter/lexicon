@@ -15,11 +15,6 @@ return array(
      */
     'scopeGlue'        => '.',
     /**
-     * PHP is escaped from views by default but you can enable it if you need it for any reason. It is highly
-     * recommended that you keep this disabled as it will make templates insecure.
-     */
-    'allowPhp'         => false,
-    /**
      * Plugins used for interpreting and outputting custom data. You can add you custom plugins here. Each one must have
      * a key that will represent the tag. i.e {{ counter.count }}
      */
@@ -34,24 +29,23 @@ return array(
         'stringTest' => 'Anomaly\Lexicon\Conditional\Test\StringTest',
     ],
     /**
-     * Node types used for parsing and compiling.
-     * The order is very important as it will affect parsing.
-     * You can define `sets` which allow to create new instances of Lexicon
-     * that only compiles templates using a subset of the node types.
-     * Node types are listed here in `node sets`, the `all` node set
-     * is the default, you can use a different node set by using the lexicon() method
-     * in the view. Here is an example.
-     * View::make('foo', $data)->using('simple')->render()
+     * Node types used for compiling. The order is very important as it will affect
+     * how the template is processed. You can define `groups` which allow to create new
+     * instances of Lexicon that only compiles templates using a subset of the node types.
+     * Node types are listed here in `node groups`, the `all` node set
+     * is the default, you can use a different node groups by calling using() method
+     * from a view. Here is an example.
+     * view('foo', $data)->using('simple')->render()
      */
     'nodeGroups'       => [
         'all'       => [
             'Anomaly\Lexicon\Node\NodeType\Comment',
             'Anomaly\Lexicon\Node\NodeType\IgnoreBlock',
             'Anomaly\Lexicon\Node\NodeType\IgnoreVariable',
+            'Anomaly\Lexicon\Node\NodeType\Block',
             'Anomaly\Lexicon\Node\NodeType\Conditional',
             'Anomaly\Lexicon\Node\NodeType\ConditionalElse',
             'Anomaly\Lexicon\Node\NodeType\ConditionalEndif',
-            'Anomaly\Lexicon\Node\NodeType\Block',
             'Anomaly\Lexicon\Node\NodeType\Recursive',
             'Anomaly\Lexicon\Node\NodeType\Section',
             'Anomaly\Lexicon\Node\NodeType\SectionAppend',
@@ -61,8 +55,8 @@ return array(
             'Anomaly\Lexicon\Node\NodeType\SectionStop',
             'Anomaly\Lexicon\Node\NodeType\SectionYield',
             'Anomaly\Lexicon\Node\NodeType\Includes',
-            'Anomaly\Lexicon\Node\NodeType\Variable',
             'Anomaly\Lexicon\Node\NodeType\VariableUnescaped',
+            'Anomaly\Lexicon\Node\NodeType\Variable',
         ],
         /**
          * Compile without layout features
@@ -76,8 +70,8 @@ return array(
             'Anomaly\Lexicon\Node\NodeType\IgnoreVariable',
             'Anomaly\Lexicon\Node\NodeType\Block',
             'Anomaly\Lexicon\Node\NodeType\Recursive',
-            'Anomaly\Lexicon\Node\NodeType\Variable',
             'Anomaly\Lexicon\Node\NodeType\VariableUnescaped',
+            'Anomaly\Lexicon\Node\NodeType\Variable',
         ],
         /**
          * Compile without Blocks
@@ -88,9 +82,21 @@ return array(
             'Anomaly\Lexicon\Node\NodeType\Conditional',
             'Anomaly\Lexicon\Node\NodeType\ConditionalElse',
             'Anomaly\Lexicon\Node\NodeType\ConditionalEndif',
-            'Anomaly\Lexicon\Node\NodeType\Variable',
             'Anomaly\Lexicon\Node\NodeType\VariableUnescaped',
+            'Anomaly\Lexicon\Node\NodeType\Variable',
         ]
     ],
-
+    /**
+     * Compiler sequence (experimental feature)
+     * The compiler sequence allows templates to be processed by other
+     * compilers other than the Lexicon source compiler. They will process the template
+     * the order specified here. For example, you want to process the template
+     * with markdown, before it gets processed by Lexicon.
+     *
+     * Example
+     * 'compilerSequence' => [
+     * 'App\Compiler\MarkdownCompiler',
+     * 'Anomaly\Lexicon\View\LexiconCompiler',
+     * ]
+     */
 );
