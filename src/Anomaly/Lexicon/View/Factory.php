@@ -135,7 +135,7 @@ class Factory extends BaseFactory implements FactoryInterface
         // Get a plugin
         if ($plugin = $pluginHandler->get($key)) {
 
-            array_shift($parts); // Shit the name
+            array_shift($parts); // Shift the name
             $method = array_shift($parts); // Shift the method
 
             // Get the plugin data if found
