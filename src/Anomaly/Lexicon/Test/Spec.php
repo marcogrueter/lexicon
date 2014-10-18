@@ -31,12 +31,27 @@ class Spec extends ObjectBehavior
             },
             'render'        => function (View $view, $expected) {
                 $content = $view->render();
-                if (!($doesHave = ($content == $expected))) {
-                    echo 'Result: ' . "'{$content}'".PHP_EOL;
-                }
-                return $doesHave;
+                return $this->stringEquals($content, $expected);
             },
+            'compile' => function ($subject, $expected) {
+                return $this->stringEquals($subject, $expected);
+            }
         ];
+    }
+
+    /**
+     * String equals value? If not output actual
+     *
+     * @param $subject
+     * @param $value
+     * @return bool
+     */
+    public function stringEquals($subject, $value)
+    {
+        if (!($equals = ($subject === $value))) {
+            echo 'Actual: ' . "'{$subject}'" . PHP_EOL;
+        }
+        return $equals;
     }
 
     /**

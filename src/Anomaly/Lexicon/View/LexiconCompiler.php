@@ -2,6 +2,7 @@
 
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\View\CompilerInterface;
+use Anomaly\Lexicon\Stub\LexiconStub;
 
 /**
  * Class LexiconCompiler
@@ -46,6 +47,11 @@ class LexiconCompiler implements CompilerInterface
             ->getNodeFactory()
             ->getRootNode($string, $path)
             ->compile();
+    }
+
+    public static function stub()
+    {
+        return new static(LexiconStub::get());
     }
 
 } 

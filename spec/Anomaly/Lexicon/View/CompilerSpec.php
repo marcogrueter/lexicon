@@ -30,7 +30,7 @@ class CompilerSpec extends Spec
 
     function it_can_set_and_get_hash()
     {
-        $this->setHash(md5('foo'))->getHash()->shouldReturn(md5('foo'));
+        $this->setHash('foo')->getHash()->shouldReturn('foo');
     }
 
     function it_can_set_and_get_lexicon(LexiconInterface $lexicon)
@@ -66,7 +66,7 @@ class CompilerSpec extends Spec
         $this->getLexicon()->addStringTemplate('<h1>{{ variable }}</h1>');
         $this->isExpired('<h1>{{ variable }}</h1>')->shouldBe(true);
     }
-    
+
     function it_can_compile_php()
     {
         $this->compile($this->path('hello.html'))->shouldReturn("<?php namespace Anomaly\Lexicon\View; class LexiconView_89161ae7e80908f946fc5b33a0948118 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render(\$__data) {
@@ -78,7 +78,7 @@ class CompilerSpec extends Spec
         $this->getLexicon()->addStringTemplate('<h1>{{ variable }}</h1>');
         $this->compile('<h1>{{ variable }}</h1>')->shouldBeString();
     }
-    
+
     function it_can_compile_php_from_string_template()
     {
         $this->getLexicon()->addStringTemplate('<h1>{{ variable }}</h1>');
@@ -86,7 +86,7 @@ class CompilerSpec extends Spec
         $this->compileFromString('<h1>{{ variable }}</h1>', $compiledPath)->shouldReturn("<?php namespace Anomaly\Lexicon\View; class LexiconView_626f1bdbf536276e4875db3ec9bcabd6 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render(\$__data) {
 ?><h1><?php echo e(\$__data['__env']->variable(\$__data,'variable',[],'',null,'string')); ?></h1><?php }} ?>");
     }
-    
+
     public function path($path)
     {
         return __DIR__ . '/../../../../resources/views/' . $path;
