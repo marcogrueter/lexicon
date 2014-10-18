@@ -3,6 +3,7 @@
 use Anomaly\Lexicon\Attribute\AttributeNode;
 use Anomaly\Lexicon\Attribute\SplitterNode;
 use Anomaly\Lexicon\Contract\LexiconInterface;
+use Anomaly\Lexicon\Contract\Node\BlockInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
 use Anomaly\Lexicon\Node\NodeType\Node;
 use Anomaly\Lexicon\Stub\Node\NodeFinderStub;
@@ -78,7 +79,7 @@ class NodeFinder
             }
         }
 
-        if ($node and $node->getId() == $this->getNode()->getId()) {
+        if ($node and ($node->getId() == $this->getNode()->getId() or $node->isRoot())) {
             $source = '$__data';
         }
 
@@ -150,8 +151,8 @@ class NodeFinder
 
     public function getAttributeNodeParent()
     {
-        $node = $this->getNode();
-        while (($node instanceof AttributeNode or $node instanceof SplitterNode) and $node->getParent()) {
+        $node = $this->getNode()->getParent();
+        while (!($node instanceof BlockInterface) and $node->getParent()) {
             $node = $node->getParent();
         }
         return $node;

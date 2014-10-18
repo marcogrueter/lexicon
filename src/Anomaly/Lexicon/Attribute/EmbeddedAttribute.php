@@ -22,6 +22,9 @@ class EmbeddedAttribute extends AttributeNode
     public function setup()
     {
         $this->setContent($this->match(0));
+
+        $nameAndRawAttributeMatch = $this->getNameAndRawAttributes();
+        $this->setName(isset($nameAndRawAttributeMatch[1]) ? $nameAndRawAttributeMatch[1] : '');
     }
 
     /**
@@ -29,8 +32,8 @@ class EmbeddedAttribute extends AttributeNode
      */
     public function getNameAndRawAttributes()
     {
-        preg_match("/\{\s*({$this->getVariableRegex()})(\s+.*?)?\s*(\/)?\}/s", $this->getContent(), $match);
-        return $match;
+        preg_match("/\{\s*({$this->getVariableRegex()})(\s+.*?)?\s*(\/)?\}/s", $this->getContent(), $nameAndRawAttributeMatch);
+        return $nameAndRawAttributeMatch;
     }
 
     /**
@@ -51,16 +54,9 @@ class EmbeddedAttribute extends AttributeNode
 
     public function getRawAttributes()
     {
-        $match = $this->getNameAndRawAttributes();
-        return isset($match[2]) ? $match[2] : '';
+        $nameAndRawAttributeMatch = $this->getNameAndRawAttributes();
+        return isset($nameAndRawAttributeMatch[2]) ? $nameAndRawAttributeMatch[2] : '';
     }
-
-    public function getName()
-    {
-        $match = $this->getNameAndRawAttributes();
-        return isset($match[1]) ? $match[1] : '';
-    }
-
 
     /**
      * Compile php
@@ -69,16 +65,16 @@ class EmbeddedAttribute extends AttributeNode
      */
     public function compile()
     {
+        $attributes = $this
+            ->setContent($this->getRawAttributes())
+            ->createChildNodes()
+            ->compileSourceFromArray();
+
         $finder = $this->getNodeFinder();
         $item = $finder->getItemSource();
         $name = $finder->getName();
-        $rawAttributes = $this->getRawAttributes();
         $expected = Lexicon::EXPECTED_STRING;
 
-        $attributes = $this
-            ->setContent($rawAttributes)
-            ->createChildNodes()
-            ->compileSourceFromArray();
 
         return "\$__data['__env']->variable({$item},'{$name}',{$attributes},'',null,'{$expected}')";
     }
