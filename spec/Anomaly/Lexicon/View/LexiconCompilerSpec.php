@@ -34,7 +34,7 @@ class LexiconCompilerSpec extends Spec
             );
     }
 
-    function it_can_compile_conditional()
+    function it_can_simple_conditional()
     {
         $this
             ->compile(
@@ -46,17 +46,20 @@ class LexiconCompilerSpec extends Spec
                     // do something
                 <?php endif; ?>'
             );
+    }
 
-/*        $this
+    function it_can_compile_conditional_with_logical_and_comparison_operators()
+    {
+        $this
             ->compile(
                 '{{ if foo and yin == yang }}
                     // do something
                 {{ endif }}'
             )->shouldCompile(
-                '<?php if($__data[\'__env\']->variable($__data, \'foo\')): ?>
+                '<?php if($__data[\'__env\']->variable($__data, \'foo\') and $__data[\'__env\']->booleanTest($__data[\'__env\']->variable($__data, \'yin\'),$__data[\'__env\']->variable($__data, \'yang\'),\'==\')): ?>
                     // do something
                 <?php endif; ?>'
-            );*/
+            );
     }
 
 }

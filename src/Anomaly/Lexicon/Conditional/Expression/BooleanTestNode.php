@@ -62,20 +62,22 @@ class BooleanTestNode extends ExpressionNode
      */
     public function compile()
     {
-        $children = $this->getChildren()->values();
+        $children = $this->createChildNodes()->getChildren();
 
-        if (count($children) == 3 and $children[1] instanceof BooleanTestOperatorNode) {
+        $parts = $children->values();
+
+        if (count($parts) == 3 and $parts[1] instanceof BooleanTestOperatorNode) {
             /** @var ValueNode $left */
-            $left = $children[0];
+            $left = $parts[0];
             /** @var BooleanTestOperatorNode $operator */
-            $operator = $children[1];
+            $operator = $parts[1];
             /** @var ValueNode $right */
-            $right = $children[2];
+            $right = $parts[2];
 
             $source = "\$__data['__env']->booleanTest({$left->compile()},{$right->compile()},{$operator->compile()})";
         } else {
             /** @var ValueNode $valueNode */
-            $valueNode = $this->createChildNodes()->getChildren()->first();
+            $valueNode = $children->first();
             $source = $valueNode->compile();
         }
 
