@@ -7,8 +7,8 @@ code_coverage:
     - html
     - clover
   output:
-    html: resources/coverage
-    clover: resources/coverage/coverage.xml
+    html: build/coverage
+    clover: build/logs/clover.xml
 
   whitelist:
     - src/Anomaly/Lexicon/Attribute

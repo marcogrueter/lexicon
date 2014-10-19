@@ -11,6 +11,7 @@
         }
     ],
     "require-dev": {
+        "codeclimate/php-test-reporter": "dev-master",
         "henrikbjorn/phpspec-code-coverage": "~0.2",
         "phpspec/phpspec": "dev-master"
     },

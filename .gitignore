@@ -2,7 +2,7 @@
 /vendor
 /.idea
 /bin
-/resources/coverage/*
+/build/coverage/*
 composer.phar
 composer.lock
 .DS_Store
