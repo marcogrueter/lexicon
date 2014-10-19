@@ -1,11 +1,12 @@
 # Lexicon Template Engine
 ___
 
-[![Build Status](https://travis-ci.org/anomalylabs/lexicon.svg?branch=master)](https://travis-ci.org/anomalylabs/lexicon)
-[![Total Downloads](https://poser.pugx.org/anomaly/lexicon/downloads.svg)](https://packagist.org/packages/anomaly/lexicon)
-[![Latest Stable Version](https://poser.pugx.org/anomaly/lexicon/v/stable.svg)](https://packagist.org/packages/anomaly/lexicon)
-[![Latest Unstable Version](https://poser.pugx.org/anomaly/lexicon/v/unstable.svg)](https://packagist.org/packages/anomaly/lexicon)
-[![License](https://poser.pugx.org/anomaly/lexicon/license.svg)](https://packagist.org/packages/anomaly/lexicon)
+[![Unstable](http://img.shields.io/badge/unstable-v0.1--alpha-orange.svg?style=flat)](https://packagist.org/packages/anomaly/lexicon)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://packagist.org/packages/anomaly/lexicon)
+[![Build Status](http://img.shields.io/travis/anomalylabs/lexicon.svg?style=flat)](https://travis-ci.org/anomalylabs/lexicon)
+[![Code Coverage](http://img.shields.io/codeclimate/coverage/github/anomalylabs/lexicon.svg?style=flat)](https://codeclimate.com/github/anomalylabs/lexicon)
+[![Code Quality](http://img.shields.io/scrutinizer/g/anomalylabs/lexicon.svg?style=flat)](https://scrutinizer-ci.com/g/anomalylabs/lexicon/)
+[![Total Downloads](http://img.shields.io/packagist/dt/anomaly/lexicon.svg?style=flat)](https://packagist.org/packages/anomaly/lexicon)
 
 Lexicon is a template engine that encourages the design of simple and maintainable templates.
 
