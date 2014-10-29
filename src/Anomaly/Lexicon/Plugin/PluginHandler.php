@@ -114,6 +114,11 @@ class PluginHandler implements PluginHandlerInterface
     public function get($name)
     {
         $lexicon   = $this->getLexicon();
+
+        if (!strpos($name, $lexicon->getScopeGlue())) {
+            return null;
+        }
+
         $container = $lexicon->getContainer();
         $name      = explode($lexicon->getScopeGlue(), $name)[0];
         return isset($this->plugins[$name]) ? $container[$this->plugins[$name]] : null;
