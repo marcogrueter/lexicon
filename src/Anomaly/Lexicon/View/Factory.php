@@ -145,6 +145,8 @@ class Factory extends BaseFactory implements FactoryInterface
         // not is null
         if (!is_null($data)) {
 
+            $nextPart = null;
+
             while (count($parts) > 0) {
 
                 $nextPart = array_shift($parts);
@@ -173,7 +175,7 @@ class Factory extends BaseFactory implements FactoryInterface
 
                     }
 
-                    $data = $this->expected($data[$nextPart], $expected, $default);
+                    $data = $data[$nextPart];
 
                 } elseif (is_object($data)) {
 
