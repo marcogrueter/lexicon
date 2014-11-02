@@ -1,3 +1,6 @@
+suites:
+  lexicon_suite:
+    spec_path: tests
 
 extensions:
   - PhpSpec\Extension\CodeCoverageExtension

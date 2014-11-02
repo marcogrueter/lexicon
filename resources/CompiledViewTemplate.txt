@@ -1,2 +1,0 @@
-<?php namespace [namespace]; class [class] implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render($__data) {
-?>[source]<?php }} ?>
