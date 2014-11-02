@@ -8,12 +8,6 @@ use Illuminate\View\Engines\CompilerEngine;
 
 class Engine extends CompilerEngine implements EngineInterface
 {
-    /**
-     * Runtime cache
-     *
-     * @var array
-     */
-    protected $cache = [];
 
     /**
      * @var CompilerInterface
@@ -38,18 +32,10 @@ class Engine extends CompilerEngine implements EngineInterface
         // an exception is thrown. This prevents any partial views from leaking.
         try {
 
-            $viewHash  = substr(strrchr($__path, '/'), 1);
-            $viewClass = $this->getLexicon()->getCompiledViewFullClass($viewHash);
-
-            include_once $__path;
-
-            if (!isset($this->cache[$__path])) {
-
-                /** @var string $__path */
-                $this->cache[$__path] = new $viewClass;
-            }
-
-            $this->cache[$__path]->render($__data);
+            $viewHash     = substr(strrchr($__path, '/'), 1);
+            $viewClass    = $this->getLexicon()->getCompiledViewNamespace() . '\\' . $viewHash;
+            $compiledView = new $viewClass;
+            $compiledView->render($__data);
 
         } catch (\Exception $e) {
             $this->handleViewException($e, $obLevel);

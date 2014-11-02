@@ -150,15 +150,6 @@ class LexiconSpec extends Spec
             ->getCompiledViewClass('foo')
             ->shouldReturn('View_foo');
     }
-    
-    function it_can_get_the_full_view_class()
-    {
-        $this
-            ->setCompiledViewNamespace('Foo')
-            ->setCompiledViewClassPrefix('View_')
-            ->getCompiledViewFullClass('bar')
-            ->shouldReturn('Foo\View_bar');
-    }
 
     function it_can_get_root_alias()
     {

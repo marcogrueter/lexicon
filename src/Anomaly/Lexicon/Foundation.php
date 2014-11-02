@@ -12,6 +12,7 @@ use Anomaly\Lexicon\Stub\LexiconStub;
 use Anomaly\Lexicon\View\Compiler;
 use Anomaly\Lexicon\View\Engine;
 use Anomaly\Lexicon\View\Factory;
+use Composer\Autoload\ClassLoader;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
@@ -283,6 +284,10 @@ class Foundation
         $resolver->register(
             'lexicon',
             function () use ($container) {
+                /** @var ClassLoader $loader */
+                $loader = new ClassLoader();
+                $loader->addPsr4($this->getLexicon()->getCompiledViewNamespace() . '\\', $this->getStoragePath());
+                $loader->register();
                 return new Engine($container['anomaly.lexicon.compiler'], $this->getFilesystem());
             }
         );

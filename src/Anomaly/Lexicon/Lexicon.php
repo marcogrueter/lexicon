@@ -71,7 +71,7 @@ class Lexicon implements LexiconInterface
      *
      * @var string
      */
-    protected $compiledViewNamespace = 'Anomaly\Lexicon\View';
+    protected $compiledViewNamespace = 'Anomaly\Lexicon\View\Compiled';
 
 
     /**
@@ -79,7 +79,7 @@ class Lexicon implements LexiconInterface
      *
      * @var string
      */
-    protected $compiledViewClassPrefix = 'LexiconView_';
+    protected $compiledViewClassPrefix = 'Lexicon_';
 
     /**
      * Storage path for compiled views
@@ -577,17 +577,6 @@ class Lexicon implements LexiconInterface
     public function getCompiledViewClass($hash)
     {
         return $this->getCompiledViewClassPrefix() . $hash;
-    }
-
-    /**
-     * Get compiled view full class
-     *
-     * @param $hash
-     * @return string
-     */
-    public function getCompiledViewFullClass($hash)
-    {
-        return $this->getCompiledViewNamespace() . '\\' . $this->getCompiledViewClass($hash);
     }
 
     /**

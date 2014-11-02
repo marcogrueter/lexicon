@@ -93,14 +93,6 @@ interface LexiconInterface
     public function getCompiledViewClass($hash);
 
     /**
-     * Get compiled view full class
-     *
-     * @param $hash
-     * @return string
-     */
-    public function getCompiledViewFullClass($hash);
-
-    /**
      * Register node type
      *
      * @param        $nodeType

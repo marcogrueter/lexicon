@@ -135,9 +135,7 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
 
         $contents = $this->compileString($this->files->get($path));
 
-        if (!is_null($this->cachePath)) {
-            $this->files->put($compiledPath, $contents);
-        }
+        $this->put($contents, $compiledPath);
 
         return $contents;
     }
@@ -155,9 +153,7 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
 
         $contents = $this->compileString($string);
 
-        if (!is_null($this->cachePath)) {
-            $this->files->put($compiledPath, $contents);
-        }
+        $this->put($contents, $compiledPath);
 
         return $contents;
     }
@@ -180,6 +176,30 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
         }
 
         return $this->compileView($string);
+    }
+
+    /**
+     * Write contents to the file
+     *
+     * @param $contents
+     * @param $compiledPath
+     */
+    protected function put($contents, $compiledPath)
+    {
+        if (!is_null($this->cachePath)) {
+            $this->files->put($compiledPath . '.php', $contents);
+        }
+    }
+
+    /**
+     * Get the path to the compiled version of a view.
+     *
+     * @param  string $path
+     * @return string
+     */
+    public function getCompiledPath($path)
+    {
+        return $this->cachePath . '/' . $this->getLexicon()->getCompiledViewClassPrefix() . md5($path);
     }
 
     /**
@@ -240,7 +260,7 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
     {
         $data = [
             '[namespace]' => $this->getLexicon()->getCompiledViewNamespace(),
-            '[class]'     => $this->getLexicon()->getCompiledViewClass($this->getHash()),
+            '[class]'     => $this->getHash(),
             '[source]'    => $source,
         ];
 
