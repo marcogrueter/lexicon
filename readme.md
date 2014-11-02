@@ -1,7 +1,7 @@
 # Lexicon Template Engine
 ___
 
-[![Unstable](http://img.shields.io/badge/unstable-0.1-orange.svg?style=flat)](https://packagist.org/packages/anomaly/lexicon)
+[![Unstable](http://img.shields.io/badge/unstable-1.0-beta-orange.svg?style=flat)](https://packagist.org/packages/anomaly/lexicon)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://packagist.org/packages/anomaly/lexicon)
 [![Build Status](http://img.shields.io/travis/anomalylabs/lexicon.svg?style=flat)](https://travis-ci.org/anomalylabs/lexicon)
 [![Code Coverage](http://img.shields.io/codeclimate/coverage/github/anomalylabs/lexicon.svg?style=flat)](https://codeclimate.com/github/anomalylabs/lexicon)
@@ -21,7 +21,7 @@ Lexicon is a Composer package named `anomaly/lexicon`. To use it, simply add it 
 ```language-php
 {
     "require": {
-        "anomaly/lexicon": "~0.1"
+        "anomaly/lexicon": "~1.0-beta"
     }
 }
 ```
@@ -33,6 +33,7 @@ Next, update `app/config/app.php` to include a reference to this package's servi
     'Anomaly\Lexicon\LexiconServiceProvider'
 ]
 ```
+
 ___
 
 ## Credits
@@ -40,9 +41,16 @@ ___
 - [Osvaldo Brignoni](http://twitter.com/obrignoni)
 - Lexicon is inspired on the [PyroCMS Lex Parser](https://github.com/pyrocms/lex), created by [Dan Horrigan](https://twitter.com/dhrrgn). 
 
-We use the following packages.
+Lexicon uses the following composer packages:
 
+- `illuminate/config`
+- `illuminate/events`
 - `illuminate/view`
+
+For testing it uses:
+
+- `codeclimate/php-test-reporter`
+- `henrikbjorn/phpspec-code-coverag`
 - `phpspec/phpspec`
 
 ## Contributing
