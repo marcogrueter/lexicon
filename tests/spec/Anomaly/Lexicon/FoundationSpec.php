@@ -96,22 +96,18 @@ class FoundationSpec extends Spec
     
     function it_can_set_and_get_config(Repository $config)
     {
-        $this->setConfig('lexicon::nodeGroups', [1, 2 ,3]);
-        $this->getConfig('lexicon::nodeGroups')->shouldReturn([1, 2 ,3]);
+        $this
+            ->setConfig('lexicon::nodeGroups', [1, 2 ,3])
+            ->getConfig('lexicon::nodeGroups')->shouldReturn([1, 2 ,3]);
     }
 
     function it_can_get_storage_path()
     {
-        $container = $this->getContainer();
-        $container['path.storage'] = '../some/folder';
-        $this->getLexicon()->setStandalone(false);
         $this->getStoragePath()->shouldBeString();
     }
 
-    function it_can_get_view_paths()
+    function it_can_set_and_get_view_paths()
     {
-        $this->getLexicon()->setViewPaths(['foo']);
-        $this->setConfig('view.paths', ['foo']);
         $this->getViewPaths()->shouldBeArray();
     }
     

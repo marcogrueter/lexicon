@@ -27,9 +27,8 @@ class LexiconStub
         $lexicon = new Lexicon();
 
         return $lexicon
-            ->setStandalone(true)
-            ->addNamespace('test', __DIR__ . '/../views')
-            ->setStoragePath(__DIR__ . '/../storage/views')
+            ->addNamespace('test', __DIR__ . '/../resources/views')
+            ->setStoragePath(__DIR__ . '/../resources/compiled')
             ->addStringTemplate('<h1>Hello {{ name }}</h1>')
             ->registerPlugin('stub', 'Anomaly\Lexicon\Plugin\StubPlugin')
             ->registerNodeGroup(

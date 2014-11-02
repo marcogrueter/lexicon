@@ -91,7 +91,7 @@ class CompilerSpec extends Spec
 
     public function compiled($path)
     {
-        return __DIR__ . '/../../../../resources/storage/views/' . $path;
+        return __DIR__ . '/../../../../resources/compiled/' . $path;
     }
 
     public function getMatchers()

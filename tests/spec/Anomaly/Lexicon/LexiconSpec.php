@@ -30,7 +30,6 @@ class LexiconSpec extends Spec
 
     function it_can_register_dependencies()
     {
-        $this->setStandalone(true);
         $this->register();
     }
 
@@ -39,24 +38,14 @@ class LexiconSpec extends Spec
         $this->setFoundation($foundation)->getFoundation()->shouldHaveType('Anomaly\Lexicon\Foundation');
     }
 
-    function it_can_set_and_get_standalone()
-    {
-        $this->setStandalone(true)->isStandalone()->shouldBe(true);
-    }
-
     function it_can_set_and_get_debug_mode()
     {
         $this->setDebug(true)->isDebug()->shouldBe(true);
     }
 
-    function it_can_set_the_scope_glue()
+    function it_can_set_and_get_the_scope_glue()
     {
-        $this->setScopeGlue(':');
-    }
-
-    function it_can_get_scope_glue()
-    {
-        $this->getScopeGlue()->shouldBeString();
+        $this->setScopeGlue(':')->getScopeGlue()->shouldBe(':');
     }
 
     function it_can_set_and_get_the_conditional_handler(ConditionalHandlerInterface $conditionalHandler)
@@ -244,7 +233,7 @@ class LexiconSpec extends Spec
     
     function it_can_get_container()
     {
-        $this->getContainer()->shouldHaveType('Anomaly\Lexicon\Support\Container');
+        $this->getContainer()->shouldHaveType('Illuminate\Container\Container');
     }
     
     function it_can_set_and_get_node_factory(NodeFactory $nodeFactory)

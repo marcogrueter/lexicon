@@ -22,7 +22,7 @@ class LexiconServiceProviderSpec extends Spec
         $this->shouldHaveType('Anomaly\Lexicon\LexiconServiceProvider');
     }
 
-    function it_can_register_lexicon(LexiconInterface $lexicon)
+    function it_can_register_lexicon()
     {
         $this->register()->shouldImplement('Anomaly\Lexicon\Contract\LexiconInterface');
     }
