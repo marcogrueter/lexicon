@@ -1,6 +1,0 @@
-<?php namespace Anomaly\Lexicon\View; class LexiconView_d510a849725d0a4836279de241c56fec implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render($__data) {
-?><ul>
-<?php foreach($__data['__env']->variable($__data,'books',[],'',[],'traversable') as $i=>$booksItem): ?>
-    <li><?php echo e($__data['__env']->variable($booksItem,'title',[],'',null,'string')); ?></li>
-<?php endforeach; ?>
-</ul><?php }} ?>

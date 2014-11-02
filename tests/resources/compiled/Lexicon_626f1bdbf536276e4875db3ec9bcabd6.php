@@ -1,0 +1,2 @@
+<?php namespace Anomaly\Lexicon\View\Compiled; class Lexicon_626f1bdbf536276e4875db3ec9bcabd6 { public function render($__data) {
+?><h1><?php echo e($__data['__env']->variable($__data,'variable',[],'',null,'string')); ?></h1><?php }} ?>

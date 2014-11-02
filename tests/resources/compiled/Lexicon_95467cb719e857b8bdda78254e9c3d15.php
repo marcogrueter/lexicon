@@ -1,4 +1,4 @@
-<?php namespace Anomaly\Lexicon\View; class LexiconView_854efb5d5794adda5ccbe0914929a638 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render($__data) {
+<?php namespace Anomaly\Lexicon\View\Compiled; class Lexicon_95467cb719e857b8bdda78254e9c3d15 { public function render($__data) {
 ?><?php $__data['__env']->startSection('content'); ?>
 <div class="content">Injecting this content into the yield section.</div>
 <?php $__data['__env']->stopSection(); ?>

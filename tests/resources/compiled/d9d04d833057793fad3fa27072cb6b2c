@@ -1,5 +1,0 @@
-<?php namespace Anomaly\Lexicon\View; class LexiconView_d9d04d833057793fad3fa27072cb6b2c implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render($__data) {
-?><?php $__data['__env']->startSection('sidebar'); ?>
-<div class="sidebar">This is some sidebar content.</div>
-<?php echo $__data['__env']->yieldSection(); ?>
-<?php echo $__data['__env']->yieldContent('content'); ?><?php }} ?>

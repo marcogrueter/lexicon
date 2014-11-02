@@ -1,2 +1,0 @@
-<?php namespace Anomaly\Lexicon\View; class LexiconView_6b8614e43c9929931e8344a9a6daa6b7 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render($__data) {
-?>This is some sample partial content.<?php }} ?>

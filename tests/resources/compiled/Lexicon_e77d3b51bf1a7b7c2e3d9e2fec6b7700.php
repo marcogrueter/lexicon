@@ -1,4 +1,4 @@
-<?php namespace Anomaly\Lexicon\View; class LexiconView_63070e6fd59898975bc11e1318a97078 implements \Anomaly\Lexicon\Contract\View\CompiledViewInterface { public function render($__data) {
+<?php namespace Anomaly\Lexicon\View\Compiled; class Lexicon_e77d3b51bf1a7b7c2e3d9e2fec6b7700 { public function render($__data) {
 ?>
     These tags will remain unparsed.
     {{ tag1 }}{{ tag2 }}{{ tag3 }}
