@@ -1,0 +1,18 @@
+suites:
+  lexicon_suite:
+    spec_path: tests
+
+  whitelist:
+    - src/Anomaly/Lexicon/Attribute
+    - src/Anomaly/Lexicon/Conditional
+    - src/Anomaly/Lexicon/Node
+    - src/Anomaly/Lexicon/Plugin
+    - src/Anomaly/Lexicon/Support
+    - src/Anomaly/Lexicon/View
+
+  whitelist_files:
+    - src/Anomaly/Lexicon/Foundation.php
+    - src/Anomaly/Lexicon/Lexicon.php
+    - src/Anomaly/Lexicon/LexiconServiceProvider.php
+
+formatter.name: pretty
