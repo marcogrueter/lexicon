@@ -81,7 +81,10 @@ class CompilerSpec extends Spec
     function it_can_compile_php_from_string_template()
     {
         $this->getLexicon()->addStringTemplate('<h1>{{ variable }}</h1>');
-        $this->compileFromString('<h1>{{ variable }}</h1>', $this->getCompiledPath('<h1>{{ variable }}</h1>'))->shouldBeCompiled('<h1>{{ variable }}</h1>');
+        $this->compileFromString(
+            '<h1>{{ variable }}</h1>',
+            $this->getCompiledPath('<h1>{{ variable }}</h1>')
+        )->shouldBeCompiled('<h1>{{ variable }}</h1>');
     }
 
     public function path($path)
@@ -97,8 +100,8 @@ class CompilerSpec extends Spec
     public function getMatchers()
     {
         return [
-            'beCompiled' => function($subject, $path) {
-                return is_file($this->compiled(md5($path)));
+            'beCompiled' => function ($subject, $path) {
+                return is_file($this->compiled('Lexicon_' . md5($path) . '.php'));
             }
         ];
     }
