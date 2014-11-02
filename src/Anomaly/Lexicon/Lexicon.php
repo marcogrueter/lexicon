@@ -5,8 +5,7 @@ use Anomaly\Lexicon\Contract\Conditional\ConditionalHandlerInterface;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Node\NodeFactory;
-use Anomaly\Lexicon\Support\Container;
-use Illuminate\Contracts\Container\Container as BaseContainer;
+use Illuminate\Container\Container;
 
 class Lexicon implements LexiconInterface
 {
@@ -147,13 +146,6 @@ class Lexicon implements LexiconInterface
     ];
 
     /**
-     * Are we using the package outside of Laravel?
-     *
-     * @var bool
-     */
-    protected $standalone = false;
-
-    /**
      * @var Foundation
      */
     protected $foundation;
@@ -166,14 +158,21 @@ class Lexicon implements LexiconInterface
     protected $configPath;
 
     /**
+     * Base path
+     *
+     * @var string
+     */
+    protected $basePath;
+
+    /**
      * Data constant
      */
     const DATA = '$__data';
 
     /**
-     * Environment (Factory) constant
+     * Factory constant
      */
-    const ENV = '$__data[\'__env\']';
+    const FACTORY = '$__data[\'__env\']';
 
     /**
      * Expected any constant
@@ -197,8 +196,10 @@ class Lexicon implements LexiconInterface
 
     /**
      * Lexicon construct
+     *
+     * @param Container $container
      */
-    public function __construct(BaseContainer $container = null)
+    public function __construct(Container $container = null)
     {
         $this->container = $container;
     }
@@ -237,26 +238,6 @@ class Lexicon implements LexiconInterface
     }
 
     /**
-     * @param bool $standalone
-     * @return Lexicon
-     */
-    public function setStandalone($standalone = true)
-    {
-        $this->standalone = $standalone;
-        return $this;
-    }
-
-    /**
-     * Is standalone
-     *
-     * @return bool
-     */
-    public function isStandalone()
-    {
-        return $this->standalone;
-    }
-
-    /**
      * Set node factory
      *
      * @param NodeFactory $nodeFactory
@@ -283,15 +264,7 @@ class Lexicon implements LexiconInterface
      */
     public function getContainer()
     {
-        if (!$this->container) {
-            $this->container = new Container();
-
-            if (method_exists($this->container, 'boot')) {
-                $this->container->boot();
-            }
-        }
-
-        return $this->container;
+        return $this->container ?: $this->container = new Container();
     }
 
     /**
@@ -548,7 +521,7 @@ class Lexicon implements LexiconInterface
      */
     public function getCompiledViewTemplatePath()
     {
-        return __DIR__ . '/../../../resources/CompiledViewTemplate.txt';
+        return __DIR__ . '/CompiledViewTemplate.txt';
     }
 
     /**
@@ -800,7 +773,7 @@ class Lexicon implements LexiconInterface
         $classes = [];
 
         if (is_object($obj)) {
-            $class = get_class($obj);
+            $class   = get_class($obj);
             $parents = class_parents($obj);
             $classes = array_intersect(
                 array_values(array_merge($parents, [$class])),
@@ -819,5 +792,27 @@ class Lexicon implements LexiconInterface
     public function getCompilerSequence()
     {
         return $this->compilerSequence;
+    }
+
+    /**
+     * Set base path
+     *
+     * @param $basePath
+     * @return $this
+     */
+    public function setBasePath($basePath)
+    {
+        $this->basePath = $basePath;
+        return $this;
+    }
+
+    /**
+     * Get base path
+     *
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return $this->basePath ?: __DIR__ . '/../../..';
     }
 }

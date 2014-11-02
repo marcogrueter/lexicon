@@ -259,19 +259,6 @@ interface LexiconInterface
     public function getFoundation();
 
     /**
-     * @param bool $standalone
-     * @return mixed
-     */
-    public function setStandalone($standalone = true);
-
-    /**
-     * Is Lexicon been used outside of Laravel?
-     *
-     * @return bool
-     */
-    public function isStandalone();
-
-    /**
      * Get node groups
      *
      * @return array
@@ -344,5 +331,12 @@ interface LexiconInterface
      * @return mixed
      */
     public function getCompilerSequence();
+
+    /**
+     * Get base path
+     *
+     * @return mixed
+     */
+    public function getBasePath();
 
 }
