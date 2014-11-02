@@ -4,13 +4,11 @@ php:
   - 5.4
   - 5.5
   - 5.6
+  - hhvm
 
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction --dev
-  - composer require illuminate/view:dev-master
-  - composer require illuminate/events:dev-master
-  - composer require illuminate/config:dev-master
 
 script: bin/phpspec run -v
 
