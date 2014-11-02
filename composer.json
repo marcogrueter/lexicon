@@ -10,14 +10,15 @@
             "email": "obrignoni@anomaly.is"
         }
     ],
+    "require": {
+        "illuminate/view": "~5.0",
+        "illuminate/config": "~5.0",
+        "illuminate/events": "~5.0"
+    },
     "require-dev": {
         "codeclimate/php-test-reporter": "dev-master",
         "henrikbjorn/phpspec-code-coverage": "~0.2",
-        "phpspec/phpspec": "dev-master"
-    },
-    "suggest": {
-        "illuminate/view": "Require illuminate/view ~5.0 if you are using this package outside of Laravel.",
-        "illuminate/config": "Require illuminate/config ~5.0 if you are using this package outside of Laravel."
+        "phpspec/phpspec": "2.1.0-RC1"
     },
     "config": {
         "bin-dir": "bin"
@@ -29,13 +30,13 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Anomaly\\Lexicon\\Stub\\": "resources/stub/"
+            "Anomaly\\Lexicon\\Stub\\": "tests/stub/"
         }
     },
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "0.1.x-dev"
+            "dev-master": "1.0.x-dev"
         }
     }
 }
