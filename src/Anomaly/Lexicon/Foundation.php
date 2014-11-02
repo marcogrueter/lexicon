@@ -3,7 +3,6 @@
 use Anomaly\Lexicon\Conditional\ConditionalHandler;
 use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Node\NodeInterface;
-use Anomaly\Lexicon\Contract\Plugin\PluginHandlerInterface;
 use Anomaly\Lexicon\Node\NodeCollection;
 use Anomaly\Lexicon\Node\NodeExtractor;
 use Anomaly\Lexicon\Node\NodeFactory;
@@ -15,10 +14,9 @@ use Anomaly\Lexicon\View\Engine;
 use Anomaly\Lexicon\View\Factory;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
-use Illuminate\Contracts\Container\Container;
+use Illuminate\Container\Container;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Session\SessionManager;
 use Illuminate\Support\ViewErrorBag;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Engines\CompilerEngine;
@@ -43,7 +41,7 @@ class Foundation
     protected $engines = ['lexicon', 'php', 'blade'];
 
     /**
-     * @var Container
+     * @var LexiconInterface
      */
     protected $lexicon;
 
@@ -63,6 +61,7 @@ class Foundation
      */
     public function register()
     {
+        $this->registerBasePath();
         $this->registerLexicon();
         $this->registerFilesystem();
         $this->registerEvents();
@@ -74,18 +73,30 @@ class Foundation
         $this->registerEngineResolver();
         $this->registerViewFinder();
         $this->registerFactory();
-/*        $this->registerSessionStore();
-        $this->registerSessionBinder($this->sessionHasErrors());*/
+
 
         return $this;
     }
 
+    /**
+     * Register Lexicon
+     */
     public function registerLexicon()
     {
-        $this->bindShared(
+        $this->getContainer()->bindShared(
             'anomaly.lexicon',
             function () {
                 return $this->lexicon;
+            }
+        );
+    }
+
+    public function registerBasePath()
+    {
+        $this->getContainer()->bindIf(
+            'path.base',
+            function () {
+                return $this->getLexicon()->getBasePath();
             }
         );
     }
@@ -95,14 +106,13 @@ class Foundation
      */
     public function registerFilesystem()
     {
-        if ($this->isStandalone()) {
-            $this->bindShared(
-                'files',
-                function () {
-                    return new Filesystem();
-                }
-            );
-        }
+        $this->getContainer()->bindIf(
+            'files',
+            function () {
+                return new Filesystem();
+            },
+            true
+        );
     }
 
     /**
@@ -110,14 +120,13 @@ class Foundation
      */
     public function registerEvents()
     {
-        if ($this->isStandalone()) {
-            $this->bindShared(
-                'events',
-                function () {
-                    return new Dispatcher();
-                }
-            );
-        }
+        $this->getContainer()->bindIf(
+            'events',
+            function () {
+                return new Dispatcher();
+            },
+            true
+        );
     }
 
     /**
@@ -125,24 +134,23 @@ class Foundation
      */
     public function registerConfigRepository()
     {
-        if ($this->isStandalone()) {
-            $this->bindShared(
-                'config',
-                function () {
-                    $config = new Repository(
-                        new FileLoader(
-                            $this->getFilesystem(),
-                            __DIR__ . '/../../config'
-                        ),
-                        'development' // TODO: Get this from Lexicon
-                    );
+        $this->getContainer()->bindIf(
+            'config',
+            function () {
+                $config = new Repository(
+                    new FileLoader(
+                        $this->getFilesystem(),
+                        __DIR__ . '/../../config'
+                    ),
+                    'development' // TODO: Get this from Lexicon
+                );
 
-                    $config->package('anomaly/lexicon', __DIR__ . '/../../config');
+                $config->package('anomaly/lexicon', __DIR__ . '/../../config');
 
-                    return $config;
-                }
-            );
-        }
+                return $config;
+            },
+            true
+        );
     }
 
     /**
@@ -150,13 +158,11 @@ class Foundation
      */
     public function registerPluginHandler()
     {
-        $this->bindShared(
+        $this->getContainer()->bindShared(
             'anomaly.lexicon.plugin.handler',
             function () {
 
-                $pluginHandler = $this->getLexicon()->getPluginHandler();
-
-                if (!($pluginHandler instanceof PluginHandlerInterface)) {
+                if (!$pluginHandler = $this->getLexicon()->getPluginHandler()) {
                     $pluginHandler = new PluginHandler();
                 }
 
@@ -177,7 +183,7 @@ class Foundation
      */
     public function registerConditionalHandler()
     {
-        $this->bindShared(
+        $this->getContainer()->bindShared(
             'anomaly.lexicon.conditional.handler',
             function () {
                 $conditionalHandler = $this->getLexicon()->getConditionalHandler();
@@ -211,7 +217,7 @@ class Foundation
      */
     public function registerNodeFactory()
     {
-        $this->getContainer()->singleton(
+        $this->getContainer()->bindShared(
             'anomaly.lexicon.node.factory',
             function () {
 
@@ -229,7 +235,6 @@ class Foundation
                 return $nodeFactory->registerNodeGroups($nodeGroups);
             }
         );
-
     }
 
     /**
@@ -239,7 +244,7 @@ class Foundation
      */
     public function registerEngineResolver()
     {
-        $this->bindShared(
+        $this->getContainer()->bindShared(
             'view.engine.resolver',
             function () {
                 $resolver = new EngineResolver();
@@ -266,7 +271,7 @@ class Foundation
     {
         $container = $this->getContainer();
 
-        $this->bindShared(
+        $this->getContainer()->bindShared(
             'anomaly.lexicon.compiler',
             function () {
                 $compiler = new Compiler($this->getFilesystem(), $this->getStoragePath());
@@ -309,7 +314,7 @@ class Foundation
     {
         $container = $this->getContainer();
 
-        $this->bindShared(
+        $container->bindShared(
             'blade.compiler',
             function () {
                 return new BladeCompiler($this->getFilesystem(), $this->getStoragePath());
@@ -331,7 +336,7 @@ class Foundation
      */
     public function registerViewFinder()
     {
-        $this->bindShared(
+        $this->getContainer()->bindShared(
             'view.finder',
             function () {
                 return new FileViewFinder($this->getFilesystem(), $this->getViewPaths());
@@ -346,7 +351,7 @@ class Foundation
      */
     public function registerFactory()
     {
-        $this->bindShared(
+        $this->getContainer()->bindShared(
             'view',
             function () {
                 // Next we need to grab the engine resolver instance that will be used by the
@@ -377,68 +382,6 @@ class Foundation
     }
 
     /**
-     * Register session store
-     *
-     * @param Container $container
-     */
-    public function registerSessionStore()
-    {
-        $container = $this->getContainer();
-
-        if ($this->isStandalone()) {
-
-/*            $this->getConfigRepository()->set('session.driver', 'array');
-
-            $this->bindShared(
-                'session',
-                function ($container) {
-                    $session = new SessionManager($container);
-                    $session->setDefaultDriver('array');
-                    return $session;
-                }
-            );
-
-            $this->bindShared(
-                'session.store',
-                function () use ($container) {
-                    $session = $container['session'];
-                    return $session->driver();
-                }
-            );*/
-        }
-    }
-
-    /**
-     * Register the session binder for the view environment.
-     *
-     * @return void
-     */
-    public function registerSessionBinder($sessionHasErrors = false)
-    {
-        $container = $this->getContainer();
-
-        if (method_exists($container, 'booted')) {
-            $container->booted(
-                function () use ($sessionHasErrors) {
-                    // If the current session has an "errors" variable bound to it, we will share
-                    // its value with all view instances so the views can easily access errors
-                    // without having to bind. An empty bag is set when there aren't errors.
-                    if ($sessionHasErrors) {
-                        $this->getFactory()->share('errors', $this->getSessionStore()->get('errors'));
-                    }
-
-                    // Putting the errors in the view for every view allows the developer to just
-                    // assume that some errors are always available, which is convenient since
-                    // they don't have to continually run checks for the presence of errors.
-                    else {
-                        $this->getFactory()->share('errors', new ViewErrorBag());
-                    }
-                }
-            );
-        }
-    }
-
-    /**
      * @return Container
      */
     public function getContainer()
@@ -452,14 +395,6 @@ class Foundation
     public function getLexicon()
     {
         return $this->lexicon;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isStandalone()
-    {
-        return $this->getLexicon()->isStandalone();
     }
 
     /**
@@ -573,14 +508,6 @@ class Foundation
     }
 
     /**
-     * @return mixed|null|object
-     */
-    public function getSessionStore()
-    {
-        return $this->getContainer()->make('session.store');
-    }
-
-    /**
      * Get event dispatcher
      *
      * @return Dispatcher
@@ -589,7 +516,6 @@ class Foundation
     {
         return $this->getContainer()->make('events');
     }
-
 
     /**
      * @return EngineResolver
@@ -606,22 +532,18 @@ class Foundation
      */
     public function getStoragePath()
     {
-        $container = $this->getContainer();
-
-        $storagePath = __DIR__ . '/../../../resources/storage/views';
-
-        if (!$this->isStandalone() and $this->getConfig('view.compiled')) {
-            $storagePath = $this->getConfig('view.compiled');
-        }
-
-        if ($override = $this->getLexicon()->getStoragePath()) {
-            $storagePath = $override;
+        if (!$storagePath = $this->getLexicon()->getStoragePath()) {
+            if (!$storagePath = $this->getConfig('lexicon::storagePath')) {
+                $storagePath = $this->getConfig('view.compiled');
+            }
         }
 
         return $storagePath;
     }
 
     /**
+     * Get factory
+     *
      * @return Factory
      */
     public function getFactory()
@@ -636,39 +558,11 @@ class Foundation
      */
     public function getViewPaths()
     {
-        $viewPaths = [__DIR__ . '/../../../resources/views'];
-
-        if ($configViewPaths = $this->getConfig('view.paths')) {
-            $viewPaths = $configViewPaths;
-        }
-
-        if ($override = $this->getLexicon()->getViewPaths()) {
-            $viewPaths = $override;
+        if (!$viewPaths = $this->getLexicon()->getViewPaths()) {
+            $viewPaths = $this->getConfig('view.paths', [__DIR__ . '/../../../resources/views']);
         }
 
         return $viewPaths;
-    }
-
-
-    /**
-     * Get session driver
-     *
-     * @return mixed
-     */
-    public function getSessionDriver()
-    {
-        return $this->getConfig('session.driver', 'array');
-    }
-
-    /**
-     * Determine if the application session has errors.
-     *
-     * @param  \Illuminate\Foundation\Application $app
-     * @return bool
-     */
-    public function sessionHasErrors()
-    {
-        return ($store = $this->getSessionStore() and $store->has('errors'));
     }
 
     /**
@@ -691,41 +585,6 @@ class Foundation
             ]
         );
     }
-
-    /**
-     * Wrap a Closure such that it is shared.
-     *
-     * @param  \Closure $closure
-     * @return \Closure
-     */
-    public function share(\Closure $closure)
-    {
-        return function ($container) use ($closure) {
-            // We'll simply declare a static variable within the Closures and if it has
-            // not been set we will execute the given Closures to resolve this value
-            // and return it back to these consumers of the method as an instance.
-            static $object;
-
-            if (is_null($object)) {
-                $object = $closure($container);
-            }
-
-            return $object;
-        };
-    }
-
-    /**
-     * Bind a shared Closure into the container.
-     *
-     * @param  string   $abstract
-     * @param  \Closure $closure
-     * @return void
-     */
-    public function bindShared($abstract, \Closure $closure)
-    {
-        $this->getContainer()->bind($abstract, $this->share($closure), true);
-    }
-
 
     /**
      * @return static

@@ -1,13 +1,7 @@
 <?php namespace Anomaly\Lexicon;
 
-
 use Anomaly\Lexicon\Contract\LexiconInterface;
-use Anomaly\Lexicon\Stub\LexiconServiceProviderStub;
-use Anomaly\Lexicon\Support\Container;
-use Illuminate\Config\FileLoader;
-use Illuminate\Config\Repository;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Foundation\Application;
+use Illuminate\Container\Container;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -24,12 +18,10 @@ class LexiconServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $app = $this->app;
+        $lexicon = new Lexicon($this->app);
+        $lexicon->register();
 
         $this->package('anomaly/lexicon');
-
-        $lexicon = new Lexicon($app);
-        $lexicon->register();
 
         return $lexicon;
     }
@@ -41,7 +33,7 @@ class LexiconServiceProvider extends ServiceProvider
      */
     public static function stub()
     {
-        return LexiconServiceProviderStub::stub();
+        return new static(new Container());
     }
 
 }
