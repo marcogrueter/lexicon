@@ -2,6 +2,7 @@
 
 use Anomaly\Lexicon\Lexicon;
 use Anomaly\Lexicon\Stub\LexiconStub;
+use Anomaly\Lexicon\Support\ValueResolver;
 
 /**
  * Class Variable
@@ -29,7 +30,17 @@ class Variable extends Single
      */
     public function compile($echo = true, $escaped = true)
     {
-        return $this->compileVariable($echo, $escaped);
+        // [0] original string
+        // [1] or
+        // [2] default value
+        if (preg_match('/\s*?(or)\s*[\'|"](\w+)[\'|"]\s*$/', $this->getRawAttributes(), $match)) {
+            $default = $match[2];
+            $source = $this->compileVariable($echo, $escaped, $default);
+        } else {
+            $source = $this->compileVariable($echo, $escaped);
+        }
+
+        return $source;
     }
 
     /**
@@ -42,8 +53,14 @@ class Variable extends Single
      * @param bool $useEcho
      * @return string
      */
-    public function compileVariable($echo = true, $escaped = true)
+    public function compileVariable($echo = true, $escaped = true, $default = 'null')
     {
+        $default = "'{$default}'";
+
+        $resolver = new ValueResolver();
+
+        $default = $resolver->resolve($default);
+
         $finder = $this->getNodeFinder();
 
         $item       = $finder->getItemSource();
@@ -52,7 +69,7 @@ class Variable extends Single
 
         $expected = Lexicon::EXPECTED_STRING;
 
-        $source = "\$this->variable({$item},'{$name}',{$attributes},'',null,'{$expected}')";
+        $source = "\$this->variable({$item},'{$name}',{$attributes},'',{$default},'{$expected}')";
 
         if ($escaped) {
             $source = "e({$source})";

@@ -21,7 +21,7 @@ Lexicon is a Composer package named `anomaly/lexicon`. To use it, simply add it 
 ```language-php
 {
     "require": {
-        "anomaly/lexicon": "~1.0-beta"
+        "anomaly/lexicon": "~1.0.0-beta"
     }
 }
 ```
