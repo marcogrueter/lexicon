@@ -27,7 +27,7 @@ class VariableUnescaped extends Variable
      */
     public function compile($echo = true, $escaped = false)
     {
-        return $this->compileVariable($echo, $escaped);
+        return parent::compile($echo, $escaped);
     }
 
 

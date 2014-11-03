@@ -175,6 +175,11 @@ class Lexicon implements LexiconInterface
     const EXPECTED_ANY = 'any';
 
     /**
+     * Expected boolean
+     */
+    const EXPECTED_BOOLEAN = 'boolean';
+
+    /**
      * Expected traversable
      */
     const EXPECTED_TRAVERSABLE = 'traversable';

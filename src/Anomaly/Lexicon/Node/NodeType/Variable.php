@@ -33,14 +33,28 @@ class Variable extends Single
         // [0] original string
         // [1] or
         // [2] default value
-        if (preg_match('/\s*?(or)\s*[\'|"](\w+)[\'|"]\s*$/', $this->getRawAttributes(), $match)) {
-            $default = $match[2];
-            $source = $this->compileVariable($echo, $escaped, $default);
+        if (preg_match($this->createSplitMatcher('or'), $this->getRawAttributes(), $match)) {
+            $source = $this->compileVariable($match[2], Lexicon::EXPECTED_BOOLEAN);
+        } elseif (preg_match($this->createSplitMatcher('then'), $this->getRawAttributes(), $match)) {
+            $source = "{$this->compileVariable('false', Lexicon::EXPECTED_BOOLEAN)} ? '{$match[2]}' : null";
         } else {
-            $source = $this->compileVariable($echo, $escaped);
+            $source = $this->compileVariable();
+        }
+
+        if ($escaped) {
+            $source = "e({$source})";
+        }
+
+        if ($echo) {
+            $source = "echo {$source};";
         }
 
         return $source;
+    }
+
+    public function createSplitMatcher($delimiter)
+    {
+        return "/\s*?({$delimiter})\s*[\'|\"](\w+)[\'|\"]\s*$/";
     }
 
     /**
@@ -53,9 +67,11 @@ class Variable extends Single
      * @param bool $useEcho
      * @return string
      */
-    public function compileVariable($echo = true, $escaped = true, $default = 'null')
+    public function compileVariable($default = 'null', $expected = Lexicon::EXPECTED_STRING)
     {
-        $default = "'{$default}'";
+        if (!in_array($default, ['true', 'false', 'null'])) {
+            $default = "'{$default}'";
+        }
 
         $resolver = new ValueResolver();
 
@@ -67,19 +83,7 @@ class Variable extends Single
         $name       = $finder->getName();
         $attributes = $this->compileAttributes();
 
-        $expected = Lexicon::EXPECTED_STRING;
-
-        $source = "\$this->variable({$item},'{$name}',{$attributes},'',{$default},'{$expected}')";
-
-        if ($escaped) {
-            $source = "e({$source})";
-        }
-
-        if ($echo) {
-            $source = "echo {$source};";
-        }
-
-        return $source;
+        return "\$this->variable({$item},'{$name}',{$attributes},'',{$default},'{$expected}')";
     }
 
     /**

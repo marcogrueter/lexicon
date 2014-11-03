@@ -205,11 +205,11 @@ class CompiledView implements CompiledViewInterface
      */
     public function expected($data, $expected = Lexicon::EXPECTED_ANY, $finalResult = null)
     {
-        if ($expected == Lexicon::EXPECTED_ANY) {
+        if ($expected === Lexicon::EXPECTED_ANY) {
 
             $finalResult = $data;
 
-        } elseif ($expected == Lexicon::EXPECTED_STRING) {
+        } elseif ($expected === Lexicon::EXPECTED_STRING) {
 
             if (
                 is_string($data) or
@@ -227,13 +227,17 @@ class CompiledView implements CompiledViewInterface
 
             }
 
-        } elseif ($expected == Lexicon::EXPECTED_TRAVERSABLE) {
+        } elseif ($expected === Lexicon::EXPECTED_TRAVERSABLE) {
 
             if (is_array($data) or $data instanceof \Traversable) {
 
                 $finalResult = $data;
 
             };
+
+        } elseif ($expected === Lexicon::EXPECTED_BOOLEAN and $data) {
+
+            $finalResult = $data;
 
         }
 
