@@ -1,6 +1,5 @@
 <?php namespace Anomaly\Lexicon\Plugin;
 
-use Anomaly\Lexicon\Contract\LexiconInterface;
 use Anomaly\Lexicon\Contract\Plugin\PluginInterface;
 
 class Plugin implements PluginInterface
@@ -86,11 +85,11 @@ class Plugin implements PluginInterface
      * Get attribute
      *
      * @param      $name
-     * @param int  $offset
      * @param null $default
+     * @param int  $offset
      * @return mixed|null
      */
-    public function getAttribute($name, $offset = 0, $default = null)
+    public function getAttribute($name, $default = null, $offset = 0)
     {
         if (isset($this->attributes[$name])) {
             return $this->attributes[$name];

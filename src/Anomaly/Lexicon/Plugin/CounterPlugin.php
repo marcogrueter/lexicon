@@ -31,23 +31,23 @@ class CounterPlugin extends Plugin
      */
     public function count()
     {
-        $id = $this->getAttribute('id', 0, 'default');
+        $id = $this->getAttribute('id', 'default');
 
         // Use a default of 1 if they haven't specified one and it's the first iteration
         if (!isset($this->ids[$id])) {
             $this->ids[$id] = (int)$this->getAttribute('start', 1, 1);
         } // lets check to see if they're only wanting to show the offset
         elseif ($this->increment) {
-            $skip = (int)$this->getAttribute('skip', 2, 1);
+            $skip = (int)$this->getAttribute('skip', 1, 2);
             // offset up unless they specify to "subtract"
-            $this->ids[$id] = ($this->getAttribute('mode', 3) == 'subtract') ?
+            $this->ids[$id] = ($this->getAttribute('mode', null, 3) == 'subtract') ?
                 $this->ids[$id] - $skip : $this->ids[$id] + $skip;
         }
 
         // set this back to continue counting again next time
         $this->increment = true;
 
-        return ($this->getAttribute('return', 4, true)) ? $this->ids[$id] : null;
+        return ($this->getAttribute('return', true, 4)) ? $this->ids[$id] : null;
     }
 
     /**
@@ -59,7 +59,7 @@ class CounterPlugin extends Plugin
     {
         $this->increment = false;
 
-        $id = $this->getAttribute('id', 0, 'default');
+        $id = $this->getAttribute('id', 'default');
 
         return isset($this->ids[$id]) ? $this->ids[$id] : null;
     }

@@ -40,11 +40,11 @@ interface PluginInterface
      * Get attribute
      *
      * @param      $name
-     * @param int  $offset
      * @param null $default
+     * @param int  $offset
      * @return mixed
      */
-    public function getAttribute($name, $offset = 0, $default = null);
+    public function getAttribute($name, $default = null, $offset = 0);
 
     /**
      * @param $key

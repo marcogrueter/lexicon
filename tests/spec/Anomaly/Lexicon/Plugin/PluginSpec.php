@@ -30,12 +30,12 @@ class PluginSpec extends Spec
     function it_can_set_and_get_ordered_attributes_by_offset()
     {
         $this->setAttributes(['foo', 'bar', 'baz']);
-        $this->getAttribute('', 1)->shouldReturn('bar');
+        $this->getAttribute('', null, 1)->shouldReturn('bar');
     }
 
     function it_gets_default_value_if_attribute_is_not_found()
     {
-        $this->getAttribute('foo', 0, 'default')->shouldReturn('default');
+        $this->getAttribute('foo', 'default')->shouldReturn('default');
     }
 
     function it_can_set_and_get_content()
