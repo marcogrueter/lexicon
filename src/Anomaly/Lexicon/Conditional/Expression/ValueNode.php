@@ -19,21 +19,17 @@ class ValueNode extends ExpressionNode
      */
     public function compile()
     {
-/*        $parent = $this->getParent();
 
-        while($parent instanceof Conditional and $this->getParent()) {
-            $parent = $this->getParent();
-        }
+        $finder = $this->getNodeFinder();
 
 
-        $finder = $parent->getNodeFinder();
-
-        $finder->getItemSource();*/
 
         $name = trim($this->getContent());
+
+        $item = $finder->getItemSource();
         $source = null;
         if (!empty($name)) {
-            $source = "\$__data['__env']->variable(\$__data, '{$name}')";
+            $source = "\$this->variable({$item}, '{$name}')";
         }
         return $source;
     }
