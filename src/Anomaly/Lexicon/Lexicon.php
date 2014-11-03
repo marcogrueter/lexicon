@@ -64,7 +64,7 @@ class Lexicon implements LexiconInterface
      *
      * @var bool
      */
-    protected $debug = false;
+    protected $debug;
 
     /**
      * Compiled view namespace
@@ -168,11 +168,6 @@ class Lexicon implements LexiconInterface
      * Data constant
      */
     const DATA = '$__data';
-
-    /**
-     * Factory constant
-     */
-    const FACTORY = '$__data[\'__env\']';
 
     /**
      * Expected any constant
@@ -566,17 +561,6 @@ class Lexicon implements LexiconInterface
     {
         $this->compiledViewClassPrefix = $viewClassPrefix;
         return $this;
-    }
-
-    /**
-     * Get compiled view class
-     *
-     * @param $hash
-     * @return string
-     */
-    public function getCompiledViewClass($hash)
-    {
-        return $this->getCompiledViewClassPrefix() . $hash;
     }
 
     /**

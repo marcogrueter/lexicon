@@ -51,7 +51,7 @@ class ConditionalSpec extends Spec
             ->setContent('foo or bar and baz && ying || yang')
             ->compile()
             ->shouldReturn(
-                "if(\$__data['__env']->variable(\$__data, 'foo') or \$__data['__env']->variable(\$__data, 'bar') and \$__data['__env']->variable(\$__data, 'baz') && \$__data['__env']->variable(\$__data, 'ying') || \$__data['__env']->variable(\$__data, 'yang')):"
+                "if(\$this->variable(\$__data, 'foo') or \$this->variable(\$__data, 'bar') and \$this->variable(\$__data, 'baz') && \$this->variable(\$__data, 'ying') || \$this->variable(\$__data, 'yang')):"
             );
     }
 
@@ -62,7 +62,7 @@ class ConditionalSpec extends Spec
             ->setContent('foo or bar and baz && ying || yang')
             ->compile()
             ->shouldReturn(
-                "if(!(\$__data['__env']->variable(\$__data, 'foo') or \$__data['__env']->variable(\$__data, 'bar') and \$__data['__env']->variable(\$__data, 'baz') && \$__data['__env']->variable(\$__data, 'ying') || \$__data['__env']->variable(\$__data, 'yang'))):"
+                "if(!(\$this->variable(\$__data, 'foo') or \$this->variable(\$__data, 'bar') and \$this->variable(\$__data, 'baz') && \$this->variable(\$__data, 'ying') || \$this->variable(\$__data, 'yang'))):"
             );
     }
 

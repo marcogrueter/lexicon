@@ -24,7 +24,7 @@ class SectionStopSpec extends Spec
 
     function it_can_compile_section_stop()
     {
-        $this->compile()->shouldReturn("\$__data['__env']->stopSection();");
+        $this->compile()->shouldReturn("\$this->view()->stopSection();");
     }
 
 }

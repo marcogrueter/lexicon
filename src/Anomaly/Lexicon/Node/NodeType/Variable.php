@@ -52,7 +52,7 @@ class Variable extends Single
 
         $expected = Lexicon::EXPECTED_STRING;
 
-        $source = "\$__data['__env']->variable({$item},'{$name}',{$attributes},'',null,'{$expected}')";
+        $source = "\$this->variable({$item},'{$name}',{$attributes},'',null,'{$expected}')";
 
         if ($escaped) {
             $source = "e({$source})";

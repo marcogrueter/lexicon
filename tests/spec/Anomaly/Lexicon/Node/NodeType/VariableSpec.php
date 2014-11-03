@@ -33,25 +33,25 @@ class VariableSpec extends Spec
     function it_can_compile_variable_php()
     {
         $this->setName('foo');
-        $this->compileVariable(false)->shouldReturn("e(\$__data['__env']->variable(\$__data,'foo',[],'',null,'string'))");
+        $this->compileVariable(false)->shouldReturn("e(\$this->variable(\$__data,'foo',[],'',null,'string'))");
     }
 
     function it_can_compile_echo_variable_php()
     {
         $this->setName('foo');
-        $this->compileVariable(true)->shouldReturn("echo e(\$__data['__env']->variable(\$__data,'foo',[],'',null,'string'));");
+        $this->compileVariable(true)->shouldReturn("echo e(\$this->variable(\$__data,'foo',[],'',null,'string'));");
     }
 
     function it_can_compile_unescaped_variable_php()
     {
         $this->setName('foo');
-        $this->compileVariable(true, false)->shouldReturn("echo \$__data['__env']->variable(\$__data,'foo',[],'',null,'string');");
+        $this->compileVariable(true, false)->shouldReturn("echo \$this->variable(\$__data,'foo',[],'',null,'string');");
     }
 
     function it_can_compile_php()
     {
         $this->setName('foo');
-        $this->compile()->shouldReturn("echo e(\$__data['__env']->variable(\$__data,'foo',[],'',null,'string'));");
+        $this->compile()->shouldReturn("echo e(\$this->variable(\$__data,'foo',[],'',null,'string'));");
     }
 
     function it_can_compile_key()

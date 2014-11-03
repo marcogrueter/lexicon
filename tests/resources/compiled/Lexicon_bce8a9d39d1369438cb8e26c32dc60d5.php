@@ -1,2 +1,2 @@
-<?php namespace Anomaly\Lexicon\View\Compiled; class Lexicon_bce8a9d39d1369438cb8e26c32dc60d5 { public function render($__data) {
-?>Original content. <?php echo $__data['__env']->make('test::partial',array_merge($__data,[]))->render(); ?><?php }} ?>
+<?php namespace Anomaly\Lexicon\View\Compiled; class Lexicon_bce8a9d39d1369438cb8e26c32dc60d5 extends \Anomaly\Lexicon\View\CompiledView { public function render($__data) {
+?>Original content. <?php echo $this->view()->make('test::partial',array_merge($__data,[]))->render(); ?><?php }} ?>

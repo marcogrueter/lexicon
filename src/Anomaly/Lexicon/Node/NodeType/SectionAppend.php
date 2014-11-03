@@ -19,7 +19,7 @@ class SectionAppend extends Single
      */
     public function compile()
     {
-        return "\$__data['__env']->appendSection();";
+        return "\$this->view()->appendSection();";
     }
 
 }

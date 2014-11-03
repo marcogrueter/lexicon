@@ -29,7 +29,7 @@ class VariableUnescapedSpec extends Spec
     function it_can_compile_php()
     {
         $this->setName('foo');
-        $this->compile()->shouldReturn("echo \$__data['__env']->variable(\$__data,'foo',[],'',null,'string');");
+        $this->compile()->shouldReturn("echo \$this->variable(\$__data,'foo',[],'',null,'string');");
     }
     
 }

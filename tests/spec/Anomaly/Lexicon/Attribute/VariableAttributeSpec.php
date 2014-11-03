@@ -36,7 +36,7 @@ class VariableAttributeSpec extends Spec
         $this
             ->setValue('foo')
             ->compileValue()
-            ->shouldReturn("\$__data['__env']->variable(\$__data,'foo',[],'',null,'string')");
+            ->shouldReturn("\$this->variable(\$__data,'foo',[],'',null,'string')");
     }
 
 }

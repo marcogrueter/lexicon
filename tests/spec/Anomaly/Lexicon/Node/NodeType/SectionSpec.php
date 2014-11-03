@@ -26,7 +26,7 @@ class SectionSpec extends Spec
         $this
             ->setRawAttributes('name="foo"')
             ->compile()
-            ->shouldReturn("\$__data['__env']->startSection('foo');");
+            ->shouldReturn("\$this->view()->startSection('foo');");
     }
     
 }

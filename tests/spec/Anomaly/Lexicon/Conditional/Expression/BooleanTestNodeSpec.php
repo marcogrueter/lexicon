@@ -26,7 +26,7 @@ class BooleanTestNodeSpec extends Spec
         $this
             ->setContent('foo == bar')
             ->compile()->shouldReturn(
-                "\$__data['__env']->booleanTest(\$__data['__env']->variable(\$__data, 'foo'),\$__data['__env']->variable(\$__data, 'bar'),'==')"
+                "\$this->booleanTest(\$this->variable(\$__data, 'foo'),\$this->variable(\$__data, 'bar'),'==')"
             );
     }
 
@@ -34,7 +34,7 @@ class BooleanTestNodeSpec extends Spec
     {
         $this
             ->setContent('foo')
-            ->compile()->shouldReturn("\$__data['__env']->variable(\$__data, 'foo')");
+            ->compile()->shouldReturn("\$this->variable(\$__data, 'foo')");
     }
 
 }

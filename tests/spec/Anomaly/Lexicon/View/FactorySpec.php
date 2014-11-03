@@ -46,7 +46,7 @@ class FactorySpec extends Spec
         $this->alias('test::hello', 'foo');
         $this->make('foo')->shouldHaveType('Anomaly\Lexicon\Contract\View\ViewInterface');
     }
-
+/*
     function it_can_get_variable_from_plugin()
     {
         $this->variable([], 'stub.foo')->shouldReturn('FOO, BAR, BAZ!');
@@ -136,8 +136,8 @@ class FactorySpec extends Spec
         ];
 
         $this->variable($data, 'simple.nonexistent')->shouldReturn(null);
-    }
-    
+    }*/
+    /*
     function it_can_get_any_value()
     {
         $this->expected('whatever', 'any')->shouldReturn('whatever');
@@ -194,7 +194,7 @@ class FactorySpec extends Spec
     {
         $this->getLexicon()->addMagicMethodClass('Anomaly\Lexicon\Stub\MagicMethodObject');
         $this->variable(['something' => new MagicMethodObjectParent()], 'something.magic_method_object');
-    }
+    }*/
     
     /**
      * Rendering views examples

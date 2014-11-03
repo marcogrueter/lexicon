@@ -1,2 +1,2 @@
-<?php namespace [namespace]; class [class] { public function render($__data) {
+<?php namespace [namespace]; class [class] extends \Anomaly\Lexicon\View\CompiledView { public function render($__data) {
 ?>[source]<?php }} ?>

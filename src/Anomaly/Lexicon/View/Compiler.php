@@ -131,8 +131,6 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
      */
     public function compileFromFile($path, $compiledPath)
     {
-        $this->setHash(substr(strrchr($compiledPath, '/'), 1));
-
         $contents = $this->compileString($this->files->get($path));
 
         $this->put($contents, $compiledPath);
@@ -149,8 +147,6 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
      */
     public function compileFromString($string, $compiledPath)
     {
-        $this->setHash(substr(strrchr($compiledPath, '/'), 1));
-
         $contents = $this->compileString($string);
 
         $this->put($contents, $compiledPath);
@@ -187,7 +183,7 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
     protected function put($contents, $compiledPath)
     {
         if (!is_null($this->cachePath)) {
-            $this->files->put($compiledPath . '.php', $contents);
+            $this->files->put($compiledPath, $contents);
         }
     }
 
@@ -199,7 +195,18 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
      */
     public function getCompiledPath($path)
     {
-        return $this->cachePath . '/' . $this->getLexicon()->getCompiledViewClassPrefix() . md5($path);
+        return $this->cachePath . '/' . $this->getLexicon()->getCompiledViewClassPrefix() . md5($path) . '.php';
+    }
+
+    /**
+     * Get compiled view class name
+     *
+     * @param $hash
+     * @return string
+     */
+    public function getViewClassFromCompiledPath($compiledPath)
+    {
+        return str_replace('.php', '', substr(strrchr($compiledPath, '/'), 1));
     }
 
     /**
@@ -260,7 +267,7 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
     {
         $data = [
             '[namespace]' => $this->getLexicon()->getCompiledViewNamespace(),
-            '[class]'     => $this->getHash(),
+            '[class]'     => $this->getViewClassFromCompiledPath($this->getCompiledPath($this->getPath())),
             '[source]'    => $source,
         ];
 
@@ -281,9 +288,7 @@ class Compiler extends BaseCompiler implements CompilerSequenceInterface
 
         if ($foundation->isDebug()) {
             return true;
-        }
-
-        if ($lexicon->isStringTemplate($path) and $this->isNotCompiled($path)) {
+        } elseif ($lexicon->isStringTemplate($path) and $this->isNotCompiled($path)) {
             return true;
         }
 

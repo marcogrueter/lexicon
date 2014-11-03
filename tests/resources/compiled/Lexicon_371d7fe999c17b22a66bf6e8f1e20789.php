@@ -1,2 +1,2 @@
-<?php namespace Anomaly\Lexicon\View\Compiled; class Lexicon_371d7fe999c17b22a66bf6e8f1e20789 { public function render($__data) {
-?><h1>Hello <?php echo e($__data['__env']->variable($__data,'name',[],'',null,'string')); ?>!</h1><?php }} ?>
+<?php namespace Anomaly\Lexicon\View\Compiled; class Lexicon_371d7fe999c17b22a66bf6e8f1e20789 extends \Anomaly\Lexicon\View\CompiledView { public function render($__data) {
+?><h1>Hello <?php echo e($this->variable($__data,'name',[],'',null,'string')); ?>!</h1><?php }} ?>

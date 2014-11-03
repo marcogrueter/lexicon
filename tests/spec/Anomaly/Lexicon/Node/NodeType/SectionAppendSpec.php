@@ -24,7 +24,7 @@ class SectionAppendSpec extends Spec
 
     function it_can_compile_section_append()
     {
-        $this->compile()->shouldReturn("\$__data['__env']->appendSection();");
+        $this->compile()->shouldReturn("\$this->view()->appendSection();");
     }
 
 }

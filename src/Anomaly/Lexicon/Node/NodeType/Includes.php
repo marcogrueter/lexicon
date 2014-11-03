@@ -27,7 +27,7 @@ class Includes extends Single
 
         if (!empty($partial)) {
             $share   = $this->getSharedAttributes();
-            $source = "echo \$__data['__env']->make({$partial},array_merge(\$__data,{$share}))->render();";
+            $source = "echo \$this->view()->make({$partial},array_merge(\$__data,{$share}))->render();";
         }
 
         return $source;

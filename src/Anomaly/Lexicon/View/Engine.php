@@ -32,9 +32,10 @@ class Engine extends CompilerEngine implements EngineInterface
         // an exception is thrown. This prevents any partial views from leaking.
         try {
 
-            $viewHash     = substr(strrchr($__path, '/'), 1);
-            $viewClass    = $this->getLexicon()->getCompiledViewNamespace() . '\\' . $viewHash;
-            $compiledView = new $viewClass;
+            $lexicon      = $this->getLexicon();
+            $viewClass    = $lexicon->getCompiledViewNamespace() . '\\' .
+                $this->getCompiler()->getViewClassFromCompiledPath($__path);
+            $compiledView = new $viewClass($lexicon);
             $compiledView->render($__data);
 
         } catch (\Exception $e) {

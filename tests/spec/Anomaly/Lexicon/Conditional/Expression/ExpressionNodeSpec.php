@@ -71,7 +71,7 @@ class ExpressionNodeSpec extends Spec
             ->setContent('foo or bar and baz')
             ->createChildNodes()
             ->compile()
-            ->shouldReturn("\$__data['__env']->variable(\$__data, 'foo') or \$__data['__env']->variable(\$__data, 'bar') and \$__data['__env']->variable(\$__data, 'baz')");
+            ->shouldReturn("\$this->variable(\$__data, 'foo') or \$this->variable(\$__data, 'bar') and \$this->variable(\$__data, 'baz')");
     }
 
 }

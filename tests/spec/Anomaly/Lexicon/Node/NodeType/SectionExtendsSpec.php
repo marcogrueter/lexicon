@@ -26,7 +26,7 @@ class SectionExtendsSpec extends Spec
         $this->setRawAttributes('layout="test::foo"')->compile();
         $this->getRootNode()->getFooter()->shouldReturn(
             [
-                "<?php echo \$__data['__env']->make('test::foo',\$__data)->render(); ?>"
+                "<?php echo \$this->view()->make('test::foo',\$__data)->render(); ?>"
             ]
         );
     }

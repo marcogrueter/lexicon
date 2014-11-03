@@ -74,7 +74,7 @@ class BooleanTestNode extends ExpressionNode
             /** @var ValueNode $right */
             $right = $parts[2];
 
-            $source = "\$__data['__env']->booleanTest({$left->compile()},{$right->compile()},{$operator->compile()})";
+            $source = "\$this->booleanTest({$left->compile()},{$right->compile()},{$operator->compile()})";
         } else {
             /** @var ValueNode $valueNode */
             $valueNode = $children->first();

@@ -28,7 +28,7 @@ class SectionYield extends Single
         $source = null;
 
         if (!empty($name)) {
-            $source = "echo \$__data['__env']->yieldContent({$name});";
+            $source = "echo \$this->view()->yieldContent({$name});";
         }
 
         return $source;

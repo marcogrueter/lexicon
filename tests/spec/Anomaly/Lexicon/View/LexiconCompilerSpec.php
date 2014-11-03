@@ -28,8 +28,8 @@ class LexiconCompilerSpec extends Spec
                 <a href="{{ foo.to "{path}" }}" class="btn btn-success">{{ title }}</a>
                 {{ /theme.actions }}'
             )->shouldCompile(
-                '<?php foreach($__data[\'__env\']->variable($__data,\'theme.actions\',[],\'\',[],\'traversable\') as $i=>$themeActionsItem): ?>
-                <a href="<?php echo e($__data[\'__env\']->variable($themeActionsItem,\'foo.to\',[0=>\'\'.$__data[\'__env\']->variable($themeActionsItem,\'path\',[],\'\',null,\'string\').\'\'],\'\',null,\'string\')); ?>" class="btn btn-success"><?php echo e($__data[\'__env\']->variable($themeActionsItem,\'title\',[],\'\',null,\'string\')); ?></a>
+                '<?php foreach($this->variable($__data,\'theme.actions\',[],\'\',[],\'traversable\') as $i=>$themeActionsItem): ?>
+                <a href="<?php echo e($this->variable($themeActionsItem,\'foo.to\',[0=>\'\'.$this->variable($themeActionsItem,\'path\',[],\'\',null,\'string\').\'\'],\'\',null,\'string\')); ?>" class="btn btn-success"><?php echo e($this->variable($themeActionsItem,\'title\',[],\'\',null,\'string\')); ?></a>
                 <?php endforeach; ?>'
             );
     }
@@ -42,7 +42,7 @@ class LexiconCompilerSpec extends Spec
                     // do something
                 {{ endif }}'
             )->shouldCompile(
-                '<?php if($__data[\'__env\']->variable($__data, \'foo\')): ?>
+                '<?php if($this->variable($__data, \'foo\')): ?>
                     // do something
                 <?php endif; ?>'
             );
@@ -56,7 +56,7 @@ class LexiconCompilerSpec extends Spec
                     // do something
                 {{ endif }}'
             )->shouldCompile(
-                '<?php if($__data[\'__env\']->variable($__data, \'foo\') and $__data[\'__env\']->booleanTest($__data[\'__env\']->variable($__data, \'yin\'),$__data[\'__env\']->variable($__data, \'yang\'),\'==\')): ?>
+                '<?php if($this->variable($__data, \'foo\') and $this->booleanTest($this->variable($__data, \'yin\'),$this->variable($__data, \'yang\'),\'==\')): ?>
                     // do something
                 <?php endif; ?>'
             );

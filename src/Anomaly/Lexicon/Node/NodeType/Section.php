@@ -26,7 +26,7 @@ class Section extends Single
         $source = null;
 
         if (!empty($name)) {
-            $source = "\$__data['__env']->startSection({$name});";
+            $source = "\$this->view()->startSection({$name});";
         }
 
         return $source;

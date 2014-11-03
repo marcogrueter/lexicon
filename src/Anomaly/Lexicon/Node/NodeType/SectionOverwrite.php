@@ -19,7 +19,7 @@ class SectionOverwrite extends Single
      */
     public function compile()
     {
-        return "\$__data['__env']->stopSection(true);";
+        return "\$this->view()->stopSection(true);";
     }
 
 }

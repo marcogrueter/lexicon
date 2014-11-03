@@ -24,7 +24,7 @@ class SectionOverwriteSpec extends Spec
 
     function it_can_compile_stop_section_as_overwrite()
     {
-        $this->compile()->shouldReturn("\$__data['__env']->stopSection(true);");
+        $this->compile()->shouldReturn("\$this->view()->stopSection(true);");
     }
 
 }

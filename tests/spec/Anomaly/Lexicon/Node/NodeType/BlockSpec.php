@@ -60,14 +60,14 @@ class BlockSpec extends Spec
 
     function it_can_get_traversable_source()
     {
-        $this->getTraversableSource()->shouldReturn("\$__data['__env']->variable(\$__data,'books',[],'',[],'traversable')");
+        $this->getTraversableSource()->shouldReturn("\$this->variable(\$__data,'books',[],'',[],'traversable')");
     }
 
     function it_can_compile_opening_tag()
     {
         $this
             ->compileOpeningTag()
-            ->shouldReturn("foreach(\$__data['__env']->variable(\$__data,'books',[],'',[],'traversable') as \$i=>\$booksItem):");
+            ->shouldReturn("foreach(\$this->variable(\$__data,'books',[],'',[],'traversable') as \$i=>\$booksItem):");
     }
 
     function it_can_compile_opening_tag_to_null_when_is_filter()

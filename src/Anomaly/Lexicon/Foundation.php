@@ -75,7 +75,6 @@ class Foundation
         $this->registerViewFinder();
         $this->registerFactory();
 
-
         return $this;
     }
 
@@ -409,7 +408,13 @@ class Foundation
      */
     public function isDebug()
     {
-        return $this->lexicon->isDebug() ?: $this->getConfig('app.debug', false);
+        $debug = $this->getLexicon()->isDebug();
+
+        if (!is_bool($debug)) {
+            $debug = $this->getConfig('app.debug', false);
+        }
+
+        return $debug;
     }
 
     /**

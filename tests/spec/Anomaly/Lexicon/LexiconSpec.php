@@ -142,14 +142,6 @@ class LexiconSpec extends Spec
             ->getCompiledViewClassPrefix()
             ->shouldReturn('View_');
     }
-    
-    function it_can_get_the_view_class()
-    {
-        $this
-            ->setCompiledViewClassPrefix('View_')
-            ->getCompiledViewClass('foo')
-            ->shouldReturn('View_foo');
-    }
 
     function it_can_get_root_alias()
     {
@@ -180,7 +172,7 @@ class LexiconSpec extends Spec
             ->shouldReturn(['views']);
     }
 
-    function it_can_register_a_node_type(NodeFactory $nodeFactory)
+    function it_can_register_a_node_type()
     {
         $this->registerNodeType('Anomaly\Lexicon\Stub\Node');
     }

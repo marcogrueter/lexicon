@@ -24,7 +24,7 @@ class SectionShowSpec extends Spec
 
     function it_can_compile_yield_section_as_show()
     {
-        $this->compile()->shouldReturn("echo \$__data['__env']->yieldSection();");
+        $this->compile()->shouldReturn("echo \$this->view()->yieldSection();");
     }
 
 }

@@ -23,7 +23,7 @@ class RecursiveSpec extends Spec
 
     function it_can_compile_recursive()
     {
-        $this->compile()->shouldReturn("echo \$__data['__env']->parse('{{ children }}',\$__data);");
+        $this->compile()->shouldReturn("echo \$this->view()->parse('{{ children }}',\$__data);");
     }
 
 }

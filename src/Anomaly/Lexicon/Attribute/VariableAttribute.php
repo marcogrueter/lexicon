@@ -46,7 +46,7 @@ class VariableAttribute extends AttributeNode
         $attributes = $this->compileAttributes();
         $name = $this->getValue();
         $expected = Lexicon::EXPECTED_STRING;
-        return "\$__data['__env']->variable(\$__data,'{$name}',{$attributes},'',null,'{$expected}')";
+        return "\$this->variable(\$__data,'{$name}',{$attributes},'',null,'{$expected}')";
     }
 
 } 

@@ -26,7 +26,7 @@ class IncludesSpec extends Spec
         $this
             ->setRawAttributes('partial="baz" share="title,author"')
             ->compile()
-            ->shouldReturn("echo \$__data['__env']->make('baz',array_merge(\$__data,['title'=>\$__data['__env']->variable(\$__data,'title',[],'',null,'string'),'author'=>\$__data['__env']->variable(\$__data,'author',[],'',null,'string')]))->render();");
+            ->shouldReturn("echo \$this->view()->make('baz',array_merge(\$__data,['title'=>\$this->variable(\$__data,'title',[],'',null,'string'),'author'=>\$this->variable(\$__data,'author',[],'',null,'string')]))->render();");
     }
 
 }

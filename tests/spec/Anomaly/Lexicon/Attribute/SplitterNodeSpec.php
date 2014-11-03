@@ -59,7 +59,7 @@ class SplitterNodeSpec extends Spec
         $this->setContent('foo {bar} baz')
             ->createChildNodes()
             ->compile()
-            ->shouldReturn("'foo '.\$__data['__env']->variable(\$__data,'bar',[],'',null,'string').' baz'");
+            ->shouldReturn("'foo '.\$this->variable(\$__data,'bar',[],'',null,'string').' baz'");
     }
     
 }

@@ -7,7 +7,6 @@ use Anomaly\Lexicon\Node\NodeFactory;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Session\SessionInterface;
 
 interface LexiconInterface
 {
@@ -83,14 +82,6 @@ interface LexiconInterface
      * @return LexiconInterface
      */
     public function setCompiledViewClassPrefix($viewClassPrefix);
-
-    /**
-     * Get compiled view class
-     *
-     * @param $hash
-     * @return string
-     */
-    public function getCompiledViewClass($hash);
 
     /**
      * Register node type

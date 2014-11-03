@@ -76,7 +76,7 @@ class EmbeddedAttribute extends AttributeNode
         $expected = Lexicon::EXPECTED_STRING;
 
 
-        return "\$__data['__env']->variable({$item},'{$name}',{$attributes},'',null,'{$expected}')";
+        return "\$this->variable({$item},'{$name}',{$attributes},'',null,'{$expected}')";
     }
 
     /**
