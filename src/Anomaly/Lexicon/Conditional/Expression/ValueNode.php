@@ -19,13 +19,9 @@ class ValueNode extends ExpressionNode
      */
     public function compile()
     {
-
+        $this->setName($this->getContent());
         $finder = $this->getNodeFinder();
-
-
-
-        $name = trim($this->getContent());
-
+        $name = $finder->getName();
         $item = $finder->getItemSource();
         $source = null;
         if (!empty($name)) {

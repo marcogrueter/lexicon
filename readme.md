@@ -1,7 +1,7 @@
 # Lexicon Template Engine
 ___
 
-[![Unstable](http://img.shields.io/badge/unstable-1.0--beta-orange.svg?style=flat)](https://packagist.org/packages/anomaly/lexicon)
+[![Unstable](http://img.shields.io/badge/unstable-1.0.0--beta-orange.svg?style=flat)](https://packagist.org/packages/anomaly/lexicon)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://packagist.org/packages/anomaly/lexicon)
 [![Build Status](http://img.shields.io/travis/anomalylabs/lexicon.svg?style=flat)](https://travis-ci.org/anomalylabs/lexicon)
 [![Code Coverage](http://img.shields.io/codeclimate/coverage/github/anomalylabs/lexicon.svg?style=flat)](https://codeclimate.com/github/anomalylabs/lexicon)
